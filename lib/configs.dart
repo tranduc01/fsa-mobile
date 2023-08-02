@@ -1,5 +1,5 @@
 /// App Name
-const APP_NAME = "SocialV";
+const APP_NAME = "FSA";
 
 /// App Icon src
 const APP_ICON = "assets/app_icon.png";
@@ -43,4 +43,3 @@ const mTestAdMobBannerId = 'ca-app-pub-3940256099942544/6300978111';
 // live
 const CONSUMER_KEY = '';
 const CONSUMER_SECRET = '';
-
