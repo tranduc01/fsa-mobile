@@ -7,6 +7,8 @@ import 'package:socialv/screens/blog/screens/blog_list_screen.dart';
 import 'package:socialv/screens/forums/screens/my_forums_screen.dart';
 import 'package:socialv/screens/groups/screens/group_screen.dart';
 import 'package:socialv/screens/lms/screens/course_list_screen.dart';
+import 'package:socialv/screens/notes/screens/note_detail_screen.dart';
+import 'package:socialv/screens/notes/screens/notes_screen.dart';
 import 'package:socialv/screens/profile/screens/profile_friends_screen.dart';
 import 'package:socialv/screens/settings/screens/settings_screen.dart';
 import 'package:socialv/screens/shop/screens/cart_screen.dart';
