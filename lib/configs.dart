@@ -1,11 +1,11 @@
 /// App Name
-const APP_NAME = "FSA";
+const APP_NAME = "OKA";
 
 /// App Icon src
 const APP_ICON = "assets/app_icon.png";
 
 /// Splash screen image src
-const SPLASH_SCREEN_IMAGE = 'assets/images/splash_image.png';
+const SPLASH_SCREEN_IMAGE = 'assets/images/splash_image.jpg';
 
 /// OneSignal Notification App Id
 const ONESIGNAL_APP_ID = '';

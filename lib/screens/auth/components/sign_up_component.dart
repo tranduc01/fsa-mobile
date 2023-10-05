@@ -27,12 +27,14 @@ class _SignUpComponentState extends State<SignUpComponent> {
   TextEditingController userNameCont = TextEditingController();
   TextEditingController fullNameCont = TextEditingController();
   TextEditingController passwordCont = TextEditingController();
+  TextEditingController confirmPasswordCont = TextEditingController();
   TextEditingController emailCont = TextEditingController();
   TextEditingController contactCont = TextEditingController();
 
   FocusNode userName = FocusNode();
   FocusNode fullName = FocusNode();
   FocusNode password = FocusNode();
+  FocusNode confirmPassword = FocusNode();
   FocusNode email = FocusNode();
   FocusNode contact = FocusNode();
 
@@ -58,8 +60,13 @@ class _SignUpComponentState extends State<SignUpComponent> {
           Users.password: passwordCont.text.validate(),
         };
 
-        await loginUser(request: request, isSocialLogin: false).then((value) async {
-          Map req = {"player_id": getStringAsync(SharePreferencesKey.ONE_SIGNAL_PLAYER_ID), "add": 1};
+        await loginUser(request: request, isSocialLogin: false)
+            .then((value) async {
+          Map req = {
+            "player_id":
+                getStringAsync(SharePreferencesKey.ONE_SIGNAL_PLAYER_ID),
+            "add": 1
+          };
 
           await setPlayerId(req).then((value) {
             //
@@ -97,9 +104,11 @@ class _SignUpComponentState extends State<SignUpComponent> {
       toast(language.registeredSuccessfully);
 
       if (widget.activityId != null) {
-        SinglePostScreen(postId: widget.activityId.validate()).launch(context, isNewTask: true);
+        SinglePostScreen(postId: widget.activityId.validate())
+            .launch(context, isNewTask: true);
       } else {
-        push(DashboardScreen(), isNewTask: true, pageRouteAnimation: PageRouteAnimation.Slide);
+        push(DashboardScreen(),
+            isNewTask: true, pageRouteAnimation: PageRouteAnimation.Slide);
       }
     }).catchError((e) {
       appStore.setLoading(false);
@@ -127,16 +136,19 @@ class _SignUpComponentState extends State<SignUpComponent> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              16.height,
-              Text(language.helloUser, style: boldTextStyle(size: 24)).paddingSymmetric(horizontal: 16),
+              10.height,
+              Text(language.helloUser, style: boldTextStyle(size: 24))
+                  .paddingSymmetric(horizontal: 16),
               8.height,
-              Text(language.createYourAccountFor, style: secondaryTextStyle(weight: FontWeight.w500)).paddingSymmetric(horizontal: 16),
+              Text(language.createYourAccountFor,
+                      style: secondaryTextStyle(weight: FontWeight.w500))
+                  .paddingSymmetric(horizontal: 16),
               Form(
                 key: signupFormKey,
                 child: Container(
                   child: Column(
                     children: [
-                      30.height,
+                      15.height,
                       AppTextField(
                         enabled: !appStore.isLoading,
                         controller: userNameCont,
@@ -147,7 +159,8 @@ class _SignUpComponentState extends State<SignUpComponent> {
                         decoration: inputDecoration(
                           context,
                           label: language.username,
-                          labelStyle: secondaryTextStyle(weight: FontWeight.w600),
+                          labelStyle:
+                              secondaryTextStyle(weight: FontWeight.w600),
                         ),
                       ).paddingSymmetric(horizontal: 16),
                       8.height,
@@ -161,7 +174,8 @@ class _SignUpComponentState extends State<SignUpComponent> {
                         decoration: inputDecoration(
                           context,
                           label: language.fullName,
-                          labelStyle: secondaryTextStyle(weight: FontWeight.w600),
+                          labelStyle:
+                              secondaryTextStyle(weight: FontWeight.w600),
                         ),
                       ).paddingSymmetric(horizontal: 16),
                       8.height,
@@ -175,7 +189,8 @@ class _SignUpComponentState extends State<SignUpComponent> {
                         decoration: inputDecoration(
                           context,
                           label: language.yourEmail,
-                          labelStyle: secondaryTextStyle(weight: FontWeight.w600),
+                          labelStyle:
+                              secondaryTextStyle(weight: FontWeight.w600),
                         ),
                       ).paddingSymmetric(horizontal: 16),
                       16.height,
@@ -187,12 +202,41 @@ class _SignUpComponentState extends State<SignUpComponent> {
                         textInputAction: TextInputAction.done,
                         textFieldType: TextFieldType.PASSWORD,
                         textStyle: boldTextStyle(),
-                        suffixIconColor: appStore.isDarkMode ? bodyDark : bodyWhite,
+                        suffixIconColor:
+                            appStore.isDarkMode ? bodyDark : bodyWhite,
                         decoration: inputDecoration(
                           context,
                           label: language.password,
                           contentPadding: EdgeInsets.all(0),
-                          labelStyle: secondaryTextStyle(weight: FontWeight.w600),
+                          labelStyle:
+                              secondaryTextStyle(weight: FontWeight.w600),
+                        ),
+                        isPassword: true,
+                        onFieldSubmitted: (x) {
+                          if (agreeTNC) {
+                            register();
+                          } else {
+                            toast(language.pleaseAgreeOurTerms);
+                          }
+                        },
+                      ).paddingSymmetric(horizontal: 16),
+                      16.height,
+                      AppTextField(
+                        enabled: !appStore.isLoading,
+                        controller: confirmPasswordCont,
+                        nextFocus: contact,
+                        focus: confirmPassword,
+                        textInputAction: TextInputAction.done,
+                        textFieldType: TextFieldType.PASSWORD,
+                        textStyle: boldTextStyle(),
+                        suffixIconColor:
+                            appStore.isDarkMode ? bodyDark : bodyWhite,
+                        decoration: inputDecoration(
+                          context,
+                          label: 'Confirm Password',
+                          contentPadding: EdgeInsets.all(0),
+                          labelStyle:
+                              secondaryTextStyle(weight: FontWeight.w600),
                         ),
                         isPassword: true,
                         onFieldSubmitted: (x) {
@@ -206,7 +250,8 @@ class _SignUpComponentState extends State<SignUpComponent> {
                       Row(
                         children: [
                           Checkbox(
-                            shape: RoundedRectangleBorder(borderRadius: radius(2)),
+                            shape:
+                                RoundedRectangleBorder(borderRadius: radius(2)),
                             activeColor: context.primaryColor,
                             value: agreeTNC,
                             onChanged: (val) {
@@ -219,22 +264,35 @@ class _SignUpComponentState extends State<SignUpComponent> {
                             maxLines: 3,
                             overflow: TextOverflow.ellipsis,
                             list: [
-                              TextSpan(text: language.bySigningUpYou + " ", style: secondaryTextStyle(fontFamily: fontFamily)),
+                              TextSpan(
+                                  text: language.bySigningUpYou + " ",
+                                  style: secondaryTextStyle(
+                                      fontFamily: fontFamily)),
                               TextSpan(
                                 text: "\n${language.termsCondition}",
-                                style: secondaryTextStyle(color: Colors.blue, decoration: TextDecoration.underline, fontStyle: FontStyle.italic, fontFamily: fontFamily),
+                                style: secondaryTextStyle(
+                                    color: Colors.blue,
+                                    decoration: TextDecoration.underline,
+                                    fontStyle: FontStyle.italic,
+                                    fontFamily: fontFamily),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
-                                    openWebPage(context, url: TERMS_AND_CONDITIONS_URL);
+                                    openWebPage(context,
+                                        url: TERMS_AND_CONDITIONS_URL);
                                   },
                               ),
-                              TextSpan(text: " & ", style: secondaryTextStyle()),
+                              TextSpan(
+                                  text: " & ", style: secondaryTextStyle()),
                               TextSpan(
                                 text: "${language.privacyPolicy}.",
-                                style: secondaryTextStyle(color: Colors.blue, decoration: TextDecoration.underline, fontStyle: FontStyle.italic),
+                                style: secondaryTextStyle(
+                                    color: Colors.blue,
+                                    decoration: TextDecoration.underline,
+                                    fontStyle: FontStyle.italic),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
-                                    openWebPage(context, url: PRIVACY_POLICY_URL);
+                                    openWebPage(context,
+                                        url: PRIVACY_POLICY_URL);
                                   },
                               ),
                             ],
@@ -256,14 +314,19 @@ class _SignUpComponentState extends State<SignUpComponent> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(language.alreadyHaveAnAccount, style: secondaryTextStyle()),
+                          Text(language.alreadyHaveAnAccount,
+                              style: secondaryTextStyle()),
                           4.width,
                           Text(
                             language.signIn,
-                            style: secondaryTextStyle(color: context.primaryColor, decoration: TextDecoration.underline),
+                            style: secondaryTextStyle(
+                                color: context.primaryColor,
+                                decoration: TextDecoration.underline),
                           ).onTap(() {
                             widget.callback?.call();
-                          }, highlightColor: Colors.transparent, splashColor: Colors.transparent)
+                          },
+                              highlightColor: Colors.transparent,
+                              splashColor: Colors.transparent)
                         ],
                       ),
                       50.height,

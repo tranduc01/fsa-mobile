@@ -13,6 +13,7 @@ import 'package:socialv/screens/fragments/notification_fragment.dart';
 import 'package:socialv/screens/fragments/profile_fragment.dart';
 import 'package:socialv/screens/fragments/search_fragment.dart';
 import 'package:socialv/screens/groups/screens/group_detail_screen.dart';
+import 'package:socialv/screens/home/components/ranking_bottomsheet_widget.dart';
 import 'package:socialv/screens/home/components/user_detail_bottomsheet_widget.dart';
 import 'package:socialv/screens/notification/components/latest_activity_component.dart';
 import 'package:socialv/screens/post/screens/add_post_screen.dart';
@@ -35,9 +36,18 @@ List<StoryActions>? storyActions;
 List<VisibilityOptions>? accountPrivacyVisibility;
 List<ReportType>? reportTypes;
 List<PostInListModel>? postInListDashboard;
-List<ReactionsModel> reactions = [];
+List<ReactionsModel> reactions = [
+  ReactionsModel(
+      id: "1",
+      imageUrl:
+          "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.freepik.com%2Ffree-photos-vectors%2Fcute-anima&psig=AOvVaw2RMtRmFfL-lDZ7FDxcK4X_&ust=1692713440659000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCKCbi4337YADFQAAAAAdAAAAABAE",
+      name: "Tran Duc",
+      defaultImageUrl:
+          "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.freepik.com%2Ffree-photos-vectors%2Fcute-anima&psig=AOvVaw2RMtRmFfL-lDZ7FDxcK4X_&ust=1692713440659000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCKCbi4337YADFQAAAAAdAAAAABAE")
+];
 
-class _DashboardScreenState extends State<DashboardScreen> with TickerProviderStateMixin {
+class _DashboardScreenState extends State<DashboardScreen>
+    with TickerProviderStateMixin {
   bool hasUpdate = false;
   late AnimationController _animationController;
 
@@ -72,16 +82,21 @@ class _DashboardScreenState extends State<DashboardScreen> with TickerProviderSt
 
     afterBuildCreated(() {
       if (isMobile) {
-        OneSignal.shared.setNotificationOpenedHandler((OSNotificationOpenedResult notification) async {
-          notification.notification.additionalData!.entries.forEach((element) async {
+        OneSignal.shared.setNotificationOpenedHandler(
+            (OSNotificationOpenedResult notification) async {
+          notification.notification.additionalData!.entries
+              .forEach((element) async {
             if (element.key == "is_comment") {
-              int postId = notification.notification.additionalData!.entries.firstWhere((element) => element.key == 'post_id').value;
+              int postId = notification.notification.additionalData!.entries
+                  .firstWhere((element) => element.key == 'post_id')
+                  .value;
               if (postId != 0) {
                 CommentScreen(postId: postId).launch(context);
               }
             } else if (element.key == 'post_id') {
               if (element.value.toString().toInt() != 0) {
-                SinglePostScreen(postId: element.value.toString().toInt()).launch(context);
+                SinglePostScreen(postId: element.value.toString().toInt())
+                    .launch(context);
               }
             } else if (element.key == 'user_id') {
               MemberProfileScreen(memberId: element.value).launch(context);
@@ -105,7 +120,10 @@ class _DashboardScreenState extends State<DashboardScreen> with TickerProviderSt
 
     getDetails();
 
-    Map req = {"player_id": getStringAsync(SharePreferencesKey.ONE_SIGNAL_PLAYER_ID), "add": 1};
+    Map req = {
+      "player_id": getStringAsync(SharePreferencesKey.ONE_SIGNAL_PLAYER_ID),
+      "add": 1
+    };
 
     await setPlayerId(req).then((value) {
       //
@@ -154,46 +172,52 @@ class _DashboardScreenState extends State<DashboardScreen> with TickerProviderSt
       appStore.setLMSEnable(value.isLMSEnable.validate());
       appStore.setCourseEnable(value.isCourseEnable.validate());
       appStore.setDisplayPostCount(value.displayPostCount.validate());
-      appStore.setDisplayPostCommentsCount(value.displayPostCommentsCount.validate());
-      appStore.setDisplayFriendRequestBtn(value.displayFriendRequestBtn.validate());
+      appStore.setDisplayPostCommentsCount(
+          value.displayPostCommentsCount.validate());
+      appStore
+          .setDisplayFriendRequestBtn(value.displayFriendRequestBtn.validate());
       appStore.setShopEnable(value.isShopEnable.validate());
       storyActions = value.storyActions.validate();
     }).catchError(onError);
   }
 
   Future<void> getReactionsList() async {
-    await getReactions().then((value) {
-      reactions = value;
-      log('Reactions: ${reactions.length}');
-    }).catchError((e) {
-      log('Error: ${e.toString()}');
-    });
+    // await getReactions().then((value) {
+    //   reactions = value;
+    //   log('Reactions: ${reactions.length}');
+    // }).catchError((e) {
+    //   log('Error: ${e.toString()}');
+    // });
 
+    reactions = reactions;
     log('Reactions: ${reactions.length}');
 
     setState(() {});
   }
 
   Future<void> defaultReactionsList() async {
-    await getDefaultReaction().then((value) {
-      if (value.isNotEmpty) {
-        appStore.setDefaultReaction(value.first);
-      } else {
-        if (reactions.isNotEmpty) appStore.setDefaultReaction(reactions.first);
-      }
-    }).catchError((e) {
-      log('Error: ${e.toString()}');
-    });
+    // await getDefaultReaction().then((value) {
+    //   if (value.isNotEmpty) {
+    //     appStore.setDefaultReaction(value.first);
+    //   } else {
+    //     if (reactions.isNotEmpty) appStore.setDefaultReaction(reactions.first);
+    //   }
+    // }).catchError((e) {
+    //   log('Error: ${e.toString()}');
+    // });
+
+    reactions = reactions;
     setState(() {});
   }
 
   Future<void> postIn() async {
-    await getPostInList().then((value) {
-      if (value.isNotEmpty) {
-        postInListDashboard = value;
-      }
-    }).catchError(onError);
+    // await getPostInList().then((value) {
+    //   if (value.isNotEmpty) {
+    //     postInListDashboard = value;
+    //   }
+    // }).catchError(onError);
 
+    //postInListDashboard = PostInListModel().listPostInList;
     setState(() {});
   }
 
@@ -247,83 +271,122 @@ class _DashboardScreenState extends State<DashboardScreen> with TickerProviderSt
                 child: SliverAppBar(
                   forceElevated: true,
                   elevation: 0.5,
-                  expandedHeight: 110,
+                  expandedHeight: 100,
                   floating: true,
                   pinned: true,
                   backgroundColor: context.scaffoldBackgroundColor,
                   title: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Image.asset(APP_ICON, width: 26),
-                      4.width,
-                      Text(APP_NAME, style: boldTextStyle(color: context.primaryColor, size: 24, fontFamily: fontFamily)),
+                      Image.asset(APP_ICON, width: 60),
+                      Text(
+                        APP_NAME,
+                        style: boldTextStyle(
+                          color: context.primaryColor,
+                          size: 24,
+                          fontFamily: fontFamily,
+                        ),
+                      ),
                     ],
                   ),
                   actions: [
                     IconButton(
                       onPressed: () {
-                        AddPostScreen().launch(context).then((value) {
-                          if (value ?? false) {
-                            selectedIndex = 0;
-                            tabController.index = 0;
-                            setState(() {});
-                          }
-                        });
+                        showModalBottomSheet(
+                          elevation: 0,
+                          context: context,
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          transitionAnimationController: _animationController,
+                          builder: (context) {
+                            return FractionallySizedBox(
+                              heightFactor: 0.93,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(
+                                    width: 45,
+                                    height: 5,
+                                    //clipBehavior: Clip.hardEdge,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(16),
+                                        color: Colors.white),
+                                  ),
+                                  8.height,
+                                  Container(
+                                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                                    decoration: BoxDecoration(
+                                      color: context.cardColor,
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(16),
+                                          topRight: Radius.circular(16)),
+                                    ),
+                                    child: RankingBottomSheetWidget(),
+                                  ).expand(),
+                                ],
+                              ),
+                            );
+                          },
+                        );
                       },
                       highlightColor: Colors.transparent,
                       splashColor: Colors.transparent,
-                      icon: Image.asset(ic_plus, height: 22, width: 22, fit: BoxFit.fitWidth, color: context.iconColor),
+                      icon: Image.asset(ic_ranking,
+                          height: 30,
+                          width: 30,
+                          fit: BoxFit.fitWidth,
+                          color: context.iconColor),
                     ),
-                    if (appStore.showWoocommerce == 1 && appStore.isShopEnable == 1)
-                      Image.asset(ic_bag, height: 24, width: 24, fit: BoxFit.fitWidth, color: context.iconColor).onTap(() {
-                        ShopScreen().launch(context);
-                      }, splashColor: Colors.transparent, highlightColor: Colors.transparent).paddingSymmetric(horizontal: 8),
-                    Observer(
-                      builder: (_) => IconButton(
-                        highlightColor: Colors.transparent,
-                        splashColor: Colors.transparent,
-                        onPressed: () {
-                          showModalBottomSheet(
-                            elevation: 0,
-                            context: context,
-                            isScrollControlled: true,
-                            backgroundColor: Colors.transparent,
-                            transitionAnimationController: _animationController,
-                            builder: (context) {
-                              return FractionallySizedBox(
-                                heightFactor: 0.93,
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Container(
-                                      width: 45,
-                                      height: 5,
-                                      //clipBehavior: Clip.hardEdge,
-                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(16), color: Colors.white),
+                    IconButton(
+                      highlightColor: Colors.transparent,
+                      splashColor: Colors.transparent,
+                      onPressed: () {
+                        showModalBottomSheet(
+                          elevation: 0,
+                          context: context,
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          transitionAnimationController: _animationController,
+                          builder: (context) {
+                            return FractionallySizedBox(
+                              heightFactor: 0.93,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(
+                                    width: 45,
+                                    height: 5,
+                                    //clipBehavior: Clip.hardEdge,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(16),
+                                        color: Colors.white),
+                                  ),
+                                  8.height,
+                                  Container(
+                                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                                    decoration: BoxDecoration(
+                                      color: context.cardColor,
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(16),
+                                          topRight: Radius.circular(16)),
                                     ),
-                                    8.height,
-                                    Container(
-                                      clipBehavior: Clip.antiAliasWithSaveLayer,
-                                      decoration: BoxDecoration(
-                                        color: context.cardColor,
-                                        borderRadius: BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
-                                      ),
-                                      child: UserDetailBottomSheetWidget(
-                                        callback: () {
-                                          //mPage = 1;
-                                          //future = getPostList();
-                                        },
-                                      ),
-                                    ).expand(),
-                                  ],
-                                ),
-                              );
-                            },
-                          );
-                        },
-                        icon: cachedImage(appStore.loginAvatarUrl, height: 30, width: 30, fit: BoxFit.cover).cornerRadiusWithClipRRect(15),
-                      ),
+                                    child: UserDetailBottomSheetWidget(
+                                      callback: () {
+                                        //mPage = 1;
+                                        //future = getPostList();
+                                      },
+                                    ),
+                                  ).expand(),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      },
+                      icon: Image.asset("assets/images/flower-pot.png",
+                              height: 30, width: 30, fit: BoxFit.cover)
+                          .cornerRadiusWithClipRRect(15),
                     ),
                   ],
                   bottom: TabBar(
@@ -335,39 +398,57 @@ class _DashboardScreenState extends State<DashboardScreen> with TickerProviderSt
                     },
                     tabs: [
                       Tooltip(
-                        richMessage: TextSpan(text: language.home, style: secondaryTextStyle(color: Colors.white)),
+                        richMessage: TextSpan(
+                            text: language.home,
+                            style: secondaryTextStyle(color: Colors.white)),
                         child: Image.asset(
                           selectedIndex == 0 ? ic_home_selected : ic_home,
                           height: 24,
                           width: 24,
                           fit: BoxFit.cover,
-                          color: selectedIndex == 0 ? context.primaryColor : context.iconColor,
+                          color: selectedIndex == 0
+                              ? context.primaryColor
+                              : context.iconColor,
                         ).paddingSymmetric(vertical: 11),
                       ),
                       Tooltip(
-                        richMessage: TextSpan(text: language.searchHere, style: secondaryTextStyle(color: Colors.white)),
+                        richMessage: TextSpan(
+                            text: language.searchHere,
+                            style: secondaryTextStyle(color: Colors.white)),
                         child: Image.asset(
                           selectedIndex == 1 ? ic_search_selected : ic_search,
                           height: 24,
                           width: 24,
                           fit: BoxFit.cover,
-                          color: selectedIndex == 1 ? context.primaryColor : context.iconColor,
+                          color: selectedIndex == 1
+                              ? context.primaryColor
+                              : context.iconColor,
                         ).paddingSymmetric(vertical: 11),
                       ),
                       Tooltip(
-                        richMessage: TextSpan(text: language.forums, style: secondaryTextStyle(color: Colors.white)),
+                        richMessage: TextSpan(
+                            text: language.forums,
+                            style: secondaryTextStyle(color: Colors.white)),
                         child: Image.asset(
-                          selectedIndex == 2 ? ic_three_user_filled : ic_three_user,
+                          selectedIndex == 2
+                              ? ic_three_user_filled
+                              : ic_three_user,
                           height: 28,
                           width: 28,
                           fit: BoxFit.fill,
-                          color: selectedIndex == 2 ? context.primaryColor : context.iconColor,
+                          color: selectedIndex == 2
+                              ? context.primaryColor
+                              : context.iconColor,
                         ).paddingSymmetric(vertical: 9),
                       ),
                       Tooltip(
-                        richMessage: TextSpan(text: language.notifications, style: secondaryTextStyle(color: Colors.white)),
+                        richMessage: TextSpan(
+                            text: language.notifications,
+                            style: secondaryTextStyle(color: Colors.white)),
                         child: selectedIndex == 3
-                            ? Image.asset(ic_notification_selected, height: 24, width: 24, fit: BoxFit.cover).paddingSymmetric(vertical: 11)
+                            ? Image.asset(ic_notification_selected,
+                                    height: 24, width: 24, fit: BoxFit.cover)
+                                .paddingSymmetric(vertical: 11)
                             : Observer(
                                 builder: (_) => Stack(
                                   clipBehavior: Clip.none,
@@ -382,14 +463,32 @@ class _DashboardScreenState extends State<DashboardScreen> with TickerProviderSt
                                     ).paddingSymmetric(vertical: 11),
                                     if (appStore.notificationCount != 0)
                                       Positioned(
-                                        right: appStore.notificationCount.toString().length > 1 ? -6 : -4,
+                                        right: appStore.notificationCount
+                                                    .toString()
+                                                    .length >
+                                                1
+                                            ? -6
+                                            : -4,
                                         top: 3,
                                         child: Container(
-                                          padding: EdgeInsets.all(appStore.notificationCount.toString().length > 1 ? 4 : 6),
-                                          decoration: BoxDecoration(color: appColorPrimary, shape: BoxShape.circle),
+                                          padding: EdgeInsets.all(appStore
+                                                      .notificationCount
+                                                      .toString()
+                                                      .length >
+                                                  1
+                                              ? 4
+                                              : 6),
+                                          decoration: BoxDecoration(
+                                              color: appColorPrimary,
+                                              shape: BoxShape.circle),
                                           child: Text(
-                                            appStore.notificationCount.toString(),
-                                            style: boldTextStyle(color: Colors.white, size: 10, weight: FontWeight.w700, letterSpacing: 0.7),
+                                            appStore.notificationCount
+                                                .toString(),
+                                            style: boldTextStyle(
+                                                color: Colors.white,
+                                                size: 10,
+                                                weight: FontWeight.w700,
+                                                letterSpacing: 0.7),
                                             textAlign: TextAlign.center,
                                           ),
                                         ),
@@ -409,7 +508,9 @@ class _DashboardScreenState extends State<DashboardScreen> with TickerProviderSt
                           height: 24,
                           width: 24,
                           fit: BoxFit.cover,
-                          color: selectedIndex == 4 ? context.primaryColor : context.iconColor,
+                          color: selectedIndex == 4
+                              ? context.primaryColor
+                              : context.iconColor,
                         ).paddingSymmetric(vertical: 11),
                       ),
                     ],
@@ -430,7 +531,6 @@ class _DashboardScreenState extends State<DashboardScreen> with TickerProviderSt
               ? FloatingActionButton(
                   onPressed: () {
                     //openWebPage(context, url: 'http://192.168.1.230/wp_themes/latest/socialv/atest');
-
                     showModalBottomSheet(
                       context: context,
                       elevation: 0,
@@ -446,7 +546,9 @@ class _DashboardScreenState extends State<DashboardScreen> with TickerProviderSt
                               Container(
                                 width: 45,
                                 height: 5,
-                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(16), color: Colors.white),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(16),
+                                    color: Colors.white),
                               ),
                               8.height,
                               Container(
@@ -454,7 +556,9 @@ class _DashboardScreenState extends State<DashboardScreen> with TickerProviderSt
                                 width: context.width(),
                                 decoration: BoxDecoration(
                                   color: context.cardColor,
-                                  borderRadius: BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(16),
+                                      topRight: Radius.circular(16)),
                                 ),
                                 child: LatestActivityComponent(),
                               ).expand(),
@@ -464,7 +568,11 @@ class _DashboardScreenState extends State<DashboardScreen> with TickerProviderSt
                       },
                     );
                   },
-                  child: cachedImage(ic_history, width: 26, height: 26, fit: BoxFit.cover, color: Colors.white),
+                  child: cachedImage(ic_history,
+                      width: 26,
+                      height: 26,
+                      fit: BoxFit.cover,
+                      color: Colors.white),
                   backgroundColor: context.primaryColor,
                 )
               : Offstage(),
