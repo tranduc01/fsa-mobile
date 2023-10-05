@@ -79,26 +79,36 @@ class _SignInScreenState extends State<SignInScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Image.asset(APP_ICON, height: 40, width: 40, fit: BoxFit.cover),
-                          8.width,
-                          Text(APP_NAME, style: boldTextStyle(color: context.primaryColor, size: 28)),
+                          Image.asset(APP_ICON,
+                              height: 100, width: 100, fit: BoxFit.cover),
+                          Text(APP_NAME,
+                              style: boldTextStyle(
+                                  color: context.primaryColor, size: 50)),
                         ],
                       ),
-                      40.height,
+                      10.height,
                       headerContainer(
                         context: context,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             TextButton(
-                              child: Text(language.login.toUpperCase(), style: boldTextStyle(color: selectedIndex == 0 ? Colors.white : Colors.white54)),
+                              child: Text(language.login.toUpperCase(),
+                                  style: boldTextStyle(
+                                      color: selectedIndex == 0
+                                          ? Colors.white
+                                          : Colors.white54)),
                               onPressed: () {
                                 selectedIndex = 0;
                                 setState(() {});
                               },
                             ),
                             TextButton(
-                              child: Text(language.signUp.toUpperCase(), style: boldTextStyle(color: selectedIndex == 1 ? Colors.white : Colors.white54)),
+                              child: Text(language.signUp.toUpperCase(),
+                                  style: boldTextStyle(
+                                      color: selectedIndex == 1
+                                          ? Colors.white
+                                          : Colors.white54)),
                               onPressed: () {
                                 selectedIndex = 1;
                                 setState(() {});
@@ -114,7 +124,9 @@ class _SignInScreenState extends State<SignInScreen> {
               ],
             ),
           ),
-          Observer(builder: (_) => LoadingWidget().visible(appStore.isLoading).center())
+          Observer(
+              builder: (_) =>
+                  LoadingWidget().visible(appStore.isLoading).center())
         ],
       ),
     );

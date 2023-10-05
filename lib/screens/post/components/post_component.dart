@@ -436,267 +436,259 @@ class _PostComponentState extends State<PostComponent> {
             _overlayHandler.removeOverlay(context);
         },
         child: Container(
-          margin: EdgeInsets.symmetric(vertical: 8),
-          decoration: BoxDecoration(
-              borderRadius: radius(commonRadius),
-              color: widget.color ?? context.cardColor),
-          child: Observer(
-              warnWhenNoObservables: false,
-              builder: (context) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+            margin: EdgeInsets.symmetric(vertical: 8),
+            decoration: BoxDecoration(
+                borderRadius: radius(commonRadius),
+                color: widget.color ?? context.cardColor),
+            child:
+                // Observer(
+                //     warnWhenNoObservables: false,
+                //     builder: (context) {
+                //       return
+                Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
                   children: [
-                    Row(
+                    cachedImage(
+                      widget.post.userImage.validate(),
+                      height: 40,
+                      width: 40,
+                      fit: BoxFit.cover,
+                    ).cornerRadiusWithClipRRect(100),
+                    12.width,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        cachedImage(
-                          widget.post.userImage.validate(),
-                          height: 40,
-                          width: 40,
-                          fit: BoxFit.cover,
-                        ).cornerRadiusWithClipRRect(100),
-                        12.width,
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  '${widget.post.userName.validate()}',
-                                  style: boldTextStyle(),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ).flexible(flex: 1),
-                                if (widget.post.isUserVerified.validate() == 1)
-                                  Image.asset(ic_tick_filled,
-                                          width: 18,
-                                          height: 18,
-                                          color: blueTickColor)
-                                      .paddingSymmetric(horizontal: 4),
-                              ],
-                            ),
-                            4.height,
                             Text(
-                                convertToAgo(
-                                    widget.post.dateRecorded.validate()),
-                                style: secondaryTextStyle()),
+                              '${widget.post.userName.validate()}',
+                              style: boldTextStyle(),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ).flexible(flex: 1),
+                            if (widget.post.isUserVerified.validate() == 1)
+                              Image.asset(
+                                ic_tick_filled,
+                                width: 15,
+                                height: 15,
+                                //color: blueTickColor,
+                              ).paddingSymmetric(horizontal: 4),
                           ],
-                        ).expand(),
-                        if (widget.post.isPinned == 1)
-                          Image.asset(ic_push_pin,
-                              height: 18,
-                              width: 18,
-                              color: context.primaryColor),
-                        if (!widget.childPost.validate())
-                          PopUpMenuButtonComponent(
-                            post: widget.post,
-                            onReportPost: () => onReportPost(),
-                            onFavorites: () => onFavorites(),
-                            onDeletePost: () => onDeletePost(),
-                            onPinned: () => onPinned(),
-                            onHidePost: () => onHidePost(),
-                            callback: () => widget.callback!.call(),
-                            groupId: widget.groupId,
-                            showHidePostOption: widget.showHidePostOption,
-                          ),
-                      ],
-                    ).paddingOnly(left: 8, top: 8, right: 8).onTap(() {
-                      MemberProfileScreen(
-                              memberId: widget.post.userId.validate())
-                          .launch(context);
-                    }, borderRadius: radius(8)),
-                    8.height,
-                    if (!widget.fromGroup)
-                      if (widget.post.postIn == Component.groups &&
-                          widget.post.groupName.validate().isNotEmpty)
-                        InkWell(
-                          onTap: () {
-                            if (widget.post.groupId != 0)
-                              GroupDetailScreen(
-                                      groupId: widget.post.groupId.validate())
-                                  .launch(context);
-                          },
-                          child: RichText(
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                    text: '${widget.post.userName.validate()} ',
-                                    style: boldTextStyle(
-                                        fontFamily: fontFamily, size: 14)),
-                                TextSpan(
-                                    text:
-                                        '${language.postedAnUpdateInTheGroup} ',
-                                    style: primaryTextStyle(
-                                        fontFamily: fontFamily, size: 14)),
-                                TextSpan(
-                                    text:
-                                        '${widget.post.groupName.validate()} ',
-                                    style: boldTextStyle(
-                                        fontFamily: fontFamily, size: 14)),
-                              ],
-                            ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.start,
-                          ).paddingSymmetric(horizontal: 8),
                         ),
-                    Divider(),
-                    PostContentComponent(
-                      postContent: widget.post.content,
-                      hasMentions: widget.post.hasMentions == 1,
-                      postType: widget.post.type,
-                      blogId: widget.post.blogId,
-                    ),
-                    PostMediaComponent(
-                      mediaTitle: widget.post.userName.validate(),
-                      mediaType: widget.post.mediaType.validate(),
-                      mediaList: widget.post.medias.validate(),
-                      onPageChange: (i) {
-                        index = i;
-                      },
-                    ),
-                    if (widget.post.type == PostActivityType.activityShare &&
-                        widget.post.childPost != null)
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8),
-                        child: PostComponent(
-                            post: widget.post.childPost!,
-                            childPost: true,
-                            color: context.scaffoldBackgroundColor),
-                      ),
-                    if (widget.childPost.validate())
-                      TextButton(
-                        onPressed: () {
-                          SinglePostScreen(
-                                  postId: widget.post.activityId.validate())
-                              .launch(context)
-                              .then((value) {
-                            if (value ?? false) widget.callback?.call();
-                          });
-                        },
-                        child: Text(language.viewPost,
-                            style:
-                                primaryTextStyle(color: context.primaryColor)),
-                      ),
+                        4.height,
+                        Text(convertToAgo(widget.post.dateRecorded.validate()),
+                            style: secondaryTextStyle()),
+                      ],
+                    ).expand(),
+                    if (widget.post.isPinned == 1)
+                      Image.asset(ic_push_pin,
+                          height: 18, width: 18, color: context.primaryColor),
                     if (!widget.childPost.validate())
-                      Observer(
-                        builder: (context) {
-                          return Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  if (appStore.isReactionEnable == 1)
-                                    if (reactions.validate().isNotEmpty)
-                                      ReactionButton(
-                                        isReacted: notify,
-                                        isComments: false,
-                                        currentUserReaction:
-                                            widget.post.curUserReaction,
-                                        onReacted: (id) {
-                                          isReacted = true;
-                                          postReaction(
-                                              addReaction: true,
-                                              reactionID: id);
-                                        },
-                                        onReactionRemoved: () {
-                                          isReacted = false;
-                                          postReaction(addReaction: false);
-                                        },
-                                      )
-                                    else
-                                      Offstage()
-                                  else
-                                    LikeButtonWidget(
-                                      key: ValueKey(isLiked),
-                                      onPostLike: () {
-                                        postLike();
-                                      },
-                                      isPostLiked: isLiked,
-                                    ),
-                                  Theme(
-                                    data: Theme.of(context).copyWith(
-                                      highlightColor: Colors.transparent,
-                                      splashColor: Colors.transparent,
-                                    ),
-                                    child: IconButton(
-                                      onPressed: () {
-                                        if (!appStore.isLoading) {
-                                          CommentScreen(
-                                                  postId: widget.post.activityId
-                                                      .validate())
-                                              .launch(context)
-                                              .then((value) {
-                                            if (value ?? false)
-                                              widget.callback?.call();
-                                          });
-                                        }
-                                      },
-                                      icon: Image.asset(
-                                        ic_chat,
-                                        height: 22,
-                                        width: 22,
-                                        fit: BoxFit.cover,
-                                        color: context.iconColor,
-                                      ),
-                                    ),
-                                  ),
-                                  Image.asset(
-                                    ic_send,
-                                    height: 22,
-                                    width: 22,
-                                    fit: BoxFit.cover,
-                                    color: context.iconColor,
-                                  ).onTap(() {
-                                    if (!appStore.isLoading) {
-                                      String saveUrl =
-                                          "$DOMAIN_URL/${widget.post.activityId.validate()}";
-                                      Share.share(saveUrl);
-                                    }
-                                  },
-                                      splashColor: Colors.transparent,
-                                      highlightColor: Colors.transparent),
-                                ],
-                              ),
-                              TextButton(
-                                onPressed: () {
+                      PopUpMenuButtonComponent(
+                        post: widget.post,
+                        onReportPost: () => onReportPost(),
+                        onFavorites: () => onFavorites(),
+                        onDeletePost: () => onDeletePost(),
+                        onPinned: () => onPinned(),
+                        onHidePost: () => onHidePost(),
+                        callback: () => widget.callback!.call(),
+                        groupId: widget.groupId,
+                        showHidePostOption: widget.showHidePostOption,
+                      ),
+                  ],
+                ).paddingOnly(left: 8, top: 8, right: 8).onTap(() {
+                  MemberProfileScreen(memberId: widget.post.userId.validate())
+                      .launch(context);
+                }, borderRadius: radius(8)),
+                8.height,
+                if (!widget.fromGroup)
+                  if (widget.post.postIn == Component.groups &&
+                      widget.post.groupName.validate().isNotEmpty)
+                    InkWell(
+                      onTap: () {
+                        if (widget.post.groupId != 0)
+                          GroupDetailScreen(
+                                  groupId: widget.post.groupId.validate())
+                              .launch(context);
+                      },
+                      child: RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                                text: '${widget.post.userName.validate()} ',
+                                style: boldTextStyle(
+                                    fontFamily: fontFamily, size: 14)),
+                            TextSpan(
+                                text: '${language.postedAnUpdateInTheGroup} ',
+                                style: primaryTextStyle(
+                                    fontFamily: fontFamily, size: 14)),
+                            TextSpan(
+                                text: '${widget.post.groupName.validate()} ',
+                                style: boldTextStyle(
+                                    fontFamily: fontFamily, size: 14)),
+                          ],
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.start,
+                      ).paddingSymmetric(horizontal: 8),
+                    ),
+                Divider(),
+                PostContentComponent(
+                  postContent: widget.post.content,
+                  hasMentions: widget.post.hasMentions == 1,
+                  postType: widget.post.type,
+                  blogId: widget.post.blogId,
+                ),
+                PostMediaComponent(
+                  mediaTitle: widget.post.userName.validate(),
+                  mediaType: widget.post.mediaType.validate(),
+                  mediaList: widget.post.medias.validate(),
+                  onPageChange: (i) {
+                    index = i;
+                  },
+                ),
+                if (widget.post.type == PostActivityType.activityShare &&
+                    widget.post.childPost != null)
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8),
+                    child: PostComponent(
+                        post: widget.post.childPost!,
+                        childPost: true,
+                        color: context.scaffoldBackgroundColor),
+                  ),
+                if (widget.childPost.validate())
+                  TextButton(
+                    onPressed: () {
+                      SinglePostScreen(
+                              postId: widget.post.activityId.validate())
+                          .launch(context)
+                          .then((value) {
+                        if (value ?? false) widget.callback?.call();
+                      });
+                    },
+                    child: Text(language.viewPost,
+                        style: primaryTextStyle(color: context.primaryColor)),
+                  ),
+                if (!widget.childPost.validate())
+                  // Observer(
+                  //   builder: (context) {
+                  //     return
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          if (appStore.isReactionEnable == 1)
+                            if (reactions.validate().isNotEmpty)
+                              ReactionButton(
+                                isReacted: notify,
+                                isComments: false,
+                                currentUserReaction:
+                                    widget.post.curUserReaction,
+                                onReacted: (id) {
+                                  isReacted = true;
+                                  postReaction(
+                                      addReaction: true, reactionID: id);
+                                },
+                                onReactionRemoved: () {
+                                  isReacted = false;
+                                  postReaction(addReaction: false);
+                                },
+                              )
+                            else
+                              Offstage()
+                          else
+                            LikeButtonWidget(
+                              key: ValueKey(isLiked),
+                              onPostLike: () {
+                                postLike();
+                              },
+                              isPostLiked: isLiked,
+                            ),
+                          Theme(
+                            data: Theme.of(context).copyWith(
+                              highlightColor: Colors.transparent,
+                              splashColor: Colors.transparent,
+                            ),
+                            child: IconButton(
+                              onPressed: () {
+                                if (!appStore.isLoading) {
                                   CommentScreen(
                                           postId:
                                               widget.post.activityId.validate())
                                       .launch(context)
-                                      .then(
-                                    (value) {
-                                      if (value ?? false)
-                                        widget.callback?.call();
-                                    },
-                                  );
-                                },
-                                child: Text(
-                                    '${appStore.displayPostCommentsCount == 1 ? widget.post.commentCount : ""} ${language.comments}',
-                                    style: secondaryTextStyle()),
+                                      .then((value) {
+                                    if (value ?? false) widget.callback?.call();
+                                  });
+                                }
+                              },
+                              icon: Image.asset(
+                                ic_chat,
+                                height: 22,
+                                width: 22,
+                                fit: BoxFit.cover,
+                                color: context.iconColor,
                               ),
-                            ],
-                          ).paddingSymmetric(horizontal: 8);
-                        },
+                            ),
+                          ),
+                          Image.asset(
+                            ic_send,
+                            height: 22,
+                            width: 22,
+                            fit: BoxFit.cover,
+                            color: context.iconColor,
+                          ).onTap(() {
+                            if (!appStore.isLoading) {
+                              String saveUrl =
+                                  "$DOMAIN_URL/${widget.post.activityId.validate()}";
+                              Share.share(saveUrl);
+                            }
+                          },
+                              splashColor: Colors.transparent,
+                              highlightColor: Colors.transparent),
+                        ],
                       ),
-                    if (!widget.childPost.validate())
-                      if (appStore.isReactionEnable == 0)
-                        PostLikesComponent(
-                          postLikeList: postLikeList,
-                          postId: widget.post.activityId.validate(),
-                          postLikeCount: postLikeCount,
-                        )
-                      else
-                        ThreeReactionComponent(
-                          isComments: false,
-                          id: widget.post.activityId.validate(),
-                          postReactionCount: postReactionCount,
-                          postReactionList: postReactionList,
-                        ).paddingOnly(left: 8, bottom: 8),
-                  ],
-                );
-              }),
-        ),
+                      TextButton(
+                        onPressed: () {
+                          CommentScreen(
+                                  postId: widget.post.activityId.validate())
+                              .launch(context)
+                              .then(
+                            (value) {
+                              if (value ?? false) widget.callback?.call();
+                            },
+                          );
+                        },
+                        child: Text(
+                            '${appStore.displayPostCommentsCount == 1 ? widget.post.commentCount : ""} ${language.comments}',
+                            style: secondaryTextStyle()),
+                      ),
+                    ],
+                  ).paddingSymmetric(horizontal: 8),
+                //   },
+                // ),
+                if (!widget.childPost.validate())
+                  if (appStore.isReactionEnable == 0)
+                    PostLikesComponent(
+                      postLikeList: postLikeList,
+                      postId: widget.post.activityId.validate(),
+                      postLikeCount: postLikeCount,
+                    )
+                  else
+                    ThreeReactionComponent(
+                      isComments: false,
+                      id: widget.post.activityId.validate(),
+                      postReactionCount: postReactionCount,
+                      postReactionList: postReactionList,
+                    ).paddingOnly(left: 8, bottom: 8),
+              ],
+            )
+            //     }),
+            ),
       );
     } else {
       return HiddenPostComponent(
