@@ -190,7 +190,7 @@ class _UserDetailBottomSheetWidgetState
                         primaryColor: appColorPrimary,
                         title: language.logoutConfirmation,
                         onAccept: (s) {
-                          logout(context);
+                          userController.Logout();
                         },
                       );
                     },
