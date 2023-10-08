@@ -61,6 +61,8 @@ dependencies:
   # Remote Notification
   onesignal_flutter: ^3.5.1
 
+  #SlideShow
+  flutter_image_slideshow: any
   # Story
   story_time: ^1.0.6
   numberpicker: ^2.1.2

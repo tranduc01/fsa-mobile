@@ -18,7 +18,8 @@ class GalleryScreen extends StatefulWidget {
   final int? userId;
   final bool canEdit;
 
-  GalleryScreen({Key? key, this.groupId, this.userId, this.canEdit = false}) : super(key: key);
+  GalleryScreen({Key? key, this.groupId, this.userId, this.canEdit = false})
+      : super(key: key);
 
   @override
   State<GalleryScreen> createState() => _GalleryScreenState();
@@ -27,7 +28,80 @@ class GalleryScreen extends StatefulWidget {
 List<MediaModel> mediaTypeList = [];
 
 class _GalleryScreenState extends State<GalleryScreen> {
-  List<Albums> albumList = [];
+  List<Albums> albumList = [
+    Albums(
+      id: 1,
+      name: 'Album 1',
+      description: 'Album 1 description',
+      thumbnail: 'https://picsum.photos/seed/picsum/200/300',
+      type: 'photo',
+      status: Status(
+        id: 1,
+        label: 'Photo',
+        singularName: 'Photo',
+        pluralName: 'Photos',
+        ttId: 1,
+        slug: 'photo',
+        callback: 'photo',
+        activityPrivacy: 'public',
+      ),
+      canDelete: true,
+    ),
+    Albums(
+      id: 2,
+      name: 'Album 2',
+      description: 'Album 2 description',
+      thumbnail: 'https://picsum.photos/seed/picsum/200/300',
+      type: 'audio',
+      status: Status(
+        id: 2,
+        label: 'Audio',
+        singularName: 'Audio',
+        pluralName: 'Audios',
+        ttId: 2,
+        slug: 'audio',
+        callback: 'audio',
+        activityPrivacy: 'public',
+      ),
+      canDelete: true,
+    ),
+    Albums(
+      id: 3,
+      name: 'Album 3',
+      description: 'Album 3 description',
+      thumbnail: 'https://picsum.photos/seed/picsum/200/300',
+      type: 'video',
+      status: Status(
+        id: 3,
+        label: 'Video',
+        singularName: 'Video',
+        pluralName: 'Videos',
+        ttId: 3,
+        slug: 'video',
+        callback: 'video',
+        activityPrivacy: 'public',
+      ),
+      canDelete: true,
+    ),
+    Albums(
+      id: 4,
+      name: 'Album 4',
+      description: 'Album 4 description',
+      thumbnail: 'https://picsum.photos/seed/picsum/200/300',
+      type: 'pdf',
+      status: Status(
+        id: 4,
+        label: 'Pdf',
+        singularName: 'Pdf',
+        pluralName: 'Pdfs',
+        ttId: 4,
+        slug: 'pdf',
+        callback: 'pdf',
+        activityPrivacy: 'public',
+      ),
+      canDelete: true,
+    ),
+  ];
 
   int selectedIndex = 0;
   bool isError = false;
@@ -48,7 +122,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
       () {
         scrollCont.addListener(
           () {
-            if (scrollCont.position.pixels == scrollCont.position.maxScrollExtent) {
+            if (scrollCont.position.pixels ==
+                scrollCont.position.maxScrollExtent) {
               if (!mIsLastPage) {
                 mPage++;
                 futureAlbum = fetchAlbums();
@@ -68,11 +143,25 @@ class _GalleryScreenState extends State<GalleryScreen> {
     appStore.setLoading(true);
     mediaTypeList.clear();
 
-    await getMediaTypes(type: widget.groupId != null ? null : Component.members).then(
+    await getMediaTypes(type: widget.groupId != null ? null : Component.members)
+        .then(
       (value) {
         mediaTypeList.addAll(value);
-        mediaTypeList.insert(0, MediaModel(title: language.all, type: language.all, allowedType: null, isActive: true));
-        if (widget.groupId != null && widget.canEdit) mediaTypeList.insert(1, MediaModel(title: language.myGallery, type: MediaTypes.myGallery, allowedType: null, isActive: true));
+        mediaTypeList.insert(
+            0,
+            MediaModel(
+                title: language.all,
+                type: language.all,
+                allowedType: null,
+                isActive: true));
+        if (widget.groupId != null && widget.canEdit)
+          mediaTypeList.insert(
+              1,
+              MediaModel(
+                  title: language.myGallery,
+                  type: MediaTypes.myGallery,
+                  allowedType: null,
+                  isActive: true));
         appStore.setLoading(false);
         setState(() {});
       },
@@ -109,26 +198,26 @@ class _GalleryScreenState extends State<GalleryScreen> {
   }
 
   Future<List<Albums>> fetchAlbums() async {
-    appStore.setLoading(true);
-    if (mPage == 1) albumList.clear();
-    await getAlbums(type: selectedIndex == 0 ? "" : mediaTypeList[selectedIndex].type, userId: widget.userId, page: mPage, groupId: widget.groupId == null ? "" : widget.groupId.toString()).then(
-      (value) {
-        mIsLastPage = value.length != PER_PAGE;
-        albumList.addAll(value);
-        if (albumList.isEmpty && selectedIndex == 0) {
-          isAlbumEmpty = true;
-        }
-        appStore.setLoading(false);
-        setState(() {});
-      },
-    ).catchError(
-      (e) {
-        toast(e.toString(), print: true);
-        appStore.setLoading(false);
-        isError = true;
-        setState(() {});
-      },
-    );
+    // appStore.setLoading(true);
+    // if (mPage == 1) albumList.clear();
+    // await getAlbums(type: selectedIndex == 0 ? "" : mediaTypeList[selectedIndex].type, userId: widget.userId, page: mPage, groupId: widget.groupId == null ? "" : widget.groupId.toString()).then(
+    //   (value) {
+    //     mIsLastPage = value.length != PER_PAGE;
+    //     albumList.addAll(value);
+    //     if (albumList.isEmpty && selectedIndex == 0) {
+    //       isAlbumEmpty = true;
+    //     }
+    //     appStore.setLoading(false);
+    //     setState(() {});
+    //   },
+    // ).catchError(
+    //   (e) {
+    //     toast(e.toString(), print: true);
+    //     appStore.setLoading(false);
+    //     isError = true;
+    //     setState(() {});
+    //   },
+    // );
     return albumList;
   }
 
@@ -170,7 +259,9 @@ class _GalleryScreenState extends State<GalleryScreen> {
                   height: context.height() * 0.8,
                   child: NoDataWidget(
                     imageWidget: NoDataLottieWidget(),
-                    title: isError ? language.somethingWentWrong : language.noDataFound,
+                    title: isError
+                        ? language.somethingWentWrong
+                        : language.noDataFound,
                     onRetry: () {
                       init();
                     },
@@ -185,18 +276,26 @@ class _GalleryScreenState extends State<GalleryScreen> {
                     children: [
                       HorizontalList(
                         itemCount: mediaTypeList.length,
-                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                         itemBuilder: (context, index) {
                           MediaModel item = mediaTypeList[index];
                           return Container(
-                            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                            padding: EdgeInsets.symmetric(
+                                vertical: 8, horizontal: 16),
                             decoration: BoxDecoration(
-                              color: selectedIndex == index ? context.primaryColor : context.cardColor,
+                              color: selectedIndex == index
+                                  ? context.primaryColor
+                                  : context.cardColor,
                               borderRadius: BorderRadius.all(radiusCircular()),
                             ),
                             child: Text(
                               item.title.validate(),
-                              style: boldTextStyle(size: 14, color: selectedIndex == index ? context.cardColor : context.primaryColor),
+                              style: boldTextStyle(
+                                  size: 14,
+                                  color: selectedIndex == index
+                                      ? context.cardColor
+                                      : context.primaryColor),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -219,7 +318,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
                       if (albumList.isEmpty)
                         SizedBox(
                           height: context.height() * 0.74,
-                          child: !widget.canEdit.validate() && !appStore.isLoading
+                          child: !widget.canEdit.validate() &&
+                                  !appStore.isLoading
                               ? NoDataWidget(
                                   imageWidget: NoDataLottieWidget(),
                                   title: language.noDataFound,
@@ -232,7 +332,11 @@ class _GalleryScreenState extends State<GalleryScreen> {
                                   isEmptyList: true,
                                   mediaTypeList: mediaTypeList,
                                   callback: () {
-                                    CreateAlbumScreen(mediaTypeList: mediaTypeList, groupID: widget.groupId).launch(context).then(
+                                    CreateAlbumScreen(
+                                            mediaTypeList: mediaTypeList,
+                                            groupID: widget.groupId)
+                                        .launch(context)
+                                        .then(
                                       (value) {
                                         if (value == true) {
                                           init();
@@ -253,7 +357,11 @@ class _GalleryScreenState extends State<GalleryScreen> {
                                 mediaTypeList: mediaTypeList,
                                 isEmptyList: false,
                                 callback: () {
-                                  CreateAlbumScreen(mediaTypeList: mediaTypeList, groupID: widget.groupId).launch(context).then(
+                                  CreateAlbumScreen(
+                                          mediaTypeList: mediaTypeList,
+                                          groupID: widget.groupId)
+                                      .launch(context)
+                                      .then(
                                     (value) {
                                       if (value == true) {
                                         init();
@@ -268,10 +376,14 @@ class _GalleryScreenState extends State<GalleryScreen> {
                             8.height,
                             GridView.builder(
                               itemCount: albumList.length,
-                              padding: EdgeInsets.only(bottom: mIsLastPage ? 16 : 60, left: 16, right: 16),
+                              padding: EdgeInsets.only(
+                                  bottom: mIsLastPage ? 16 : 60,
+                                  left: 16,
+                                  right: 16),
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
-                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2,
                                 childAspectRatio: 1,
                                 crossAxisSpacing: 8,
@@ -310,8 +422,14 @@ class _GalleryScreenState extends State<GalleryScreen> {
           ),
           Positioned(
             bottom: albumList.isNotEmpty && mPage != 1 ? 8 : null,
-            width: albumList.isNotEmpty && mPage != 1 ? MediaQuery.of(context).size.width : null,
-            child: Observer(builder: (_) => LoadingWidget(isBlurBackground: mPage == 1 ? true : false).center().visible(appStore.isLoading)),
+            width: albumList.isNotEmpty && mPage != 1
+                ? MediaQuery.of(context).size.width
+                : null,
+            child: Observer(
+                builder: (_) =>
+                    LoadingWidget(isBlurBackground: mPage == 1 ? true : false)
+                        .center()
+                        .visible(appStore.isLoading)),
           ),
         ],
       ),

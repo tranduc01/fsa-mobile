@@ -3,12 +3,14 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/components/loading_widget.dart';
 import 'package:socialv/main.dart';
+import 'package:socialv/models/common_models/avatar_urls.dart';
 import 'package:socialv/models/groups/group_response.dart';
 import 'package:socialv/models/members/member_response.dart';
 import 'package:socialv/network/rest_apis.dart';
 import 'package:socialv/screens/search/components/search_group_component.dart';
 import 'package:socialv/screens/search/components/search_member_component.dart';
 
+import '../../models/common_models/links.dart';
 import '../../utils/app_constants.dart';
 
 class SearchFragment extends StatefulWidget {
@@ -20,8 +22,36 @@ class SearchFragment extends StatefulWidget {
   State<SearchFragment> createState() => _SearchFragmentState();
 }
 
-class _SearchFragmentState extends State<SearchFragment> with SingleTickerProviderStateMixin {
-  List<MemberResponse> memberList = [];
+class _SearchFragmentState extends State<SearchFragment>
+    with SingleTickerProviderStateMixin {
+  List<MemberResponse> memberList = [
+    MemberResponse(
+      links: Links(collection: [], self: [], user: []),
+      avatarUrls: AvatarUrls(full: '', thumb: ''),
+      friendshipStatus: false,
+      friendshipStatusSlug: '',
+      id: 1,
+      link: '',
+      mentionName: '',
+      name: 'Tuan',
+      userLogin: 'Tuanbe',
+      isUserVerified: false,
+      lastActive: DateTime.now().toString(),
+    ),
+    MemberResponse(
+      links: Links(collection: [], self: [], user: []),
+      avatarUrls: AvatarUrls(full: '', thumb: ''),
+      friendshipStatus: false,
+      friendshipStatusSlug: '',
+      id: 2,
+      link: '',
+      mentionName: '',
+      name: 'Duc',
+      userLogin: 'Duc',
+      isUserVerified: false,
+      lastActive: DateTime.now().toString(),
+    ),
+  ];
   List<GroupResponse> groupList = [];
 
   List<String> searchOptions = [language.members, language.groups];
@@ -42,7 +72,8 @@ class _SearchFragmentState extends State<SearchFragment> with SingleTickerProvid
     dropdownValue = searchOptions.first;
 
     widget.controller.addListener(() {
-      if (widget.controller.position.pixels == widget.controller.position.maxScrollExtent) {
+      if (widget.controller.position.pixels ==
+          widget.controller.position.maxScrollExtent) {
         if (!mIsLastPage) {
           mPage++;
           setState(() {});
@@ -137,7 +168,9 @@ class _SearchFragmentState extends State<SearchFragment> with SingleTickerProvid
                 Container(
                   width: context.width() * 0.54,
                   margin: EdgeInsets.only(left: 16, right: 8),
-                  decoration: BoxDecoration(color: context.cardColor, borderRadius: radius(commonRadius)),
+                  decoration: BoxDecoration(
+                      color: context.cardColor,
+                      borderRadius: radius(commonRadius)),
                   child: AppTextField(
                     controller: searchController,
                     onChanged: (val) {
@@ -161,7 +194,11 @@ class _SearchFragmentState extends State<SearchFragment> with SingleTickerProvid
                       ).paddingAll(16),
                       suffixIcon: hasShowClearTextIcon
                           ? IconButton(
-                              icon: Icon(Icons.cancel, color: appStore.isDarkMode ? bodyDark : bodyWhite, size: 18),
+                              icon: Icon(Icons.cancel,
+                                  color: appStore.isDarkMode
+                                      ? bodyDark
+                                      : bodyWhite,
+                                  size: 18),
                               onPressed: () {
                                 hideKeyboard(context);
                                 mPage = 1;
@@ -181,13 +218,17 @@ class _SearchFragmentState extends State<SearchFragment> with SingleTickerProvid
                   child: Container(
                     width: context.width() * 0.32,
                     margin: EdgeInsets.only(right: 16, left: 8),
-                    decoration: BoxDecoration(color: context.cardColor, borderRadius: radius(commonRadius)),
+                    decoration: BoxDecoration(
+                        color: context.cardColor,
+                        borderRadius: radius(commonRadius)),
                     child: DropdownButtonHideUnderline(
                       child: ButtonTheme(
                         alignedDropdown: true,
                         child: DropdownButton<String>(
                           borderRadius: BorderRadius.circular(commonRadius),
-                          icon: Icon(Icons.arrow_drop_down, color: appStore.isDarkMode ? bodyDark : bodyWhite),
+                          icon: Icon(Icons.arrow_drop_down,
+                              color:
+                                  appStore.isDarkMode ? bodyDark : bodyWhite),
                           elevation: 8,
                           isExpanded: true,
                           style: primaryTextStyle(),
@@ -201,10 +242,14 @@ class _SearchFragmentState extends State<SearchFragment> with SingleTickerProvid
                               getGroups(text: searchController.text);
                             }
                           },
-                          items: searchOptions.validate().map<DropdownMenuItem<String>>((String value) {
+                          items: searchOptions
+                              .validate()
+                              .map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
-                              child: Text(value, style: primaryTextStyle(), overflow: TextOverflow.ellipsis),
+                              child: Text(value,
+                                  style: primaryTextStyle(),
+                                  overflow: TextOverflow.ellipsis),
                             );
                           }).toList(),
                           value: dropdownValue,
@@ -218,7 +263,9 @@ class _SearchFragmentState extends State<SearchFragment> with SingleTickerProvid
             16.height,
             if (dropdownValue == searchOptions.first)
               SearchMemberComponent(
-                memberList: memberList.isEmpty ? appStore.recentMemberSearchList : memberList,
+                memberList: memberList.isEmpty
+                    ? appStore.recentMemberSearchList
+                    : memberList,
                 showRecent: memberList.isEmpty,
                 callback: () {
                   setState(() {});
@@ -227,7 +274,9 @@ class _SearchFragmentState extends State<SearchFragment> with SingleTickerProvid
             else
               SearchGroupComponent(
                 showRecent: groupList.isEmpty,
-                groupList: groupList.isEmpty ? appStore.recentGroupsSearchList : groupList,
+                groupList: groupList.isEmpty
+                    ? appStore.recentGroupsSearchList
+                    : groupList,
                 callback: () {
                   setState(() {});
                 },
@@ -239,7 +288,9 @@ class _SearchFragmentState extends State<SearchFragment> with SingleTickerProvid
           child: Observer(
             builder: (_) => SizedBox(
               height: mPage == 1 ? context.height() * 0.5 : null,
-              child: LoadingWidget(isBlurBackground: false).center().visible(appStore.isLoading),
+              child: LoadingWidget(isBlurBackground: false)
+                  .center()
+                  .visible(appStore.isLoading),
             ),
           ),
         )

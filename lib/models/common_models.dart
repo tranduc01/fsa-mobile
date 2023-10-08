@@ -7,8 +7,6 @@ import 'package:socialv/screens/blog/screens/blog_list_screen.dart';
 import 'package:socialv/screens/forums/screens/my_forums_screen.dart';
 import 'package:socialv/screens/groups/screens/group_screen.dart';
 import 'package:socialv/screens/lms/screens/course_list_screen.dart';
-import 'package:socialv/screens/notes/screens/note_detail_screen.dart';
-import 'package:socialv/screens/notes/screens/notes_screen.dart';
 import 'package:socialv/screens/profile/screens/profile_friends_screen.dart';
 import 'package:socialv/screens/settings/screens/settings_screen.dart';
 import 'package:socialv/screens/shop/screens/cart_screen.dart';
@@ -17,6 +15,7 @@ import 'package:socialv/screens/shop/screens/shop_screen.dart';
 import 'package:socialv/screens/shop/screens/wishlist_screen.dart';
 import 'package:socialv/screens/stories/screen/user_story_screen.dart';
 
+import '../screens/auction/screen/auction_screen.dart';
 import '../screens/lms/screens/cource_orders_screen.dart';
 import '../screens/subscription/screens/subscription_screen3.dart';
 import '../utils/app_constants.dart';
@@ -58,13 +57,8 @@ List<DrawerModel> getDrawerOptions() {
       attachedScreen: SubscriptionScreen3()));
   list.add(DrawerModel(
     image: ic_buy,
-    title: "Notes",
-    attachedScreen: NotesScreen(),
-  ));
-  list.add(DrawerModel(
-    image: ic_buy,
-    title: "Notes Details",
-    attachedScreen: NoteDetail(),
+    title: "Auction Screen",
+    attachedScreen: AutionScreen(),
   ));
   if (appStore.isLMSEnable == 1 && appStore.isCourseEnable == 1) {
     list.add(DrawerModel(

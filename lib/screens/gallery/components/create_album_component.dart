@@ -17,7 +17,9 @@ class CreateAlbumComponent extends StatefulWidget {
   final Function(int)? onNextPage;
   final int? groupId;
 
-  CreateAlbumComponent({Key? key, required this.mediaTypeList, this.onNextPage, this.groupId}) : super(key: key);
+  CreateAlbumComponent(
+      {Key? key, required this.mediaTypeList, this.onNextPage, this.groupId})
+      : super(key: key);
 
   @override
   State<CreateAlbumComponent> createState() => _CreateAlbumComponentState();
@@ -34,7 +36,24 @@ class _CreateAlbumComponentState extends State<CreateAlbumComponent> {
   FocusNode titleNode = FocusNode();
   FocusNode discNode = FocusNode();
 
-  List<MediaActiveStatusesModel> mediaStatusList = [];
+  List<MediaActiveStatusesModel> mediaStatusList = [
+    MediaActiveStatusesModel(
+        id: 4,
+        label: "AAA",
+        singularName: "BBB",
+        pluralName: "CCC",
+        ttId: 1,
+        callback: "DDD",
+        activityPrivacy: "EEE"),
+    MediaActiveStatusesModel(
+        id: 5,
+        label: "AAA",
+        singularName: "BBB",
+        pluralName: "CCC",
+        ttId: 1,
+        callback: "DDD",
+        activityPrivacy: "EEE"),
+  ];
 
   bool isError = false;
 
@@ -44,28 +63,30 @@ class _CreateAlbumComponentState extends State<CreateAlbumComponent> {
     getMediaStatusList();
 
     if (widget.mediaTypeList.validate().isNotEmpty) {
-      dropdownTypeValue = widget.mediaTypeList[(widget.groupId != null) ? 2 : 1];
-      selectedAlbumMedia = widget.mediaTypeList[(widget.groupId != null) ? 2 : 1];
+      dropdownTypeValue =
+          widget.mediaTypeList[(widget.groupId != null) ? 2 : 1];
+      selectedAlbumMedia =
+          widget.mediaTypeList[(widget.groupId != null) ? 2 : 1];
     }
   }
 
   Future<List<MediaActiveStatusesModel>> getMediaStatusList() async {
-    appStore.setLoading(true);
-    await getMediaStatus(type: widget.groupId == null ? Component.members : Component.groups).then(
-      (value) {
-        mediaStatusList.addAll(value);
-        dropdownStatusValue = mediaStatusList.first;
-        appStore.setLoading(false);
-        isError = false;
-        setState(() {});
-      },
-    ).catchError(
-      (e) {
-        isError = true;
-        appStore.setLoading(false);
-        setState(() {});
-      },
-    );
+    // appStore.setLoading(true);
+    // await getMediaStatus(type: widget.groupId == null ? Component.members : Component.groups).then(
+    //   (value) {
+    //     mediaStatusList.addAll(value);
+    //     dropdownStatusValue = mediaStatusList.first;
+    //     appStore.setLoading(false);
+    //     isError = false;
+    //     setState(() {});
+    //   },
+    // ).catchError(
+    //   (e) {
+    //     isError = true;
+    //     appStore.setLoading(false);
+    //     setState(() {});
+    //   },
+    // );
     return mediaStatusList;
   }
 
@@ -76,7 +97,8 @@ class _CreateAlbumComponentState extends State<CreateAlbumComponent> {
         setState(() {});
         createAlbum(
           groupID: widget.groupId,
-          component: widget.groupId == null ? Component.members : Component.groups,
+          component:
+              widget.groupId == null ? Component.members : Component.groups,
           title: titleCont.text,
           type: selectedAlbumMedia!.type.validate(),
           description: discCont.text,
@@ -120,7 +142,9 @@ class _CreateAlbumComponentState extends State<CreateAlbumComponent> {
               height: context.height() * 0.8,
               child: NoDataWidget(
                 imageWidget: NoDataLottieWidget(),
-                title: isError ? language.somethingWentWrong : language.noDataFound,
+                title: isError
+                    ? language.somethingWentWrong
+                    : language.noDataFound,
                 onRetry: () {
                   getMediaStatusList();
                 },
@@ -134,7 +158,8 @@ class _CreateAlbumComponentState extends State<CreateAlbumComponent> {
               clipBehavior: Clip.antiAliasWithSaveLayer,
               padding: EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(defaultRadius)),
+                borderRadius:
+                    BorderRadius.vertical(top: Radius.circular(defaultRadius)),
                 color: context.cardColor,
               ),
               child: SingleChildScrollView(
@@ -145,7 +170,9 @@ class _CreateAlbumComponentState extends State<CreateAlbumComponent> {
                     24.height,
                     Text(
                       "1. ${language.addAlbumDetails}",
-                      style: primaryTextStyle(color: appStore.isDarkMode ? bodyDark : bodyWhite, size: 18),
+                      style: primaryTextStyle(
+                          color: appStore.isDarkMode ? bodyDark : bodyWhite,
+                          size: 18),
                     ),
                     16.height,
                     Row(
@@ -156,18 +183,25 @@ class _CreateAlbumComponentState extends State<CreateAlbumComponent> {
                           Container(
                             height: 40,
                             width: 200,
-                            decoration: BoxDecoration(color: context.scaffoldBackgroundColor, borderRadius: radius(commonRadius)),
+                            decoration: BoxDecoration(
+                                color: context.scaffoldBackgroundColor,
+                                borderRadius: radius(commonRadius)),
                             child: DropdownButtonHideUnderline(
                               child: ButtonTheme(
                                 alignedDropdown: true,
                                 child: DropdownButton<MediaModel>(
                                   isExpanded: true,
-                                  borderRadius: BorderRadius.circular(commonRadius),
+                                  borderRadius:
+                                      BorderRadius.circular(commonRadius),
                                   value: dropdownTypeValue,
-                                  icon: Icon(Icons.arrow_drop_down, color: appStore.isDarkMode ? bodyDark : bodyWhite),
+                                  icon: Icon(Icons.arrow_drop_down,
+                                      color: appStore.isDarkMode
+                                          ? bodyDark
+                                          : bodyWhite),
                                   elevation: 8,
                                   style: primaryTextStyle(),
-                                  underline: Container(height: 2, color: appColorPrimary),
+                                  underline: Container(
+                                      height: 2, color: appColorPrimary),
                                   alignment: Alignment.bottomCenter,
                                   onChanged: (MediaModel? newValue) {
                                     setState(() {
@@ -175,10 +209,14 @@ class _CreateAlbumComponentState extends State<CreateAlbumComponent> {
                                       selectedAlbumMedia = newValue;
                                     });
                                   },
-                                  items: widget.mediaTypeList.sublist((widget.groupId != null) ? 2 : 1).map<DropdownMenuItem<MediaModel>>((e) {
+                                  items: widget.mediaTypeList
+                                      .sublist((widget.groupId != null) ? 2 : 1)
+                                      .map<DropdownMenuItem<MediaModel>>((e) {
                                     return DropdownMenuItem<MediaModel>(
                                       value: e,
-                                      child: Text('${e.title.validate()}', overflow: TextOverflow.ellipsis, maxLines: 1),
+                                      child: Text('${e.title.validate()}',
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1),
                                     );
                                   }).toList(),
                                 ),
@@ -195,28 +233,43 @@ class _CreateAlbumComponentState extends State<CreateAlbumComponent> {
                         Container(
                           height: 40,
                           width: 200,
-                          decoration: BoxDecoration(color: context.scaffoldBackgroundColor, borderRadius: radius(commonRadius)),
+                          decoration: BoxDecoration(
+                              color: context.scaffoldBackgroundColor,
+                              borderRadius: radius(commonRadius)),
                           child: DropdownButtonHideUnderline(
                             child: ButtonTheme(
                               alignedDropdown: true,
                               child: DropdownButton<MediaActiveStatusesModel>(
-                                borderRadius: BorderRadius.circular(commonRadius),
+                                borderRadius:
+                                    BorderRadius.circular(commonRadius),
                                 value: dropdownStatusValue,
                                 isExpanded: true,
-                                icon: Icon(Icons.arrow_drop_down, color: appStore.isDarkMode ? bodyDark : bodyWhite),
+                                icon: Icon(Icons.arrow_drop_down,
+                                    color: appStore.isDarkMode
+                                        ? bodyDark
+                                        : bodyWhite),
                                 elevation: 8,
                                 style: primaryTextStyle(),
-                                underline: Container(height: 2, color: appColorPrimary),
+                                underline: Container(
+                                    height: 2, color: appColorPrimary),
                                 alignment: Alignment.bottomCenter,
-                                onChanged: (MediaActiveStatusesModel? newValue) {
+                                onChanged:
+                                    (MediaActiveStatusesModel? newValue) {
                                   setState(() {
                                     dropdownStatusValue = newValue!;
                                   });
                                 },
-                                items: mediaStatusList.map<DropdownMenuItem<MediaActiveStatusesModel>>((e) {
-                                  return DropdownMenuItem<MediaActiveStatusesModel>(
+                                items: mediaStatusList.map<
+                                    DropdownMenuItem<
+                                        MediaActiveStatusesModel>>((e) {
+                                  return DropdownMenuItem<
+                                      MediaActiveStatusesModel>(
                                     value: e,
-                                    child: e.label != language.all ? Text('${e.label.validate()}', overflow: TextOverflow.ellipsis, maxLines: 1) : Offstage(),
+                                    child: e.label != language.all
+                                        ? Text('${e.label.validate()}',
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1)
+                                        : Offstage(),
                                   );
                                 }).toList(),
                               ),
@@ -287,7 +340,9 @@ class _CreateAlbumComponentState extends State<CreateAlbumComponent> {
               ),
             ),
           Positioned(
-            child: Observer(builder: (_) => LoadingWidget().center().visible(appStore.isLoading)),
+            child: Observer(
+                builder: (_) =>
+                    LoadingWidget().center().visible(appStore.isLoading)),
           ),
         ],
       ),
