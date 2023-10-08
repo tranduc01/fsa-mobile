@@ -1,21 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:socialv/components/loading_widget.dart';
-import 'package:socialv/components/no_data_lottie_widget.dart';
-import 'package:socialv/main.dart';
 import 'package:socialv/models/common_models/post_mdeia_model.dart';
 import 'package:socialv/models/posts/comment_model.dart';
 import 'package:socialv/models/posts/get_post_likes_model.dart';
 import 'package:socialv/models/posts/post_model.dart';
 import 'package:socialv/models/reactions/reactions_count_model.dart';
-import 'package:socialv/network/rest_apis.dart';
 import 'package:socialv/screens/dashboard_screen.dart';
 import 'package:socialv/screens/home/components/ad_component.dart';
-import 'package:socialv/screens/home/components/initial_home_component.dart';
 import 'package:socialv/screens/home/components/suggested_user_component.dart';
 import 'package:socialv/screens/post/components/post_component.dart';
-import 'package:socialv/screens/stories/component/home_story_component.dart';
 
 import '../../utils/app_constants.dart';
 
