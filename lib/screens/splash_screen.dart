@@ -81,10 +81,6 @@ class _SplashScreenState extends State<SplashScreen> {
           begin: Alignment.topLeft,
           end: Alignment(0.8, 1),
           colors: <Color>[
-            // Color.fromARGB(250, 58, 16, 120),
-            // Color.fromARGB(250, 78, 49, 170),
-            // Color.fromARGB(250, 47, 88, 205),
-            // Color.fromARGB(250, 55, 149, 189),
             Color.fromRGBO(255, 192, 203, 0.8),
             Color.fromRGBO(255, 105, 180, 0.8)
           ],

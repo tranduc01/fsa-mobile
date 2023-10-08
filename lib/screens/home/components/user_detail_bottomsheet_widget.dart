@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/components/loading_widget.dart';
-import 'package:socialv/controllers/UserController.dart';
+import 'package:socialv/controllers/user_controller.dart';
 import 'package:socialv/main.dart';
 import 'package:socialv/models/common_models.dart';
-import 'package:socialv/network/rest_apis.dart';
 import 'package:socialv/screens/profile/screens/edit_profile_screen.dart';
 import 'package:socialv/utils/app_constants.dart';
-import 'package:socialv/utils/cached_network_image.dart';
 
 import '../../auth/screens/sign_in_screen.dart';
 
@@ -190,7 +187,7 @@ class _UserDetailBottomSheetWidgetState
                         primaryColor: appColorPrimary,
                         title: language.logoutConfirmation,
                         onAccept: (s) {
-                          logout(context);
+                          userController.Logout();
                         },
                       );
                     },
