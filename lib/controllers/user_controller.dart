@@ -35,12 +35,20 @@ class UserController extends GetxController {
   }
 
   void Login(String email, String password) async {
-    isLoggedIn.value = true;
     var url = Uri.parse('http://orchidsharingapp.somee.com/api/Auth/login');
-    if (email == '123' && password == '123456') {
+
+    var response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({"email": email, "password": password}),
+    );
+
+    if (response.statusCode == 200) {
       isLoggedIn.value = true;
-      push(DashboardScreen(),
-          isNewTask: true, pageRouteAnimation: PageRouteAnimation.Slide);
+    } else {
+      print('Request failed with status: ${response.statusCode}');
     }
   }
 

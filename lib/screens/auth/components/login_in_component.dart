@@ -2,13 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:socialv/controllers/UserController.dart';
+import 'package:socialv/controllers/user_controller.dart';
 import 'package:socialv/main.dart';
-import 'package:socialv/network/rest_apis.dart';
 import 'package:socialv/screens/auth/screens/forget_password_screen.dart';
 import 'package:socialv/screens/dashboard_screen.dart';
-import 'package:socialv/screens/post/screens/single_post_screen.dart';
-import 'package:socialv/services/login_service.dart';
 
 import '../../../utils/app_constants.dart';
 
@@ -171,10 +168,48 @@ class _LoginInComponentState extends State<LoginInComponent> {
 
                           userController.Login(nameCont.text.trim().validate(),
                               passwordCont.text.trim().validate());
-                          if (!userController.isLoggedIn.value) {
-                            Future.delayed(Duration(seconds: 2), () {
-                              Navigator.pop(context);
+
+                          if (userController.isLoggedIn.value) {
+                            Future.delayed(Duration(seconds: 3), () {
+                              //Navigator.pop(context);
                               toast('Login Successfully');
+                              push(DashboardScreen(),
+                                  isNewTask: true,
+                                  pageRouteAnimation: PageRouteAnimation.Slide);
+                            });
+                          } else {
+                            Future.delayed(Duration(seconds: 3), () {
+                              Navigator.pop(context);
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: Text('Login Failed',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.bold)),
+                                    content: Text(
+                                      'Please check your Email and Password!',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    actions: [
+                                      Center(
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text('OK'),
+                                        ),
+                                      )
+                                    ],
+                                  );
+                                },
+                              );
                             });
                           }
                         } else {

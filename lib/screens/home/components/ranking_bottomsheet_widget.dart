@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:socialv/components/loading_widget.dart';
 import 'package:socialv/main.dart';
 import 'package:socialv/models/common_models.dart';
-import 'package:socialv/network/rest_apis.dart';
-import 'package:socialv/screens/profile/screens/edit_profile_screen.dart';
-import 'package:socialv/utils/app_constants.dart';
-import 'package:socialv/utils/cached_network_image.dart';
 
 class RankingBottomSheetWidget extends StatefulWidget {
   final VoidCallback? callback;

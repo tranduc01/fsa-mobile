@@ -1,18 +1,11 @@
-import 'dart:convert';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:socialv/controllers/UserController.dart';
+import 'package:socialv/controllers/user_controller.dart';
 import 'package:socialv/main.dart';
-import 'package:socialv/network/rest_apis.dart';
-import 'package:socialv/screens/dashboard_screen.dart';
 
 import '../../../utils/app_constants.dart';
-import '../../post/screens/single_post_screen.dart';
-import '../screens/sign_in_screen.dart';
 
 class SignUpComponent extends StatefulWidget {
   final VoidCallback? callback;
@@ -271,7 +264,7 @@ class _SignUpComponentState extends State<SignUpComponent> {
                                   passwordCont.text.trim().validate(),
                                   confirmPasswordCont.text.trim().validate());
                               if (userController.isRegistered.value) {
-                                Future.delayed(Duration(seconds: 2), () {
+                                Future.delayed(Duration(seconds: 3), () {
                                   Navigator.pop(context);
                                   widget.callback?.call();
                                   toast('Registered Successfully');
