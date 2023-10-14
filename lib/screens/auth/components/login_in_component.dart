@@ -169,16 +169,13 @@ class _LoginInComponentState extends State<LoginInComponent> {
                           userController.Login(nameCont.text.trim().validate(),
                               passwordCont.text.trim().validate());
 
-                          if (userController.isLoggedIn.value) {
-                            Future.delayed(Duration(seconds: 3), () {
-                              //Navigator.pop(context);
+                          Future.delayed(Duration(seconds: 3), () {
+                            if (userController.isLoggedIn.value) {
                               toast('Login Successfully');
                               push(DashboardScreen(),
                                   isNewTask: true,
                                   pageRouteAnimation: PageRouteAnimation.Slide);
-                            });
-                          } else {
-                            Future.delayed(Duration(seconds: 3), () {
+                            } else {
                               Navigator.pop(context);
                               showDialog(
                                 context: context,
@@ -210,8 +207,8 @@ class _LoginInComponentState extends State<LoginInComponent> {
                                   );
                                 },
                               );
-                            });
-                          }
+                            }
+                          });
                         } else {
                           appStore.setLoading(false);
                         }
