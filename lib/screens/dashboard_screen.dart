@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:socialv/main.dart';
@@ -21,6 +22,8 @@ import 'package:socialv/screens/post/screens/single_post_screen.dart';
 import 'package:socialv/screens/profile/screens/member_profile_screen.dart';
 import 'package:socialv/utils/app_constants.dart';
 import 'package:socialv/utils/cached_network_image.dart';
+
+import '../controllers/user_controller.dart';
 
 int selectedIndex = 0;
 
@@ -56,6 +59,8 @@ class _DashboardScreenState extends State<DashboardScreen>
   bool onAnimationEnd = true;
 
   List<Widget> appFragments = [];
+
+  late UserController userController = Get.put(UserController());
 
   @override
   void initState() {
@@ -334,58 +339,76 @@ class _DashboardScreenState extends State<DashboardScreen>
                           height: 30,
                           width: 30,
                           fit: BoxFit.fitWidth,
-                          color: context.iconColor),
+                          color: Colors.black),
                     ),
-                    IconButton(
-                      highlightColor: Colors.transparent,
-                      splashColor: Colors.transparent,
-                      onPressed: () {
-                        showModalBottomSheet(
-                          elevation: 0,
-                          context: context,
-                          isScrollControlled: true,
-                          backgroundColor: Colors.transparent,
-                          transitionAnimationController: _animationController,
-                          builder: (context) {
-                            return FractionallySizedBox(
-                              heightFactor: 0.93,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Container(
-                                    width: 45,
-                                    height: 5,
-                                    //clipBehavior: Clip.hardEdge,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(16),
-                                        color: Colors.white),
+                    Obx(
+                      () => IconButton(
+                          highlightColor: Colors.transparent,
+                          splashColor: Colors.transparent,
+                          onPressed: () {
+                            showModalBottomSheet(
+                              elevation: 0,
+                              context: context,
+                              isScrollControlled: true,
+                              backgroundColor: Colors.transparent,
+                              transitionAnimationController:
+                                  _animationController,
+                              builder: (context) {
+                                return FractionallySizedBox(
+                                  heightFactor: 0.93,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Container(
+                                        width: 45,
+                                        height: 5,
+                                        //clipBehavior: Clip.hardEdge,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(16),
+                                            color: Colors.white),
+                                      ),
+                                      8.height,
+                                      Container(
+                                        clipBehavior:
+                                            Clip.antiAliasWithSaveLayer,
+                                        decoration: BoxDecoration(
+                                          color: context.cardColor,
+                                          borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(16),
+                                              topRight: Radius.circular(16)),
+                                        ),
+                                        child: UserDetailBottomSheetWidget(
+                                          callback: () {
+                                            //mPage = 1;
+                                            //future = getPostList();
+                                          },
+                                        ),
+                                      ).expand(),
+                                    ],
                                   ),
-                                  8.height,
-                                  Container(
-                                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                                    decoration: BoxDecoration(
-                                      color: context.cardColor,
-                                      borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(16),
-                                          topRight: Radius.circular(16)),
-                                    ),
-                                    child: UserDetailBottomSheetWidget(
-                                      callback: () {
-                                        //mPage = 1;
-                                        //future = getPostList();
-                                      },
-                                    ),
-                                  ).expand(),
-                                ],
-                              ),
+                                );
+                              },
                             );
                           },
-                        );
-                      },
-                      icon: Image.asset("assets/images/flower-pot.png",
-                              height: 30, width: 30, fit: BoxFit.cover)
-                          .cornerRadiusWithClipRRect(15),
-                    ),
+                          icon: userController.isLoggedIn.value
+                              ? userController
+                                      .user.value.avatarUrl.isEmptyOrNull
+                                  ? Image.asset("assets/images/profile.gif",
+                                          height: 60,
+                                          width: 60,
+                                          fit: BoxFit.cover)
+                                      .cornerRadiusWithClipRRect(15)
+                                  : Image.network(
+                                          userController.user.value.avatarUrl!,
+                                          height: 60,
+                                          width: 60,
+                                          fit: BoxFit.cover)
+                                      .cornerRadiusWithClipRRect(15)
+                              : Image.asset("assets/images/profile.gif",
+                                      height: 60, width: 60, fit: BoxFit.cover)
+                                  .cornerRadiusWithClipRRect(15)),
+                    )
                   ],
                   bottom: TabBar(
                     indicatorColor: context.primaryColor,
@@ -406,7 +429,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                           fit: BoxFit.cover,
                           color: selectedIndex == 0
                               ? context.primaryColor
-                              : context.iconColor,
+                              : Colors.black,
                         ).paddingSymmetric(vertical: 11),
                       ),
                       Tooltip(
@@ -420,7 +443,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                           fit: BoxFit.cover,
                           color: selectedIndex == 1
                               ? context.primaryColor
-                              : context.iconColor,
+                              : Colors.black,
                         ).paddingSymmetric(vertical: 11),
                       ),
                       Tooltip(
@@ -436,7 +459,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                           fit: BoxFit.fill,
                           color: selectedIndex == 2
                               ? context.primaryColor
-                              : context.iconColor,
+                              : Colors.black,
                         ).paddingSymmetric(vertical: 9),
                       ),
                       Tooltip(
@@ -457,7 +480,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                                       height: 24,
                                       width: 24,
                                       fit: BoxFit.cover,
-                                      color: context.iconColor,
+                                      color: Colors.black,
                                     ).paddingSymmetric(vertical: 11),
                                     if (appStore.notificationCount != 0)
                                       Positioned(
@@ -508,7 +531,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                           fit: BoxFit.cover,
                           color: selectedIndex == 4
                               ? context.primaryColor
-                              : context.iconColor,
+                              : Colors.black,
                         ).paddingSymmetric(vertical: 11),
                       ),
                     ],
@@ -551,7 +574,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                               8.height,
                               Container(
                                 padding: EdgeInsets.all(16),
-                                width: context.width(),
+                                width: MediaQuery.of(context).size.width,
                                 decoration: BoxDecoration(
                                   color: context.cardColor,
                                   borderRadius: BorderRadius.only(
