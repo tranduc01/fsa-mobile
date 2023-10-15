@@ -85,7 +85,7 @@ class _AutionScreenState extends State<AutionScreen> {
                 ),
               ),
               Positioned(
-                bottom: 60,
+                bottom: 20,
                 left: 13,
                 child: Container(
                   padding: EdgeInsets.all(8.0),
