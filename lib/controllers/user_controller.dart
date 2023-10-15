@@ -3,11 +3,13 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:nb_utils/nb_utils.dart';
 
+import '../models/common_models/user.dart';
 import '../screens/dashboard_screen.dart';
 
 class UserController extends GetxController {
   var isLoggedIn = false.obs;
   var isRegistered = false.obs;
+  var user = User().obs;
 
   void Register(String name, String email, String password,
       String confirmPassword) async {
@@ -47,6 +49,7 @@ class UserController extends GetxController {
 
     if (response.statusCode == 200) {
       isLoggedIn.value = true;
+      user.value = User.fromJson(jsonDecode(response.body)['user']);
     } else {
       print('Request failed with status: ${response.statusCode}');
     }

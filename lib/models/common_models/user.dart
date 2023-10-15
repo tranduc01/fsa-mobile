@@ -3,11 +3,22 @@ class User {
   String? href;
   String? taxonomy;
   int? count;
-  int? id;
+  String? id;
   bool? templated;
   String? name;
+  String? userName;
+  String? avatarUrl;
 
-  User({this.embeddable, this.href, this.taxonomy, this.count, this.id, this.templated, this.name});
+  User(
+      {this.embeddable,
+      this.href,
+      this.taxonomy,
+      this.count,
+      this.id,
+      this.templated,
+      this.name,
+      this.userName,
+      this.avatarUrl});
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
@@ -18,6 +29,8 @@ class User {
       id: json['id'],
       templated: json['templated'],
       name: json['name'],
+      userName: json['userName'],
+      avatarUrl: json['avatarUrl'],
     );
   }
 

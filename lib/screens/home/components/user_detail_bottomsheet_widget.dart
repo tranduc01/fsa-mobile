@@ -63,9 +63,18 @@ class _UserDetailBottomSheetWidgetState
                     userController.isLoggedIn.value
                         ? Row(
                             children: [
-                              Image.asset("assets/images/flower-pot.png",
-                                      height: 62, width: 62, fit: BoxFit.cover)
-                                  .cornerRadiusWithClipRRect(100),
+                              userController.user.value.avatarUrl.isEmptyOrNull
+                                  ? Image.asset("assets/images/profile.gif",
+                                          height: 62,
+                                          width: 62,
+                                          fit: BoxFit.cover)
+                                      .cornerRadiusWithClipRRect(100)
+                                  : Image.network(
+                                          userController.user.value.avatarUrl!,
+                                          height: 62,
+                                          width: 62,
+                                          fit: BoxFit.cover)
+                                      .cornerRadiusWithClipRRect(100),
                               //cachedImage(appStore.loginAvatarUrl, height: 62, width: 62, fit: BoxFit.cover).cornerRadiusWithClipRRect(100),
                               16.width,
                               Column(
@@ -73,10 +82,10 @@ class _UserDetailBottomSheetWidgetState
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Text('Tran Duc',
+                                  Text(userController.user.value.name!,
                                       style: boldTextStyle(size: 18)),
                                   8.height,
-                                  Text('doantranduc01@gmail.com',
+                                  Text(userController.user.value.userName!,
                                       style: secondaryTextStyle(),
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 1),
@@ -98,7 +107,7 @@ class _UserDetailBottomSheetWidgetState
                         : InkWell(
                             child: Row(
                               children: [
-                                Image.asset("assets/images/flower-pot.png",
+                                Image.asset("assets/images/profile.gif",
                                         height: 62,
                                         width: 62,
                                         fit: BoxFit.cover)
