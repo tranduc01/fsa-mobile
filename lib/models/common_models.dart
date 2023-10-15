@@ -15,6 +15,7 @@ import 'package:socialv/screens/shop/screens/shop_screen.dart';
 import 'package:socialv/screens/shop/screens/wishlist_screen.dart';
 import 'package:socialv/screens/stories/screen/user_story_screen.dart';
 
+import '../screens/auction/screen/auction_screen.dart';
 import '../screens/lms/screens/cource_orders_screen.dart';
 import '../screens/subscription/screens/subscription_screen3.dart';
 import '../utils/app_constants.dart';
@@ -54,6 +55,11 @@ List<DrawerModel> getDrawerOptions() {
       image: ic_buy,
       title: "Supscription",
       attachedScreen: SubscriptionScreen3()));
+  list.add(DrawerModel(
+    image: ic_buy,
+    title: "Auction Screen",
+    attachedScreen: AutionScreen(),
+  ));
   if (appStore.isLMSEnable == 1 && appStore.isCourseEnable == 1) {
     list.add(DrawerModel(
         image: ic_book,

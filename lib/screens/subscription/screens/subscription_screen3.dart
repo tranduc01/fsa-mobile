@@ -11,6 +11,7 @@ class _SubscriptionScreen3 extends State<SubscriptionScreen3> {
       "https://scontent.fsgn5-14.fna.fbcdn.net/v/t1.15752-9/368880605_308510311698750_1411479145021421749_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=ae9488&_nc_ohc=km19GMKqkR0AX_qWzd-&_nc_ht=scontent.fsgn5-14.fna&oh=03_AdQntgZRqpL_W9TL3DtgoweirTR1z7mtU3CnCTRLKKsKwg&oe=650C55E3";
   Color _backgroundColor = Color.fromRGBO(0, 61, 70, 1);
   Color _color = Color.fromRGBO(98, 121, 193, 1);
+  bool tap = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -466,31 +467,37 @@ class _SubscriptionScreen3 extends State<SubscriptionScreen3> {
                   Text(
                     "Trial period",
                     style: TextStyle(
-                      color: Colors.white,
+                      color: tap ? Colors.white : Colors.amber,
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Container(
-                    margin: EdgeInsets.symmetric(
-                      horizontal: 16.0,
-                      vertical: 16.0,
-                    ),
-                    height: 40.0,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(4.0),
-                    ),
-                    child: Center(
-                      child: Text(
-                        "Try for free",
-                        style: TextStyle(
-                          color: _color,
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
+                  GestureDetector(
+                    child: Container(
+                      margin: EdgeInsets.symmetric(
+                        horizontal: 16.0,
+                        vertical: 16.0,
+                      ),
+                      height: 40.0,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(4.0),
+                      ),
+                      child: Center(
+                        child: Text(
+                          "Try for free",
+                          style: TextStyle(
+                            color: _color,
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
+                    onTap: () {
+                      tap = tap ? true : false;
+                      setState(() {});
+                    },
                   ),
                   Text(
                     "By clicking subscribe, you agree to the rules",

@@ -5,7 +5,6 @@ import 'package:socialv/components/loading_widget.dart';
 import 'package:socialv/components/no_data_lottie_widget.dart';
 import 'package:socialv/main.dart';
 import 'package:socialv/models/forums/forum_model.dart';
-import 'package:socialv/network/rest_apis.dart';
 import 'package:socialv/screens/dashboard_screen.dart';
 import 'package:socialv/screens/forums/components/forums_card_component.dart';
 import 'package:socialv/screens/forums/screens/forum_detail_screen.dart';
@@ -22,7 +21,41 @@ class ForumsFragment extends StatefulWidget {
 }
 
 class _ForumsFragment extends State<ForumsFragment> {
-  List<ForumModel> forumsList = [];
+  List<ForumModel> forumsList = [
+    ForumModel(
+      groupDetails: [],
+      id: 1,
+      isPrivate: 0,
+      title: 'Hội những người mê hoa lan vãi cả lồn',
+      description: 'Ai có đam mê thì vào đây mình thẩm du',
+      postCount: '10',
+      topicCount: '10',
+      freshness: [],
+      type: 'type',
+    ),
+    ForumModel(
+      groupDetails: [],
+      id: 3,
+      isPrivate: 0,
+      title: 'Hoa lan là nhất',
+      description: 'Ai có đam mê thì vào đây mình thẩm du',
+      postCount: '10',
+      topicCount: '10',
+      freshness: [],
+      type: 'type',
+    ),
+    ForumModel(
+      groupDetails: [],
+      id: 2,
+      isPrivate: 0,
+      title: 'Bán hoa dâm bụt',
+      description: 'Ai có đam mê thì vào đây mình thẩm du',
+      postCount: '10',
+      topicCount: '10',
+      freshness: [],
+      type: 'type',
+    )
+  ];
   late Future<List<ForumModel>> future;
 
   TextEditingController searchController = TextEditingController();
@@ -41,7 +74,8 @@ class _ForumsFragment extends State<ForumsFragment> {
     widget.controller.addListener(() {
       /// pagination
       if (selectedIndex == 2) {
-        if (widget.controller.position.pixels == widget.controller.position.maxScrollExtent) {
+        if (widget.controller.position.pixels ==
+            widget.controller.position.maxScrollExtent) {
           if (!mIsLastPage) {
             mPage++;
             setState(() {});
@@ -78,19 +112,19 @@ class _ForumsFragment extends State<ForumsFragment> {
   }
 
   Future<List<ForumModel>> getForums() async {
-    appStore.setLoading(true);
-    await getForumList(page: mPage, keyword: searchController.text).then((value) {
-      if (mPage == 1) forumsList.clear();
-      mIsLastPage = value.length != PER_PAGE;
-      forumsList.addAll(value);
-      setState(() {});
+    // appStore.setLoading(true);
+    // await getForumList(page: mPage, keyword: searchController.text).then((value) {
+    //   if (mPage == 1) forumsList.clear();
+    //   mIsLastPage = value.length != PER_PAGE;
+    //   forumsList.addAll(value);
+    //   setState(() {});
 
-      appStore.setLoading(false);
-    }).catchError((e) {
-      isError = true;
-      appStore.setLoading(false);
-      toast(e.toString(), print: true);
-    });
+    //   appStore.setLoading(false);
+    // }).catchError((e) {
+    //   isError = true;
+    //   appStore.setLoading(false);
+    //   toast(e.toString(), print: true);
+    // });
 
     return forumsList;
   }
@@ -115,7 +149,8 @@ class _ForumsFragment extends State<ForumsFragment> {
         Container(
           width: context.width() - 32,
           margin: EdgeInsets.only(left: 16, right: 8),
-          decoration: BoxDecoration(color: context.cardColor, borderRadius: radius(commonRadius)),
+          decoration: BoxDecoration(
+              color: context.cardColor, borderRadius: radius(commonRadius)),
           child: AppTextField(
             controller: searchController,
             textFieldType: TextFieldType.USERNAME,
@@ -136,7 +171,9 @@ class _ForumsFragment extends State<ForumsFragment> {
               ).paddingAll(16),
               suffixIcon: hasShowClearTextIcon
                   ? IconButton(
-                      icon: Icon(Icons.cancel, color: appStore.isDarkMode ? bodyDark : bodyWhite, size: 18),
+                      icon: Icon(Icons.cancel,
+                          color: appStore.isDarkMode ? bodyDark : bodyWhite,
+                          size: 18),
                       onPressed: () {
                         hideKeyboard(context);
                         hasShowClearTextIcon = false;
@@ -162,7 +199,9 @@ class _ForumsFragment extends State<ForumsFragment> {
                     height: context.height() * 0.5,
                     child: NoDataWidget(
                       imageWidget: NoDataLottieWidget(),
-                      title: isError ? language.somethingWentWrong : language.noDataFound,
+                      title: isError
+                          ? language.somethingWentWrong
+                          : language.noDataFound,
                       onRetry: () {
                         LiveStream().emit(RefreshForumsFragment);
                       },
@@ -177,7 +216,9 @@ class _ForumsFragment extends State<ForumsFragment> {
                       height: context.height() * 0.5,
                       child: NoDataWidget(
                         imageWidget: NoDataLottieWidget(),
-                        title: isError ? language.somethingWentWrong : language.noDataFound,
+                        title: isError
+                            ? language.somethingWentWrong
+                            : language.noDataFound,
                         onRetry: () {
                           LiveStream().emit(RefreshForumsFragment);
                         },
@@ -188,8 +229,10 @@ class _ForumsFragment extends State<ForumsFragment> {
                     return AnimatedListView(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
-                      slideConfiguration: SlideConfiguration(delay: 80.milliseconds, verticalOffset: 300),
-                      padding: EdgeInsets.only(left: 16, right: 16, bottom: 50, top: 16),
+                      slideConfiguration: SlideConfiguration(
+                          delay: 80.milliseconds, verticalOffset: 300),
+                      padding: EdgeInsets.only(
+                          left: 16, right: 16, bottom: 50, top: 16),
                       itemCount: forumsList.length,
                       itemBuilder: (context, index) {
                         ForumModel data = forumsList[index];
@@ -233,7 +276,8 @@ class _ForumsFragment extends State<ForumsFragment> {
                 if (appStore.isLoading) {
                   return Positioned(
                     bottom: mPage != 1 ? 10 : null,
-                    child: LoadingWidget(isBlurBackground: mPage == 1 ? true : false),
+                    child: LoadingWidget(
+                        isBlurBackground: mPage == 1 ? true : false),
                   );
                 } else {
                   return Offstage();

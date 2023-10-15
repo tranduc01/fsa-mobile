@@ -29,7 +29,20 @@ class SingleAlbumDetailScreen extends StatefulWidget {
 }
 
 class _SingleAlbumDetailScreenState extends State<SingleAlbumDetailScreen> {
-  List<AlbumMediaListModel> albumMediaList = [];
+  List<AlbumMediaListModel> albumMediaList = [
+    AlbumMediaListModel(
+        id: 1,
+        url: 'https://picsum.photos/seed/picsum/200/300',
+        canDelete: true),
+    AlbumMediaListModel(
+        id: 2,
+        url: 'https://picsum.photos/seed/picsum/200/300',
+        canDelete: true),
+    AlbumMediaListModel(
+        id: 3,
+        url: 'https://picsum.photos/seed/picsum/200/300',
+        canDelete: true),
+  ];
   ScrollController scrollCont = ScrollController();
   late Future<List<AlbumMediaListModel>> future;
   bool isError = false;
@@ -56,26 +69,26 @@ class _SingleAlbumDetailScreenState extends State<SingleAlbumDetailScreen> {
   }
 
   Future<List<AlbumMediaListModel>> getAlbumDetailsList() async {
-    appStore.setLoading(true);
-    if (mPage == 1) albumMediaList.clear();
+    // appStore.setLoading(true);
+    // if (mPage == 1) albumMediaList.clear();
 
-    await getAlbumDetails(
-            galleryID: widget.album.id.validate().toInt(), page: mPage)
-        .then(
-      (value) {
-        albumMediaList.addAll(value);
-        mIsLastPage = value.length != PER_PAGE;
-        appStore.setLoading(false);
-        setState(() {});
-      },
-    ).catchError(
-      (e) {
-        toast(e.toString(), print: true);
-        appStore.setLoading(false);
-        isError = true;
-        setState(() {});
-      },
-    );
+    // await getAlbumDetails(
+    //         galleryID: widget.album.id.validate().toInt(), page: mPage)
+    //     .then(
+    //   (value) {
+    //     albumMediaList.addAll(value);
+    //     mIsLastPage = value.length != PER_PAGE;
+    //     appStore.setLoading(false);
+    //     setState(() {});
+    //   },
+    // ).catchError(
+    //   (e) {
+    //     toast(e.toString(), print: true);
+    //     appStore.setLoading(false);
+    //     isError = true;
+    //     setState(() {});
+    //   },
+    // );
 
     return albumMediaList;
   }
