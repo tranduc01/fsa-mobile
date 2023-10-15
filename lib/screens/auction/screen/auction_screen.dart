@@ -1,6 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/screens/auction/screen/auction_detail_screen.dart';
 
 class AutionScreen extends StatefulWidget {
