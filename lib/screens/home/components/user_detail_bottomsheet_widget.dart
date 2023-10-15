@@ -180,20 +180,23 @@ class _UserDetailBottomSheetWidgetState
                 children: [
                   VersionInfoWidget(prefixText: 'v'),
                   16.height,
-                  TextButton(
-                    onPressed: () {
-                      showConfirmDialogCustom(
-                        context,
-                        primaryColor: appColorPrimary,
-                        title: language.logoutConfirmation,
-                        onAccept: (s) {
-                          userController.Logout();
-                        },
-                      );
-                    },
-                    child: Text(language.logout,
-                        style: boldTextStyle(color: context.primaryColor)),
-                  ),
+                  userController.isLoggedIn.value
+                      ? TextButton(
+                          onPressed: () {
+                            showConfirmDialogCustom(
+                              context,
+                              primaryColor: appColorPrimary,
+                              title: language.logoutConfirmation,
+                              onAccept: (s) {
+                                userController.Logout();
+                              },
+                            );
+                          },
+                          child: Text(language.logout,
+                              style:
+                                  boldTextStyle(color: context.primaryColor)),
+                        )
+                      : Offstage(),
                   20.height,
                 ],
               ),

@@ -263,13 +263,45 @@ class _SignUpComponentState extends State<SignUpComponent> {
                                   emailCont.text.trim().validate(),
                                   passwordCont.text.trim().validate(),
                                   confirmPasswordCont.text.trim().validate());
-                              if (userController.isRegistered.value) {
-                                Future.delayed(Duration(seconds: 3), () {
+                              Future.delayed(Duration(seconds: 3), () {
+                                if (userController.isRegistered.value) {
                                   Navigator.pop(context);
                                   widget.callback?.call();
                                   toast('Registered Successfully');
-                                });
-                              }
+                                } else {
+                                  Navigator.pop(context);
+                                  showDialog(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: Text('Register Failed',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                color: Colors.red,
+                                                fontWeight: FontWeight.bold)),
+                                        content: Text(
+                                          'PLease try again!',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                        actions: [
+                                          Center(
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text('OK'),
+                                            ),
+                                          )
+                                        ],
+                                      );
+                                    },
+                                  );
+                                }
+                              });
                             } else {
                               toast(
                                   'Password and Confirm Password does not match');
