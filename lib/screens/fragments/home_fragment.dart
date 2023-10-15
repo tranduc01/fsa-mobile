@@ -4,7 +4,11 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/components/loading_widget.dart';
 import 'package:socialv/components/no_data_lottie_widget.dart';
 import 'package:socialv/main.dart';
+import 'package:socialv/models/common_models/post_mdeia_model.dart';
+import 'package:socialv/models/posts/comment_model.dart';
+import 'package:socialv/models/posts/get_post_likes_model.dart';
 import 'package:socialv/models/posts/post_model.dart';
+import 'package:socialv/models/reactions/reactions_count_model.dart';
 import 'package:socialv/network/rest_apis.dart';
 import 'package:socialv/screens/dashboard_screen.dart';
 import 'package:socialv/screens/home/components/ad_component.dart';
@@ -24,10 +28,84 @@ class HomeFragment extends StatefulWidget {
   State<HomeFragment> createState() => _HomeFragmentState();
 }
 
-class _HomeFragmentState extends State<HomeFragment> with SingleTickerProviderStateMixin {
+class _HomeFragmentState extends State<HomeFragment>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
 
-  List<PostModel> postList = [];
+  List<PostModel> postList = [
+    PostModel(
+      activityId: 1,
+      commentCount: 1,
+      comments: [CommentModel()],
+      content: "Test 1",
+      dateRecorded: DateTime.parse("2023-01-01").toString(),
+      isFavorites: 1,
+      isLiked: 1,
+      likeCount: 1,
+      mediaList: ["Test Media"],
+      mediaType: "photo",
+      postIn: "123",
+      userEmail: "example@gmail.com",
+      userId: 1,
+      userImage:
+          "https://khoinguonsangtao.vn/wp-content/uploads/2022/09/hinh-ve-don-gian-cute-dang-yeu-va-de-thuc-hien.jpg",
+      userName: "Tran Duc",
+      isUserVerified: 1,
+      usersWhoLiked: [GetPostLikesModel()],
+      medias: [
+        PostMediaModel(
+            url:
+                "https://i.pinimg.com/474x/94/b6/cc/94b6cc282430ef169df131de1ad12843.jpg")
+      ],
+      isFriend: 1,
+      type: "",
+      blogId: 1,
+      childPost: PostModel(),
+      groupId: 1,
+      groupName: "Test",
+      hasMentions: 1,
+      reactions: [Reactions()],
+      curUserReaction: null,
+      reactionCount: 1,
+      isPinned: 1,
+    ),
+    PostModel(
+      activityId: 1,
+      commentCount: 1,
+      comments: [CommentModel()],
+      content: "Test 2",
+      dateRecorded: DateTime.parse("2023-05-01").toString(),
+      isFavorites: 0,
+      isLiked: 0,
+      likeCount: 3,
+      mediaList: ["Test Media"],
+      mediaType: "gif",
+      postIn: "123",
+      userEmail: "example@gmail.com",
+      userId: 1,
+      userImage:
+          "https://khoinguonsangtao.vn/wp-content/uploads/2022/09/hinh-ve-don-gian-cute-dang-yeu-va-de-thuc-hien.jpg",
+      userName: "Tran Duc",
+      isUserVerified: 1,
+      usersWhoLiked: [GetPostLikesModel()],
+      medias: [
+        PostMediaModel(
+            url:
+                "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHB4Z3UyOW55aXN2NjFxOTdoY3BramdqZmJzOHRtdjFpcDgwY2didyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/6FxJBpNTBgWdJCXKD4/giphy.gif")
+      ],
+      isFriend: 3,
+      type: "",
+      blogId: 1,
+      childPost: PostModel(),
+      groupId: 1,
+      groupName: "Test",
+      hasMentions: 1,
+      reactions: [Reactions()],
+      curUserReaction: null,
+      reactionCount: 3,
+      isPinned: 0,
+    )
+  ];
   late Future<List<PostModel>> future;
 
   int mPage = 1;
@@ -49,7 +127,8 @@ class _HomeFragmentState extends State<HomeFragment> with SingleTickerProviderSt
     widget.controller.addListener(() {
       /// pagination
       if (selectedIndex == 0) {
-        if (widget.controller.position.pixels == widget.controller.position.maxScrollExtent) {
+        if (widget.controller.position.pixels ==
+            widget.controller.position.maxScrollExtent) {
           if (!mIsLastPage) {
             mPage++;
             future = getPostList();
@@ -66,21 +145,21 @@ class _HomeFragmentState extends State<HomeFragment> with SingleTickerProviderSt
   }
 
   Future<List<PostModel>> getPostList() async {
-    appStore.setLoading(true);
-    await getPost(page: mPage, type: PostRequestType.all).then((value) {
-      if (mPage == 1) postList.clear();
+    //appStore.setLoading(true);
+    // await getPost(page: mPage, type: PostRequestType.all).then((value) {
+    //   if (mPage == 1) postList.clear();
 
-      mIsLastPage = value.length != PER_PAGE;
-      postList.addAll(value);
-      setState(() {});
+    //   mIsLastPage = value.length != PER_PAGE;
+    //   postList.addAll(value);
+    //   setState(() {});
 
-      appStore.setLoading(false);
-    }).catchError((e) {
-      isError = true;
-      appStore.setLoading(false);
-      toast(e.toString(), print: true);
-      setState(() {});
-    });
+    //   appStore.setLoading(false);
+    // }).catchError((e) {
+    //   isError = true;
+    //   appStore.setLoading(false);
+    //   toast(e.toString(), print: true);
+    //   setState(() {});
+    // });
 
     return postList;
   }
@@ -105,15 +184,12 @@ class _HomeFragmentState extends State<HomeFragment> with SingleTickerProviderSt
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            20.height,
-            if (!isError)
-              HomeStoryComponent(callback: () {
-                LiveStream().emit(GetUserStories);
-              }),
+            10.height,
             AnimatedListView(
               padding: EdgeInsets.only(bottom: mIsLastPage ? 16 : 60),
               itemCount: postList.length,
-              slideConfiguration: SlideConfiguration(delay: 80.milliseconds, verticalOffset: 300),
+              slideConfiguration: SlideConfiguration(
+                  delay: 80.milliseconds, verticalOffset: 300),
               itemBuilder: (context, index) {
                 return Column(
                   mainAxisSize: MainAxisSize.min,
@@ -136,28 +212,33 @@ class _HomeFragmentState extends State<HomeFragment> with SingleTickerProviderSt
             ),
           ],
         ),
-        if (!appStore.isLoading && isError && postList.isEmpty)
-          SizedBox(
-            height: context.height() * 0.8,
-            child: NoDataWidget(
-              imageWidget: NoDataLottieWidget(),
-              title: isError ? language.somethingWentWrong : language.noDataFound,
-              onRetry: () {
-                isError = false;
-                LiveStream().emit(OnAddPost);
-              },
-              retryText: '   ${language.clickToRefresh}   ',
-            ).center(),
-          ),
-        if (postList.isEmpty && !appStore.isLoading && !isError)
-          SizedBox(
-            height: context.height() * 0.8,
-            child: InitialHomeComponent().center(),
-          ),
-        Positioned(
-          bottom: postList.isNotEmpty||mPage != 1 ? 8 : null,
-          child: Observer(builder: (_) => LoadingWidget(isBlurBackground: mPage == 1 ? true : false).center().visible(appStore.isLoading)),
-        ),
+        // if (!appStore.isLoading && isError && postList.isEmpty)
+        //   SizedBox(
+        //     height: context.height() * 0.8,
+        //     child: NoDataWidget(
+        //       imageWidget: NoDataLottieWidget(),
+        //       title:
+        //           isError ? language.somethingWentWrong : language.noDataFound,
+        //       onRetry: () {
+        //         isError = false;
+        //         LiveStream().emit(OnAddPost);
+        //       },
+        //       retryText: '   ${language.clickToRefresh}   ',
+        //     ).center(),
+        //   ),
+        // if (postList.isEmpty && !appStore.isLoading && !isError)
+        //   SizedBox(
+        //     height: context.height() * 0.8,
+        //     child: InitialHomeComponent().center(),
+        //   ),
+        // Positioned(
+        //   bottom: postList.isNotEmpty || mPage != 1 ? 8 : null,
+        //   child: Observer(
+        //       builder: (_) =>
+        //           LoadingWidget(isBlurBackground: mPage == 1 ? true : false)
+        //               .center()
+        //               .visible(appStore.isLoading)),
+        // ),
       ],
     );
   }

@@ -76,16 +76,17 @@ const ic_student = 'assets/icons/ic_student.png';
 const ic_time_filled = 'assets/icons/ic_time_filled.png';
 const ic_timer = 'assets/icons/ic_timer.png';
 const ic_like = 'assets/icons/ic_like.png';
-const ic_share='assets/icons/ic_share.png';
-const ic_push_pin='assets/icons/ic_push_pin.png';
-const ic_message='assets/icons/ic_message.png';
-const ic_shield_fail='assets/icons/ic_shield_fail.png';
+const ic_share = 'assets/icons/ic_share.png';
+const ic_push_pin = 'assets/icons/ic_push_pin.png';
+const ic_message = 'assets/icons/ic_message.png';
+const ic_shield_fail = 'assets/icons/ic_shield_fail.png';
 const ic_blog = 'assets/icons/ic_blog.png';
 const ic_books = 'assets/icons/ic_books.png';
 const ic_full_screen = 'assets/icons/ic_full_screen.png';
 const ic_exit_full_screen = 'assets/icons/ic_exit_full_screen.png';
 const ic_pause = 'assets/icons/ic_pause.png';
 const ic_play_button = 'assets/icons/ic_play_button.png';
+const ic_ranking = 'assets/icons/ranking.png';
 
 /// Lottie Files
 const no_data = "assets/lottie/no_data.json";

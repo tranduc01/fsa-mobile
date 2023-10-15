@@ -43,7 +43,7 @@ dependencies:
   # State Management Technique
   mobx: ^2.2.0
   flutter_mobx: ^2.0.6+5
-
+  get:
   # Share
   share_plus: ^7.0.1
   flutter_custom_tabs: ^1.0.4
