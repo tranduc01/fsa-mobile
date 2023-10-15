@@ -16,11 +16,9 @@ import 'package:socialv/screens/groups/screens/group_detail_screen.dart';
 import 'package:socialv/screens/home/components/ranking_bottomsheet_widget.dart';
 import 'package:socialv/screens/home/components/user_detail_bottomsheet_widget.dart';
 import 'package:socialv/screens/notification/components/latest_activity_component.dart';
-import 'package:socialv/screens/post/screens/add_post_screen.dart';
 import 'package:socialv/screens/post/screens/comment_screen.dart';
 import 'package:socialv/screens/post/screens/single_post_screen.dart';
 import 'package:socialv/screens/profile/screens/member_profile_screen.dart';
-import 'package:socialv/screens/shop/screens/shop_screen.dart';
 import 'package:socialv/utils/app_constants.dart';
 import 'package:socialv/utils/cached_network_image.dart';
 

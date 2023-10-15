@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/screens/auction/screen/auction_detail_screen.dart';
@@ -17,114 +18,31 @@ class _AutionScreenState extends State<AutionScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                    "Tuanbe",
-                    style: TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                  Container(
-                    width: 50.0,
-                    height: 50.0,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.purple,
-                      image: DecorationImage(
-                        image: NetworkImage(
-                            "https://scontent.fsgn5-9.fna.fbcdn.net/v/t1.6435-9/195462539_2596085170685401_8094832095637303646_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=0Rf2T1o-ABkAX8RfomW&_nc_ht=scontent.fsgn5-9.fna&_nc_e2o=f&oh=00_AfA17CvntVIHB2zD8nsa6ig6sZX7l-oQEhjVaqPqnWAyeQ&oe=65424A6C"),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  )
-                ],
-              ),
-              Text(
-                'Đấu giá lan',
-                style: TextStyle(
-                  fontSize: 30.0,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(
-                height: 10.0,
-              ),
-              Text(
-                "Gần đây",
-                style: TextStyle(
-                  color: black,
-                  fontSize: 20.0,
-                ),
-              ),
-              SizedBox(
-                height: 10.0,
-              ),
-              Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.purple.withOpacity(0.5),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(20.0),
-                          bottomLeft: Radius.circular(20.0),
-                          bottomRight: Radius.circular(20.0),
-                        ),
-                      ),
-                      child: TextField(
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.search),
-                          hintText: "Tìm kiếm hoa bạn muốn đấu giá",
-                          border: InputBorder.none,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 20.0,
-                  ),
-                  Stack(
-                    children: <Widget>[
-                      Icon(Icons.notifications_none),
-                      Positioned(
-                        top: -1,
-                        right: 1,
-                        child: Container(
-                          padding: EdgeInsets.all(2.0),
-                          child: Text(
-                            "2",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 10.0,
-                            ),
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.orange,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
               Container(
-                height: 400.0,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: <Widget>[
-                    auctionWidget("auction1"),
-                    auctionWidget("auction2"),
-                    auctionWidget("auction3"),
-                    auctionWidget("auction4"),
-                  ],
-                ),
-              )
+                  height: 200.0,
+                  child: CarouselSlider(
+                    options: CarouselOptions(
+                      height: 200.0,
+                      autoPlay: true,
+                    ),
+                    items: [
+                      auctionWidget(heroTag1),
+                      auctionWidget(heroTag2),
+                      auctionWidget(heroTag3),
+                      auctionWidget(heroTag4),
+                      auctionWidget(heroTag5),
+                    ].map((i) {
+                      return Builder(
+                        builder: (BuildContext context) {
+                          return Container(
+                              width: MediaQuery.of(context).size.width,
+                              margin: EdgeInsets.symmetric(horizontal: 5.0),
+                              decoration: BoxDecoration(color: Colors.amber),
+                              child: i);
+                        },
+                      );
+                    }).toList(),
+                  )),
             ],
           ),
         ),
@@ -132,6 +50,15 @@ class _AutionScreenState extends State<AutionScreen> {
     );
   }
 
+  String heroTag1 =
+      "https://cdn.tgdd.vn/Files/2021/07/24/1370576/hoa-lan-tim-dac-diem-y-nghia-va-cach-trong-hoa-no-dep-202107242028075526.jpg";
+  String heroTag2 =
+      "https://cdn.tgdd.vn/Files/2021/07/23/1370384/cach-nhan-biet-cac-loai-phong-lan-va-ky-thuat-trong-phu-hop-cho-tung-loai-202107232038443447.jpg";
+  String heroTag3 =
+      "https://vuanem.com/blog/wp-content/uploads/2022/11/y-nghia-hoa-phong-lan.jpg";
+  String heroTag4 = "https://hoatuoithanhthao.com/media/ftp/hoa-lan-3.jpg";
+  String heroTag5 =
+      "https://dienhoaxanh.com/wp-content/uploads/2021/09/y-nghia-hoa-lan-do.jpg";
   Widget auctionWidget(String heroTag) {
     return InkWell(
       onTap: () {
@@ -146,39 +73,16 @@ class _AutionScreenState extends State<AutionScreen> {
       child: Hero(
         tag: heroTag,
         child: Container(
-          padding: EdgeInsets.only(top: 10.0),
-          width: 250.0,
-          height: 400.0,
+          height: 250.0,
+          width: 400.0,
           child: Stack(
             children: <Widget>[
               Container(
-                width: 230.0,
-                height: 375.0,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20.0),
-                    bottomLeft: Radius.circular(20.0),
-                    bottomRight: Radius.circular(20.0),
-                  ),
                   image: DecorationImage(
-                    image: NetworkImage(
-                        "https://hoatuoithanhthao.com/media/ftp/hoa-lan-5.jpg"),
+                    image: NetworkImage(heroTag),
                     fit: BoxFit.cover,
                   ),
-                ),
-              ),
-              Positioned(
-                bottom: 1,
-                right: 15,
-                child: FloatingActionButton(
-                  heroTag: null,
-                  mini: true,
-                  backgroundColor: Colors.orange,
-                  child: Icon(
-                    Icons.chevron_right,
-                    color: Colors.white,
-                  ),
-                  onPressed: () => print("next"),
                 ),
               ),
               Positioned(

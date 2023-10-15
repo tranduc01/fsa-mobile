@@ -63,6 +63,8 @@ dependencies:
 
   #SlideShow
   flutter_image_slideshow: any
+
+  carousel_slider: ^4.2.1
   # Story
   story_time: ^1.0.6
   numberpicker: ^2.1.2
