@@ -135,7 +135,7 @@ class _UserDetailBottomSheetWidgetState
                             ).paddingOnly(
                                 left: 16, right: 8, bottom: 16, top: 16),
                             onTap: () {
-                              SignInScreen().launch(context, isNewTask: true);
+                              SignInScreen().launch(context, isNewTask: false);
                             },
                           ),
                     Column(

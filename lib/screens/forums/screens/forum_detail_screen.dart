@@ -20,13 +20,17 @@ class ForumDetailScreen extends StatefulWidget {
   final String type;
   final bool isFromSubscription;
 
-  const ForumDetailScreen({required this.forumId, required this.type, this.isFromSubscription = false});
+  const ForumDetailScreen(
+      {required this.forumId,
+      required this.type,
+      this.isFromSubscription = false});
 
   @override
   State<ForumDetailScreen> createState() => _ForumDetailScreenState();
 }
 
-class _ForumDetailScreenState extends State<ForumDetailScreen> with SingleTickerProviderStateMixin {
+class _ForumDetailScreenState extends State<ForumDetailScreen>
+    with SingleTickerProviderStateMixin {
   ForumDetailModel forum = ForumDetailModel();
   ScrollController _scrollController = ScrollController();
 
@@ -54,7 +58,8 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> with SingleTicker
     tabController = TabController(length: 2, vsync: this);
 
     _scrollController.addListener(() {
-      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
         if (!mIsLastPage) {
           mPage++;
           appStore.setLoading(true);
@@ -68,7 +73,8 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> with SingleTicker
     isError = false;
     appStore.setLoading(true);
 
-    await getForumDetail(forumId: widget.forumId, page: mPage).then((value) async {
+    await getForumDetail(forumId: widget.forumId, page: mPage)
+        .then((value) async {
       forum = value;
 
       if (value.forumList.validate().isNotEmpty) {
@@ -84,11 +90,13 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> with SingleTicker
         topicList.clear();
       }
 
-      mIsLastPage = value.topicList.validate().length != PER_PAGE && value.forumList.validate().length != PER_PAGE;
+      mIsLastPage = value.topicList.validate().length != PER_PAGE &&
+          value.forumList.validate().length != PER_PAGE;
       topicList.addAll(value.topicList.validate());
       forumList.addAll(value.forumList.validate());
 
-      showOptions = forumList.validate().isNotEmpty && topicList.validate().isNotEmpty;
+      showOptions =
+          forumList.validate().isNotEmpty && topicList.validate().isNotEmpty;
 
       setState(() {});
 
@@ -147,7 +155,8 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> with SingleTicker
                 child: PopupMenuButton(
                   position: PopupMenuPosition.under,
                   padding: EdgeInsets.zero,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(commonRadius)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(commonRadius)),
                   onSelected: (val) async {
                     if (val == 1) {
                       ifNotTester(() {
@@ -167,7 +176,11 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> with SingleTicker
                         });
                       });
                     } else {
-                      CreateTopicScreen(forumName: forum.title.validate(), forumId: widget.forumId).launch(context).then((value) {
+                      CreateTopicScreen(
+                              forumName: forum.title.validate(),
+                              forumId: widget.forumId)
+                          .launch(context)
+                          .then((value) {
                         if (value ?? false) {
                           isUpdate = true;
                           appStore.setLoading(true);
@@ -182,10 +195,13 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> with SingleTicker
                   itemBuilder: (context) => <PopupMenuEntry>[
                     PopupMenuItem(
                       value: 1,
-                      child: Text(isSubscribed ? language.unsubscribe : language.subscribe),
+                      child: Text(isSubscribed
+                          ? language.unsubscribe
+                          : language.subscribe),
                       textStyle: primaryTextStyle(),
                     ),
-                    if (forum.groupDetails == null || forum.groupDetails!.isGroupMember.validate())
+                    if (forum.groupDetails == null ||
+                        forum.groupDetails!.isGroupMember.validate())
                       PopupMenuItem(
                         value: 2,
                         child: Text(language.createTopic),
@@ -210,12 +226,20 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> with SingleTicker
                             children: [
                               ProfileHeaderComponent(
                                 avatarUrl: forum.image.validate(),
-                                cover: forum.groupDetails != null && forum.groupDetails!.coverImage.validate().isNotEmpty ? forum.groupDetails!.coverImage.validate() : null,
+                                //cover: forum.groupDetails != null && forum.groupDetails!.coverImage.validate().isNotEmpty ? forum.groupDetails!.coverImage.validate() : null,
                               ),
                               16.height,
-                              Text(forum.title.validate(), style: boldTextStyle(size: 20)).paddingSymmetric(horizontal: 16).onTap(() {
-                                if (forum.groupDetails != null && forum.groupDetails!.groupId != 0) {
-                                  GroupDetailScreen(groupId: forum.groupDetails!.groupId.validate()).launch(context).then((value) {
+                              Text(forum.title.validate(),
+                                      style: boldTextStyle(size: 20))
+                                  .paddingSymmetric(horizontal: 16)
+                                  .onTap(() {
+                                if (forum.groupDetails != null &&
+                                    forum.groupDetails!.groupId != 0) {
+                                  GroupDetailScreen(
+                                          groupId: forum.groupDetails!.groupId
+                                              .validate())
+                                      .launch(context)
+                                      .then((value) {
                                     if (value ?? false) {
                                       mPage = 1;
                                       setState(() {});
@@ -223,7 +247,10 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> with SingleTicker
                                     }
                                   });
                                 }
-                              }, splashColor: Colors.transparent, highlightColor: Colors.transparent).center(),
+                              },
+                                      splashColor: Colors.transparent,
+                                      highlightColor:
+                                          Colors.transparent).center(),
                               8.height,
                               ReadMoreText(
                                 forum.description.validate(),
@@ -233,10 +260,17 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> with SingleTicker
                               ).paddingSymmetric(horizontal: 16).center(),
                               16.height,
                               AppButton(
-                                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 4),
                                 elevation: 0,
-                                color: isSubscribed ? appOrangeColor : appGreenColor,
-                                child: Text(isSubscribed ? language.unsubscribe : language.subscribe, style: boldTextStyle(color: Colors.white)),
+                                color: isSubscribed
+                                    ? appOrangeColor
+                                    : appGreenColor,
+                                child: Text(
+                                    isSubscribed
+                                        ? language.unsubscribe
+                                        : language.subscribe,
+                                    style: boldTextStyle(color: Colors.white)),
                                 onTap: () {
                                   ifNotTester(() {
                                     isSubscribed = !isSubscribed;
@@ -248,8 +282,10 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> with SingleTicker
                                       toast(language.unsubscribedSuccessfully);
                                     }
 
-                                    subscribeForum(forumId: widget.forumId).then((value) {
-                                      if (widget.isFromSubscription) isUpdate = true;
+                                    subscribeForum(forumId: widget.forumId)
+                                        .then((value) {
+                                      if (widget.isFromSubscription)
+                                        isUpdate = true;
                                     }).catchError((e) {
                                       log(e.toString());
                                     });
@@ -261,11 +297,18 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> with SingleTicker
                                 padding: EdgeInsets.all(8),
                                 decoration: BoxDecoration(
                                   color: context.primaryColor.withAlpha(30),
-                                  border: Border(left: BorderSide(color: context.primaryColor, width: 2)),
+                                  border: Border(
+                                      left: BorderSide(
+                                          color: context.primaryColor,
+                                          width: 2)),
                                 ),
-                                child: Text(forum.lastUpdate.validate(), style: secondaryTextStyle()),
+                                child: Text(forum.lastUpdate.validate(),
+                                    style: secondaryTextStyle()),
                               ),
-                              if ((forum.groupDetails != null && forum.groupDetails!.isGroupMember.validate()) || forum.isPrivate == 0)
+                              if ((forum.groupDetails != null &&
+                                      forum.groupDetails!.isGroupMember
+                                          .validate()) ||
+                                  forum.isPrivate == 0)
                                 ForumDetailComponent(
                                     type: widget.type,
                                     forumList: forumList,
@@ -278,15 +321,23 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> with SingleTicker
                                       setState(() {});
                                       getDetails();
                                     })
-                              else if (forum.groupDetails != null && !forum.groupDetails!.isGroupMember.validate())
+                              else if (forum.groupDetails != null &&
+                                  !forum.groupDetails!.isGroupMember.validate())
                                 appButton(
                                   context: context,
-                                  shapeBorder: RoundedRectangleBorder(borderRadius: radius(4)),
+                                  shapeBorder: RoundedRectangleBorder(
+                                      borderRadius: radius(4)),
                                   text: language.viewGroup,
                                   textStyle: boldTextStyle(color: Colors.white),
                                   onTap: () {
-                                    if (forum.groupDetails != null && forum.groupDetails!.groupId != 0)
-                                      GroupDetailScreen(groupId: forum.groupDetails!.groupId.validate()).launch(context).then((value) {
+                                    if (forum.groupDetails != null &&
+                                        forum.groupDetails!.groupId != 0)
+                                      GroupDetailScreen(
+                                              groupId: forum
+                                                  .groupDetails!.groupId
+                                                  .validate())
+                                          .launch(context)
+                                          .then((value) {
                                         if (value ?? false) {
                                           mPage = 1;
                                           setState(() {});
@@ -315,11 +366,15 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> with SingleTicker
                             ],
                           ),
                         ).visible(!isError)
-                      : LoadingWidget().center().visible(!appStore.isLoading & !isError),
+                      : LoadingWidget()
+                          .center()
+                          .visible(!appStore.isLoading & !isError),
                   if (isError)
                     NoDataWidget(
                       imageWidget: NoDataLottieWidget(),
-                      title: isError ? language.somethingWentWrong : language.noDataFound,
+                      title: isError
+                          ? language.somethingWentWrong
+                          : language.noDataFound,
                       retryText: '   ${language.clickToRefresh}   ',
                       onRetry: () {
                         mPage = 1;
@@ -328,7 +383,10 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> with SingleTicker
                     ).center(),
                   Positioned(
                     bottom: mPage != 1 ? 10 : null,
-                    child: LoadingWidget(isBlurBackground: mPage == 1 ? true : false).center().visible(appStore.isLoading),
+                    child: LoadingWidget(
+                            isBlurBackground: mPage == 1 ? true : false)
+                        .center()
+                        .visible(appStore.isLoading),
                   ),
                 ],
               );

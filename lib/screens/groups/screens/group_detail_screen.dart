@@ -26,7 +26,8 @@ class GroupDetailScreen extends StatefulWidget {
   final String? groupAvatarImage;
   final String? groupCoverImage;
 
-  GroupDetailScreen({this.groupId, this.groupAvatarImage, this.groupCoverImage});
+  GroupDetailScreen(
+      {this.groupId, this.groupAvatarImage, this.groupCoverImage});
 
   @override
   State<GroupDetailScreen> createState() => _GroupDetailScreenState();
@@ -55,7 +56,8 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
 
     if (postList.isNotEmpty) {
       _scrollController.addListener(() {
-        if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+        if (_scrollController.position.pixels ==
+            _scrollController.position.maxScrollExtent) {
           if (!mIsLastPage) {
             mPage++;
             future = getPostList();
@@ -70,7 +72,9 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
   Future<void> groupDetail() async {
     appStore.setLoading(true);
 
-    getGroupDetail(groupId: widget.groupId.validate(), userId: appStore.loginUserId).then((value) async {
+    getGroupDetail(
+            groupId: widget.groupId.validate(), userId: appStore.loginUserId)
+        .then((value) async {
       group = value.first;
       fetchGp = true;
       setState(() {});
@@ -88,7 +92,12 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
     isLoading = true;
     if (mPage == 1) postList.clear();
 
-    await getPost(type: PostRequestType.group, page: mPage, groupId: widget.groupId, userId: appStore.loginUserId.toInt()).then((value) {
+    await getPost(
+            type: PostRequestType.group,
+            page: mPage,
+            groupId: widget.groupId,
+            userId: appStore.loginUserId.toInt())
+        .then((value) {
       mIsLastPage = value.length != PER_PAGE;
 
       postList.addAll(value);
@@ -135,14 +144,17 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
         color: context.primaryColor,
         child: Scaffold(
           appBar: AppBar(
-            title: Text(parseHtmlString(group.name.validate()), style: boldTextStyle(size: 20)),
+            title: Text(parseHtmlString(group.name.validate()),
+                style: boldTextStyle(size: 20)),
             elevation: 0,
             centerTitle: true,
             actions: [
               if (group.isGroupAdmin.validate())
                 IconButton(
                   onPressed: () {
-                    EditGroupScreen(groupId: widget.groupId.validate()).launch(context).then((value) {
+                    EditGroupScreen(groupId: widget.groupId.validate())
+                        .launch(context)
+                        .then((value) {
                       if (value ?? false) {
                         isUpdate = value;
                         groupDetail();
@@ -163,7 +175,8 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                   child: PopupMenuButton(
                     position: PopupMenuPosition.under,
                     padding: EdgeInsets.zero,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(commonRadius)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(commonRadius)),
                     onSelected: (val) async {
                       if (val == 1) {
                         showConfirmDialogCustom(
@@ -171,7 +184,9 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                           onAccept: (c) async {
                             ifNotTester(() async {
                               appStore.setLoading(true);
-                              await leaveGroup(groupId: group.id.validate().toInt()).then((value) {
+                              await leaveGroup(
+                                      groupId: group.id.validate().toInt())
+                                  .then((value) {
                                 isUpdate = true;
                                 groupDetail();
                               }).catchError((e) {
@@ -199,13 +214,17 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                                   Container(
                                     width: 45,
                                     height: 5,
-                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(16), color: Colors.white),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(16),
+                                        color: Colors.white),
                                   ),
                                   8.height,
                                   Container(
                                     decoration: BoxDecoration(
                                       color: context.cardColor,
-                                      borderRadius: BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(16),
+                                          topRight: Radius.circular(16)),
                                     ),
                                     child: ShowReportDialog(
                                       isPostReport: false,
@@ -250,7 +269,9 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                   : isError
                       ? NoDataWidget(
                           imageWidget: NoDataLottieWidget(),
-                          title: isError ? language.somethingWentWrong : language.noDataFound,
+                          title: isError
+                              ? language.somethingWentWrong
+                              : language.noDataFound,
                           onRetry: () {
                             onRefresh();
                           },
@@ -262,17 +283,25 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                             children: [
                               ProfileHeaderComponent(
                                 avatarUrl: group.groupAvatarImage.validate(),
-                                cover: group.groupCoverImage.validate(),
+                                //cover: group.groupCoverImage.validate(),
                               ),
                               16.height,
                               RichText(
                                 text: TextSpan(
-                                  text: '${parseHtmlString(group.name.validate())}',
-                                  style: boldTextStyle(size: 20, fontFamily: fontFamily),
+                                  text:
+                                      '${parseHtmlString(group.name.validate())}',
+                                  style: boldTextStyle(
+                                      size: 20, fontFamily: fontFamily),
                                   children: <TextSpan>[
                                     TextSpan(
-                                      text: ' ${group.isGroupAdmin.validate() ? '(${language.organizer})' : group.isGroupMember.validate() ? '(${language.member})' : ''}',
-                                      style: boldTextStyle(color: appStore.isDarkMode ? bodyDark : bodyWhite, size: 14, fontFamily: fontFamily),
+                                      text:
+                                          ' ${group.isGroupAdmin.validate() ? '(${language.organizer})' : group.isGroupMember.validate() ? '(${language.member})' : ''}',
+                                      style: boldTextStyle(
+                                          color: appStore.isDarkMode
+                                              ? bodyDark
+                                              : bodyWhite,
+                                          size: 14,
+                                          fontFamily: fontFamily),
                                     ),
                                   ],
                                 ),
@@ -299,10 +328,15 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                                     color: context.iconColor,
                                   ),
                                   4.width,
-                                  Text('${group.groupType.validate().capitalizeFirstLetter()} ${language.group}', style: secondaryTextStyle()),
+                                  Text(
+                                      '${group.groupType.validate().capitalizeFirstLetter()} ${language.group}',
+                                      style: secondaryTextStyle()),
                                   Text(
                                     '•',
-                                    style: primaryTextStyle(color: appStore.isDarkMode ? bodyDark : bodyWhite),
+                                    style: primaryTextStyle(
+                                        color: appStore.isDarkMode
+                                            ? bodyDark
+                                            : bodyWhite),
                                   ).paddingSymmetric(horizontal: 8),
                                   Image.asset(
                                     ic_calendar,
@@ -312,36 +346,55 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                                     color: context.iconColor,
                                   ),
                                   4.width,
-                                  if (fetchGp) Text('${getFormattedDate(group.dateCreated.validate())}', style: secondaryTextStyle()),
+                                  if (fetchGp)
+                                    Text(
+                                        '${getFormattedDate(group.dateCreated.validate())}',
+                                        style: secondaryTextStyle()),
                                 ],
                               ).paddingSymmetric(horizontal: 16),
                               16.height,
                               Container(
                                 padding: EdgeInsets.all(8),
                                 width: context.width(),
-                                decoration: BoxDecoration(color: context.cardColor, borderRadius: radius(defaultAppButtonRadius)),
+                                decoration: BoxDecoration(
+                                    color: context.cardColor,
+                                    borderRadius:
+                                        radius(defaultAppButtonRadius)),
                                 child: Column(
                                   children: [
                                     Row(
                                       children: [
                                         TextButton(
                                           onPressed: () {
-                                            if (group.isGroupAdmin.validate() && group.groupType == AccountType.private) {
+                                            if (group.isGroupAdmin.validate() &&
+                                                group.groupType ==
+                                                    AccountType.private) {
                                               GroupMemberRequestScreen(
-                                                creatorId: group.groupCreatedById.validate(),
-                                                groupId: widget.groupId.validate(),
-                                                isAdmin: group.isGroupAdmin.validate(),
+                                                creatorId: group
+                                                    .groupCreatedById
+                                                    .validate(),
+                                                groupId:
+                                                    widget.groupId.validate(),
+                                                isAdmin: group.isGroupAdmin
+                                                    .validate(),
                                               ).launch(context).then((value) {
                                                 if (value) {
                                                   isUpdate = true;
                                                   groupDetail();
                                                 }
                                               });
-                                            } else if (group.groupType == AccountType.public || group.isGroupMember.validate()) {
+                                            } else if (group.groupType ==
+                                                    AccountType.public ||
+                                                group.isGroupMember
+                                                    .validate()) {
                                               GroupMemberScreen(
-                                                creatorId: group.groupCreatedById.validate(),
-                                                groupId: widget.groupId.validate(),
-                                                isAdmin: group.isGroupAdmin.validate(),
+                                                creatorId: group
+                                                    .groupCreatedById
+                                                    .validate(),
+                                                groupId:
+                                                    widget.groupId.validate(),
+                                                isAdmin: group.isGroupAdmin
+                                                    .validate(),
                                               ).launch(context).then((value) {
                                                 if (value ?? false) {
                                                   isUpdate = true;
@@ -355,24 +408,43 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                                           child: Row(
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
-                                              if (group.memberList.validate().isNotEmpty)
+                                              if (group.memberList
+                                                  .validate()
+                                                  .isNotEmpty)
                                                 Stack(
-                                                  children: group.memberList.validate().take(3).map((e) {
+                                                  children: group.memberList
+                                                      .validate()
+                                                      .take(3)
+                                                      .map((e) {
                                                     return Container(
                                                       width: 32,
                                                       height: 32,
-                                                      margin: EdgeInsets.only(left: 18 * group.memberList.validate().indexOf(e).toDouble()),
+                                                      margin: EdgeInsets.only(
+                                                          left: 18 *
+                                                              group.memberList
+                                                                  .validate()
+                                                                  .indexOf(e)
+                                                                  .toDouble()),
                                                       child: cachedImage(
-                                                        group.memberList.validate()[group.memberList.validate().indexOf(e)].userAvatar.validate(),
+                                                        group.memberList
+                                                            .validate()[group
+                                                                .memberList
+                                                                .validate()
+                                                                .indexOf(e)]
+                                                            .userAvatar
+                                                            .validate(),
                                                         fit: BoxFit.cover,
-                                                      ).cornerRadiusWithClipRRect(100),
+                                                      ).cornerRadiusWithClipRRect(
+                                                          100),
                                                     );
                                                   }).toList(),
                                                 ),
                                               6.width,
                                               Text(
                                                 '${group.memberCount.validate().toInt()} ${language.members}',
-                                                style: boldTextStyle(color: context.primaryColor),
+                                                style: boldTextStyle(
+                                                    color:
+                                                        context.primaryColor),
                                               ),
                                             ],
                                           ),
@@ -380,12 +452,16 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                                         if (group.canInvite.validate())
                                           Theme(
                                             data: Theme.of(context).copyWith(
-                                              highlightColor: Colors.transparent,
+                                              highlightColor:
+                                                  Colors.transparent,
                                               splashColor: Colors.transparent,
                                             ),
                                             child: IconButton(
                                               onPressed: () {
-                                                InviteUserScreen(groupId: widget.groupId.validate()).launch(context);
+                                                InviteUserScreen(
+                                                        groupId: widget.groupId
+                                                            .validate())
+                                                    .launch(context);
                                               },
                                               icon: Image.asset(
                                                 ic_add_user,
@@ -397,15 +473,25 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                                             ),
                                           ),
                                       ],
-                                      mainAxisAlignment: group.isGroupMember.validate() ? MainAxisAlignment.spaceBetween : MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          group.isGroupMember.validate()
+                                              ? MainAxisAlignment.spaceBetween
+                                              : MainAxisAlignment.center,
                                     ),
-                                    if (!group.isGroupMember.validate() && group.isBanned == 0)
+                                    if (!group.isGroupMember.validate() &&
+                                        group.isBanned == 0)
                                       JoinGroupWidget(
                                         hasInvite: group.hasInvite.validate(),
-                                        isRequestSent: group.isRequestSent.validate(),
+                                        isRequestSent:
+                                            group.isRequestSent.validate(),
                                         groupId: widget.groupId.validate(),
-                                        isGroupMember: group.isGroupMember.validate(),
-                                        isPublicGroup: group.groupType.validate() == AccountType.public ? true : false,
+                                        isGroupMember:
+                                            group.isGroupMember.validate(),
+                                        isPublicGroup:
+                                            group.groupType.validate() ==
+                                                    AccountType.public
+                                                ? true
+                                                : false,
                                         callback: () {
                                           isUpdate = true;
                                           groupDetail();
@@ -417,87 +503,126 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                               ).paddingSymmetric(horizontal: 16),
                               8.height,
                               if (group.isGalleryEnabled == 1)
-                                if (group.groupType == AccountType.public || group.isGroupMember.validate())
+                                if (group.groupType == AccountType.public ||
+                                    group.isGroupMember.validate())
                                   TextIcon(
                                     onTap: () {
-                                      GalleryScreen(groupId: group.id, canEdit: group.isGroupMember.validate()).launch(context);
+                                      GalleryScreen(
+                                              groupId: group.id,
+                                              canEdit: group.isGroupMember
+                                                  .validate())
+                                          .launch(context);
                                     },
                                     text: language.viewGallery,
-                                    textStyle: primaryTextStyle(color: appColorPrimary),
-                                    prefix: Image.asset(ic_image, width: 18, height: 18, color: appColorPrimary),
+                                    textStyle: primaryTextStyle(
+                                        color: appColorPrimary),
+                                    prefix: Image.asset(ic_image,
+                                        width: 18,
+                                        height: 18,
+                                        color: appColorPrimary),
                                   ),
                               8.height,
                               if (!appStore.isLoading)
-                                group.groupType == AccountType.public || group.isGroupMember.validate()
+                                group.groupType == AccountType.public ||
+                                        group.isGroupMember.validate()
                                     ? Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           if (postList.isNotEmpty)
                                             Text(
-                                              (appStore.displayPostCount == 1) ? '${language.post} (${group.postCount})' : language.post,
-                                              style: boldTextStyle(color: context.primaryColor),
+                                              (appStore.displayPostCount == 1)
+                                                  ? '${language.post} (${group.postCount})'
+                                                  : language.post,
+                                              style: boldTextStyle(
+                                                  color: context.primaryColor),
                                             ).paddingSymmetric(horizontal: 16),
                                           FutureBuilder<List<PostModel>>(
                                             future: future,
                                             builder: (ctx, snap) {
                                               if (snap.hasError) {
                                                 return NoDataWidget(
-                                                  imageWidget: NoDataLottieWidget(),
-                                                  title: isError ? language.somethingWentWrong : language.noDataFound,
+                                                  imageWidget:
+                                                      NoDataLottieWidget(),
+                                                  title: isError
+                                                      ? language
+                                                          .somethingWentWrong
+                                                      : language.noDataFound,
                                                   onRetry: () {
                                                     onRefresh();
                                                   },
-                                                  retryText: '   ${language.clickToRefresh}   ',
+                                                  retryText:
+                                                      '   ${language.clickToRefresh}   ',
                                                 ).center();
                                               }
                                               if (snap.hasData) {
-                                                if (snap.data.validate().isEmpty && !fetchGp) {
+                                                if (snap.data
+                                                        .validate()
+                                                        .isEmpty &&
+                                                    !fetchGp) {
                                                   return NoDataWidget(
-                                                    imageWidget: NoDataLottieWidget(),
-                                                    title: isError ? language.somethingWentWrong : language.noDataFound,
+                                                    imageWidget:
+                                                        NoDataLottieWidget(),
+                                                    title: isError
+                                                        ? language
+                                                            .somethingWentWrong
+                                                        : language.noDataFound,
                                                     onRetry: () {
                                                       onRefresh();
                                                     },
-                                                    retryText: '   ${language.clickToRefresh}   ',
+                                                    retryText:
+                                                        '   ${language.clickToRefresh}   ',
                                                   ).center();
                                                 } else {
                                                   return Stack(
                                                     children: [
                                                       AnimatedListView(
-                                                        padding: EdgeInsets.all(8),
-                                                        itemCount: postList.length,
-                                                        slideConfiguration: SlideConfiguration(
-                                                          delay: 80.milliseconds,
+                                                        padding:
+                                                            EdgeInsets.all(8),
+                                                        itemCount:
+                                                            postList.length,
+                                                        slideConfiguration:
+                                                            SlideConfiguration(
+                                                          delay:
+                                                              80.milliseconds,
                                                           verticalOffset: 300,
                                                         ),
-                                                        itemBuilder: (context, index) {
+                                                        itemBuilder:
+                                                            (context, index) {
                                                           return PostComponent(
-                                                            post: postList[index],
+                                                            post:
+                                                                postList[index],
                                                             callback: () {
                                                               mPage = 1;
                                                               groupDetail();
-                                                              future = getPostList();
+                                                              future =
+                                                                  getPostList();
                                                             },
                                                             fromGroup: true,
-                                                            groupId: widget.groupId,
+                                                            groupId:
+                                                                widget.groupId,
                                                           );
                                                         },
                                                         shrinkWrap: true,
-                                                        physics: NeverScrollableScrollPhysics(),
+                                                        physics:
+                                                            NeverScrollableScrollPhysics(),
                                                       ),
-                                                      if (mPage != 1 && isLoading)
+                                                      if (mPage != 1 &&
+                                                          isLoading)
                                                         Positioned(
                                                           bottom: 0,
                                                           right: 0,
                                                           left: 0,
-                                                          child: ThreeBounceLoadingWidget(),
+                                                          child:
+                                                              ThreeBounceLoadingWidget(),
                                                         )
                                                     ],
                                                   );
                                                 }
                                               }
 
-                                              return ThreeBounceLoadingWidget().paddingTop(16);
+                                              return ThreeBounceLoadingWidget()
+                                                  .paddingTop(16);
                                             },
                                           ),
                                         ],
@@ -509,25 +634,26 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                         );
             },
           ),
-          floatingActionButton: group.isGroupAdmin.validate() || group.isGroupMember.validate()
-              ? FloatingActionButton(
-                  backgroundColor: appColorPrimary,
-                  onPressed: () {
-                    AddPostScreen(
-                      component: Component.groups,
-                      groupId: widget.groupId,
-                      groupName: group.name.validate(),
-                    ).launch(context).then((value) {
-                      if (value ?? false) {
-                        groupDetail();
-                        mPage = 1;
-                        future = getPostList();
-                      }
-                    });
-                  },
-                  child: Icon(Icons.add, color: Colors.white),
-                )
-              : Offstage(),
+          floatingActionButton:
+              group.isGroupAdmin.validate() || group.isGroupMember.validate()
+                  ? FloatingActionButton(
+                      backgroundColor: appColorPrimary,
+                      onPressed: () {
+                        AddPostScreen(
+                          component: Component.groups,
+                          groupId: widget.groupId,
+                          groupName: group.name.validate(),
+                        ).launch(context).then((value) {
+                          if (value ?? false) {
+                            groupDetail();
+                            mPage = 1;
+                            future = getPostList();
+                          }
+                        });
+                      },
+                      child: Icon(Icons.add, color: Colors.white),
+                    )
+                  : Offstage(),
         ),
       ),
     );

@@ -57,6 +57,7 @@ class UserController extends GetxController {
 
   void Logout() {
     isLoggedIn.value = false;
+    user.value = User();
     push(DashboardScreen(),
         isNewTask: true, pageRouteAnimation: PageRouteAnimation.Slide);
   }
