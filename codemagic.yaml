@@ -1,18 +1,14 @@
 workflows:
   ios-workflow-id:
     name: iOS Workflow
-    instance_type: xcode_12.5.x
+    instance_type: mac_mini_m1
     max_build_duration: 60
     environment:
       vars:
         FLUTTER_VERSION: "2.2.3"
         ANDROID_HOME: $HOME/Android/Sdk
-        PATH: $PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
-    cache:
-      directories:
-        - $HOME/.pub-cache
-        - $HOME/Android/Sdk
-        - $HOME/Library/Caches/CocoaPods
+        PATH: $PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools 
+    
     triggering:
       events:
         - push
