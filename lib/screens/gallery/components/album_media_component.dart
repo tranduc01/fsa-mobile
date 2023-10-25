@@ -16,12 +16,14 @@ class AlbumMediaComponent extends StatefulWidget {
   final String? mediaType;
   final String thumbnail;
   final bool? canDelete;
-  final VoidCallback? onDelete;
+  final int? mediaId;
+  final Function(int)? onDelete;
 
   AlbumMediaComponent(
       {required this.mediaUrl,
       this.onDelete,
       this.canDelete = false,
+      this.mediaId,
       required this.thumbnail,
       this.mediaType});
 
@@ -54,7 +56,7 @@ class _AlbumMediaComponentState extends State<AlbumMediaComponent> {
     log(widget.thumbnail);
     return GestureDetector(
       onTap: () {
-        if (widget.mediaType == MediaTypes.photo) {
+        if (widget.mediaType == MediaTypes.image) {
           ImageScreen(imageURl: widget.mediaUrl.validate()).launch(context);
         } else if (widget.mediaType == MediaTypes.audio) {
           AudioPostScreen(widget.mediaUrl.validate()).launch(context);
@@ -80,7 +82,7 @@ class _AlbumMediaComponentState extends State<AlbumMediaComponent> {
                 ? cachedImage(
                     height: context.height(),
                     width: context.width(),
-                    widget.mediaType == MediaTypes.photo
+                    widget.mediaType == MediaTypes.image
                         ? widget.mediaUrl.validate()
                         : widget.thumbnail.validate(),
                     fit: BoxFit.cover,
@@ -96,23 +98,29 @@ class _AlbumMediaComponentState extends State<AlbumMediaComponent> {
                       ).cornerRadiusWithClipRRect(commonRadius),
           ),
           if (widget.canDelete.validate())
-            IconButton(
+            Container(
+              height: 40,
+              width: 40,
+              margin: EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.6),
+                borderRadius: BorderRadius.circular(commonRadius),
+              ),
+              child: IconButton(
                 onPressed: () {
                   showConfirmDialogCustom(
                     context,
                     title: language.albumDeleteConfirmation,
                     onAccept: (s) {
-                      widget.onDelete!.call();
+                      widget.onDelete!.call(widget.mediaId!);
                     },
                     dialogType: DialogType.DELETE,
                   );
                 },
-                icon: Image.asset(
-                  ic_delete,
-                  color: Colors.white,
-                  height: 18,
-                  width: 18,
-                )),
+                icon: Image.asset(ic_delete,
+                    color: Colors.black, height: 20, width: 20),
+              ),
+            )
         ],
       ),
     );

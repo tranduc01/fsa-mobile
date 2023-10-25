@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/main.dart';
+import '../../../models/gallery/albums.dart';
 import '../components/album_upload_component.dart';
-
 
 // ignore: must_be_immutable
 class AddMediaScreen extends StatefulWidget {
   String? fileType;
+  Album? album;
 
-  AddMediaScreen({required this.fileType});
+  AddMediaScreen({required this.fileType, this.album});
 
   @override
   State<AddMediaScreen> createState() => _AddMediaScreenState();
@@ -31,7 +32,7 @@ class _AddMediaScreenState extends State<AddMediaScreen> {
           },
         ),
       ),
-      body: AlbumUploadScreen(fileType:widget.fileType),
+      body: AlbumUploadScreen(fileType: widget.fileType, album: widget.album),
     );
   }
 }
