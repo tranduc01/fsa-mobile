@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:get/get.dart';
@@ -6,6 +7,7 @@ import 'package:socialv/models/common_models.dart';
 import 'package:socialv/models/gallery/albums.dart';
 
 class GalleryController extends GetxController {
+  final storage = new FlutterSecureStorage();
   var albums = <Album>[].obs;
   var album = Album().obs;
   var isLoading = true.obs;
@@ -23,7 +25,11 @@ class GalleryController extends GetxController {
     isLoading(true);
     var url = 'https://orchidsharingapp.somee.com/api/Collection';
 
-    var response = await GetConnect().get(url);
+    String? token = await storage.read(key: 'jwt');
+    var headers = {
+      'Authorization': 'Bearer $token',
+    };
+    var response = await GetConnect().get(url, headers: headers);
     if (response.statusCode == 200) {
       var result = jsonDecode(response.bodyString!);
       isLoading(false);
@@ -38,7 +44,12 @@ class GalleryController extends GetxController {
   Future<Album> fetchAlbum(int albumId) async {
     isLoading(true);
     var url = 'https://orchidsharingapp.somee.com/api/Collection/$albumId';
-    var response = await GetConnect().get(url);
+
+    String? token = await storage.read(key: 'jwt');
+    var headers = {
+      'Authorization': 'Bearer $token',
+    };
+    var response = await GetConnect().get(url, headers: headers);
 
     if (response.statusCode == 200) {
       var result = jsonDecode(response.bodyString!);
@@ -55,7 +66,8 @@ class GalleryController extends GetxController {
     try {
       var url = Uri.parse('https://orchidsharingapp.somee.com/api/Collection');
       var request = http.MultipartRequest('POST', url);
-
+      request.headers['Authorization'] =
+          'Bearer ${await storage.read(key: 'jwt')}';
       for (var media in medias) {
         var multipartFile = await http.MultipartFile.fromPath(
           'medias',
@@ -86,7 +98,8 @@ class GalleryController extends GetxController {
       var url = Uri.parse(
           'https://orchidsharingapp.somee.com/api/Collection/${album.id}');
       var request = http.MultipartRequest('PATCH', url);
-
+      request.headers['Authorization'] =
+          'Bearer ${await storage.read(key: 'jwt')}';
       if (medias != null) {
         for (var media in medias) {
           var multipartFile = await http.MultipartFile.fromPath(
@@ -120,7 +133,11 @@ class GalleryController extends GetxController {
   Future<void> deleteAlbum(int id) async {
     try {
       var url = 'https://orchidsharingapp.somee.com/api/Collection/$id';
-      var response = await GetConnect().delete(url);
+      String? token = await storage.read(key: 'jwt');
+      var headers = {
+        'Authorization': 'Bearer $token',
+      };
+      var response = await GetConnect().delete(url, headers: headers);
       if (response.statusCode == 200) {
         isDeleteSuccess(true);
       } else {

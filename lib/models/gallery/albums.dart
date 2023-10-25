@@ -25,7 +25,7 @@ class Album {
     createdAt = DateTime.parse(json['createdAt']);
     media = json['medias'] != null
         ? (json['medias'] as List).map((e) => Media.fromJson(e)).toList()
-        : null;
+        : [];
   }
 }
 
