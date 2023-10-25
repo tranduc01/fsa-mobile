@@ -47,7 +47,7 @@ dependencies:
   # Share
   share_plus: ^7.0.1
   flutter_custom_tabs: ^1.0.4
-  shared_preferences:
+  flutter_secure_storage:
 
   # Firebase
   firebase_crashlytics: ^3.3.1

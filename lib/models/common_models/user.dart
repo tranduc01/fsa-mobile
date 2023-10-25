@@ -43,7 +43,8 @@ class User {
     data['id'] = this.id;
     data['templated'] = this.templated;
     data['name'] = this.name;
-
+    data['userName'] = this.userName;
+    data['avatarUrl'] = this.avatarUrl;
     return data;
   }
 }

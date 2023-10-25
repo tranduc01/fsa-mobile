@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/components/loading_widget.dart';
@@ -23,7 +24,7 @@ class UserDetailBottomSheetWidget extends StatefulWidget {
 class _UserDetailBottomSheetWidgetState
     extends State<UserDetailBottomSheetWidget> {
   List<DrawerModel> options = getDrawerOptions();
-  final UserController userController = Get.put(UserController());
+  final UserController userController = Get.find();
 
   int selectedIndex = -1;
   bool isLoading = false;
@@ -60,7 +61,7 @@ class _UserDetailBottomSheetWidgetState
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    userController.isLoggedIn.value
+                    Obx(() => userController.isLoggedIn.value
                         ? Row(
                             children: [
                               userController.user.value.avatarUrl.isEmptyOrNull
@@ -137,7 +138,7 @@ class _UserDetailBottomSheetWidgetState
                             onTap: () {
                               SignInScreen().launch(context, isNewTask: false);
                             },
-                          ),
+                          )),
                     Column(
                       mainAxisSize: MainAxisSize.min,
                       children: options.map((e) {
@@ -188,6 +189,14 @@ class _UserDetailBottomSheetWidgetState
               Column(
                 children: [
                   VersionInfoWidget(prefixText: 'v'),
+                  GestureDetector(
+                    child: Text('Tap me'),
+                    onTap: () async {
+                      FlutterSecureStorage prefs = FlutterSecureStorage();
+                      print(await prefs.read(key: 'jwt'));
+                      print(await prefs.read(key: 'user'));
+                    },
+                  ),
                   16.height,
                   userController.isLoggedIn.value
                       ? TextButton(
