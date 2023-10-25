@@ -1,0 +1,30 @@
+workflows:
+  ios-workflow-id:
+    name: iOS Workflow
+    instance_type: mac_mini_m1
+    max_build_duration: 60
+    environment:
+      vars:
+        FLUTTER_VERSION: "2.2.3"
+        ANDROID_HOME: $HOME/Android/Sdk
+        PATH: $PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
+    xcode:
+      version: "12.5.1"
+    cache:
+      directories:
+        - $HOME/.pub-cache
+        - $HOME/Android/Sdk
+        - $HOME/Library/Caches/CocoaPods
+    triggering:
+      events:
+        - push
+        - pull_request
+    scripts:
+      - flutter pub get
+      - flutter build ios --release --no-codesign
+    artifacts:
+      - build/ios/ipa/*.ipa
+    publishing:
+      email:
+        recipients:
+          - doantranduc01@gmail.com
