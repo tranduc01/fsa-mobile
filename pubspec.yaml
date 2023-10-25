@@ -47,6 +47,7 @@ dependencies:
   # Share
   share_plus: ^7.0.1
   flutter_custom_tabs: ^1.0.4
+  flutter_secure_storage:
 
   # Firebase
   firebase_crashlytics: ^3.3.1
@@ -57,6 +58,7 @@ dependencies:
   # AUTHENTICATION
   google_sign_in: ^6.1.0
   the_apple_sign_in: ^1.1.1
+  jwt_decoder: 
 
   # Remote Notification
   onesignal_flutter: ^3.5.1

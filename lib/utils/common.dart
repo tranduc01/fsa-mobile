@@ -236,37 +236,31 @@ Future<List<File>> getMultipleFiles({required MediaModel mediaType}) async {
   FilePickerResult? filePickerResult;
   List<File> imgList = [];
 
-  FileType type = FileType.custom;
-
-  if (isIOS) {
-    log('${mediaType.type}');
-    if (mediaType.type == MediaTypes.photo)
-      type = FileType.image;
-    else if (mediaType.type == MediaTypes.video)
-      type = FileType.video;
-    else
-      type = FileType.custom;
-  } else {
-    type = FileType.custom;
-  }
+  // if (isIOS) {
+  //   log('${mediaType.type}');
+  //   if (mediaType.type == MediaTypes.photo)
+  //     type = FileType.image;
+  //   else if (mediaType.type == MediaTypes.video)
+  //     type = FileType.video;
+  //   else
+  //     type = FileType.custom;
+  // } else {
+  //   type = FileType.custom;
+  // }
 
   filePickerResult = await FilePicker.platform.pickFiles(
-      allowMultiple: true,
-      type: type,
-      allowedExtensions:
-          type == FileType.custom ? mediaType.allowedType.validate() : null);
+      allowMultiple: true, allowedExtensions: mediaType.allowedType.validate());
 
   if (filePickerResult != null) {
     filePickerResult.files.forEach((element) {
       log('element: ${element.path.validate().split("/").last.split(".").last}');
-
-      if (element.path.validate().split("/").last.split(".").last.isNotEmpty &&
-          mediaType.allowedType!.any((e) =>
-              e == element.path.validate().split("/").last.split(".").last)) {
-        imgList.add(File(element.path!));
-      } else {
-        toast(language.cannotAddThisFile);
-      }
+      // if (element.path.validate().split("/").last.split(".").last.isNotEmpty &&
+      //     mediaType.allowedType!.any((e) =>
+      //         e == element.path.validate().split("/").last.split(".").last)) {
+      imgList.add(File(element.path!));
+      // } else {
+      //   toast(language.cannotAddThisFile);
+      // }
     });
   }
   return imgList;

@@ -363,9 +363,9 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
                           avatarUrl: member.blockedBy.validate()
                               ? AppImages.defaultAvatarUrl
                               : member.memberAvatarImage.validate(),
-                          cover: member.blockedBy.validate()
-                              ? null
-                              : member.memberCoverImage.validate(),
+                          // cover: member.blockedBy.validate()
+                          //     ? null
+                          //     : member.memberCoverImage.validate(),
                         ),
                         Column(
                           mainAxisSize: MainAxisSize.min,

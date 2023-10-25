@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:socialv/network/rest_apis.dart';
+import 'package:socialv/controllers/gallery_controller.dart';
 import 'package:socialv/screens/gallery/screens/create_album_screen.dart';
+import 'package:video_player/video_player.dart';
+import '../../../components/file_picker_dialog_component.dart';
 import '../../../components/loading_widget.dart';
 import '../../../components/no_data_lottie_widget.dart';
 import '../../../main.dart';
+import '../../../models/common_models.dart';
 import '../../../models/gallery/media_active_statuses_model.dart';
 import '../../../models/posts/media_model.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/common.dart';
 import '../../../utils/constants.dart';
+import '../../post/components/show_selected_media_component.dart';
 
 class CreateAlbumComponent extends StatefulWidget {
   final List<MediaModel> mediaTypeList;
@@ -29,7 +34,9 @@ int? albumId;
 
 class _CreateAlbumComponentState extends State<CreateAlbumComponent> {
   final albumKey = GlobalKey<FormState>();
-  MediaModel dropdownTypeValue = MediaModel();
+  MediaModel dropdownTypeValue = MediaModel(
+      allowedType: ['image', 'video'], title: 'Image', type: 'image');
+  List<PostMedia> mediaList = [];
   MediaActiveStatusesModel dropdownStatusValue = MediaActiveStatusesModel();
   TextEditingController titleCont = TextEditingController();
   TextEditingController discCont = TextEditingController();
@@ -39,7 +46,7 @@ class _CreateAlbumComponentState extends State<CreateAlbumComponent> {
   List<MediaActiveStatusesModel> mediaStatusList = [
     MediaActiveStatusesModel(
         id: 4,
-        label: "AAA",
+        label: "111",
         singularName: "BBB",
         pluralName: "CCC",
         ttId: 1,
@@ -47,15 +54,24 @@ class _CreateAlbumComponentState extends State<CreateAlbumComponent> {
         activityPrivacy: "EEE"),
     MediaActiveStatusesModel(
         id: 5,
-        label: "AAA",
+        label: "222",
         singularName: "BBB",
         pluralName: "CCC",
-        ttId: 1,
+        ttId: 2,
+        callback: "DDD",
+        activityPrivacy: "EEE"),
+    MediaActiveStatusesModel(
+        id: 6,
+        label: "333",
+        singularName: "BBB",
+        pluralName: "CCC",
+        ttId: 3,
         callback: "DDD",
         activityPrivacy: "EEE"),
   ];
 
   bool isError = false;
+  late GalleryController galleryController = Get.put(GalleryController());
 
   @override
   void initState() {
@@ -67,6 +83,11 @@ class _CreateAlbumComponentState extends State<CreateAlbumComponent> {
           widget.mediaTypeList[(widget.groupId != null) ? 2 : 1];
       selectedAlbumMedia =
           widget.mediaTypeList[(widget.groupId != null) ? 2 : 1];
+    }
+
+    // Set dropdownStatusValue to the first item in mediaStatusList
+    if (mediaStatusList.isNotEmpty) {
+      dropdownStatusValue = mediaStatusList.first;
     }
   }
 
@@ -90,36 +111,6 @@ class _CreateAlbumComponentState extends State<CreateAlbumComponent> {
     return mediaStatusList;
   }
 
-  void createNewAlbum() {
-    ifNotTester(
-      () {
-        appStore.setLoading(true);
-        setState(() {});
-        createAlbum(
-          groupID: widget.groupId,
-          component:
-              widget.groupId == null ? Component.members : Component.groups,
-          title: titleCont.text,
-          type: selectedAlbumMedia!.type.validate(),
-          description: discCont.text,
-          status: dropdownStatusValue.slug.validate(),
-        ).then((value) {
-          albumId = value.albumId.validate();
-          toast(value.message.toString(), print: true);
-          isAlbumCreated = true;
-          appStore.setLoading(false);
-          widget.onNextPage!.call(1);
-        }).catchError(
-          (e) {
-            toast(e.toString(), print: true);
-            appStore.setLoading(false);
-            setState(() {});
-          },
-        );
-      },
-    );
-  }
-
   @override
   void setState(VoidCallback fn) {
     if (mounted) super.setState(fn);
@@ -139,7 +130,7 @@ class _CreateAlbumComponentState extends State<CreateAlbumComponent> {
         children: [
           if (isError)
             SizedBox(
-              height: context.height() * 0.8,
+              height: MediaQuery.of(context).size.height * 0.8,
               child: NoDataWidget(
                 imageWidget: NoDataLottieWidget(),
                 title: isError
@@ -153,8 +144,8 @@ class _CreateAlbumComponentState extends State<CreateAlbumComponent> {
             )
           else
             Container(
-              height: context.height(),
-              width: context.width(),
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
               clipBehavior: Clip.antiAliasWithSaveLayer,
               padding: EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
@@ -169,116 +160,12 @@ class _CreateAlbumComponentState extends State<CreateAlbumComponent> {
                   children: [
                     24.height,
                     Text(
-                      "1. ${language.addAlbumDetails}",
+                      "${language.addAlbumDetails}",
                       style: primaryTextStyle(
                           color: appStore.isDarkMode ? bodyDark : bodyWhite,
                           size: 18),
                     ),
                     16.height,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(language.type, style: boldTextStyle()),
-                        if (widget.mediaTypeList.validate().isNotEmpty)
-                          Container(
-                            height: 40,
-                            width: 200,
-                            decoration: BoxDecoration(
-                                color: context.scaffoldBackgroundColor,
-                                borderRadius: radius(commonRadius)),
-                            child: DropdownButtonHideUnderline(
-                              child: ButtonTheme(
-                                alignedDropdown: true,
-                                child: DropdownButton<MediaModel>(
-                                  isExpanded: true,
-                                  borderRadius:
-                                      BorderRadius.circular(commonRadius),
-                                  value: dropdownTypeValue,
-                                  icon: Icon(Icons.arrow_drop_down,
-                                      color: appStore.isDarkMode
-                                          ? bodyDark
-                                          : bodyWhite),
-                                  elevation: 8,
-                                  style: primaryTextStyle(),
-                                  underline: Container(
-                                      height: 2, color: appColorPrimary),
-                                  alignment: Alignment.bottomCenter,
-                                  onChanged: (MediaModel? newValue) {
-                                    setState(() {
-                                      dropdownTypeValue = newValue!;
-                                      selectedAlbumMedia = newValue;
-                                    });
-                                  },
-                                  items: widget.mediaTypeList
-                                      .sublist((widget.groupId != null) ? 2 : 1)
-                                      .map<DropdownMenuItem<MediaModel>>((e) {
-                                    return DropdownMenuItem<MediaModel>(
-                                      value: e,
-                                      child: Text('${e.title.validate()}',
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1),
-                                    );
-                                  }).toList(),
-                                ),
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-                    16.height,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(language.status, style: boldTextStyle()),
-                        Container(
-                          height: 40,
-                          width: 200,
-                          decoration: BoxDecoration(
-                              color: context.scaffoldBackgroundColor,
-                              borderRadius: radius(commonRadius)),
-                          child: DropdownButtonHideUnderline(
-                            child: ButtonTheme(
-                              alignedDropdown: true,
-                              child: DropdownButton<MediaActiveStatusesModel>(
-                                borderRadius:
-                                    BorderRadius.circular(commonRadius),
-                                value: dropdownStatusValue,
-                                isExpanded: true,
-                                icon: Icon(Icons.arrow_drop_down,
-                                    color: appStore.isDarkMode
-                                        ? bodyDark
-                                        : bodyWhite),
-                                elevation: 8,
-                                style: primaryTextStyle(),
-                                underline: Container(
-                                    height: 2, color: appColorPrimary),
-                                alignment: Alignment.bottomCenter,
-                                onChanged:
-                                    (MediaActiveStatusesModel? newValue) {
-                                  setState(() {
-                                    dropdownStatusValue = newValue!;
-                                  });
-                                },
-                                items: mediaStatusList.map<
-                                    DropdownMenuItem<
-                                        MediaActiveStatusesModel>>((e) {
-                                  return DropdownMenuItem<
-                                      MediaActiveStatusesModel>(
-                                    value: e,
-                                    child: e.label != language.all
-                                        ? Text('${e.label.validate()}',
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1)
-                                        : Offstage(),
-                                  );
-                                }).toList(),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    8.height,
                     Form(
                       key: albumKey,
                       child: Column(
@@ -322,6 +209,64 @@ class _CreateAlbumComponentState extends State<CreateAlbumComponent> {
                       ).paddingSymmetric(vertical: 8),
                     ),
                     8.height,
+                    Stack(
+                      children: [
+                        DottedBorderWidget(
+                          padding: EdgeInsets.symmetric(vertical: 32),
+                          radius: defaultAppButtonRadius,
+                          dotsWidth: 8,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              16.height,
+                              AppButton(
+                                elevation: 0,
+                                color: appColorPrimary,
+                                text: language.selectFiles,
+                                textStyle: boldTextStyle(color: Colors.white),
+                                onTap: () async {
+                                  onSelectMedia();
+                                },
+                              ),
+                              16.height,
+                              Text(
+                                '${language.add} files',
+                                style: secondaryTextStyle(size: 16),
+                              ).center(),
+                              8.height,
+                              Text(
+                                'Please select files',
+                                style: secondaryTextStyle(),
+                              ).center(),
+                              16.height,
+                            ],
+                          ),
+                        ),
+                        // Positioned(
+                        //   child: Icon(Icons.cancel_outlined,
+                        //           color: appColorPrimary, size: 18)
+                        //       .onTap(() {
+                        //     finish(context);
+                        //     finish(context);
+                        //   },
+                        //           splashColor: Colors.transparent,
+                        //           highlightColor: Colors.transparent),
+                        //   right: 6,
+                        //   top: 6,
+                        // ),
+                      ],
+                    ).paddingAll(16),
+                    if (mediaList.isNotEmpty)
+                      ShowSelectedMediaComponent(
+                        mediaList: mediaList,
+                        mediaType: MediaModel(
+                            type: 'photo', title: 'Photo', isActive: true),
+                        videoController:
+                            List.generate(mediaList.length, (index) {
+                          return VideoPlayerController.networkUrl(Uri.parse(
+                              mediaList[index].file!.path.validate()));
+                        }),
+                      ),
                     Align(
                       alignment: Alignment.center,
                       child: appButton(
@@ -329,7 +274,115 @@ class _CreateAlbumComponentState extends State<CreateAlbumComponent> {
                         onTap: () {
                           hideKeyboard(context);
                           if (albumKey.currentState!.validate()) {
-                            createNewAlbum();
+                            showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (context) {
+                                  return Dialog(
+                                    shadowColor: Colors.transparent,
+                                    backgroundColor: Colors.transparent,
+                                    child: Image.asset(
+                                      'assets/icons/loading.gif',
+                                      height: 180,
+                                      width: 180,
+                                    ),
+                                  );
+                                });
+                            galleryController.createAlbum(
+                                titleCont.text, discCont.text, mediaList);
+                            Future.delayed(Duration(seconds: 3), () {
+                              if (galleryController.isCreateSuccess.value) {
+                                galleryController.fetchAlbums();
+                                Navigator.pop(context);
+                                toast('Album Created Successfully');
+                                Navigator.pop(context);
+                              } else {
+                                Navigator.pop(context);
+                                showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (context) {
+                                    return Dialog(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: Container(
+                                        width: 200,
+                                        padding: EdgeInsets.all(16),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Image.asset(
+                                                'assets/images/fail.gif'),
+                                            SizedBox(
+                                              height: 20,
+                                            ),
+                                            Text(
+                                              'Create Failed',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 20),
+                                            ),
+                                            SizedBox(height: 20),
+                                            Text(
+                                              'Please try again!',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                color: const Color.fromARGB(
+                                                    106, 0, 0, 0),
+                                              ),
+                                            ),
+                                            SizedBox(height: 20),
+                                            Center(
+                                              child: ElevatedButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text(
+                                                  'Try Again',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.black),
+                                                ),
+                                                style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateColor
+                                                          .resolveWith(
+                                                              (states) {
+                                                    if (states.contains(
+                                                        MaterialState
+                                                            .pressed)) {
+                                                      return const Color
+                                                              .fromARGB(
+                                                          137, 244, 67, 54);
+                                                    }
+                                                    return Colors.white;
+                                                  }),
+                                                  shape:
+                                                      MaterialStateProperty.all<
+                                                          RoundedRectangleBorder>(
+                                                    RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                        side: BorderSide(
+                                                            color: Colors.red,
+                                                            width: 2)),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              }
+                            });
                           }
                         },
                         context: context,
@@ -347,5 +400,46 @@ class _CreateAlbumComponentState extends State<CreateAlbumComponent> {
         ],
       ),
     );
+  }
+
+  Future<void> onSelectMedia() async {
+    FileTypes? file = await showInDialog(
+      context,
+      contentPadding: EdgeInsets.symmetric(vertical: 16),
+      title: Text(language.chooseAnAction, style: boldTextStyle()),
+      builder: (p0) {
+        return FilePickerDialog(isSelected: true);
+      },
+    );
+
+    if (file != null) {
+      if (file == FileTypes.CAMERA) {
+        appStore.setLoading(true);
+        await getImageSource(
+                isCamera: true,
+                isVideo: selectedAlbumMedia!.type == MediaTypes.video)
+            .then((value) {
+          appStore.setLoading(false);
+          mediaList.add(PostMedia(file: value));
+          setState(() {});
+        }).catchError((e) {
+          log('Error: ${e.toString()}');
+          appStore.setLoading(false);
+        });
+      } else {
+        appStore.setLoading(true);
+        getMultipleFiles(mediaType: MediaModel(type: 'photo', isActive: true))
+            .then((value) {
+          value.forEach((element) {
+            mediaList.add(PostMedia(file: element));
+          });
+        }).catchError((e) {
+          log('Error: ${e.toString()}');
+        }).whenComplete(() {
+          setState(() {});
+          appStore.setLoading(false);
+        });
+      }
+    }
   }
 }

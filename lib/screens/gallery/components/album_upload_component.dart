@@ -1,7 +1,9 @@
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:socialv/controllers/gallery_controller.dart';
 import 'package:socialv/models/posts/media_model.dart';
 import 'package:socialv/screens/gallery/screens/create_album_screen.dart';
 import 'package:video_player/video_player.dart';
@@ -10,20 +12,18 @@ import '../../../components/file_picker_dialog_component.dart';
 import '../../../components/loading_widget.dart';
 import '../../../main.dart';
 import '../../../models/common_models.dart';
-import '../../../network/rest_apis.dart';
+import '../../../models/gallery/albums.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/common.dart';
 import '../../../utils/constants.dart';
 import '../../post/components/show_selected_media_component.dart';
-import '../screens/gallery_screen.dart';
-import 'create_album_component.dart';
 
 // ignore: must_be_immutable
 class AlbumUploadScreen extends StatefulWidget {
   final String? fileType;
-  final int? groupId;
+  final Album? album;
 
-  AlbumUploadScreen({this.fileType, this.groupId});
+  AlbumUploadScreen({this.fileType, this.album});
 
   @override
   State<AlbumUploadScreen> createState() => _AlbumUploadScreenState();
@@ -31,20 +31,18 @@ class AlbumUploadScreen extends StatefulWidget {
 
 class _AlbumUploadScreenState extends State<AlbumUploadScreen> {
   List<PostMedia> mediaList = [];
-
+  late GalleryController galleryController = Get.put(GalleryController());
   @override
   void initState() {
     super.initState();
     mediaList.clear();
     if (widget.fileType != null) {
-      MediaModel media = mediaTypeList
-          .firstWhere((element) => element.type == widget.fileType);
+      // MediaModel media = mediaTypeList
+      //     .firstWhere((element) => element.type == widget.fileType);
 
       selectedAlbumMedia = MediaModel(
-        type: media.type,
-        title: media.title,
-        allowedType: media.allowedType,
-        isActive: media.isActive,
+        type: widget.fileType,
+        isActive: true,
       );
     }
   }
@@ -75,7 +73,8 @@ class _AlbumUploadScreenState extends State<AlbumUploadScreen> {
         });
       } else {
         appStore.setLoading(true);
-        getMultipleFiles(mediaType: selectedAlbumMedia!).then((value) {
+        getMultipleFiles(mediaType: MediaModel(type: 'photo', isActive: true))
+            .then((value) {
           value.forEach((element) {
             mediaList.add(PostMedia(file: element));
           });
@@ -88,34 +87,6 @@ class _AlbumUploadScreenState extends State<AlbumUploadScreen> {
         log('MediaList: ${mediaList.length}');
       }
     }
-  }
-
-  void onUpload() async {
-    ifNotTester(() async {
-      if (mediaList.isEmpty) {
-        toast(language.addPostContent);
-      } else {
-        appStore.setLoading(true);
-        setState(() {});
-        await uploadMediaFiles(
-                groupId: widget.groupId,
-                count: mediaList.length,
-                galleryId: albumId,
-                media: mediaList)
-            .then(
-          (value) async {
-            appStore.setLoading(false);
-            finish(context, true);
-          },
-        ).catchError(
-          (e) {
-            toast(language.somethingWentWrong, print: true);
-            appStore.setLoading(false);
-            finish(context, true);
-          },
-        );
-      }
-    });
   }
 
   @override
@@ -145,7 +116,7 @@ class _AlbumUploadScreenState extends State<AlbumUploadScreen> {
               children: [
                 24.height,
                 if (widget.fileType == null)
-                  Text("2. ${language.addMediaFile}",
+                  Text("${language.addMediaFile}",
                           style: primaryTextStyle(
                               color: appStore.isDarkMode ? bodyDark : bodyWhite,
                               size: 18))
@@ -166,26 +137,7 @@ class _AlbumUploadScreenState extends State<AlbumUploadScreen> {
                             text: language.selectFiles,
                             textStyle: boldTextStyle(color: Colors.white),
                             onTap: () async {
-                              if (selectedAlbumMedia!.type ==
-                                      MediaTypes.photo ||
-                                  selectedAlbumMedia!.type ==
-                                      MediaTypes.video) {
-                                onSelectMedia();
-                              } else {
-                                appStore.setLoading(true);
-                                getMultipleFiles(mediaType: selectedAlbumMedia!)
-                                    .then((value) {
-                                  value.forEach((element) {
-                                    mediaList.add(PostMedia(file: element));
-                                  });
-                                }).catchError((e) {
-                                  log('Error: ${e.toString()}');
-                                }).whenComplete(() {
-                                  setState(() {});
-                                  appStore.setLoading(false);
-                                });
-                                log('MediaList: ${mediaList.length}');
-                              }
+                              onSelectMedia();
                             },
                           ),
                           16.height,
@@ -202,18 +154,18 @@ class _AlbumUploadScreenState extends State<AlbumUploadScreen> {
                         ],
                       ),
                     ),
-                    Positioned(
-                      child: Icon(Icons.cancel_outlined,
-                              color: appColorPrimary, size: 18)
-                          .onTap(() {
-                        finish(context);
-                        finish(context);
-                      },
-                              splashColor: Colors.transparent,
-                              highlightColor: Colors.transparent),
-                      right: 6,
-                      top: 6,
-                    ),
+                    // Positioned(
+                    //   child: Icon(Icons.cancel_outlined,
+                    //           color: appColorPrimary, size: 18)
+                    //       .onTap(() {
+                    //     finish(context);
+                    //     finish(context);
+                    //   },
+                    //           splashColor: Colors.transparent,
+                    //           highlightColor: Colors.transparent),
+                    //   right: 6,
+                    //   top: 6,
+                    // ),
                   ],
                 ).paddingAll(16),
                 if (mediaList.isNotEmpty)
@@ -231,7 +183,108 @@ class _AlbumUploadScreenState extends State<AlbumUploadScreen> {
                   child: appButton(
                     text: language.upload,
                     onTap: () {
-                      onUpload();
+                      showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (context) {
+                            return Dialog(
+                              shadowColor: Colors.transparent,
+                              backgroundColor: Colors.transparent,
+                              child: Image.asset(
+                                'assets/icons/loading.gif',
+                                height: 180,
+                                width: 180,
+                              ),
+                            );
+                          });
+                      galleryController.updateAlbum(
+                          widget.album!, mediaList, null);
+                      Future.delayed(Duration(seconds: 3), () {
+                        if (galleryController.isUpdateSuccess.value) {
+                          galleryController.fetchAlbum(widget.album!.id!);
+                          Navigator.pop(context);
+                          toast('Medias Added Successfully');
+                          Navigator.pop(context);
+                        } else {
+                          Navigator.pop(context);
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (context) {
+                              return Dialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Container(
+                                  width: 200,
+                                  padding: EdgeInsets.all(16),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Image.asset('assets/images/fail.gif'),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      Text(
+                                        'Create Failed',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20),
+                                      ),
+                                      SizedBox(height: 20),
+                                      Text(
+                                        'Please try again!',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: const Color.fromARGB(
+                                              106, 0, 0, 0),
+                                        ),
+                                      ),
+                                      SizedBox(height: 20),
+                                      Center(
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text(
+                                            'Try Again',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black),
+                                          ),
+                                          style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateColor.resolveWith(
+                                                    (states) {
+                                              if (states.contains(
+                                                  MaterialState.pressed)) {
+                                                return const Color.fromARGB(
+                                                    137, 244, 67, 54);
+                                              }
+                                              return Colors.white;
+                                            }),
+                                            shape: MaterialStateProperty.all<
+                                                RoundedRectangleBorder>(
+                                              RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  side: BorderSide(
+                                                      color: Colors.red,
+                                                      width: 2)),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        }
+                      });
                     },
                     context: context,
                   ),

@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/components/loading_widget.dart';
 import 'package:socialv/components/no_data_lottie_widget.dart';
+import 'package:socialv/controllers/user_controller.dart';
 import 'package:socialv/main.dart';
 import 'package:socialv/models/members/member_detail_model.dart';
 import 'package:socialv/models/story/highlight_category_list_model.dart';
 import 'package:socialv/network/rest_apis.dart';
 import 'package:socialv/screens/dashboard_screen.dart';
-import 'package:socialv/screens/groups/screens/group_screen.dart';
 import 'package:socialv/screens/post/components/post_component.dart';
 import 'package:socialv/screens/profile/components/profile_header_component.dart';
-import 'package:socialv/screens/profile/screens/profile_friends_screen.dart';
-import 'package:socialv/screens/stories/component/story_highlights_component.dart';
 
 import '../../models/posts/post_model.dart';
 import '../../utils/app_constants.dart';
@@ -62,7 +61,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
   late Future<List<PostModel>> future;
 
   List<HighlightCategoryListModel> categoryList = [];
-
+  late UserController userController = Get.put(UserController());
   int mPage = 1;
   bool mIsLastPage = false;
   bool isError = false;
@@ -164,121 +163,128 @@ class _ProfileFragmentState extends State<ProfileFragment> {
         Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Observer(
-                builder: (_) => ProfileHeaderComponent(
-                    avatarUrl: appStore.loginAvatarUrl,
-                    cover: _memberDetails.memberCoverImage.validate())),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Observer(builder: (context) {
-                  return RichText(
-                    textAlign: TextAlign.center,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    text: TextSpan(
-                      text: appStore.loginFullName,
-                      style: boldTextStyle(size: 20),
-                      children: [
-                        if (_memberDetails.isUserVerified.validate())
-                          WidgetSpan(
-                            child: Image.asset(ic_tick_filled,
-                                    width: 20, height: 20, color: blueTickColor)
-                                .paddingSymmetric(horizontal: 4),
+            Obx(() => ProfileHeaderComponent(
+                  avatarUrl: userController.user.value.avatarUrl,
+                )),
+            userController.isLoggedIn.value
+                ? Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Obx(() {
+                        return RichText(
+                          textAlign: TextAlign.center,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          text: TextSpan(
+                            text: userController.user.value.name,
+                            style: boldTextStyle(size: 20),
+                            children: [
+                              WidgetSpan(
+                                child: Image.asset(ic_tick_filled,
+                                        width: 20,
+                                        height: 20,
+                                        color: blueTickColor)
+                                    .paddingSymmetric(horizontal: 4),
+                              ),
+                            ],
                           ),
-                      ],
-                    ),
-                  );
-                }),
-                4.height,
-                TextIcon(
-                  edgeInsets: EdgeInsets.zero,
-                  spacing: 0,
-                  onTap: () {
-                    PersonalInfoScreen(
-                            profileInfo: _memberDetails.profileInfo.validate(),
-                            hasUserInfo: true)
-                        .launch(context);
-                  },
-                  text: appStore.loginName,
-                  textStyle: secondaryTextStyle(),
-                  suffix: SizedBox(
-                    height: 26,
-                    width: 26,
-                    child: IconButton(
-                      padding: EdgeInsets.zero,
-                      onPressed: () {
-                        PersonalInfoScreen(
-                                profileInfo:
-                                    _memberDetails.profileInfo.validate(),
-                                hasUserInfo: true)
-                            .launch(context);
-                      },
-                      icon: Icon(Icons.info_outline_rounded),
-                      iconSize: 18,
-                      splashRadius: 1,
-                    ),
-                  ),
-                ),
-              ],
-            ).paddingAll(16),
-            Observer(builder: (context) {
-              return Row(
-                children: [
-                  if (appStore.displayPostCount == 1)
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(_memberDetails.postCount.validate().toString(),
-                            style: boldTextStyle(size: 18)),
-                        4.height,
-                        Text(language.posts,
-                            style: secondaryTextStyle(size: 12)),
-                      ],
-                    ).paddingSymmetric(vertical: 8).onTap(() {
-                      widget.controller?.animateTo(context.height() * 0.35,
-                          duration: const Duration(milliseconds: 500),
-                          curve: Curves.linear);
-                    },
-                        splashColor: Colors.transparent,
-                        highlightColor: Colors.transparent).expand(),
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(_memberDetails.friendsCount.validate().toString(),
-                          style: boldTextStyle(size: 18)),
+                        );
+                      }),
                       4.height,
-                      Text(language.friends,
-                          style: secondaryTextStyle(size: 12)),
+                      TextIcon(
+                        edgeInsets: EdgeInsets.zero,
+                        spacing: 0,
+                        onTap: () {
+                          PersonalInfoScreen(
+                                  profileInfo:
+                                      _memberDetails.profileInfo.validate(),
+                                  hasUserInfo: true)
+                              .launch(context);
+                        },
+                        text: userController.user.value.userName,
+                        textStyle: secondaryTextStyle(),
+                        suffix: SizedBox(
+                          height: 26,
+                          width: 26,
+                          child: IconButton(
+                            padding: EdgeInsets.zero,
+                            onPressed: () {
+                              PersonalInfoScreen(
+                                      profileInfo:
+                                          _memberDetails.profileInfo.validate(),
+                                      hasUserInfo: true)
+                                  .launch(context);
+                            },
+                            icon: Icon(Icons.info_outline_rounded),
+                            iconSize: 18,
+                            splashRadius: 1,
+                          ),
+                        ),
+                      ),
                     ],
-                  ).paddingSymmetric(vertical: 8).onTap(() {
-                    ProfileFriendsScreen().launch(context).then((value) {
-                      if (value ?? false) getMemberDetails();
-                    });
-                  },
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.transparent).expand(),
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(_memberDetails.groupsCount.validate().toString(),
-                          style: boldTextStyle(size: 18)),
-                      4.height,
-                      Text(language.groups,
-                          style: secondaryTextStyle(size: 12)),
-                    ],
-                  ).paddingSymmetric(vertical: 8).onTap(() {
-                    GroupScreen().launch(context).then((value) {
-                      if (value) getMemberDetails();
-                    });
-                  },
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.transparent).expand(),
-                ],
-              );
-            }),
+                  ).paddingAll(16)
+                : Text(
+                    'Please login to view your profile!',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  ).withHeight(30),
+            // Observer(builder: (context) {
+            //   return Row(
+            //     children: [
+            //       if (appStore.displayPostCount == 1)
+            //         Column(
+            //           mainAxisSize: MainAxisSize.min,
+            //           children: [
+            //             Text(_memberDetails.postCount.validate().toString(),
+            //                 style: boldTextStyle(size: 18)),
+            //             4.height,
+            //             Text(language.posts,
+            //                 style: secondaryTextStyle(size: 12)),
+            //           ],
+            //         ).paddingSymmetric(vertical: 8).onTap(() {
+            //           widget.controller?.animateTo(
+            //               MediaQuery.of(context).size.height * 0.35,
+            //               duration: const Duration(milliseconds: 500),
+            //               curve: Curves.linear);
+            //         },
+            //             splashColor: Colors.transparent,
+            //             highlightColor: Colors.transparent).expand(),
+            //       Column(
+            //         mainAxisSize: MainAxisSize.min,
+            //         children: [
+            //           Text(_memberDetails.friendsCount.validate().toString(),
+            //               style: boldTextStyle(size: 18)),
+            //           4.height,
+            //           Text(language.friends,
+            //               style: secondaryTextStyle(size: 12)),
+            //         ],
+            //       ).paddingSymmetric(vertical: 8).onTap(() {
+            //         ProfileFriendsScreen().launch(context).then((value) {
+            //           if (value ?? false) getMemberDetails();
+            //         });
+            //       },
+            //           splashColor: Colors.transparent,
+            //           highlightColor: Colors.transparent).expand(),
+            //       Column(
+            //         mainAxisSize: MainAxisSize.min,
+            //         children: [
+            //           Text(_memberDetails.groupsCount.validate().toString(),
+            //               style: boldTextStyle(size: 18)),
+            //           4.height,
+            //           Text(language.groups,
+            //               style: secondaryTextStyle(size: 12)),
+            //         ],
+            //       ).paddingSymmetric(vertical: 8).onTap(() {
+            //         GroupScreen().launch(context).then((value) {
+            //           if (value) getMemberDetails();
+            //         });
+            //       },
+            //           splashColor: Colors.transparent,
+            //           highlightColor: Colors.transparent).expand(),
+            //     ],
+            //   );
+            // }),
             TextIcon(
               onTap: () {
                 GalleryScreen(
@@ -288,15 +294,8 @@ class _ProfileFragmentState extends State<ProfileFragment> {
               text: language.viewGallery,
               textStyle: primaryTextStyle(color: appColorPrimary),
               prefix: Image.asset(ic_image,
-                  width: 18, height: 18, color: appColorPrimary),
+                  width: 25, height: 25, color: appColorPrimary),
             ),
-            if (appStore.showStoryHighlight == 1)
-              StoryHighlightsComponent(
-                categoryList: categoryList,
-                avatarImage: _memberDetails.memberAvatarImage.validate(),
-                highlightsList: _memberDetails.highlightStory.validate(),
-              ),
-            16.height,
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -354,7 +353,8 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                               left: 8, right: 8, bottom: 50, top: 8),
                           itemCount: _userPostList.length,
                           slideConfiguration: SlideConfiguration(
-                              delay: 80.milliseconds, verticalOffset: 300),
+                              delay: Duration(milliseconds: 80),
+                              verticalOffset: 300),
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
