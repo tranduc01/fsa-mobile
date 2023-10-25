@@ -1,7 +1,7 @@
 workflows:
   ios-workflow-id:
     name: iOS Workflow
-    instance_type: mac_mini_m1
+    instance_type: xcode_12.5.x
     max_build_duration: 60
     environment:
       vars:
