@@ -73,7 +73,6 @@ class UserController extends GetxController {
     if (response.statusCode == 200) {
       isRegistered.value = true;
     } else {
-      // Request failed, handle the error
       print('Request failed with status: ${response.statusCode}');
     }
   }
