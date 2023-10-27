@@ -235,7 +235,7 @@ class _SignUpComponentState extends State<SignUpComponent> {
                     appButton(
                       context: context,
                       text: language.signUp.capitalizeFirstLetter(),
-                      onTap: () {
+                      onTap: () async {
                         if (signupFormKey.currentState!.validate()) {
                           signupFormKey.currentState!.save();
                           hideKeyboard(context);
@@ -258,7 +258,7 @@ class _SignUpComponentState extends State<SignUpComponent> {
                                     );
                                   });
 
-                              userController.Register(
+                              await userController.Register(
                                   fullNameCont.text.trim().validate(),
                                   emailCont.text.trim().validate(),
                                   passwordCont.text.trim().validate(),

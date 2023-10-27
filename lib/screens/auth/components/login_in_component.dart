@@ -146,7 +146,7 @@ class _LoginInComponentState extends State<LoginInComponent> {
                     appButton(
                       context: context,
                       text: language.login.capitalizeFirstLetter(),
-                      onTap: () {
+                      onTap: () async {
                         if (loginFormKey.currentState!.validate()) {
                           loginFormKey.currentState!.save();
                           hideKeyboard(context);
@@ -166,7 +166,8 @@ class _LoginInComponentState extends State<LoginInComponent> {
                                 );
                               });
 
-                          userController.Login(nameCont.text.trim().validate(),
+                          await userController.Login(
+                              nameCont.text.trim().validate(),
                               passwordCont.text.trim().validate());
 
                           Future.delayed(Duration(seconds: 3), () {

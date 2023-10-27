@@ -9,8 +9,8 @@ import 'package:socialv/models/gallery/albums.dart';
 class GalleryController extends GetxController {
   final storage = new FlutterSecureStorage();
   var albums = <Album>[].obs;
-  var album = Album().obs;
-  var isLoading = true.obs;
+  var album = Album(media: []).obs;
+  var isLoading = false.obs;
   var isCreateSuccess = false.obs;
   var isDeleteSuccess = false.obs;
   var isUpdateSuccess = false.obs;

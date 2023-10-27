@@ -110,7 +110,7 @@ class _SingleAlbumDetailScreenState extends State<SingleAlbumDetailScreen> {
                     ),
                     Obx(() {
                       if (galleryController
-                          .album.value.media!.isEmpty) if (widget.canEdit
+                          .album.value.media.isEmpty) if (widget.canEdit
                               .validate() &&
                           !appStore.isLoading)
                         return Column(
@@ -126,7 +126,7 @@ class _SingleAlbumDetailScreenState extends State<SingleAlbumDetailScreen> {
                                   fileType: 'photo',
                                   album: widget.album,
                                 ).launch(context).then((value) {
-                                  widget.album.media!.toList();
+                                  widget.album.media.toList();
                                 });
                               },
                               icon: Icon(Icons.add_a_photo_outlined,
@@ -143,7 +143,7 @@ class _SingleAlbumDetailScreenState extends State<SingleAlbumDetailScreen> {
                                 ? language.somethingWentWrong
                                 : language.noDataFound,
                             onRetry: () {
-                              widget.album.media!.toList();
+                              widget.album.media.toList();
                             },
                             retryText: '   ${language.clickToRefresh}   ',
                           ).center(),
@@ -152,8 +152,7 @@ class _SingleAlbumDetailScreenState extends State<SingleAlbumDetailScreen> {
                         return ThreeBounceLoadingWidget();
                       else
                         return GridView.builder(
-                          itemCount:
-                              galleryController.album.value.media!.length,
+                          itemCount: galleryController.album.value.media.length,
                           padding: EdgeInsets.only(
                               bottom: mIsLastPage ? 16 : 60, top: 16),
                           shrinkWrap: true,
@@ -168,7 +167,7 @@ class _SingleAlbumDetailScreenState extends State<SingleAlbumDetailScreen> {
                           ),
                           itemBuilder: (context, index) {
                             Media media =
-                                galleryController.album.value.media![index];
+                                galleryController.album.value.media[index];
                             return AlbumMediaComponent(
                               mediaId: media.id,
                               mediaType: media.type,
@@ -203,12 +202,12 @@ class _SingleAlbumDetailScreenState extends State<SingleAlbumDetailScreen> {
                   AddMediaScreen(album: widget.album, fileType: 'photo')
                       .launch(context)
                       .then((value) {
-                    widget.album.media!.toList();
+                    widget.album.media.toList();
                   });
                 },
                 child: Icon(Icons.add, color: Colors.white),
                 backgroundColor: context.primaryColor,
-              ).visible(galleryController.album.value.media!.isNotEmpty))
+              ).visible(galleryController.album.value.media.isNotEmpty))
           : null,
     );
   }

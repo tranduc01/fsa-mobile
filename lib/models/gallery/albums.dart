@@ -5,7 +5,7 @@ class Album {
   String? description;
   DateTime? createdAt;
   bool? canDelete;
-  List<Media>? media;
+  List<Media> media = [];
 
   Album(
       {this.id,
@@ -13,7 +13,7 @@ class Album {
       this.description,
       this.coverImageUrl,
       this.createdAt,
-      this.media,
+      required this.media,
       this.canDelete});
 
   Album.fromJson(dynamic json) {
@@ -23,9 +23,7 @@ class Album {
     description = json['description'];
     canDelete = json['can_delete'] ?? true;
     createdAt = DateTime.parse(json['createdAt']);
-    media = json['medias'] != null
-        ? (json['medias'] as List).map((e) => Media.fromJson(e)).toList()
-        : [];
+    media = (json['medias'] as List).map((e) => Media.fromJson(e)).toList();
   }
 }
 

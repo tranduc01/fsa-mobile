@@ -35,8 +35,8 @@ class _GalleryScreenAlbumComponentState
             color: Colors.black.withOpacity(0.2),
             borderRadius: BorderRadius.circular(commonRadius),
           ),
-          child: widget.album.media!.isNotEmpty
-              ? cachedImage(widget.album.media!.first.url,
+          child: widget.album.media.isNotEmpty
+              ? cachedImage(widget.album.media.first.url,
                   height: MediaQuery.of(context).size.height,
                   width: MediaQuery.of(context).size.width,
                   fit: BoxFit.cover)

@@ -271,7 +271,7 @@ class _CreateAlbumComponentState extends State<CreateAlbumComponent> {
                       alignment: Alignment.center,
                       child: appButton(
                         text: language.create,
-                        onTap: () {
+                        onTap: () async {
                           hideKeyboard(context);
                           if (albumKey.currentState!.validate()) {
                             showDialog(
@@ -288,7 +288,7 @@ class _CreateAlbumComponentState extends State<CreateAlbumComponent> {
                                     ),
                                   );
                                 });
-                            galleryController.createAlbum(
+                            await galleryController.createAlbum(
                                 titleCont.text, discCont.text, mediaList);
                             Future.delayed(Duration(seconds: 3), () {
                               if (galleryController.isCreateSuccess.value) {

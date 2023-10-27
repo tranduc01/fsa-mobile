@@ -21,7 +21,6 @@ class UserController extends GetxController {
       isLoggedIn.value = !checkJWTValidity(jwt);
       if (!checkJWTValidity(jwt)) {
         user.value = (await getUser())!;
-        print(user.value.userName);
       } else {
         Logout();
       }
@@ -54,7 +53,7 @@ class UserController extends GetxController {
     return null;
   }
 
-  void Register(String name, String email, String password,
+  Future<void> Register(String name, String email, String password,
       String confirmPassword) async {
     var url = Uri.parse('https://orchidsharingapp.somee.com/api/Auth/register');
 
@@ -79,7 +78,7 @@ class UserController extends GetxController {
     }
   }
 
-  void Login(String email, String password) async {
+  Future<void> Login(String email, String password) async {
     var url = Uri.parse('https://orchidsharingapp.somee.com/api/Auth/login');
 
     var response = await http.post(
