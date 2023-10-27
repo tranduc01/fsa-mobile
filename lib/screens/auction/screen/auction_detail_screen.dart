@@ -13,7 +13,6 @@ class _AcutionDetailSceenState extends State<AcutionDetailSceen> {
   bool isShowAuctionInfo = false;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
