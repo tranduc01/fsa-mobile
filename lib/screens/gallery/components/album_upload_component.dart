@@ -84,7 +84,6 @@ class _AlbumUploadScreenState extends State<AlbumUploadScreen> {
           setState(() {});
           appStore.setLoading(false);
         });
-        log('MediaList: ${mediaList.length}');
       }
     }
   }
@@ -182,7 +181,7 @@ class _AlbumUploadScreenState extends State<AlbumUploadScreen> {
                   alignment: Alignment.center,
                   child: appButton(
                     text: language.upload,
-                    onTap: () {
+                    onTap: () async {
                       showDialog(
                           context: context,
                           barrierDismissible: false,
@@ -197,7 +196,7 @@ class _AlbumUploadScreenState extends State<AlbumUploadScreen> {
                               ),
                             );
                           });
-                      galleryController.updateAlbum(
+                      await galleryController.updateAlbum(
                           widget.album!, mediaList, null);
                       Future.delayed(Duration(seconds: 3), () {
                         if (galleryController.isUpdateSuccess.value) {

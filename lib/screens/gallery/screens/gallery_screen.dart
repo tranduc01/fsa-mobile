@@ -129,8 +129,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                           if (galleryController.albums.isEmpty)
                             SizedBox(
                               height: MediaQuery.of(context).size.height * 0.74,
-                              child: !widget.canEdit.validate() &&
-                                      !appStore.isLoading
+                              child: galleryController.isError.value
                                   ? NoDataWidget(
                                       imageWidget: NoDataLottieWidget(),
                                       title: language.noDataFound,

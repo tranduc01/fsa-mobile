@@ -14,6 +14,7 @@ class GalleryController extends GetxController {
   var isCreateSuccess = false.obs;
   var isDeleteSuccess = false.obs;
   var isUpdateSuccess = false.obs;
+  var isError = false.obs;
 
   @override
   void onInit() {
@@ -36,6 +37,7 @@ class GalleryController extends GetxController {
       return albums.value =
           (result['items'] as List).map((e) => Album.fromJson(e)).toList();
     } else {
+      isError(true);
       print('Request failed with status: ${response.statusCode}');
       throw Exception('Failed to load album');
     }
@@ -117,7 +119,7 @@ class GalleryController extends GetxController {
       }
 
       request.fields['title'] = album.title!;
-      request.fields['description'] = album.description!;
+      request.fields['description'] = album.description ?? "";
 
       var response = await request.send();
       if (response.statusCode == 200) {
