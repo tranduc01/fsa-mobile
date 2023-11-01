@@ -33,7 +33,6 @@ List<MediaModel> mediaTypeList = [
 
 class _GalleryScreenState extends State<GalleryScreen> {
   int selectedIndex = 0;
-  bool isError = false;
   ScrollController scrollCont = ScrollController();
   int mPage = 1;
   bool mIsLastPage = false;
@@ -106,14 +105,12 @@ class _GalleryScreenState extends State<GalleryScreen> {
                 if (galleryController.isLoading.value) {
                   return LoadingWidget();
                 } else {
-                  if (snap.hasError || isError) {
+                  if (galleryController.isError.value) {
                     return SizedBox(
                       height: MediaQuery.of(context).size.height * 0.8,
                       child: NoDataWidget(
                         imageWidget: NoDataLottieWidget(),
-                        title: isError
-                            ? language.somethingWentWrong
-                            : language.noDataFound,
+                        title: language.somethingWentWrong,
                         onRetry: () {
                           galleryController.fetchAlbums();
                         },

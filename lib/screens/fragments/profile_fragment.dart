@@ -7,7 +7,6 @@ import 'package:socialv/components/no_data_lottie_widget.dart';
 import 'package:socialv/controllers/user_controller.dart';
 import 'package:socialv/main.dart';
 import 'package:socialv/models/members/member_detail_model.dart';
-import 'package:socialv/models/story/highlight_category_list_model.dart';
 import 'package:socialv/network/rest_apis.dart';
 import 'package:socialv/screens/dashboard_screen.dart';
 import 'package:socialv/screens/post/components/post_component.dart';
@@ -17,6 +16,7 @@ import '../../models/posts/post_model.dart';
 import '../../utils/app_constants.dart';
 import '../gallery/screens/gallery_screen.dart';
 import '../profile/screens/personal_info_screen.dart';
+import '../profile/screens/verify_user_screen.dart';
 
 class ProfileFragment extends StatefulWidget {
   final ScrollController? controller;
@@ -28,7 +28,34 @@ class ProfileFragment extends StatefulWidget {
 }
 
 class _ProfileFragmentState extends State<ProfileFragment> {
-  MemberDetailModel _memberDetails = MemberDetailModel();
+  MemberDetailModel _memberDetails = MemberDetailModel(
+      id: '1',
+      email: 'doantranduc01@gmail.com',
+      name: 'Tran Duc',
+      isUserVerified: true,
+      friendsCount: 20,
+      memberAvatarImage:
+          'https://scontent.fsgn5-15.fna.fbcdn.net/v/t39.30808-6/353017930_6153557468098795_166607921767111563_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=5f2048&_nc_ohc=N5pLFu6oHkMAX_AbfkM&_nc_ht=scontent.fsgn5-15.fna&oh=00_AfDA4xqUbAjRrUVVTzz1PT0cybH1iGpdrZHodkqeD6fIFA&oe=654323AC',
+      memberCoverImage:
+          'https://scontent.fsgn5-8.fna.fbcdn.net/v/t39.30808-6/273370641_4708706809250542_6839313790496689506_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=5f2048&_nc_ohc=nyxL_IzJcsEAX-rRpUV&_nc_ht=scontent.fsgn5-8.fna&oh=00_AfCh2QxAAjNgvGHpRfuPKRk-VHX6sbBqrwkbzwobCck1NQ&oe=65435957',
+      postCount: 10,
+      groupsCount: 10,
+      profileInfo: [
+        ProfileInfo(id: 1, name: 'Detail', fields: [
+          Field(id: 1, name: 'Name', value: 'Tran Duc'),
+          Field(id: 2, name: 'Email', value: 'doantranduc01@gmail.com'),
+          Field(id: 3, name: 'DOB', value: '28/05/2001'),
+          Field(id: 4, name: 'Gender', value: 'Male'),
+          Field(id: 5, name: 'Address', value: 'Binh Duong')
+        ]),
+        ProfileInfo(id: 2, name: 'Information', fields: [
+          Field(id: 1, name: 'Name', value: 'Tran Duc'),
+          Field(id: 2, name: 'Email', value: 'doantranduc01@gmail.com'),
+          Field(id: 3, name: 'DOB', value: '28/05/2001'),
+          Field(id: 4, name: 'Gender', value: 'Male'),
+          Field(id: 5, name: 'Address', value: 'Binh Duong')
+        ])
+      ]);
   List<PostModel> _userPostList = [
     PostModel(
         activityId: 1,
@@ -60,7 +87,6 @@ class _ProfileFragmentState extends State<ProfileFragment> {
 
   late Future<List<PostModel>> future;
 
-  List<HighlightCategoryListModel> categoryList = [];
   late UserController userController = Get.put(UserController());
   int mPage = 1;
   bool mIsLastPage = false;
@@ -85,7 +111,6 @@ class _ProfileFragmentState extends State<ProfileFragment> {
         }
       }
     });
-    getCategoryList();
     getMemberDetails();
     LiveStream().on(OnAddPostProfile, (p0) {
       getMemberDetails();
@@ -98,17 +123,18 @@ class _ProfileFragmentState extends State<ProfileFragment> {
   }
 
   Future<void> getMemberDetails() async {
-    appStore.setLoading(true);
-    await getMemberDetail(userId: appStore.loginUserId.toInt())
-        .then((value) async {
-      _memberDetails = value.first;
-      setState(() {});
+    // appStore.setLoading(true);
+    // await getMemberDetail(userId: appStore.loginUserId.toInt())
+    //     .then((value) async {
+    //   _memberDetails = value.first;
+    //   setState(() {});
 
-      appStore.setLoading(false);
-    }).catchError((e) {
-      appStore.setLoading(false);
-      toast(e.toString(), print: true);
-    });
+    //   appStore.setLoading(false);
+    // }).catchError((e) {
+    //   appStore.setLoading(false);
+    //   toast(e.toString(), print: true);
+    // });
+    _memberDetails = _memberDetails;
   }
 
   Future<List<PostModel>> getUserPostList() async {
@@ -131,17 +157,6 @@ class _ProfileFragmentState extends State<ProfileFragment> {
     // });
     // setState(() {});
     return _userPostList;
-  }
-
-  Future<void> getCategoryList() async {
-    appStore.setLoading(true);
-    await getHighlightList().then((value) {
-      categoryList = value;
-      appStore.setLoading(false);
-    }).catchError((e) {
-      log(e.toString());
-      appStore.setLoading(false);
-    });
   }
 
   @override
@@ -182,11 +197,23 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                             style: boldTextStyle(size: 20),
                             children: [
                               WidgetSpan(
-                                child: Image.asset(ic_tick_filled,
+                                child: userController.user.value.isVerified ??
+                                        false
+                                    ? Image.asset(ic_tick_filled,
                                         width: 20,
                                         height: 20,
                                         color: blueTickColor)
-                                    .paddingSymmetric(horizontal: 4),
+                                    : GestureDetector(
+                                        child: Image.asset(
+                                          'assets/icons/ic_cancel.png',
+                                          width: 20,
+                                          height: 20,
+                                        ),
+                                        onTap: () async {
+                                          VerifyUserScreen().launch(context);
+                                          toast('Please verify your account');
+                                        },
+                                      ).paddingSymmetric(horizontal: 4),
                               ),
                             ],
                           ),

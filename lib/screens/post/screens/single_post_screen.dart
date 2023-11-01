@@ -11,7 +11,6 @@ import 'package:socialv/models/posts/get_post_likes_model.dart';
 import 'package:socialv/models/posts/post_model.dart';
 import 'package:socialv/network/rest_apis.dart';
 import 'package:socialv/screens/post/components/comment_component.dart';
-import 'package:socialv/screens/post/components/post_component.dart';
 import 'package:socialv/screens/post/components/post_media_component.dart';
 import 'package:socialv/screens/post/components/reaction_button_widget.dart';
 import 'package:socialv/screens/post/components/update_comment_component.dart';
@@ -21,6 +20,7 @@ import 'package:socialv/screens/profile/screens/member_profile_screen.dart';
 import 'package:socialv/utils/app_constants.dart';
 import 'package:socialv/utils/cached_network_image.dart';
 
+import '../../../models/common_models/post_mdeia_model.dart';
 import '../../../models/reactions/reactions_count_model.dart';
 import '../../dashboard_screen.dart';
 import '../components/post_content_component.dart';
@@ -36,12 +36,64 @@ class SinglePostScreen extends StatefulWidget {
 }
 
 class _SinglePostScreenState extends State<SinglePostScreen> {
-  PostModel post = PostModel();
+  PostModel post = PostModel(
+    activityId: 1,
+    commentCount: 3,
+    comments: [
+      CommentModel(
+          id: '1',
+          content: 'Test',
+          userId: '1',
+          userEmail: 'doantranduc01@gmail.com',
+          userImage:
+              'https://scontent.fsgn5-15.fna.fbcdn.net/v/t39.30808-6/353017930_6153557468098795_166607921767111563_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=5f2048&_nc_ohc=N5pLFu6oHkMAX_AbfkM&_nc_ht=scontent.fsgn5-15.fna&oh=00_AfDA4xqUbAjRrUVVTzz1PT0cybH1iGpdrZHodkqeD6fIFA&oe=654323AC',
+          isUserVerified: true,
+          userName: 'Tran Duc')
+    ],
+    content: "Test 1",
+    dateRecorded: DateTime.parse("2023-01-01").toString(),
+    isFavorites: 1,
+    isLiked: 1,
+    likeCount: 1,
+    mediaList: ["Test Media"],
+    mediaType: "photo",
+    postIn: "123",
+    userEmail: "example@gmail.com",
+    userId: 1,
+    userImage:
+        "https://khoinguonsangtao.vn/wp-content/uploads/2022/09/hinh-ve-don-gian-cute-dang-yeu-va-de-thuc-hien.jpg",
+    userName: "Tran Duc",
+    isUserVerified: 1,
+    usersWhoLiked: [GetPostLikesModel()],
+    medias: [
+      PostMediaModel(
+          url:
+              "https://i.pinimg.com/474x/94/b6/cc/94b6cc282430ef169df131de1ad12843.jpg")
+    ],
+    isFriend: 1,
+    type: "",
+    blogId: 1,
+    childPost: PostModel(),
+    groupId: 1,
+    groupName: "Test",
+    hasMentions: 1,
+    reactions: [Reactions()],
+    curUserReaction: null,
+    reactionCount: 1,
+    isPinned: 1,
+  );
   late Future<PostModel> future;
 
   PageController pageController = PageController();
 
-  List<GetPostLikesModel> likeList = [];
+  List<GetPostLikesModel> likeList = [
+    GetPostLikesModel(
+        userId: '1',
+        isUserVerified: true,
+        userAvatar:
+            'https://scontent.fsgn5-15.fna.fbcdn.net/v/t39.30808-6/353017930_6153557468098795_166607921767111563_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=5f2048&_nc_ohc=N5pLFu6oHkMAX_AbfkM&_nc_ht=scontent.fsgn5-15.fna&oh=00_AfDA4xqUbAjRrUVVTzz1PT0cybH1iGpdrZHodkqeD6fIFA&oe=654323AC',
+        userName: 'Tran Duc'),
+  ];
   List<Reactions> postReactionList = [];
   bool? isReacted;
   int postReactionCount = 0;
@@ -60,26 +112,26 @@ class _SinglePostScreenState extends State<SinglePostScreen> {
   }
 
   Future<PostModel> postDetail() async {
-    isError = false;
-    appStore.setLoading(true);
+    // isError = false;
+    // appStore.setLoading(true);
 
-    getSinglePost(postId: widget.postId.validate()).then((value) {
-      post = value;
-      likeCount = value.likeCount.validate();
-      likeList = value.usersWhoLiked.validate();
-      isLike = value.isLiked.validate() == 1;
-      fetchPost = true;
-      postReactionList = value.reactions.validate();
-      isReacted = value.curUserReaction != null;
-      postReactionCount = value.reactionCount.validate();
-      setState(() {});
-      appStore.setLoading(false);
-    }).catchError((e) {
-      isError = true;
-      appStore.setLoading(false);
-      toast(e.toString(), print: true);
-      setState(() {});
-    });
+    // getSinglePost(postId: widget.postId.validate()).then((value) {
+    //   post = value;
+    //   likeCount = value.likeCount.validate();
+    //   likeList = value.usersWhoLiked.validate();
+    //   isLike = value.isLiked.validate() == 1;
+    //   fetchPost = true;
+    //   postReactionList = value.reactions.validate();
+    //   isReacted = value.curUserReaction != null;
+    //   postReactionCount = value.reactionCount.validate();
+    //   setState(() {});
+    //   appStore.setLoading(false);
+    // }).catchError((e) {
+    //   isError = true;
+    //   appStore.setLoading(false);
+    //   toast(e.toString(), print: true);
+    //   setState(() {});
+    // });
 
     return post;
   }
@@ -88,17 +140,37 @@ class _SinglePostScreenState extends State<SinglePostScreen> {
     ifNotTester(() async {
       if (addReaction) {
         if (postReactionList.length < 3 && isReacted.validate()) {
-          if (postReactionList.any((element) => element.user!.id.validate().toString() == appStore.loginUserId)) {
-            int index = postReactionList.indexWhere((element) => element.user!.id.validate().toString() == appStore.loginUserId);
+          if (postReactionList.any((element) =>
+              element.user!.id.validate().toString() == appStore.loginUserId)) {
+            int index = postReactionList.indexWhere((element) =>
+                element.user!.id.validate().toString() == appStore.loginUserId);
             postReactionList[index].id = reactionID.validate().toString();
-            postReactionList[index].icon = reactions.firstWhere((element) => element.id == reactionID.validate().toString().validate()).imageUrl.validate();
-            postReactionList[index].reaction = reactions.firstWhere((element) => element.id == reactionID.validate().toString().validate()).name.validate();
+            postReactionList[index].icon = reactions
+                .firstWhere((element) =>
+                    element.id == reactionID.validate().toString().validate())
+                .imageUrl
+                .validate();
+            postReactionList[index].reaction = reactions
+                .firstWhere((element) =>
+                    element.id == reactionID.validate().toString().validate())
+                .name
+                .validate();
           } else {
             postReactionList.add(
               Reactions(
                 id: reactionID.validate().toString(),
-                icon: reactions.firstWhere((element) => element.id == reactionID.validate().toString().validate()).imageUrl.validate(),
-                reaction: reactions.firstWhere((element) => element.id == reactionID.validate().toString().validate()).name.validate(),
+                icon: reactions
+                    .firstWhere((element) =>
+                        element.id ==
+                        reactionID.validate().toString().validate())
+                    .imageUrl
+                    .validate(),
+                reaction: reactions
+                    .firstWhere((element) =>
+                        element.id ==
+                        reactionID.validate().toString().validate())
+                    .name
+                    .validate(),
                 user: ReactedUser(
                   id: appStore.loginUserId.validate().toInt(),
                   displayName: appStore.loginFullName,
@@ -110,17 +182,24 @@ class _SinglePostScreenState extends State<SinglePostScreen> {
         }
         setState(() {});
 
-        await addPostReaction(id: post.activityId.validate(), reactionId: reactionID.validate(), isComments: false).then((value) {
+        await addPostReaction(
+                id: post.activityId.validate(),
+                reactionId: reactionID.validate(),
+                isComments: false)
+            .then((value) {
           //
         }).catchError((e) {
           log('Error: ${e.toString()}');
         });
       } else {
-        postReactionList.removeWhere((element) => element.user!.id.validate().toString() == appStore.loginUserId);
+        postReactionList.removeWhere((element) =>
+            element.user!.id.validate().toString() == appStore.loginUserId);
 
         postReactionCount--;
         setState(() {});
-        await deletePostReaction(id: post.activityId.validate(), isComments: false).then((value) {
+        await deletePostReaction(
+                id: post.activityId.validate(), isComments: false)
+            .then((value) {
           //
         }).catchError((e) {
           log('Error: ${e.toString()}');
@@ -144,7 +223,8 @@ class _SinglePostScreenState extends State<SinglePostScreen> {
         }
         if (!isLike) {
           if (likeList.length <= 3) {
-            likeList.removeWhere((element) => element.userId == appStore.loginUserId);
+            likeList.removeWhere(
+                (element) => element.userId == appStore.loginUserId);
           }
           likeCount--;
         }
@@ -155,7 +235,8 @@ class _SinglePostScreenState extends State<SinglePostScreen> {
         setState(() {});
       }).catchError((e) {
         if (likeList.length < 3) {
-          likeList.removeWhere((element) => element.userId == appStore.loginUserId);
+          likeList
+              .removeWhere((element) => element.userId == appStore.loginUserId);
         }
         isLike = false;
         setState(() {});
@@ -210,7 +291,9 @@ class _SinglePostScreenState extends State<SinglePostScreen> {
                   if (snap.hasError) {
                     return NoDataWidget(
                       imageWidget: NoDataLottieWidget(),
-                      title: isError ? language.somethingWentWrong : language.noDataFound,
+                      title: isError
+                          ? language.somethingWentWrong
+                          : language.noDataFound,
                       onRetry: () {
                         future = postDetail();
                       },
@@ -222,7 +305,9 @@ class _SinglePostScreenState extends State<SinglePostScreen> {
                     if (snap.data == null) {
                       return NoDataWidget(
                         imageWidget: NoDataLottieWidget(),
-                        title: isError ? language.somethingWentWrong : language.noDataFound,
+                        title: isError
+                            ? language.somethingWentWrong
+                            : language.noDataFound,
                         onRetry: () {
                           future = postDetail();
                         },
@@ -243,7 +328,8 @@ class _SinglePostScreenState extends State<SinglePostScreen> {
                                       ).cornerRadiusWithClipRRect(100),
                                       12.width,
                                       Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Row(
                                             children: [
@@ -253,39 +339,59 @@ class _SinglePostScreenState extends State<SinglePostScreen> {
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
                                               ).flexible(),
-                                              if (post.isUserVerified == 1) Image.asset(ic_tick_filled, width: 18, height: 18, color: blueTickColor).paddingSymmetric(horizontal: 4),
+                                              if (post.isUserVerified == 1)
+                                                Image.asset(ic_tick_filled,
+                                                        width: 18,
+                                                        height: 18,
+                                                        color: blueTickColor)
+                                                    .paddingSymmetric(
+                                                        horizontal: 4),
                                             ],
                                           ),
-                                          Text(post.userEmail.validate(), style: secondaryTextStyle()),
+                                          Text(post.userEmail.validate(),
+                                              style: secondaryTextStyle()),
                                         ],
                                       ).expand(),
-                                      Text(convertToAgo(post.dateRecorded.validate()), style: secondaryTextStyle()),
+                                      Text(
+                                          convertToAgo(
+                                              post.dateRecorded.validate()),
+                                          style: secondaryTextStyle()),
                                     ],
                                   ).paddingSymmetric(horizontal: 16).onTap(() {
-                                    MemberProfileScreen(memberId: post.userId.validate()).launch(context);
-                                  }, splashColor: Colors.transparent, highlightColor: Colors.transparent),
+                                    MemberProfileScreen(
+                                            memberId: post.userId.validate())
+                                        .launch(context);
+                                  },
+                                      splashColor: Colors.transparent,
+                                      highlightColor: Colors.transparent),
                                   20.height,
                                   Divider(height: 0),
                                   16.height,
-                                  PostContentComponent(blogId: post.blogId, postType: post.type, hasMentions: post.hasMentions == 1, postContent: post.content),
+                                  PostContentComponent(
+                                      blogId: post.blogId,
+                                      postType: post.type,
+                                      hasMentions: post.hasMentions == 1,
+                                      postContent: post.content),
                                   PostMediaComponent(
                                     mediaTitle: post.userName.validate(),
                                     mediaType: post.mediaType,
                                     mediaList: post.medias,
                                     isFromPostDetail: true,
                                   ).paddingSymmetric(horizontal: 8),
-                                  if (post.childPost != null) PostComponent(post: post.childPost!, childPost: true),
                                   Row(
                                     children: [
-                                      if (appStore.isReactionEnable==1)
+                                      if (appStore.isReactionEnable == 1)
                                         if (reactions.validate().isNotEmpty)
                                           ReactionButton(
                                             isComments: false,
                                             isReacted: isReacted,
-                                            currentUserReaction: post.curUserReaction,
+                                            currentUserReaction:
+                                                post.curUserReaction,
                                             onReacted: (id) {
                                               isReacted = true;
-                                              postReaction(addReaction: true, reactionID: id);
+                                              postReaction(
+                                                  addReaction: true,
+                                                  reactionID: id);
                                             },
                                             onReactionRemoved: () {
                                               isReacted = false;
@@ -304,7 +410,11 @@ class _SinglePostScreenState extends State<SinglePostScreen> {
                                         ),
                                       IconButton(
                                         onPressed: () {
-                                          CommentScreen(postId: post.activityId.validate()).launch(context).then((value) {
+                                          CommentScreen(
+                                                  postId: post.activityId
+                                                      .validate())
+                                              .launch(context)
+                                              .then((value) {
                                             if (value ?? false) {
                                               isChange = true;
                                               postDetail();
@@ -326,9 +436,12 @@ class _SinglePostScreenState extends State<SinglePostScreen> {
                                         fit: BoxFit.cover,
                                         color: context.iconColor,
                                       ).onTap(() {
-                                        String saveUrl = "$DOMAIN_URL/${widget.postId.validate()}";
+                                        String saveUrl =
+                                            "$DOMAIN_URL/${widget.postId.validate()}";
                                         Share.share(saveUrl);
-                                      }, splashColor: Colors.transparent, highlightColor: Colors.transparent),
+                                      },
+                                          splashColor: Colors.transparent,
+                                          highlightColor: Colors.transparent),
                                     ],
                                   ).paddingSymmetric(horizontal: 16),
                                   12.height,
@@ -342,13 +455,26 @@ class _SinglePostScreenState extends State<SinglePostScreen> {
                                     Row(
                                       children: [
                                         Stack(
-                                          children: likeList.validate().take(3).map((e) {
+                                          children: likeList
+                                              .validate()
+                                              .take(3)
+                                              .map((e) {
                                             return Container(
                                               width: 32,
                                               height: 32,
-                                              margin: EdgeInsets.only(left: 18 * likeList.validate().indexOf(e).toDouble()),
+                                              margin: EdgeInsets.only(
+                                                  left: 18 *
+                                                      likeList
+                                                          .validate()
+                                                          .indexOf(e)
+                                                          .toDouble()),
                                               child: cachedImage(
-                                                likeList.validate()[likeList.validate().indexOf(e)].userAvatar.validate(),
+                                                likeList
+                                                    .validate()[likeList
+                                                        .validate()
+                                                        .indexOf(e)]
+                                                    .userAvatar
+                                                    .validate(),
                                                 fit: BoxFit.cover,
                                               ).cornerRadiusWithClipRRect(100),
                                             );
@@ -357,16 +483,41 @@ class _SinglePostScreenState extends State<SinglePostScreen> {
                                         RichText(
                                           text: TextSpan(
                                             text: language.likedBy,
-                                            style: secondaryTextStyle(size: 12, fontFamily: fontFamily),
+                                            style: secondaryTextStyle(
+                                                size: 12,
+                                                fontFamily: fontFamily),
                                             children: <TextSpan>[
-                                              TextSpan(text: ' ${likeList.first.userName.validate()}', style: boldTextStyle(size: 12, fontFamily: fontFamily)),
-                                              if (likeList.length > 1) TextSpan(text: ' And ', style: secondaryTextStyle(size: 12, fontFamily: fontFamily)),
-                                              if (likeList.length > 1) TextSpan(text: '${likeCount - 1} others', style: boldTextStyle(size: 12, fontFamily: fontFamily)),
+                                              TextSpan(
+                                                  text:
+                                                      ' ${likeList.first.userName.validate()}',
+                                                  style: boldTextStyle(
+                                                      size: 12,
+                                                      fontFamily: fontFamily)),
+                                              if (likeList.length > 1)
+                                                TextSpan(
+                                                    text: ' And ',
+                                                    style: secondaryTextStyle(
+                                                        size: 12,
+                                                        fontFamily:
+                                                            fontFamily)),
+                                              if (likeList.length > 1)
+                                                TextSpan(
+                                                    text:
+                                                        '${likeCount - 1} others',
+                                                    style: boldTextStyle(
+                                                        size: 12,
+                                                        fontFamily:
+                                                            fontFamily)),
                                             ],
                                           ),
                                         ).paddingAll(8).onTap(() {
-                                          PostLikesScreen(postId: post.activityId.validate()).launch(context);
-                                        }, splashColor: Colors.transparent, highlightColor: Colors.transparent)
+                                          PostLikesScreen(
+                                                  postId: post.activityId
+                                                      .validate())
+                                              .launch(context);
+                                        },
+                                            splashColor: Colors.transparent,
+                                            highlightColor: Colors.transparent)
                                       ],
                                     ).paddingSymmetric(horizontal: 16),
                                   if (post.commentCount.validate() > 0)
@@ -374,7 +525,9 @@ class _SinglePostScreenState extends State<SinglePostScreen> {
                                       alignment: Alignment.centerLeft,
                                       child: TextButton(
                                         onPressed: () {
-                                          CommentScreen(postId: widget.postId).launch(context).then((value) {
+                                          CommentScreen(postId: widget.postId)
+                                              .launch(context)
+                                              .then((value) {
                                             if (value ?? false) {
                                               isChange = true;
                                               postDetail();
@@ -382,7 +535,10 @@ class _SinglePostScreenState extends State<SinglePostScreen> {
                                           });
                                         },
                                         child: Text(
-                                          post.commentCount.validate() > 1 ? '${language.viewAll} ${post.commentCount.validate()} ${language.comments}' : language.comments.capitalizeFirstLetter(),
+                                          post.commentCount.validate() > 1
+                                              ? '${language.viewAll} ${post.commentCount.validate()} ${language.comments}'
+                                              : language.comments
+                                                  .capitalizeFirstLetter(),
                                           style: secondaryTextStyle(),
                                         ),
                                       ),
@@ -395,14 +551,21 @@ class _SinglePostScreenState extends State<SinglePostScreen> {
                                         verticalOffset: 300,
                                       ),
                                       physics: NeverScrollableScrollPhysics(),
-                                      padding: EdgeInsets.fromLTRB(16, 16, 16, 76),
-                                      itemCount: post.comments.validate().take(3).length,
+                                      padding:
+                                          EdgeInsets.fromLTRB(16, 16, 16, 76),
+                                      itemCount: post.comments
+                                          .validate()
+                                          .take(3)
+                                          .length,
                                       itemBuilder: (context, index) {
-                                        CommentModel comment = post.comments.validate()[index];
+                                        CommentModel comment =
+                                            post.comments.validate()[index];
 
                                         return CommentComponent(
                                           onReply: () {
-                                            CommentScreen(postId: widget.postId).launch(context).then((value) {
+                                            CommentScreen(postId: widget.postId)
+                                                .launch(context)
+                                                .then((value) {
                                               if (value ?? false) {
                                                 isChange = true;
                                                 postDetail();
@@ -415,11 +578,19 @@ class _SinglePostScreenState extends State<SinglePostScreen> {
                                               contentPadding: EdgeInsets.zero,
                                               builder: (p0) {
                                                 return UpdateCommentComponent(
-                                                  id: comment.id.validate().toInt(),
-                                                  activityId: comment.itemId.validate().toInt(),
+                                                  id: comment.id
+                                                      .validate()
+                                                      .toInt(),
+                                                  activityId: comment.itemId
+                                                      .validate()
+                                                      .toInt(),
                                                   comment: comment.content,
-                                                  parentId: comment.secondaryItemId.validate().toInt(),
-                                                  medias: comment.medias.validate(),
+                                                  parentId: comment
+                                                      .secondaryItemId
+                                                      .validate()
+                                                      .toInt(),
+                                                  medias:
+                                                      comment.medias.validate(),
                                                   callback: (x) {
                                                     isChange = true;
                                                     postDetail();
@@ -429,7 +600,9 @@ class _SinglePostScreenState extends State<SinglePostScreen> {
                                             );
                                           },
                                           onDelete: () {
-                                            CommentScreen(postId: widget.postId).launch(context).then((value) {
+                                            CommentScreen(postId: widget.postId)
+                                                .launch(context)
+                                                .then((value) {
                                               if (value ?? false) {
                                                 isChange = true;
                                                 postDetail();
@@ -437,7 +610,8 @@ class _SinglePostScreenState extends State<SinglePostScreen> {
                                             });
                                           },
                                           isParent: true,
-                                          comment: post.comments.validate()[index],
+                                          comment:
+                                              post.comments.validate()[index],
                                           postId: widget.postId,
                                         );
                                       },
@@ -454,7 +628,9 @@ class _SinglePostScreenState extends State<SinglePostScreen> {
               if (isError)
                 NoDataWidget(
                   imageWidget: NoDataLottieWidget(),
-                  title: isError ? language.somethingWentWrong : language.noDataFound,
+                  title: isError
+                      ? language.somethingWentWrong
+                      : language.noDataFound,
                   onRetry: () {
                     future = postDetail();
                   },

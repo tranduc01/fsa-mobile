@@ -13,7 +13,7 @@ const ONESIGNAL_APP_ID = '';
 /// Todo: Remove Base URL
 /// NOTE: Do not add slash (/) at the end of your domain.
 const DOMAIN_URL = '';
-const BASE_URL = '$DOMAIN_URL/wp-json/';
+const BASE_URL = 'http://capstoneorchid-001-site1.btempurl.com/api';
 
 /// AppStore Url
 const IOS_APP_LINK = 'https://apps.apple.com/us/app/socialv/id1641646237';

@@ -30,6 +30,7 @@ dependencies:
   video_player: ^2.6.1
   youtube_player_flutter: ^8.1.2
   visibility_detector: ^0.3.3
+  camera:
 
   # APIs
   http: ^0.13.6

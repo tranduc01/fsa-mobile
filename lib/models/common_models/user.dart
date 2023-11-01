@@ -8,6 +8,7 @@ class User {
   String? name;
   String? userName;
   String? avatarUrl;
+  bool? isVerified;
 
   User(
       {this.embeddable,
@@ -18,7 +19,8 @@ class User {
       this.templated,
       this.name,
       this.userName,
-      this.avatarUrl});
+      this.avatarUrl,
+      this.isVerified});
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
@@ -31,6 +33,7 @@ class User {
       name: json['name'],
       userName: json['userName'],
       avatarUrl: json['avatarUrl'],
+      isVerified: json['isVerified'] ?? false,
     );
   }
 

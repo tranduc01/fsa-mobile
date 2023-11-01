@@ -6,6 +6,8 @@ import 'package:get/get.dart';
 import 'package:socialv/models/common_models.dart';
 import 'package:socialv/models/gallery/albums.dart';
 
+import '../configs.dart';
+
 class GalleryController extends GetxController {
   final storage = new FlutterSecureStorage();
   var albums = <Album>[].obs;
@@ -24,7 +26,7 @@ class GalleryController extends GetxController {
 
   Future<List<Album>> fetchAlbums() async {
     isLoading(true);
-    var url = 'https://orchidsharingapp.somee.com/api/Collection';
+    var url = '$BASE_URL/Collection';
 
     String? token = await storage.read(key: 'jwt');
     var headers = {
@@ -34,9 +36,11 @@ class GalleryController extends GetxController {
     if (response.statusCode == 200) {
       var result = jsonDecode(response.bodyString!);
       isLoading(false);
+      isError(false);
       return albums.value =
           (result['items'] as List).map((e) => Album.fromJson(e)).toList();
     } else {
+      isLoading(false);
       isError(true);
       print('Request failed with status: ${response.statusCode}');
       throw Exception('Failed to load album');
@@ -45,7 +49,7 @@ class GalleryController extends GetxController {
 
   Future<Album> fetchAlbum(int albumId) async {
     isLoading(true);
-    var url = 'https://orchidsharingapp.somee.com/api/Collection/$albumId';
+    var url = '$BASE_URL/Collection/$albumId';
 
     String? token = await storage.read(key: 'jwt');
     var headers = {
@@ -66,7 +70,7 @@ class GalleryController extends GetxController {
   Future<void> createAlbum(
       String title, String description, List<PostMedia> medias) async {
     try {
-      var url = Uri.parse('https://orchidsharingapp.somee.com/api/Collection');
+      var url = Uri.parse('$BASE_URL/Collection');
       var request = http.MultipartRequest('POST', url);
       request.headers['Authorization'] =
           'Bearer ${await storage.read(key: 'jwt')}';
@@ -97,8 +101,7 @@ class GalleryController extends GetxController {
   Future<void> updateAlbum(
       Album album, List<PostMedia>? medias, List<int>? deleteId) async {
     try {
-      var url = Uri.parse(
-          'https://orchidsharingapp.somee.com/api/Collection/${album.id}');
+      var url = Uri.parse('$BASE_URL/Collection/${album.id}');
       var request = http.MultipartRequest('PATCH', url);
       request.headers['Authorization'] =
           'Bearer ${await storage.read(key: 'jwt')}';
@@ -134,7 +137,7 @@ class GalleryController extends GetxController {
 
   Future<void> deleteAlbum(int id) async {
     try {
-      var url = 'https://orchidsharingapp.somee.com/api/Collection/$id';
+      var url = '$BASE_URL/Collection/$id';
       String? token = await storage.read(key: 'jwt');
       var headers = {
         'Authorization': 'Bearer $token',

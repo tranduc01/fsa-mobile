@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:nb_utils/nb_utils.dart';
 
+import '../configs.dart';
 import '../models/common_models/user.dart';
 import '../screens/dashboard_screen.dart';
 
@@ -55,7 +56,7 @@ class UserController extends GetxController {
 
   Future<void> Register(String name, String email, String password,
       String confirmPassword) async {
-    var url = Uri.parse('https://orchidsharingapp.somee.com/api/Auth/register');
+    var url = Uri.parse('$BASE_URL/Auth/register');
 
     var response = await http.post(
       url,
@@ -78,7 +79,7 @@ class UserController extends GetxController {
   }
 
   Future<void> Login(String email, String password) async {
-    var url = Uri.parse('https://orchidsharingapp.somee.com/api/Auth/login');
+    var url = Uri.parse('$BASE_URL/Auth/login');
 
     var response = await http.post(
       url,

@@ -2,10 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
+import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/components/file_picker_dialog_component.dart';
 import 'package:socialv/components/loading_widget.dart';
+import 'package:socialv/controllers/user_controller.dart';
 import 'package:socialv/main.dart';
 import 'package:socialv/models/members/profile_field_model.dart';
 import 'package:socialv/network/rest_apis.dart';
@@ -20,6 +21,7 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   String avatarUrl = appStore.loginAvatarUrl;
+  UserController userController = Get.find();
 
   List<ProfileFieldModel> fieldList = [
     ProfileFieldModel(
@@ -50,8 +52,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Future<void> init() async {
     getFiledList();
 
-    avatarUrl = appStore.loginAvatarUrl;
-    nameCont.text = appStore.loginFullName;
+    avatarUrl = userController.user.value.avatarUrl.validate();
+    nameCont.text = userController.user.value.name.validate();
     nameCont.selection =
         TextSelection.fromPosition(TextPosition(offset: nameCont.text.length));
     setState(() {});
@@ -118,7 +120,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             elevation: 0,
             centerTitle: true,
             leading: IconButton(
-              icon: Icon(Icons.arrow_back, color: context.iconColor),
+              icon: Icon(Icons.arrow_back, color: Colors.black),
               onPressed: () {
                 finish(context, true);
               },
@@ -167,7 +169,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         children: [
                           Image.asset(
                             'assets/images/cover.jpg',
-                            width: context.width(),
+                            width: MediaQuery.of(context).size.width,
                             height: 220,
                             fit: BoxFit.cover,
                           ).cornerRadiusWithClipRRectOnly(
@@ -285,7 +287,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                       style: primaryTextStyle(
                                           color: isExpanded
                                               ? context.primaryColor
-                                              : context.iconColor),
+                                              : Colors.black),
                                     ),
                                   );
                                 },
