@@ -38,7 +38,7 @@ void main() async {
   defaultRadius = 32.0;
   defaultAppButtonRadius = 12;
 
-  initializeOneSignal();
+  //initializeOneSignal();
 
   exitFullScreen();
   Get.put(UserController());

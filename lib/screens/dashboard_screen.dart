@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:socialv/main.dart';
 import 'package:socialv/models/dashboard_api_response.dart';
 import 'package:socialv/models/posts/post_in_list_model.dart';
@@ -13,13 +12,9 @@ import 'package:socialv/screens/fragments/home_fragment.dart';
 import 'package:socialv/screens/fragments/notification_fragment.dart';
 import 'package:socialv/screens/fragments/profile_fragment.dart';
 import 'package:socialv/screens/fragments/search_fragment.dart';
-import 'package:socialv/screens/groups/screens/group_detail_screen.dart';
 import 'package:socialv/screens/home/components/ranking_bottomsheet_widget.dart';
 import 'package:socialv/screens/home/components/user_detail_bottomsheet_widget.dart';
 import 'package:socialv/screens/notification/components/latest_activity_component.dart';
-import 'package:socialv/screens/post/screens/comment_screen.dart';
-import 'package:socialv/screens/post/screens/single_post_screen.dart';
-import 'package:socialv/screens/profile/screens/member_profile_screen.dart';
 import 'package:socialv/utils/app_constants.dart';
 import 'package:socialv/utils/cached_network_image.dart';
 
@@ -83,33 +78,33 @@ class _DashboardScreenState extends State<DashboardScreen>
       ProfileFragment(controller: _controller),
     ]);
 
-    afterBuildCreated(() {
-      if (isMobile) {
-        OneSignal.shared.setNotificationOpenedHandler(
-            (OSNotificationOpenedResult notification) async {
-          notification.notification.additionalData!.entries
-              .forEach((element) async {
-            if (element.key == "is_comment") {
-              int postId = notification.notification.additionalData!.entries
-                  .firstWhere((element) => element.key == 'post_id')
-                  .value;
-              if (postId != 0) {
-                CommentScreen(postId: postId).launch(context);
-              }
-            } else if (element.key == 'post_id') {
-              if (element.value.toString().toInt() != 0) {
-                SinglePostScreen(postId: element.value.toString().toInt())
-                    .launch(context);
-              }
-            } else if (element.key == 'user_id') {
-              MemberProfileScreen(memberId: element.value).launch(context);
-            } else if (element.key == 'group_id') {
-              GroupDetailScreen(groupId: element.value).launch(context);
-            }
-          });
-        });
-      }
-    });
+    // afterBuildCreated(() {
+    //   if (isMobile) {
+    //     OneSignal.shared.setNotificationOpenedHandler(
+    //         (OSNotificationOpenedResult notification) async {
+    //       notification.notification.additionalData!.entries
+    //           .forEach((element) async {
+    //         if (element.key == "is_comment") {
+    //           int postId = notification.notification.additionalData!.entries
+    //               .firstWhere((element) => element.key == 'post_id')
+    //               .value;
+    //           if (postId != 0) {
+    //             CommentScreen(postId: postId).launch(context);
+    //           }
+    //         } else if (element.key == 'post_id') {
+    //           if (element.value.toString().toInt() != 0) {
+    //             SinglePostScreen(postId: element.value.toString().toInt())
+    //                 .launch(context);
+    //           }
+    //         } else if (element.key == 'user_id') {
+    //           MemberProfileScreen(memberId: element.value).launch(context);
+    //         } else if (element.key == 'group_id') {
+    //           GroupDetailScreen(groupId: element.value).launch(context);
+    //         }
+    //       });
+    //     });
+    //   }
+    // });
 
     await getReactionsList();
     defaultReactionsList();
