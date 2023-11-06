@@ -58,12 +58,12 @@ dependencies:
   firebase_messaging: ^14.6.1
 
   # AUTHENTICATION
-  google_sign_in: ^6.1.0
+  google_sign_in:
   the_apple_sign_in: ^1.1.1
   jwt_decoder:
 
   # Remote Notification
-  onesignal_flutter: ^5.0.3
+  #onesignal_flutter: ^5.0.3
 
   #SlideShow
   flutter_image_slideshow: any
@@ -74,7 +74,7 @@ dependencies:
   numberpicker: ^2.1.2
 
   path_provider: ^2.0.15
-
+  connectivity_plus:
   lottie: ^2.3.2
 
   flutter_localizations:

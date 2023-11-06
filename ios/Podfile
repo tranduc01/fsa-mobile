@@ -1,5 +1,5 @@
 # Uncomment this line to define a global platform for your project
- platform :ios, '11.0'
+ platform :ios, '14.0'
 
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
@@ -31,8 +31,8 @@ target 'Runner' do
   use_frameworks!
   use_modular_headers!
 
-  # flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
-  pod 'GoogleSignIn', '~> 7.0.0'
+  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+  pod 'GoogleSignIn', '~> 6.2'
   pod 'connectivity_plus', :path => '.symlinks/plugins/connectivity_plus/ios'
 end
 
