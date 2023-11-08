@@ -181,16 +181,6 @@ PODS:
   - nanopb/encode (2.30909.1)
   - nb_utils (0.0.1):
     - Flutter
-  - OneSignalXCFramework (3.12.7):
-    - OneSignalXCFramework/OneSignalCore (= 3.12.7)
-    - OneSignalXCFramework/OneSignalExtension (= 3.12.7)
-    - OneSignalXCFramework/OneSignalOutcomes (= 3.12.7)
-  - OneSignalXCFramework/OneSignalCore (3.12.7)
-  - OneSignalXCFramework/OneSignalExtension (3.12.7):
-    - OneSignalXCFramework/OneSignalCore
-    - OneSignalXCFramework/OneSignalOutcomes
-  - OneSignalXCFramework/OneSignalOutcomes (3.12.7):
-    - OneSignalXCFramework/OneSignalCore
   - OrderedSet (5.0.0)
   - path_provider_foundation (0.0.1):
     - Flutter
@@ -243,7 +233,6 @@ DEPENDENCIES:
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - just_audio (from `.symlinks/plugins/just_audio/ios`)
   - nb_utils (from `.symlinks/plugins/nb_utils/ios`)
-  - OneSignalXCFramework (< 4.0, >= 3.4.3)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
@@ -275,7 +264,6 @@ SPEC REPOS:
     - GTMAppAuth
     - GTMSessionFetcher
     - nanopb
-    - OneSignalXCFramework
     - OrderedSet
     - PromisesObjC
     - PromisesSwift
@@ -378,7 +366,6 @@ SPEC CHECKSUMS:
   just_audio: baa7252489dbcf47a4c7cc9ca663e9661c99aafa
   nanopb: d4d75c12cd1316f4a64e3c6963f879ecd4b5e0d5
   nb_utils: ada4338858d8827ec92fdab2a545206b4ba4cfb1
-  OneSignalXCFramework: 0fca311799488cb50419c0b96594aa8df4300115
   OrderedSet: aaeb196f7fef5a9edf55d89760da9176ad40b93c
   path_provider_foundation: 29f094ae23ebbca9d3d0cec13889cd9060c0e943
   PromisesObjC: c50d2056b5253dadbd6c2bea79b0674bd5a52fa4
@@ -396,6 +383,6 @@ SPEC CHECKSUMS:
   url_launcher_ios: 68d46cc9766d0c41dbdc884310529557e3cd7a86
   video_player_avfoundation: 8563f13d8fc8b2c29dc2d09e60b660e4e8128837
 
-PODFILE CHECKSUM: 11b3be62efd528ccd4be402230710924ec4adb98
+PODFILE CHECKSUM: 965ffe0080892d223d35f15b0f4ea1dc455df0fc
 
 COCOAPODS: 1.14.2

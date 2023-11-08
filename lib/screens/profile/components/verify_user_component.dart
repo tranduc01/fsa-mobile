@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'dart:ui';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -95,7 +98,7 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
                                     icon: Icon(Icons.camera_alt_outlined),
                                     iconSize: 40,
                                     onPressed: () async {
-                                      onSelectMedia('frontId');
+                                      onCaptureImage('frontId');
                                     },
                                   ).center()
                                 : Stack(
@@ -107,7 +110,7 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
                                                       .validate(),
                                               height: 150,
                                               width: 330,
-                                              fit: BoxFit.fitWidth)
+                                              fit: BoxFit.cover)
                                           .cornerRadiusWithClipRRect(
                                               commonRadius),
                                       Positioned(
@@ -152,7 +155,7 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
                                     icon: Icon(Icons.camera_alt_outlined),
                                     iconSize: 40,
                                     onPressed: () async {
-                                      onSelectMedia('backId');
+                                      onCaptureImage('backId');
                                     },
                                   ).center()
                                 : Stack(
@@ -164,7 +167,7 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
                                                       .validate(),
                                               height: 150,
                                               width: 330,
-                                              fit: BoxFit.fitWidth)
+                                              fit: BoxFit.cover)
                                           .cornerRadiusWithClipRRect(
                                               commonRadius),
                                       Positioned(
@@ -209,7 +212,7 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
                                     icon: Icon(Icons.camera_alt_outlined),
                                     iconSize: 40,
                                     onPressed: () async {
-                                      onSelectMedia('portraitId');
+                                      onCaptureImage('portraitId');
                                     },
                                   ).center()
                                 : Stack(
@@ -373,37 +376,82 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
     );
   }
 
-  Future<void> onSelectMedia(String mediaType) async {
-    final idCardWidth = 85.6;
-    final idCardHeight = 53.98;
-    final cameras = await availableCameras();
-    final camera = cameras[0];
-
+  Future<void> onCaptureImage(String mediaType) async {
     //appStore.setLoading(true);
     _cameraController = CameraController(
-      camera,
-      ResolutionPreset.high,
-      enableAudio: false,
-    );
+        await availableCameras().then((value) => value.first),
+        ResolutionPreset.ultraHigh,
+        enableAudio: false);
     await _cameraController.initialize();
     await showDialog(
       context: context,
-      builder: (context) => AspectRatio(
-          aspectRatio: idCardWidth / idCardHeight,
-          child: CameraPreview(_cameraController)),
+      builder: (context) => Stack(
+        children: [
+          Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: CameraPreview(_cameraController),
+          ),
+          Center(
+            child: Container(
+              padding: EdgeInsets.all(10),
+              width: MediaQuery.of(context).size.width,
+              height: 250,
+              decoration: BoxDecoration(
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: Colors.grey,
+                  width: 3.0,
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+              bottom: 120,
+              left: 0,
+              right: 0,
+              child: Container(
+                  padding: EdgeInsets.all(10),
+                  height: 40,
+                  decoration: BoxDecoration(
+                      color: const Color.fromARGB(154, 255, 255, 255),
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Center(
+                    child: Text(
+                      'Place your ID card in the frame',
+                      style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18),
+                    ),
+                  ))),
+          Positioned(
+            bottom: 30,
+            left: 0,
+            right: 0,
+            child: GestureDetector(
+              child: Image.asset(
+                'assets/icons/ic_capture.png',
+                height: 50,
+                width: 50,
+                color: Colors.black,
+              ),
+              onTap: () async {
+                var value = await _cameraController.takePicture();
+                mediaType == 'frontId'
+                    ? frontIdMedia = PostMedia(file: File(value.path))
+                    : mediaType == 'backId'
+                        ? backIdMedia = PostMedia(file: File(value.path))
+                        : portraitMedia = PostMedia(file: File(value.path));
+                setState(() {});
+                Navigator.pop(context);
+                setState(() {});
+              },
+            ),
+          ),
+        ],
+      ),
     );
-    // await getImageSource(isCamera: true, isVideo: false).then((value) {
-    //   appStore.setLoading(false);
-
-    //   mediaType == 'frontId'
-    //       ? frontIdMedia = PostMedia(file: value)
-    //       : mediaType == 'backId'
-    //           ? backIdMedia = PostMedia(file: value)
-    //           : portraitMedia = PostMedia(file: value);
-    //   setState(() {});
-    // }).catchError((e) {
-    //   log('Error: ${e.toString()}');
-    //   appStore.setLoading(false);
-    // });
   }
 }

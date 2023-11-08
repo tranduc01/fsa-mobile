@@ -36,10 +36,10 @@ target 'Runner' do
   pod 'connectivity_plus', :path => '.symlinks/plugins/connectivity_plus/ios'
 end
 
-target 'OneSignalNotificationServiceExtension' do
-  use_frameworks!
-  pod 'OneSignalXCFramework', '>= 3.4.3', '< 4.0'
-end
+# target 'OneSignalNotificationServiceExtension' do
+#   use_frameworks!
+#   pod 'OneSignalXCFramework', '>= 3.4.3', '< 4.0'
+# end
 
 post_install do |installer|
   installer.pods_project.targets.each do |target|
