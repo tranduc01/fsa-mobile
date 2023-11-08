@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -224,7 +223,7 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
                                                       .validate(),
                                               height: 400,
                                               width: 330,
-                                              fit: BoxFit.fill)
+                                              fit: BoxFit.cover)
                                           .cornerRadiusWithClipRRect(
                                               commonRadius),
                                       Positioned(
@@ -378,93 +377,90 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
 
   Future<void> onCaptureImage(String mediaType) async {
     //appStore.setLoading(true);
+    final cameras = await availableCameras();
+    final camera = mediaType == 'frontId' || mediaType == 'backId'
+        ? cameras[0]
+        : cameras[1];
     _cameraController = CameraController(
-      await availableCameras().then((value) => value.first),
+      camera,
       ResolutionPreset.ultraHigh,
       enableAudio: false,
     );
     await _cameraController.initialize();
     await showDialog(
       context: context,
-      builder: (context) => Scaffold(
-        body: SafeArea(
-          child: Container(
-            color: Colors.black, // Set the background color to black
-            child: Stack(
-              children: [
-                Positioned.fill(
-                  child: AspectRatio(
-                    aspectRatio: _cameraController.value.aspectRatio,
-                    child: CameraPreview(_cameraController),
-                  ),
+      builder: (context) => Stack(
+        children: [
+          Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: CameraPreview(_cameraController),
+          ),
+          Center(
+            child: Container(
+              padding: EdgeInsets.all(10),
+              width: MediaQuery.of(context).size.width,
+              height: 250,
+              decoration: BoxDecoration(
+                color: Color.fromARGB(37, 76, 175, 79),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: Color.fromARGB(198, 76, 175, 79),
+                  width: 3.0,
                 ),
-                Center(
-                  child: Container(
-                    padding: EdgeInsets.all(10),
-                    width: MediaQuery.of(context).size.width,
-                    height: 250,
-                    decoration: BoxDecoration(
-                      color: Colors.transparent,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: Colors.grey,
-                        width: 3.0,
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  bottom: 120,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    padding: EdgeInsets.all(10),
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(154, 255, 255, 255),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Place your ID card in the frame',
-                        style: TextStyle(
-                          fontFamily: 'Roboto',
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  bottom: 30,
-                  left: 0,
-                  right: 0,
-                  child: GestureDetector(
-                    child: Image.asset(
-                      'assets/icons/ic_capture.png',
-                      height: 50,
-                      width: 50,
-                      color: Colors.black,
-                    ),
-                    onTap: () async {
-                      var value = await _cameraController.takePicture();
-                      mediaType == 'frontId'
-                          ? frontIdMedia = PostMedia(file: File(value.path))
-                          : mediaType == 'backId'
-                              ? backIdMedia = PostMedia(file: File(value.path))
-                              : portraitMedia =
-                                  PostMedia(file: File(value.path));
-                      setState(() {});
-                      Navigator.pop(context);
-                      setState(() {});
-                    },
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
-        ),
+          Positioned(
+            bottom: 120,
+            left: 0,
+            right: 0,
+            child: Container(
+              padding: EdgeInsets.all(30),
+              height: 40,
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(154, 255, 255, 255),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Center(
+                child: Text(
+                  'Place your ID card in the frame',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontFamily: 'Roboto',
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 30,
+            left: 0,
+            right: 0,
+            child: GestureDetector(
+              child: Image.asset(
+                'assets/icons/ic_capture.png',
+                height: 50,
+                width: 50,
+                color: Colors.black,
+              ),
+              onTap: () async {
+                var value = await _cameraController.takePicture();
+                if (mediaType == 'potraitMedia') {}
+                mediaType == 'frontId'
+                    ? frontIdMedia = PostMedia(file: File(value.path))
+                    : mediaType == 'backId'
+                        ? backIdMedia = PostMedia(file: File(value.path))
+                        : portraitMedia = PostMedia(file: File(value.path));
+                setState(() {});
+                Navigator.pop(context);
+                setState(() {});
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
