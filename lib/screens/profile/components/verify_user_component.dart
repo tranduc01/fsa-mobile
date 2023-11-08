@@ -398,7 +398,7 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
           ),
           Center(
             child: Container(
-              padding: EdgeInsets.all(10),
+              padding: EdgeInsets.all(30),
               width: MediaQuery.of(context).size.width,
               height: 250,
               decoration: BoxDecoration(
@@ -416,7 +416,7 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
             left: 0,
             right: 0,
             child: Container(
-              padding: EdgeInsets.all(30),
+              padding: EdgeInsets.all(20),
               height: 40,
               decoration: BoxDecoration(
                 color: const Color.fromARGB(154, 255, 255, 255),
@@ -429,7 +429,7 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
                     color: Colors.black,
                     fontFamily: 'Roboto',
                     fontWeight: FontWeight.bold,
-                    fontSize: 18,
+                    fontSize: 16,
                   ),
                 ),
               ),
@@ -442,8 +442,8 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
             child: GestureDetector(
               child: Image.asset(
                 'assets/icons/ic_capture.png',
-                height: 50,
-                width: 50,
+                height: 60,
+                width: 60,
                 color: Colors.black,
               ),
               onTap: () async {
@@ -456,7 +456,6 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
                         : portraitMedia = PostMedia(file: File(value.path));
                 setState(() {});
                 Navigator.pop(context);
-                setState(() {});
               },
             ),
           ),
