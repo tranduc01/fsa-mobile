@@ -3,7 +3,6 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/controllers/gallery_controller.dart';
-import 'package:socialv/screens/gallery/screens/create_album_screen.dart';
 import 'package:video_player/video_player.dart';
 import '../../../components/file_picker_dialog_component.dart';
 import '../../../components/loading_widget.dart';
@@ -34,8 +33,7 @@ int? albumId;
 
 class _CreateAlbumComponentState extends State<CreateAlbumComponent> {
   final albumKey = GlobalKey<FormState>();
-  MediaModel dropdownTypeValue = MediaModel(
-      allowedType: ['image', 'video'], title: 'Image', type: 'image');
+
   List<PostMedia> mediaList = [];
   MediaActiveStatusesModel dropdownStatusValue = MediaActiveStatusesModel();
   TextEditingController titleCont = TextEditingController();
@@ -77,18 +75,6 @@ class _CreateAlbumComponentState extends State<CreateAlbumComponent> {
   void initState() {
     super.initState();
     getMediaStatusList();
-
-    if (widget.mediaTypeList.validate().isNotEmpty) {
-      dropdownTypeValue =
-          widget.mediaTypeList[(widget.groupId != null) ? 2 : 1];
-      selectedAlbumMedia =
-          widget.mediaTypeList[(widget.groupId != null) ? 2 : 1];
-    }
-
-    // Set dropdownStatusValue to the first item in mediaStatusList
-    if (mediaStatusList.isNotEmpty) {
-      dropdownStatusValue = mediaStatusList.first;
-    }
   }
 
   Future<List<MediaActiveStatusesModel>> getMediaStatusList() async {
@@ -356,7 +342,7 @@ class _CreateAlbumComponentState extends State<CreateAlbumComponent> {
                                                         MaterialState
                                                             .pressed)) {
                                                       return const Color
-                                                              .fromARGB(
+                                                          .fromARGB(
                                                           137, 244, 67, 54);
                                                     }
                                                     return Colors.white;
@@ -415,10 +401,7 @@ class _CreateAlbumComponentState extends State<CreateAlbumComponent> {
     if (file != null) {
       if (file == FileTypes.CAMERA) {
         appStore.setLoading(true);
-        await getImageSource(
-                isCamera: true,
-                isVideo: selectedAlbumMedia!.type == MediaTypes.video)
-            .then((value) {
+        await getImageSource(isCamera: true, isVideo: false).then((value) {
           appStore.setLoading(false);
           mediaList.add(PostMedia(file: value));
           setState(() {});
@@ -428,15 +411,12 @@ class _CreateAlbumComponentState extends State<CreateAlbumComponent> {
         });
       } else {
         appStore.setLoading(true);
-        getMultipleFiles(mediaType: MediaModel(type: 'photo', isActive: true))
-            .then((value) {
-          value.forEach((element) {
-            mediaList.add(PostMedia(file: element));
-          });
+        await getImageSource(isCamera: false, isVideo: false).then((value) {
+          appStore.setLoading(false);
+          mediaList.add(PostMedia(file: value));
+          setState(() {});
         }).catchError((e) {
           log('Error: ${e.toString()}');
-        }).whenComplete(() {
-          setState(() {});
           appStore.setLoading(false);
         });
       }

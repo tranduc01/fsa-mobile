@@ -56,12 +56,13 @@ dependencies:
   firebase_core: ^2.13.0
   firebase_auth: ^4.6.1
   firebase_messaging: ^14.6.1
+  google_ml_kit:
 
   # AUTHENTICATION
   google_sign_in:
   the_apple_sign_in: ^1.1.1
   jwt_decoder:
-  firebase_ml_vision:
+  
 
   # Remote Notification
   #onesignal_flutter: ^5.0.3

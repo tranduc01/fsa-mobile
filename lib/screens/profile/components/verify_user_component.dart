@@ -4,6 +4,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get/get.dart';
+import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/controllers/gallery_controller.dart';
 import '../../../components/loading_widget.dart';
@@ -40,6 +41,16 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
   @override
   void initState() {
     super.initState();
+  }
+
+  bool detectPhraseMatch(String paragraph, String target) {
+    List<String> words = paragraph.split(' ');
+    for (String word in words) {
+      if (word.length >= 12 && word.contains(target)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @override
@@ -252,25 +263,47 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
                     child: appButton(
                       text: 'Verify',
                       onTap: () async {
-                        showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (context) {
-                              return Dialog(
-                                shadowColor: Colors.transparent,
-                                backgroundColor: Colors.transparent,
-                                child: Image.asset(
-                                  'assets/icons/loading.gif',
-                                  height: 180,
-                                  width: 180,
-                                ),
-                              );
-                            });
+                        // showDialog(
+                        //     context: context,
+                        //     barrierDismissible: false,
+                        //     builder: (context) {
+                        //       return Dialog(
+                        //         shadowColor: Colors.transparent,
+                        //         backgroundColor: Colors.transparent,
+                        //         child: Image.asset(
+                        //           'assets/icons/loading.gif',
+                        //           height: 180,
+                        //           width: 180,
+                        //         ),
+                        //       );
+                        //     });
                         // await galleryController.createAlbum(
                         //     titleCont.text, discCont.text, mediaList);
-                        Future.delayed(Duration(seconds: 3), () {
-                          Navigator.pop(context);
-                          Navigator.pop(context);
+                        Future.delayed(Duration(seconds: 3), () async {
+                          String path = "";
+                          await getImageSource(isCamera: false, isVideo: false)
+                              .then((value) {
+                            appStore.setLoading(false);
+                            path = value!.path;
+                            setState(() {});
+                          }).catchError((e) {
+                            log('Error: ${e.toString()}');
+                            appStore.setLoading(false);
+                          });
+                          final textDetector =
+                              GoogleMlKit.vision.textRecognizer();
+                          final inputImage = InputImage.fromFilePath(path);
+                          final RecognizedText recognisedText =
+                              await textDetector.processImage(inputImage);
+                          //Navigator.pop(context);
+
+                          var text = recognisedText.text;
+                          print(text);
+                          detectPhraseMatch(text.toLowerCase(),
+                                  'CĂN CƯỚC CÔNG DÂN'.toLowerCase())
+                              ? toast('Match')
+                              : toast('Not Match');
+
                           // if (galleryController.isCreateSuccess.value) {
                           //   galleryController.fetchAlbums();
                           //   Navigator.pop(context);

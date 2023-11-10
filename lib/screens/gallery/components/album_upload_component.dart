@@ -36,15 +36,6 @@ class _AlbumUploadScreenState extends State<AlbumUploadScreen> {
   void initState() {
     super.initState();
     mediaList.clear();
-    if (widget.fileType != null) {
-      // MediaModel media = mediaTypeList
-      //     .firstWhere((element) => element.type == widget.fileType);
-
-      selectedAlbumMedia = MediaModel(
-        type: widget.fileType,
-        isActive: true,
-      );
-    }
   }
 
   Future<void> onSelectMedia() async {
@@ -60,10 +51,7 @@ class _AlbumUploadScreenState extends State<AlbumUploadScreen> {
     if (file != null) {
       if (file == FileTypes.CAMERA) {
         appStore.setLoading(true);
-        await getImageSource(
-                isCamera: true,
-                isVideo: selectedAlbumMedia!.type == MediaTypes.video)
-            .then((value) {
+        await getImageSource(isCamera: true, isVideo: false).then((value) {
           appStore.setLoading(false);
           mediaList.add(PostMedia(file: value));
           setState(() {});
@@ -73,15 +61,12 @@ class _AlbumUploadScreenState extends State<AlbumUploadScreen> {
         });
       } else {
         appStore.setLoading(true);
-        getMultipleFiles(mediaType: MediaModel(type: 'photo', isActive: true))
-            .then((value) {
-          value.forEach((element) {
-            mediaList.add(PostMedia(file: element));
-          });
+        await getImageSource(isCamera: false, isVideo: false).then((value) {
+          appStore.setLoading(false);
+          mediaList.add(PostMedia(file: value));
+          setState(() {});
         }).catchError((e) {
           log('Error: ${e.toString()}');
-        }).whenComplete(() {
-          setState(() {});
           appStore.setLoading(false);
         });
       }
@@ -170,7 +155,8 @@ class _AlbumUploadScreenState extends State<AlbumUploadScreen> {
                 if (mediaList.isNotEmpty)
                   ShowSelectedMediaComponent(
                     mediaList: mediaList,
-                    mediaType: selectedAlbumMedia!,
+                    mediaType: MediaModel(
+                        type: 'photo', title: 'Photo', isActive: true),
                     videoController: List.generate(mediaList.length, (index) {
                       return VideoPlayerController.networkUrl(
                           Uri.parse(mediaList[index].file!.path.validate()));
