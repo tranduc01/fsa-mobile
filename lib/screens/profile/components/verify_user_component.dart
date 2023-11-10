@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get/get.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
@@ -410,6 +411,7 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
 
   Future<void> onCaptureImage(String mediaType) async {
     //appStore.setLoading(true);
+    bool isDataDetected = false;
     final cameras = await availableCameras();
     final camera = mediaType == 'frontId' || mediaType == 'backId'
         ? cameras[0]
@@ -420,6 +422,14 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
       enableAudio: false,
     );
     await _cameraController.initialize();
+    _cameraController.startImageStream((CameraImage image) {
+      // Process the image, e.g., detect data
+      isDataDetected = checkImageData(image);
+      if (isDataDetected) {
+        isDataDetected = true;
+        setState(() {});
+      }
+    });
     await showDialog(
       context: context,
       builder: (context) => Stack(
@@ -438,7 +448,9 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
                 color: Color.fromARGB(37, 76, 175, 79),
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
-                  color: Color.fromARGB(198, 76, 175, 79),
+                  color: isDataDetected
+                      ? Colors.green
+                      : Color.fromARGB(37, 76, 175, 79),
                   width: 3.0,
                 ),
               ),
@@ -495,5 +507,51 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
         ],
       ),
     );
+    _cameraController.stopImageStream();
+  }
+
+  bool checkImageData(CameraImage image) {
+    // Convert the CameraImage to InputImage
+    InputImage inputImage = InputImage.fromBytes(
+      bytes: _concatenatePlanes(image.planes),
+      metadata: InputImageMetadata(
+        size: Size(image.width.toDouble(), image.height.toDouble()),
+        rotation: InputImageRotation.rotation0deg,
+        bytesPerRow: image.planes[0].bytesPerRow,
+        format: InputImageFormat.nv21,
+      ),
+    );
+
+    // Create an instance of TextRecognizer
+    TextRecognizer textRecognizer = GoogleMlKit.vision.textRecognizer();
+
+    // Process the image and get the detected text
+    Future<RecognizedText> processImage() async {
+      return await textRecognizer.processImage(inputImage);
+    }
+
+    // Check if the detected text is not null or empty
+    bool hasData = false;
+    processImage().then((RecognizedText text) {
+      if (text.blocks.isNotEmpty) {
+        hasData = true;
+      }
+    });
+
+    return hasData;
+  }
+
+  Uint8List _concatenatePlanes(List<Plane> planes) {
+    int totalSize = planes
+        .map((Plane plane) => plane.bytes.length)
+        .reduce((value, element) => value + element);
+    Uint8List concatenatedBytes = Uint8List(totalSize);
+    int index = 0;
+    for (Plane plane in planes) {
+      concatenatedBytes.setRange(
+          index, index + plane.bytes.length, plane.bytes);
+      index += plane.bytes.length;
+    }
+    return concatenatedBytes;
   }
 }
