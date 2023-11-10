@@ -1,5 +1,4 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -29,7 +28,6 @@ void main() async {
   await initialize(aLocaleLanguageList: languageList());
 
   Firebase.initializeApp().then((value) {
-    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
     //MobileAds.instance.initialize();
   }).catchError((e) {
     log('Error: ${e.toString()}');

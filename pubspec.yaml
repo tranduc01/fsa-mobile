@@ -52,10 +52,9 @@ dependencies:
   flutter_secure_storage:
 
   # Firebase
-  firebase_crashlytics: ^3.3.1
-  firebase_core: ^2.13.0
-  firebase_auth: ^4.6.1
-  firebase_messaging: ^14.6.1
+  firebase_core: 
+  firebase_auth:
+  firebase_messaging: 
   google_ml_kit:
 
   # AUTHENTICATION

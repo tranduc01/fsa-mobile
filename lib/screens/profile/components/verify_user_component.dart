@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:camera/camera.dart';
@@ -63,6 +64,8 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
   void dispose() {
     titleNode.dispose();
     discNode.dispose();
+    _cameraController.dispose();
+    _cameraController.stopImageStream();
     super.dispose();
   }
 
@@ -412,23 +415,21 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
   Future<void> onCaptureImage(String mediaType) async {
     //appStore.setLoading(true);
     bool isDataDetected = false;
+    StreamController<bool> dataDetectedController = StreamController<bool>();
     final cameras = await availableCameras();
     final camera = mediaType == 'frontId' || mediaType == 'backId'
         ? cameras[0]
         : cameras[1];
     _cameraController = CameraController(
       camera,
-      ResolutionPreset.ultraHigh,
+      ResolutionPreset.high,
       enableAudio: false,
     );
     await _cameraController.initialize();
-    _cameraController.startImageStream((CameraImage image) {
+    _cameraController.startImageStream((CameraImage image) async {
       // Process the image, e.g., detect data
-      isDataDetected = checkImageData(image);
-      if (isDataDetected) {
-        isDataDetected = true;
-        setState(() {});
-      }
+      isDataDetected = await checkImageData(image);
+      dataDetectedController.add(isDataDetected);
     });
     await showDialog(
       context: context,
@@ -440,46 +441,52 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
             child: CameraPreview(_cameraController),
           ),
           Center(
-            child: Container(
-              padding: EdgeInsets.all(30),
-              width: MediaQuery.of(context).size.width,
-              height: 250,
-              decoration: BoxDecoration(
-                color: Color.fromARGB(37, 76, 175, 79),
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
+              child: StreamBuilder<bool>(
+            stream: dataDetectedController.stream,
+            initialData: false,
+            builder: (context, snapshot) {
+              bool isDataDetected = snapshot.data ?? false;
+              return Container(
+                padding: EdgeInsets.all(30),
+                width: MediaQuery.of(context).size.width,
+                height: 250,
+                decoration: BoxDecoration(
                   color: isDataDetected
-                      ? Colors.green
-                      : Color.fromARGB(37, 76, 175, 79),
-                  width: 3.0,
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: 120,
-            left: 0,
-            right: 0,
-            child: Container(
-              padding: EdgeInsets.all(20),
-              height: 40,
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(154, 255, 255, 255),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Center(
-                child: Text(
-                  'Place your ID card in the frame',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontFamily: 'Roboto',
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                      ? const Color.fromARGB(109, 76, 175, 79)
+                      : const Color.fromARGB(104, 244, 67, 54),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: isDataDetected ? Colors.green : Colors.red,
+                    width: 3.0,
                   ),
                 ),
-              ),
-            ),
-          ),
+              );
+            },
+          )),
+          // Positioned(
+          //   bottom: 120,
+          //   left: 0,
+          //   right: 0,
+          //   child: Container(
+          //     padding: EdgeInsets.all(20),
+          //     height: 40,
+          //     decoration: BoxDecoration(
+          //       color: const Color.fromARGB(154, 255, 255, 255),
+          //       borderRadius: BorderRadius.circular(10),
+          //     ),
+          //     child: Center(
+          //       child: Text(
+          //         'Place your ID card in the frame',
+          //         style: TextStyle(
+          //           color: Colors.black,
+          //           fontFamily: 'Roboto',
+          //           fontWeight: FontWeight.bold,
+          //           fontSize: 16,
+          //         ),
+          //       ),
+          //     ),
+          //   ),
+          // ),
           Positioned(
             bottom: 30,
             left: 0,
@@ -510,15 +517,31 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
     _cameraController.stopImageStream();
   }
 
-  bool checkImageData(CameraImage image) {
+  Future<bool> checkImageData(CameraImage image) async {
     // Convert the CameraImage to InputImage
-    InputImage inputImage = InputImage.fromBytes(
-      bytes: _concatenatePlanes(image.planes),
+    final WriteBuffer allBytes = WriteBuffer();
+    for (Plane plane in image.planes) {
+      allBytes.putUint8List(plane.bytes);
+    }
+    final bytes = allBytes.done().buffer.asUint8List();
+
+    final Size imageSize =
+        Size(image.width.toDouble(), image.height.toDouble());
+
+    final InputImageRotation rotation = InputImageRotation.rotation0deg;
+
+    final InputImageFormat format =
+        image.format.group == ImageFormatGroup.yuv420
+            ? InputImageFormat.yuv420
+            : InputImageFormat.bgra8888;
+
+    final inputImage = InputImage.fromBytes(
+      bytes: bytes,
       metadata: InputImageMetadata(
-        size: Size(image.width.toDouble(), image.height.toDouble()),
-        rotation: InputImageRotation.rotation0deg,
+        size: imageSize,
+        rotation: rotation,
+        format: format,
         bytesPerRow: image.planes[0].bytesPerRow,
-        format: InputImageFormat.nv21,
       ),
     );
 
@@ -526,32 +549,11 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
     TextRecognizer textRecognizer = GoogleMlKit.vision.textRecognizer();
 
     // Process the image and get the detected text
-    Future<RecognizedText> processImage() async {
-      return await textRecognizer.processImage(inputImage);
-    }
+    RecognizedText text = await textRecognizer.processImage(inputImage);
 
     // Check if the detected text is not null or empty
-    bool hasData = false;
-    processImage().then((RecognizedText text) {
-      if (text.blocks.isNotEmpty) {
-        hasData = true;
-      }
-    });
+    bool hasData = text.blocks.isNotEmpty;
 
     return hasData;
-  }
-
-  Uint8List _concatenatePlanes(List<Plane> planes) {
-    int totalSize = planes
-        .map((Plane plane) => plane.bytes.length)
-        .reduce((value, element) => value + element);
-    Uint8List concatenatedBytes = Uint8List(totalSize);
-    int index = 0;
-    for (Plane plane in planes) {
-      concatenatedBytes.setRange(
-          index, index + plane.bytes.length, plane.bytes);
-      index += plane.bytes.length;
-    }
-    return concatenatedBytes;
   }
 }
