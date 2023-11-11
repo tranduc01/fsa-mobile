@@ -449,11 +449,14 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
           Positioned(
             top: 30,
             left: 10,
-            child: IconButton(
-              icon: Icon(Icons.arrow_back, color: Colors.white),
-              onPressed: () {
-                Navigator.pop(context);
-              },
+            child: Material(
+              type: MaterialType.transparency,
+              child: IconButton(
+                icon: Icon(Icons.arrow_back, color: Colors.white),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
             ),
           ),
           Center(
@@ -488,7 +491,7 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
                 'assets/icons/ic_capture.png',
                 height: 60,
                 width: 60,
-                color: Colors.black,
+                color: Colors.white,
               ),
               onTap: () async {
                 if (isDataDetected) {
