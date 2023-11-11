@@ -415,6 +415,7 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
   Future<void> onCaptureImage(String mediaType) async {
     //appStore.setLoading(true);
     bool isDataDetected = false;
+    int frameCount = 0;
     StreamController<bool> dataDetectedController = StreamController<bool>();
     final cameras = await availableCameras();
     final camera = mediaType == 'frontId' || mediaType == 'backId'
@@ -437,9 +438,12 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
     //   }
     // });
     _cameraController.startImageStream((CameraImage image) async {
-      // Process the image, e.g., detect data
-      isDataDetected = await checkImageData(image);
-      dataDetectedController.add(isDataDetected);
+      frameCount++;
+      if (frameCount % 10 == 0) {
+        // process every 10th frame
+        isDataDetected = await checkImageData(image);
+        dataDetectedController.add(isDataDetected);
+      }
     });
     await showDialog(
       context: context,
