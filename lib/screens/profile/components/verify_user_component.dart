@@ -446,6 +446,16 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
             width: MediaQuery.of(context).size.width,
             child: CameraPreview(_cameraController),
           ),
+          Positioned(
+            top: 30,
+            left: 10,
+            child: IconButton(
+              icon: Icon(Icons.arrow_back, color: Colors.white),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ),
           Center(
               child: StreamBuilder<bool>(
             stream: dataDetectedController.stream,
