@@ -426,11 +426,18 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
       enableAudio: false,
     );
     await _cameraController.initialize();
-    _cameraController.startImageStream((CameraImage image) async {
-      // Process the image, e.g., detect data
-      isDataDetected = await checkImageData(image);
-      dataDetectedController.add(isDataDetected);
+    Timer timer = Timer.periodic(Duration(seconds: 2), (Timer t) async {
+      if (_cameraController.value.isStreamingImages) {
+        _cameraController.stopImageStream();
+        dataDetectedController.add(isDataDetected);
+        _cameraController.startImageStream((CameraImage image) async {
+          // Process the image, e.g., detect data
+          isDataDetected = await checkImageData(image);
+          dataDetectedController.add(isDataDetected);
+        });
+      }
     });
+
     await showDialog(
       context: context,
       builder: (context) => Stack(
@@ -452,8 +459,8 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
                 height: 250,
                 decoration: BoxDecoration(
                   color: isDataDetected
-                      ? const Color.fromARGB(109, 76, 175, 79)
-                      : const Color.fromARGB(104, 244, 67, 54),
+                      ? Color.fromARGB(75, 76, 175, 79)
+                      : Color.fromARGB(75, 244, 67, 54),
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
                     color: isDataDetected ? Colors.green : Colors.red,
@@ -514,7 +521,9 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
         ],
       ),
     );
+    timer.cancel();
     _cameraController.stopImageStream();
+    dataDetectedController.close();
   }
 
   Future<bool> checkImageData(CameraImage image) async {
@@ -550,6 +559,9 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
 
     // Process the image and get the detected text
     RecognizedText text = await textRecognizer.processImage(inputImage);
+
+    // Close the TextRecognizer
+    textRecognizer.close();
 
     // Check if the detected text is not null or empty
     bool hasData = text.blocks.isNotEmpty;
