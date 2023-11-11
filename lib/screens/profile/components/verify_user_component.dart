@@ -426,18 +426,21 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
       enableAudio: false,
     );
     await _cameraController.initialize();
-    Timer timer = Timer.periodic(Duration(seconds: 2), (Timer t) async {
-      if (_cameraController.value.isStreamingImages) {
-        _cameraController.stopImageStream();
-        dataDetectedController.add(isDataDetected);
-        _cameraController.startImageStream((CameraImage image) async {
-          // Process the image, e.g., detect data
-          isDataDetected = await checkImageData(image);
-          dataDetectedController.add(isDataDetected);
-        });
-      }
+    // Timer timer = Timer.periodic(Duration(seconds: 2), (Timer t) async {
+    //   if (_cameraController.value.isStreamingImages) {
+    //     _cameraController.stopImageStream();
+    //     _cameraController.startImageStream((CameraImage image) async {
+    //       // Process the image, e.g., detect data
+    //       isDataDetected = await checkImageData(image);
+    //       dataDetectedController.add(isDataDetected);
+    //     });
+    //   }
+    // });
+    _cameraController.startImageStream((CameraImage image) async {
+      // Process the image, e.g., detect data
+      isDataDetected = await checkImageData(image);
+      dataDetectedController.add(isDataDetected);
     });
-
     await showDialog(
       context: context,
       builder: (context) => Stack(
@@ -521,8 +524,10 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
         ],
       ),
     );
-    timer.cancel();
-    _cameraController.stopImageStream();
+    //timer.cancel();
+    if (_cameraController.value.isStreamingImages) {
+      _cameraController.stopImageStream();
+    }
     dataDetectedController.close();
   }
 
@@ -565,7 +570,7 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
 
     // Check if the detected text is not null or empty
     bool hasData = text.blocks.isNotEmpty;
-
+    print('checkImageData returning: $hasData');
     return hasData;
   }
 }
