@@ -470,30 +470,6 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
             },
           )),
           Positioned(
-            bottom: 150,
-            left: 0,
-            right: 0,
-            child: Container(
-              padding: EdgeInsets.all(20),
-              height: 40,
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(154, 255, 255, 255),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Center(
-                child: Text(
-                  'Place your ID card in the frame',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontFamily: 'Roboto',
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Positioned(
             bottom: 30,
             left: 0,
             right: 0,
@@ -515,6 +491,8 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
                           : portraitMedia = PostMedia(file: File(value.path));
                   setState(() {});
                   Navigator.pop(context);
+                } else {
+                  toast('Please place your ID card in the frame!');
                 }
               },
             ),
@@ -522,7 +500,7 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
         ],
       ),
     );
-    //timer.cancel();
+
     if (_cameraController.value.isStreamingImages) {
       _cameraController.stopImageStream();
     }
@@ -567,8 +545,7 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
     textRecognizer.close();
 
     // Check if the detected text is not null or empty
-    bool hasData = text.blocks.contains('CĂN CƯỚC') ||
-        text.blocks.contains('Cityzen Identity Card');
+    bool hasData = text.text.toLowerCase().contains('citizen');
     return hasData;
   }
 }
