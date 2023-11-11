@@ -427,16 +427,7 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
       enableAudio: false,
     );
     await _cameraController.initialize();
-    // Timer timer = Timer.periodic(Duration(seconds: 2), (Timer t) async {
-    //   if (_cameraController.value.isStreamingImages) {
-    //     _cameraController.stopImageStream();
-    //     _cameraController.startImageStream((CameraImage image) async {
-    //       // Process the image, e.g., detect data
-    //       isDataDetected = await checkImageData(image);
-    //       dataDetectedController.add(isDataDetected);
-    //     });
-    //   }
-    // });
+
     _cameraController.startImageStream((CameraImage image) async {
       frameCount++;
       if (frameCount % 10 == 0) {
@@ -445,6 +436,7 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
         dataDetectedController.add(isDataDetected);
       }
     });
+
     await showDialog(
       context: context,
       builder: (context) => Stack(
@@ -477,30 +469,30 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
               );
             },
           )),
-          // Positioned(
-          //   bottom: 120,
-          //   left: 0,
-          //   right: 0,
-          //   child: Container(
-          //     padding: EdgeInsets.all(20),
-          //     height: 40,
-          //     decoration: BoxDecoration(
-          //       color: const Color.fromARGB(154, 255, 255, 255),
-          //       borderRadius: BorderRadius.circular(10),
-          //     ),
-          //     child: Center(
-          //       child: Text(
-          //         'Place your ID card in the frame',
-          //         style: TextStyle(
-          //           color: Colors.black,
-          //           fontFamily: 'Roboto',
-          //           fontWeight: FontWeight.bold,
-          //           fontSize: 16,
-          //         ),
-          //       ),
-          //     ),
-          //   ),
-          // ),
+          Positioned(
+            bottom: 150,
+            left: 0,
+            right: 0,
+            child: Container(
+              padding: EdgeInsets.all(20),
+              height: 40,
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(154, 255, 255, 255),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Center(
+                child: Text(
+                  'Place your ID card in the frame',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontFamily: 'Roboto',
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ),
+          ),
           Positioned(
             bottom: 30,
             left: 0,
@@ -513,15 +505,17 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
                 color: Colors.black,
               ),
               onTap: () async {
-                var value = await _cameraController.takePicture();
-                if (mediaType == 'potraitMedia') {}
-                mediaType == 'frontId'
-                    ? frontIdMedia = PostMedia(file: File(value.path))
-                    : mediaType == 'backId'
-                        ? backIdMedia = PostMedia(file: File(value.path))
-                        : portraitMedia = PostMedia(file: File(value.path));
-                setState(() {});
-                Navigator.pop(context);
+                if (isDataDetected) {
+                  var value = await _cameraController.takePicture();
+                  if (mediaType == 'potraitMedia') {}
+                  mediaType == 'frontId'
+                      ? frontIdMedia = PostMedia(file: File(value.path))
+                      : mediaType == 'backId'
+                          ? backIdMedia = PostMedia(file: File(value.path))
+                          : portraitMedia = PostMedia(file: File(value.path));
+                  setState(() {});
+                  Navigator.pop(context);
+                }
               },
             ),
           ),
@@ -573,8 +567,8 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
     textRecognizer.close();
 
     // Check if the detected text is not null or empty
-    bool hasData = text.blocks.isNotEmpty;
-    print('checkImageData returning: $hasData');
+    bool hasData = text.blocks.contains('CĂN CƯỚC') ||
+        text.blocks.contains('Cityzen Identity Card');
     return hasData;
   }
 }
