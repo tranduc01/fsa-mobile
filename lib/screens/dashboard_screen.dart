@@ -78,34 +78,6 @@ class _DashboardScreenState extends State<DashboardScreen>
       ProfileFragment(controller: _controller),
     ]);
 
-    // afterBuildCreated(() {
-    //   if (isMobile) {
-    //     OneSignal.shared.setNotificationOpenedHandler(
-    //         (OSNotificationOpenedResult notification) async {
-    //       notification.notification.additionalData!.entries
-    //           .forEach((element) async {
-    //         if (element.key == "is_comment") {
-    //           int postId = notification.notification.additionalData!.entries
-    //               .firstWhere((element) => element.key == 'post_id')
-    //               .value;
-    //           if (postId != 0) {
-    //             CommentScreen(postId: postId).launch(context);
-    //           }
-    //         } else if (element.key == 'post_id') {
-    //           if (element.value.toString().toInt() != 0) {
-    //             SinglePostScreen(postId: element.value.toString().toInt())
-    //                 .launch(context);
-    //           }
-    //         } else if (element.key == 'user_id') {
-    //           MemberProfileScreen(memberId: element.value).launch(context);
-    //         } else if (element.key == 'group_id') {
-    //           GroupDetailScreen(groupId: element.value).launch(context);
-    //         }
-    //       });
-    //     });
-    //   }
-    // });
-
     await getReactionsList();
     defaultReactionsList();
 
@@ -116,28 +88,28 @@ class _DashboardScreenState extends State<DashboardScreen>
     selectedIndex = 0;
     setState(() {});
 
-    getDetails();
+    //getDetails();
 
-    Map req = {
-      "player_id": getStringAsync(SharePreferencesKey.ONE_SIGNAL_PLAYER_ID),
-      "add": 1
-    };
+    // Map req = {
+    //   "player_id": getStringAsync(SharePreferencesKey.ONE_SIGNAL_PLAYER_ID),
+    //   "add": 1
+    // };
 
-    await setPlayerId(req).then((value) {
-      //
-    }).catchError((e) {
-      log("Player id error : ${e.toString()}");
-    });
+    // await setPlayerId(req).then((value) {
+    //   //
+    // }).catchError((e) {
+    //   log("Player id error : ${e.toString()}");
+    // });
 
-    getNonce().then((value) {
-      appStore.setNonce(value.storeApiNonce.validate());
-    }).catchError(onError);
+    // getNonce().then((value) {
+    //   appStore.setNonce(value.storeApiNonce.validate());
+    // }).catchError(onError);
 
     setStatusBarColorBasedOnTheme();
 
-    activeUser();
-    getNotificationCount();
-    getMediaList();
+    //activeUser();
+    //getNotificationCount();
+    //getMediaList();
   }
 
   Future<void> getMediaList() async {
@@ -188,7 +160,6 @@ class _DashboardScreenState extends State<DashboardScreen>
     // });
 
     reactions = reactions;
-    log('Reactions: ${reactions.length}');
 
     setState(() {});
   }

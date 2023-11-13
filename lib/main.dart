@@ -27,16 +27,12 @@ void main() async {
 
   await initialize(aLocaleLanguageList: languageList());
 
-  Firebase.initializeApp().then((value) {
-    //MobileAds.instance.initialize();
-  }).catchError((e) {
+  Firebase.initializeApp().then((value) {}).catchError((e) {
     log('Error: ${e.toString()}');
   });
 
   defaultRadius = 32.0;
   defaultAppButtonRadius = 12;
-
-  //initializeOneSignal();
 
   exitFullScreen();
   Get.put(UserController());
