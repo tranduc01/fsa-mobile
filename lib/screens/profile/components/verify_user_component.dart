@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get/get.dart';
-import 'package:google_ml_kit/google_ml_kit.dart';
+import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/controllers/gallery_controller.dart';
 import '../../../components/loading_widget.dart';
@@ -43,16 +44,6 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
   @override
   void initState() {
     super.initState();
-  }
-
-  bool detectPhraseMatch(String paragraph, String target) {
-    List<String> words = paragraph.split(' ');
-    for (String word in words) {
-      if (word.length >= 12 && word.contains(target)) {
-        return true;
-      }
-    }
-    return false;
   }
 
   @override
@@ -226,7 +217,7 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
                                     icon: Icon(Icons.camera_alt_outlined),
                                     iconSize: 40,
                                     onPressed: () async {
-                                      onCaptureImage('portraitId');
+                                      onCaptureImage('portraitMedia');
                                     },
                                   ).center()
                                 : Stack(
@@ -294,8 +285,7 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
                             log('Error: ${e.toString()}');
                             appStore.setLoading(false);
                           });
-                          final textDetector =
-                              GoogleMlKit.vision.textRecognizer();
+                          final textDetector = TextRecognizer();
                           final inputImage = InputImage.fromFilePath(path);
                           final RecognizedText recognisedText =
                               await textDetector.processImage(inputImage);
@@ -303,8 +293,8 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
 
                           var text = recognisedText.text;
                           print(text);
-                          detectPhraseMatch(text.toLowerCase(),
-                                  'CĂN CƯỚC CÔNG DÂN'.toLowerCase())
+                          text.toLowerCase().contains(
+                                  'Personal identification'.toLowerCase())
                               ? toast('Match')
                               : toast('Not Match');
 
@@ -417,6 +407,7 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
     bool isDataDetected = false;
     int frameCount = 0;
     StreamController<bool> dataDetectedController = StreamController<bool>();
+    List<Face> faces = [];
     final cameras = await availableCameras();
     final camera = mediaType == 'frontId' || mediaType == 'backId'
         ? cameras[0]
@@ -432,8 +423,12 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
       frameCount++;
       if (frameCount % 10 == 0) {
         // process every 10th frame
-        isDataDetected = await checkImageData(image);
-        dataDetectedController.add(isDataDetected);
+        if (mediaType == 'potraitMeddia') {
+          faces = await detectFace(image);
+        } else {
+          isDataDetected = await checkImageData(image, mediaType);
+          dataDetectedController.add(isDataDetected);
+        }
       }
     });
 
@@ -459,29 +454,47 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
               ),
             ),
           ),
-          Center(
-              child: StreamBuilder<bool>(
-            stream: dataDetectedController.stream,
-            initialData: false,
-            builder: (context, snapshot) {
-              bool isDataDetected = snapshot.data ?? false;
-              return Container(
-                padding: EdgeInsets.all(30),
-                width: MediaQuery.of(context).size.width,
-                height: 250,
-                decoration: BoxDecoration(
-                  color: isDataDetected
-                      ? Color.fromARGB(75, 76, 175, 79)
-                      : Color.fromARGB(75, 244, 67, 54),
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color: isDataDetected ? Colors.green : Colors.red,
-                    width: 3.0,
+          if (mediaType == 'potraitMedia')
+            for (final face in faces)
+              Positioned(
+                left: face.boundingBox.left,
+                top: face.boundingBox.top,
+                width: face.boundingBox.width,
+                height: face.boundingBox.height,
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.red,
+                      width: 2,
+                    ),
                   ),
                 ),
-              );
-            },
-          )),
+              )
+          else
+            Center(
+              child: StreamBuilder<bool>(
+                stream: dataDetectedController.stream,
+                initialData: false,
+                builder: (context, snapshot) {
+                  bool isDataDetected = snapshot.data ?? false;
+                  return Container(
+                    padding: EdgeInsets.all(30),
+                    width: MediaQuery.of(context).size.width,
+                    height: 250,
+                    decoration: BoxDecoration(
+                      color: isDataDetected
+                          ? Color.fromARGB(75, 76, 175, 79)
+                          : Color.fromARGB(75, 244, 67, 54),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: isDataDetected ? Colors.green : Colors.red,
+                        width: 3.0,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
           Positioned(
             bottom: 30,
             left: 0,
@@ -520,7 +533,7 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
     dataDetectedController.close();
   }
 
-  Future<bool> checkImageData(CameraImage image) async {
+  Future<bool> checkImageData(CameraImage image, String type) async {
     // Convert the CameraImage to InputImage
     final WriteBuffer allBytes = WriteBuffer();
     for (Plane plane in image.planes) {
@@ -549,7 +562,7 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
     );
 
     // Create an instance of TextRecognizer
-    TextRecognizer textRecognizer = GoogleMlKit.vision.textRecognizer();
+    TextRecognizer textRecognizer = TextRecognizer();
 
     // Process the image and get the detected text
     RecognizedText text = await textRecognizer.processImage(inputImage);
@@ -558,7 +571,53 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
     textRecognizer.close();
 
     // Check if the detected text is not null or empty
-    bool hasData = text.text.toLowerCase().contains('citizen');
+    bool hasData = type == 'frontId'
+        ? text.text.toLowerCase().contains('citizen') ||
+            text.text.toLowerCase().contains('căn cước công dân') ||
+            text.text.toLowerCase().contains('căn cước')
+        : text.text.toLowerCase().contains('Personal identification') ||
+            text.text.toLowerCase().contains('Personal') ||
+            text.text.toLowerCase().contains('identification');
     return hasData;
+  }
+
+  Future<List<Face>> detectFace(CameraImage image) async {
+    // Convert the CameraImage to InputImage
+    final WriteBuffer allBytes = WriteBuffer();
+    for (Plane plane in image.planes) {
+      allBytes.putUint8List(plane.bytes);
+    }
+    final bytes = allBytes.done().buffer.asUint8List();
+
+    final Size imageSize =
+        Size(image.width.toDouble(), image.height.toDouble());
+
+    final InputImageRotation rotation = InputImageRotation.rotation0deg;
+
+    final InputImageFormat format =
+        image.format.group == ImageFormatGroup.yuv420
+            ? InputImageFormat.yuv420
+            : InputImageFormat.bgra8888;
+
+    final inputImage = InputImage.fromBytes(
+      bytes: bytes,
+      metadata: InputImageMetadata(
+        size: imageSize,
+        rotation: rotation,
+        format: format,
+        bytesPerRow: image.planes[0].bytesPerRow,
+      ),
+    );
+
+    // Create an instance of FaceDetector
+    FaceDetector faceDetector = FaceDetector(options: FaceDetectorOptions());
+
+    // Process the image and get the detected face
+    final List<Face> faces = await faceDetector.processImage(inputImage);
+
+    // Close the FaceDetector
+    faceDetector.close();
+
+    return faces;
   }
 }
