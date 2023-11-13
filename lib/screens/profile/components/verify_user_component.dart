@@ -217,7 +217,7 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
                                     icon: Icon(Icons.camera_alt_outlined),
                                     iconSize: 40,
                                     onPressed: () async {
-                                      onCaptureImage('portraitMedia');
+                                      onCaptureImage('potraitMedia');
                                     },
                                   ).center()
                                 : Stack(
@@ -418,18 +418,27 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
     );
     await _cameraController.initialize();
 
-    _cameraController.startImageStream((CameraImage image) async {
-      frameCount++;
-      if (frameCount % 10 == 0) {
-        // process every 10th frame
-        if (mediaType == 'potraitMeddia') {
-          faces = await detectFace(image);
-        } else {
+    if (mediaType == 'frontId' || mediaType == 'backId') {
+      _cameraController.startImageStream((CameraImage image) async {
+        frameCount++;
+        if (frameCount % 10 == 0) {
+          // process every 10th frame
           isDataDetected = await checkImageData(image, mediaType);
           dataDetectedController.add(isDataDetected);
         }
-      }
-    });
+      });
+    }
+
+    if (mediaType == 'potraitMedia') {
+      _cameraController.startImageStream((CameraImage image) async {
+        frameCount++;
+        if (frameCount % 10 == 0) {
+          // process every 10th frame
+          faces = await detectFace(image);
+          setState(() {});
+        }
+      });
+    }
 
     await showDialog(
       context: context,
@@ -456,19 +465,13 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
           if (mediaType == 'potraitMedia')
             for (final face in faces)
               Positioned(
-                left: face.boundingBox.left,
-                top: face.boundingBox.top,
-                width: face.boundingBox.width,
-                height: face.boundingBox.height,
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.red,
-                      width: 2,
-                    ),
-                  ),
-                ),
-              )
+                  left: face.boundingBox.left,
+                  top: face.boundingBox.top,
+                  width: face.boundingBox.width,
+                  height: face.boundingBox.height,
+                  child: CustomPaint(
+                    painter: FaceRectanglePainter(face.boundingBox),
+                  ))
           else
             Center(
               child: StreamBuilder<bool>(
@@ -506,18 +509,28 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
                 color: Colors.white,
               ),
               onTap: () async {
-                if (isDataDetected) {
-                  var value = await _cameraController.takePicture();
-                  if (mediaType == 'potraitMedia') {}
-                  mediaType == 'frontId'
-                      ? frontIdMedia = PostMedia(file: File(value.path))
-                      : mediaType == 'backId'
-                          ? backIdMedia = PostMedia(file: File(value.path))
-                          : portraitMedia = PostMedia(file: File(value.path));
-                  setState(() {});
-                  Navigator.pop(context);
-                } else {
-                  toast('Please place your ID card in the frame!');
+                if (mediaType == 'frontId' || mediaType == 'backId') {
+                  if (isDataDetected) {
+                    var value = await _cameraController.takePicture();
+                    if (mediaType == 'frontId')
+                      PostMedia(file: File(value.path));
+                    if (mediaType == 'backId')
+                      backIdMedia = PostMedia(file: File(value.path));
+                    setState(() {});
+                    Navigator.pop(context);
+                  } else {
+                    toast('Please place your ID card in the frame!');
+                  }
+                }
+                if (mediaType == 'potraitMedia') {
+                  if (faces.isNotEmpty) {
+                    var value = await _cameraController.takePicture();
+                    portraitMedia = PostMedia(file: File(value.path));
+                    setState(() {});
+                    Navigator.pop(context);
+                  } else {
+                    toast('Please keep your face on the camera!');
+                  }
                 }
               },
             ),
@@ -613,10 +626,40 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
 
     // Process the image and get the detected face
     final List<Face> faces = await faceDetector.processImage(inputImage);
-
+    faces.forEach((element) {
+      print('BB: ' + element.boundingBox.toString());
+    });
     // Close the FaceDetector
     faceDetector.close();
 
     return faces;
   }
+}
+
+class FaceRectanglePainter extends CustomPainter {
+  final Rect boundingBox;
+
+  FaceRectanglePainter(this.boundingBox);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.red
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.0;
+
+    // Calculate the adjusted bounding box coordinates based on the canvas size
+    final adjustedBoundingBox = Rect.fromLTRB(
+      boundingBox.left * size.width,
+      boundingBox.top * size.height,
+      boundingBox.right * size.width,
+      boundingBox.bottom * size.height,
+    );
+
+    // Draw the rectangle on the canvas
+    canvas.drawRect(adjustedBoundingBox, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => true;
 }
