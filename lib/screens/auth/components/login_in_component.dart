@@ -96,7 +96,7 @@ class _LoginInComponentState extends State<LoginInComponent> {
                           loginFormKey.currentState!.save();
                           hideKeyboard(context);
 
-                          userController.Login(nameCont.text.trim().validate(),
+                          userController.login(nameCont.text.trim().validate(),
                               passwordCont.text.trim().validate());
                         } else {
                           appStore.setLoading(false);
@@ -166,98 +166,95 @@ class _LoginInComponentState extends State<LoginInComponent> {
                                 );
                               });
 
-                          await userController.Login(
+                          await userController.login(
                               nameCont.text.trim().validate(),
                               passwordCont.text.trim().validate());
 
-                          Future.delayed(Duration(seconds: 3), () {
-                            if (userController.isLoggedIn.value) {
-                              toast('Login Successfully');
-                              push(DashboardScreen(),
-                                  isNewTask: true,
-                                  pageRouteAnimation: PageRouteAnimation.Slide);
-                            } else {
-                              Navigator.pop(context);
-                              showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (context) {
-                                  return Dialog(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: Container(
-                                      width: 200,
-                                      padding: EdgeInsets.all(16),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Image.asset('assets/images/fail.gif'),
-                                          SizedBox(
-                                            height: 20,
+                          if (userController.isLoggedIn.value) {
+                            toast('Login Successfully');
+                            push(DashboardScreen(),
+                                isNewTask: true,
+                                pageRouteAnimation: PageRouteAnimation.Slide);
+                          } else {
+                            Navigator.pop(context);
+                            showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (context) {
+                                return Dialog(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Container(
+                                    width: 200,
+                                    padding: EdgeInsets.all(16),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Image.asset('assets/images/fail.gif'),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        Text(
+                                          'Login Failed',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20),
+                                        ),
+                                        SizedBox(height: 20),
+                                        Text(
+                                          'Please check your Email and Password!',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: const Color.fromARGB(
+                                                106, 0, 0, 0),
                                           ),
-                                          Text(
-                                            'Login Failed',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 20),
-                                          ),
-                                          SizedBox(height: 20),
-                                          Text(
-                                            'Please check your Email and Password!',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              color: const Color.fromARGB(
-                                                  106, 0, 0, 0),
+                                        ),
+                                        SizedBox(height: 20),
+                                        Center(
+                                          child: ElevatedButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text(
+                                              'Try Again',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black),
                                             ),
-                                          ),
-                                          SizedBox(height: 20),
-                                          Center(
-                                            child: ElevatedButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              },
-                                              child: Text(
-                                                'Try Again',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black),
-                                              ),
-                                              style: ButtonStyle(
-                                                backgroundColor:
-                                                    MaterialStateColor
-                                                        .resolveWith((states) {
-                                                  if (states.contains(
-                                                      MaterialState.pressed)) {
-                                                    return const Color.fromARGB(
-                                                        137, 244, 67, 54);
-                                                  }
-                                                  return Colors.white;
-                                                }),
-                                                shape:
-                                                    MaterialStateProperty.all<
-                                                        RoundedRectangleBorder>(
-                                                  RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                      side: BorderSide(
-                                                          color: Colors.red,
-                                                          width: 2)),
-                                                ),
+                                            style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateColor
+                                                      .resolveWith((states) {
+                                                if (states.contains(
+                                                    MaterialState.pressed)) {
+                                                  return const Color.fromARGB(
+                                                      137, 244, 67, 54);
+                                                }
+                                                return Colors.white;
+                                              }),
+                                              shape: MaterialStateProperty.all<
+                                                  RoundedRectangleBorder>(
+                                                RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                    side: BorderSide(
+                                                        color: Colors.red,
+                                                        width: 2)),
                                               ),
                                             ),
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
-                                  );
-                                },
-                              );
-                            }
-                          });
+                                  ),
+                                );
+                              },
+                            );
+                          }
                         } else {
                           appStore.setLoading(false);
                         }

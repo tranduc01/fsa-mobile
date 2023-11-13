@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:nb_utils/nb_utils.dart';
+import 'package:socialv/models/response_model.dart';
 
 import '../configs.dart';
 import '../models/common_models/user.dart';
@@ -23,7 +24,7 @@ class UserController extends GetxController {
       if (!checkJWTValidity(jwt)) {
         user.value = (await getUser())!;
       } else {
-        Logout();
+        logout();
       }
     }
   }
@@ -54,7 +55,7 @@ class UserController extends GetxController {
     return null;
   }
 
-  Future<void> Register(String name, String email, String password,
+  Future<void> register(String name, String email, String password,
       String confirmPassword) async {
     var url = Uri.parse('$BASE_URL/Auth/register');
 
@@ -70,15 +71,17 @@ class UserController extends GetxController {
         "confirmPassword": confirmPassword
       }),
     );
-
+    ResponseModel responseModel =
+        ResponseModel.fromJson(jsonDecode(response.body));
     if (response.statusCode == 200) {
       isRegistered.value = true;
     } else {
       print('Request failed with status: ${response.statusCode}');
+      print('Request failed with message: ${responseModel.message}');
     }
   }
 
-  Future<void> Login(String email, String password) async {
+  Future<void> login(String email, String password) async {
     var url = Uri.parse('$BASE_URL/Auth/login');
 
     var response = await http.post(
@@ -89,17 +92,21 @@ class UserController extends GetxController {
       body: jsonEncode({"email": email, "password": password}),
     );
 
+    ResponseModel responseModel =
+        ResponseModel.fromJson(jsonDecode(response.body));
+
     if (response.statusCode == 200) {
       isLoggedIn.value = true;
-      user.value = User.fromJson(jsonDecode(response.body)['user']);
+      user.value = User.fromJson((responseModel.data)['user']);
       saveUser(user.value);
-      saveJWT(jsonDecode(response.body)['accessToken']);
+      saveJWT((responseModel.data)['accessToken']);
     } else {
       print('Request failed with status: ${response.statusCode}');
+      print('Request failed with message: ${responseModel.message}');
     }
   }
 
-  void Logout() async {
+  void logout() async {
     storage.delete(key: 'jwt');
     storage.delete(key: 'user');
     isLoggedIn.value = false;

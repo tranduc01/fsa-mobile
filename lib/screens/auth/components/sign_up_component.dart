@@ -246,103 +246,97 @@ class _SignUpComponentState extends State<SignUpComponent> {
                                   );
                                 });
 
-                            await userController.Register(
+                            await userController.register(
                                 fullNameCont.text.trim().validate(),
                                 emailCont.text.trim().validate(),
                                 passwordCont.text.trim(),
                                 confirmPasswordCont.text.trim().validate());
-                            Future.delayed(Duration(seconds: 3), () {
-                              if (userController.isRegistered.value) {
-                                Navigator.pop(context);
-                                widget.callback?.call();
-                                toast('Registered Successfully');
-                              } else {
-                                Navigator.pop(context);
-                                showDialog(
-                                  context: context,
-                                  barrierDismissible: false,
-                                  builder: (context) {
-                                    return Dialog(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: Container(
-                                        width: 200,
-                                        padding: EdgeInsets.all(16),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Image.asset(
-                                                'assets/images/fail.gif'),
-                                            SizedBox(
-                                              height: 20,
+
+                            if (userController.isRegistered.value) {
+                              Navigator.pop(context);
+                              widget.callback?.call();
+                              toast('Registered Successfully');
+                            } else {
+                              Navigator.pop(context);
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (context) {
+                                  return Dialog(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Container(
+                                      width: 200,
+                                      padding: EdgeInsets.all(16),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Image.asset('assets/images/fail.gif'),
+                                          SizedBox(
+                                            height: 20,
+                                          ),
+                                          Text(
+                                            'Register Failed',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20),
+                                          ),
+                                          SizedBox(height: 20),
+                                          Text(
+                                            'Please try again!',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              color: const Color.fromARGB(
+                                                  106, 0, 0, 0),
                                             ),
-                                            Text(
-                                              'Register Failed',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 20),
-                                            ),
-                                            SizedBox(height: 20),
-                                            Text(
-                                              'Please try again!',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                color: const Color.fromARGB(
-                                                    106, 0, 0, 0),
+                                          ),
+                                          SizedBox(height: 20),
+                                          Center(
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text(
+                                                'Try Again',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.black),
                                               ),
-                                            ),
-                                            SizedBox(height: 20),
-                                            Center(
-                                              child: ElevatedButton(
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                },
-                                                child: Text(
-                                                  'Try Again',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.black),
-                                                ),
-                                                style: ButtonStyle(
-                                                  backgroundColor:
-                                                      MaterialStateColor
-                                                          .resolveWith(
-                                                              (states) {
-                                                    if (states.contains(
-                                                        MaterialState
-                                                            .pressed)) {
-                                                      return const Color
-                                                              .fromARGB(
-                                                          137, 244, 67, 54);
-                                                    }
-                                                    return Colors.white;
-                                                  }),
-                                                  shape:
-                                                      MaterialStateProperty.all<
-                                                          RoundedRectangleBorder>(
-                                                    RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
-                                                        side: BorderSide(
-                                                            color: Colors.red,
-                                                            width: 2)),
-                                                  ),
+                                              style: ButtonStyle(
+                                                backgroundColor:
+                                                    MaterialStateColor
+                                                        .resolveWith((states) {
+                                                  if (states.contains(
+                                                      MaterialState.pressed)) {
+                                                    return const Color.fromARGB(
+                                                        137, 244, 67, 54);
+                                                  }
+                                                  return Colors.white;
+                                                }),
+                                                shape:
+                                                    MaterialStateProperty.all<
+                                                        RoundedRectangleBorder>(
+                                                  RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      side: BorderSide(
+                                                          color: Colors.red,
+                                                          width: 2)),
                                                 ),
                                               ),
                                             ),
-                                          ],
-                                        ),
+                                          ),
+                                        ],
                                       ),
-                                    );
-                                  },
-                                );
-                              }
-                            });
+                                    ),
+                                  );
+                                },
+                              );
+                            }
                           } else {
                             toast(language.pleaseAgreeOurTerms);
                           }

@@ -5,6 +5,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:get/get.dart';
 import 'package:socialv/models/common_models.dart';
 import 'package:socialv/models/gallery/albums.dart';
+import 'package:socialv/models/response_model.dart';
 
 import '../configs.dart';
 
@@ -33,16 +34,21 @@ class GalleryController extends GetxController {
       'Authorization': 'Bearer $token',
     };
     var response = await GetConnect().get(url, headers: headers);
+
+    ResponseModel responseModel =
+        ResponseModel.fromJson(jsonDecode(response.bodyString!));
+
     if (response.statusCode == 200) {
-      var result = jsonDecode(response.bodyString!);
       isLoading(false);
       isError(false);
-      return albums.value =
-          (result['items'] as List).map((e) => Album.fromJson(e)).toList();
+      return albums.value = (responseModel.data['items'] as List)
+          .map((e) => Album.fromJson(e))
+          .toList();
     } else {
       isLoading(false);
       isError(true);
       print('Request failed with status: ${response.statusCode}');
+      print('Request failed with status: ${responseModel.message}');
       throw Exception('Failed to load album');
     }
   }
@@ -57,10 +63,12 @@ class GalleryController extends GetxController {
     };
     var response = await GetConnect().get(url, headers: headers);
 
+    ResponseModel responseModel =
+        ResponseModel.fromJson(jsonDecode(response.bodyString!));
+
     if (response.statusCode == 200) {
-      var result = jsonDecode(response.bodyString!);
       isLoading(false);
-      return album.value = Album.fromJson(result);
+      return album.value = Album.fromJson(responseModel.data);
     } else {
       print('Request failed with status: ${response.statusCode}');
       throw Exception('Failed to load album');
