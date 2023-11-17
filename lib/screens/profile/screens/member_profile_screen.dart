@@ -22,6 +22,7 @@ import 'package:socialv/screens/stories/component/story_highlights_component.dar
 import '../../../models/common_models/post_mdeia_model.dart';
 import '../../../models/posts/comment_model.dart';
 import '../../../models/posts/get_post_likes_model.dart';
+import '../../../models/posts/post.dart';
 import '../../../models/reactions/reactions_count_model.dart';
 import '../../../utils/app_constants.dart';
 import '../../gallery/screens/gallery_screen.dart';
@@ -64,45 +65,8 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
   bool isCallback = false;
   bool showDetails = false;
 
-  List<PostModel> postList = [
-    PostModel(
-      activityId: 1,
-      commentCount: 1,
-      comments: [CommentModel()],
-      content: "Test 1",
-      dateRecorded: DateTime.parse("2023-01-01").toString(),
-      isFavorites: 1,
-      isLiked: 1,
-      likeCount: 1,
-      mediaList: ["Test Media"],
-      mediaType: "photo",
-      postIn: "123",
-      userEmail: "example@gmail.com",
-      userId: 1,
-      userImage:
-          "https://khoinguonsangtao.vn/wp-content/uploads/2022/09/hinh-ve-don-gian-cute-dang-yeu-va-de-thuc-hien.jpg",
-      userName: "Tran Duc",
-      isUserVerified: 1,
-      usersWhoLiked: [GetPostLikesModel()],
-      medias: [
-        PostMediaModel(
-            url:
-                "https://i.pinimg.com/474x/94/b6/cc/94b6cc282430ef169df131de1ad12843.jpg")
-      ],
-      isFriend: 1,
-      type: "",
-      blogId: 1,
-      childPost: PostModel(),
-      groupId: 1,
-      groupName: "Test",
-      hasMentions: 1,
-      reactions: [Reactions()],
-      curUserReaction: null,
-      reactionCount: 1,
-      isPinned: 1,
-    )
-  ];
-  late Future<List<PostModel>> future;
+  List<Post> postList = [];
+  late Future<List<Post>> future;
 
   List<HighlightCategoryListModel> categoryList = [];
 
@@ -151,7 +115,7 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
     });
   }
 
-  Future<List<PostModel>> getPostList() async {
+  Future<List<Post>> getPostList() async {
     // if (mPage == 1) postList.clear();
     // isLoading = true;
     // setState(() {});
@@ -455,18 +419,18 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
                             },
                             isBlockedByMe: member.blockedByMe.validate(),
                           ),
-                        16.height,
-                        if (appStore.showStoryHighlight == 1 && showDetails)
-                          StoryHighlightsComponent(
-                            categoryList: categoryList,
-                            showAddOption:
-                                member.id.validate() == appStore.loginUserId,
-                            avatarImage: member.memberAvatarImage.validate(),
-                            highlightsList: member.highlightStory.validate(),
-                            callback: () {
-                              onRefresh();
-                            },
-                          ),
+                        // 16.height,
+                        // if (appStore.showStoryHighlight == 1 && showDetails)
+                        //   StoryHighlightsComponent(
+                        //     categoryList: categoryList,
+                        //     showAddOption:
+                        //         member.id.validate() == appStore.loginUserId,
+                        //     avatarImage: member.memberAvatarImage.validate(),
+                        //     highlightsList: member.highlightStory.validate(),
+                        //     callback: () {
+                        //       onRefresh();
+                        //     },
+                        //   ),
                         8.height,
                         Row(
                           children: [
@@ -533,9 +497,7 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
                         if (showDetails)
                           TextIcon(
                             onTap: () {
-                              GalleryScreen(
-                                      userId: member.id.toInt(), canEdit: false)
-                                  .launch(context);
+                              GalleryScreen(canEdit: false).launch(context);
                             },
                             text: language.viewGallery,
                             textStyle: primaryTextStyle(color: appColorPrimary),
@@ -544,7 +506,7 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
                           ),
                         8.height,
                         if (!appStore.isLoading && showDetails)
-                          FutureBuilder<List<PostModel>>(
+                          FutureBuilder<List<Post>>(
                             future: future,
                             builder: (ctx, snap) {
                               if (snap.hasError) {

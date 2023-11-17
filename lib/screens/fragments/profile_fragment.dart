@@ -12,6 +12,7 @@ import 'package:socialv/screens/dashboard_screen.dart';
 import 'package:socialv/screens/post/components/post_component.dart';
 import 'package:socialv/screens/profile/components/profile_header_component.dart';
 
+import '../../models/posts/post.dart';
 import '../../models/posts/post_model.dart';
 import '../../utils/app_constants.dart';
 import '../gallery/screens/gallery_screen.dart';
@@ -56,36 +57,9 @@ class _ProfileFragmentState extends State<ProfileFragment> {
           Field(id: 5, name: 'Address', value: 'Binh Duong')
         ])
       ]);
-  List<PostModel> _userPostList = [
-    PostModel(
-        activityId: 1,
-        commentCount: 10,
-        comments: [],
-        content: "Hello",
-        dateRecorded: DateTime.parse("2023-09-09").toString(),
-        isFavorites: 1,
-        isLiked: 1,
-        likeCount: 10,
-        mediaList: [],
-        mediaType: "a",
-        postIn: "image",
-        userEmail: "tuanblep0298@gmail.com"),
-    PostModel(
-        activityId: 2,
-        commentCount: 10,
-        comments: [],
-        content: "Hello",
-        dateRecorded: DateTime.parse("2023-09-09").toString(),
-        isFavorites: 1,
-        isLiked: 1,
-        likeCount: 10,
-        mediaList: [],
-        mediaType: "a",
-        postIn: "image",
-        userEmail: "tuanblep0298@gmail.com"),
-  ];
+  List<Post> _userPostList = [];
 
-  late Future<List<PostModel>> future;
+  late Future<List<Post>> future;
 
   late UserController userController = Get.put(UserController());
   int mPage = 1;
@@ -137,7 +111,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
     _memberDetails = _memberDetails;
   }
 
-  Future<List<PostModel>> getUserPostList() async {
+  Future<List<Post>> getUserPostList() async {
     // if (mPage == 1) _userPostList.clear();
     // isLoading = true;
     // appStore.setLoading(true);
@@ -314,9 +288,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
             // }),
             TextIcon(
               onTap: () {
-                GalleryScreen(
-                        userId: appStore.loginUserId.toInt(), canEdit: true)
-                    .launch(context);
+                GalleryScreen(canEdit: true).launch(context);
               },
               text: language.viewGallery,
               textStyle: primaryTextStyle(color: appColorPrimary),
@@ -346,7 +318,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                 ),
               ],
             ).paddingSymmetric(horizontal: 8),
-            FutureBuilder<List<PostModel>>(
+            FutureBuilder<List<Post>>(
               future: future,
               builder: (ctx, snap) {
                 if (snap.hasError) {

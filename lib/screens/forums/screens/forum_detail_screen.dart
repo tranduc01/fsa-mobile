@@ -235,17 +235,17 @@ class _ForumDetailScreenState extends State<ForumDetailScreen>
                                   .onTap(() {
                                 if (forum.groupDetails != null &&
                                     forum.groupDetails!.groupId != 0) {
-                                  GroupDetailScreen(
-                                          groupId: forum.groupDetails!.groupId
-                                              .validate())
-                                      .launch(context)
-                                      .then((value) {
-                                    if (value ?? false) {
-                                      mPage = 1;
-                                      setState(() {});
-                                      getDetails();
-                                    }
-                                  });
+                                  // GroupDetailScreen(
+                                  //         groupId: forum.groupDetails!.groupId
+                                  //             .validate())
+                                  //     .launch(context)
+                                  //     .then((value) {
+                                  //   if (value ?? false) {
+                                  //     mPage = 1;
+                                  //     setState(() {});
+                                  //     getDetails();
+                                  //   }
+                                  // });
                                 }
                               },
                                       splashColor: Colors.transparent,
@@ -330,22 +330,22 @@ class _ForumDetailScreenState extends State<ForumDetailScreen>
                                   text: language.viewGroup,
                                   textStyle: boldTextStyle(color: Colors.white),
                                   onTap: () {
-                                    if (forum.groupDetails != null &&
-                                        forum.groupDetails!.groupId != 0)
-                                      GroupDetailScreen(
-                                              groupId: forum
-                                                  .groupDetails!.groupId
-                                                  .validate())
-                                          .launch(context)
-                                          .then((value) {
-                                        if (value ?? false) {
-                                          mPage = 1;
-                                          setState(() {});
-                                          getDetails();
-                                        }
-                                      });
-                                    else
-                                      toast(language.canNotViewThisGroup);
+                                    // if (forum.groupDetails != null &&
+                                    //     forum.groupDetails!.groupId != 0)
+                                    //   GroupDetailScreen(
+                                    //           groupId: forum
+                                    //               .groupDetails!.groupId
+                                    //               .validate())
+                                    //       .launch(context)
+                                    //       .then((value) {
+                                    //     if (value ?? false) {
+                                    //       mPage = 1;
+                                    //       setState(() {});
+                                    //       getDetails();
+                                    //     }
+                                    //   });
+                                    // else
+                                    toast(language.canNotViewThisGroup);
                                   },
                                   width: context.width() - 64,
                                 ).paddingSymmetric(vertical: 20).center()

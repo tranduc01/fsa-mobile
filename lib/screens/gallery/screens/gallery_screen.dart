@@ -16,10 +16,9 @@ import 'single_album_detail_screen.dart';
 
 class GalleryScreen extends StatefulWidget {
   final int? groupId;
-  final int? userId;
   final bool canEdit;
 
-  GalleryScreen({Key? key, this.groupId, this.userId, this.canEdit = false})
+  GalleryScreen({Key? key, this.groupId, this.canEdit = false})
       : super(key: key);
 
   @override

@@ -1,15 +1,16 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:socialv/models/common_models/post_mdeia_model.dart';
-import 'package:socialv/models/posts/comment_model.dart';
-import 'package:socialv/models/posts/get_post_likes_model.dart';
-import 'package:socialv/models/posts/post_model.dart';
-import 'package:socialv/models/reactions/reactions_count_model.dart';
+import 'package:socialv/controllers/post_controller.dart';
 import 'package:socialv/screens/dashboard_screen.dart';
 import 'package:socialv/screens/home/components/ad_component.dart';
 import 'package:socialv/screens/home/components/suggested_user_component.dart';
 import 'package:socialv/screens/post/components/post_component.dart';
 
+import '../../components/loading_widget.dart';
+import '../../components/no_data_lottie_widget.dart';
+import '../../models/posts/post.dart';
 import '../../utils/app_constants.dart';
 
 class HomeFragment extends StatefulWidget {
@@ -24,91 +25,17 @@ class HomeFragment extends StatefulWidget {
 class _HomeFragmentState extends State<HomeFragment>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
-
-  List<PostModel> postList = [
-    PostModel(
-      activityId: 1,
-      commentCount: 1,
-      comments: [CommentModel()],
-      content: "Test 1",
-      dateRecorded: DateTime.parse("2023-01-01").toString(),
-      isFavorites: 1,
-      isLiked: 1,
-      likeCount: 1,
-      mediaList: ["Test Media"],
-      mediaType: "photo",
-      postIn: "123",
-      userEmail: "example@gmail.com",
-      userId: 1,
-      userImage:
-          "https://khoinguonsangtao.vn/wp-content/uploads/2022/09/hinh-ve-don-gian-cute-dang-yeu-va-de-thuc-hien.jpg",
-      userName: "Tran Duc",
-      isUserVerified: 1,
-      usersWhoLiked: [GetPostLikesModel()],
-      medias: [
-        PostMediaModel(
-            url:
-                "https://i.pinimg.com/474x/94/b6/cc/94b6cc282430ef169df131de1ad12843.jpg")
-      ],
-      isFriend: 1,
-      type: "",
-      blogId: 1,
-      childPost: PostModel(),
-      groupId: 1,
-      groupName: "Test",
-      hasMentions: 1,
-      reactions: [Reactions()],
-      curUserReaction: null,
-      reactionCount: 1,
-      isPinned: 1,
-    ),
-    PostModel(
-      activityId: 1,
-      commentCount: 1,
-      comments: [CommentModel()],
-      content: "Test 2",
-      dateRecorded: DateTime.parse("2023-05-01").toString(),
-      isFavorites: 0,
-      isLiked: 0,
-      likeCount: 3,
-      mediaList: ["Test Media"],
-      mediaType: "gif",
-      postIn: "123",
-      userEmail: "example@gmail.com",
-      userId: 1,
-      userImage:
-          "https://khoinguonsangtao.vn/wp-content/uploads/2022/09/hinh-ve-don-gian-cute-dang-yeu-va-de-thuc-hien.jpg",
-      userName: "Tran Duc",
-      isUserVerified: 1,
-      usersWhoLiked: [GetPostLikesModel()],
-      medias: [
-        PostMediaModel(
-            url:
-                "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHB4Z3UyOW55aXN2NjFxOTdoY3BramdqZmJzOHRtdjFpcDgwY2didyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/6FxJBpNTBgWdJCXKD4/giphy.gif")
-      ],
-      isFriend: 3,
-      type: "",
-      blogId: 1,
-      childPost: PostModel(),
-      groupId: 1,
-      groupName: "Test",
-      hasMentions: 1,
-      reactions: [Reactions()],
-      curUserReaction: null,
-      reactionCount: 3,
-      isPinned: 0,
-    )
-  ];
-  late Future<List<PostModel>> future;
+  late PostController postController = Get.put(PostController());
+  List<Post> postList = [];
+  late Future<List<Post>> future;
 
   int mPage = 1;
   bool mIsLastPage = false;
-  bool isError = false;
 
   @override
   void initState() {
-    future = getPostList();
-
+    postController.fetchPosts();
+    postList = postController.posts;
     _animationController = BottomSheet.createAnimationController(this);
     _animationController.duration = const Duration(milliseconds: 500);
     _animationController.drive(CurveTween(curve: Curves.easeOutQuad));
@@ -124,37 +51,11 @@ class _HomeFragmentState extends State<HomeFragment>
             widget.controller.position.maxScrollExtent) {
           if (!mIsLastPage) {
             mPage++;
-            future = getPostList();
+            future = postController.fetchPosts();
           }
         }
       }
     });
-
-    LiveStream().on(OnAddPost, (p0) {
-      postList.clear();
-      mPage = 1;
-      future = getPostList();
-    });
-  }
-
-  Future<List<PostModel>> getPostList() async {
-    //appStore.setLoading(true);
-    // await getPost(page: mPage, type: PostRequestType.all).then((value) {
-    //   if (mPage == 1) postList.clear();
-
-    //   mIsLastPage = value.length != PER_PAGE;
-    //   postList.addAll(value);
-    //   setState(() {});
-
-    //   appStore.setLoading(false);
-    // }).catchError((e) {
-    //   isError = true;
-    //   appStore.setLoading(false);
-    //   toast(e.toString(), print: true);
-    //   setState(() {});
-    // });
-
-    return postList;
   }
 
   @override
@@ -164,7 +65,6 @@ class _HomeFragmentState extends State<HomeFragment>
 
   @override
   void dispose() {
-    LiveStream().dispose(OnAddPost);
     _animationController.dispose();
     super.dispose();
   }
@@ -174,64 +74,115 @@ class _HomeFragmentState extends State<HomeFragment>
     return Stack(
       alignment: Alignment.topCenter,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            10.height,
-            AnimatedListView(
-              padding: EdgeInsets.only(bottom: mIsLastPage ? 16 : 60),
-              itemCount: postList.length,
-              slideConfiguration: SlideConfiguration(
-                  delay: 80.milliseconds, verticalOffset: 300),
-              itemBuilder: (context, index) {
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    PostComponent(
-                      post: postList[index],
-                      count: 0,
-                      callback: () {
-                        mPage = 1;
-                        future = getPostList();
-                      },
-                      showHidePostOption: true,
-                    ).paddingSymmetric(horizontal: 8),
-                    if ((index + 1) % 5 == 0) AdComponent(),
-                    if ((index + 1) == 3) SuggestedUserComponent(),
-                  ],
-                );
+        Obx(() => Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                15.height,
+                Container(
+                  child: CarouselSlider(
+                    options: CarouselOptions(
+                      height: 280,
+                      autoPlay: true,
+                      aspectRatio: 2.0,
+                      enlargeCenterPage: true,
+                      enlargeStrategy: CenterPageEnlargeStrategy.height,
+                    ),
+                    items: postList
+                        .map((item) => Container(
+                              child: Container(
+                                margin: EdgeInsets.all(5.0),
+                                child: ClipRRect(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(16)),
+                                    child: Stack(
+                                      children: <Widget>[
+                                        Image.network(item.thumbnail!,
+                                            fit: BoxFit.cover, width: 1000.0),
+                                        Positioned(
+                                          bottom: 0.0,
+                                          left: 0.0,
+                                          right: 0.0,
+                                          child: Container(
+                                              decoration: BoxDecoration(
+                                                gradient: LinearGradient(
+                                                  colors: [
+                                                    Color.fromARGB(
+                                                        213, 0, 0, 0),
+                                                    Color.fromARGB(0, 0, 0, 0)
+                                                  ],
+                                                  begin: Alignment.bottomCenter,
+                                                  end: Alignment.topCenter,
+                                                ),
+                                              ),
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: 10.0,
+                                                  horizontal: 20.0),
+                                              child: Center(
+                                                child: Text(
+                                                  item.title!,
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 17.0,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontFamily: 'Roboto'),
+                                                ),
+                                              )),
+                                        ),
+                                      ],
+                                    )),
+                              ),
+                            ))
+                        .toList(),
+                  ),
+                ),
+                10.height,
+                AnimatedListView(
+                  padding: EdgeInsets.only(bottom: mIsLastPage ? 16 : 60),
+                  itemCount: postList.length,
+                  slideConfiguration: SlideConfiguration(
+                      delay: Duration(milliseconds: 80), verticalOffset: 300),
+                  itemBuilder: (context, index) {
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        PostComponent(
+                          post: postList[index],
+                          callback: () {
+                            mPage = 1;
+                            future = postController.fetchPosts();
+                          },
+                        ).paddingSymmetric(horizontal: 8),
+                        if ((index + 1) % 5 == 0) AdComponent(),
+                        if ((index + 1) == 3) SuggestedUserComponent(),
+                      ],
+                    );
+                  },
+                  shrinkWrap: true,
+                ),
+              ],
+            )),
+        if (postController.isError.value && postList.isEmpty)
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.8,
+            child: NoDataWidget(
+              imageWidget: NoDataLottieWidget(),
+              title: postController.isError.value
+                  ? 'Something Went Wrong'
+                  : 'No data found',
+              onRetry: () {
+                postController.isError.value = false;
               },
-              shrinkWrap: true,
-            ),
-          ],
+              retryText: '   Click to Refresh   ',
+            ).center(),
+          ),
+        Positioned(
+          bottom: postList.isNotEmpty || mPage != 1 ? 8 : null,
+          child: Obx(() =>
+              LoadingWidget(isBlurBackground: mPage == 1 ? true : false)
+                  .center()
+                  .visible(postController.isLoading.value)),
         ),
-        // if (!appStore.isLoading && isError && postList.isEmpty)
-        //   SizedBox(
-        //     height: context.height() * 0.8,
-        //     child: NoDataWidget(
-        //       imageWidget: NoDataLottieWidget(),
-        //       title:
-        //           isError ? language.somethingWentWrong : language.noDataFound,
-        //       onRetry: () {
-        //         isError = false;
-        //         LiveStream().emit(OnAddPost);
-        //       },
-        //       retryText: '   ${language.clickToRefresh}   ',
-        //     ).center(),
-        //   ),
-        // if (postList.isEmpty && !appStore.isLoading && !isError)
-        //   SizedBox(
-        //     height: context.height() * 0.8,
-        //     child: InitialHomeComponent().center(),
-        //   ),
-        // Positioned(
-        //   bottom: postList.isNotEmpty || mPage != 1 ? 8 : null,
-        //   child: Observer(
-        //       builder: (_) =>
-        //           LoadingWidget(isBlurBackground: mPage == 1 ? true : false)
-        //               .center()
-        //               .visible(appStore.isLoading)),
-        // ),
       ],
     );
   }

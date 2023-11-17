@@ -57,8 +57,8 @@ class SearchGroupComponent extends StatelessWidget {
                       jsonEncode(appStore.recentGroupsSearchList));
                 }
                 hideKeyboard(context);
-                GroupDetailScreen(groupId: groupList[index].id.validate())
-                    .launch(context);
+                // GroupDetailScreen(groupId: groupList[index].id.validate())
+                //     .launch(context);
               },
                   splashColor: Colors.transparent,
                   highlightColor: Colors.transparent);

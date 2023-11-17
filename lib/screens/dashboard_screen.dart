@@ -28,7 +28,6 @@ class DashboardScreen extends StatefulWidget {
 }
 
 List<VisibilityOptions>? visibilities;
-List<StoryActions>? storyActions;
 List<VisibilityOptions>? accountPrivacyVisibility;
 List<ReportType>? reportTypes;
 List<PostInListModel>? postInListDashboard;
@@ -147,7 +146,6 @@ class _DashboardScreenState extends State<DashboardScreen>
       appStore
           .setDisplayFriendRequestBtn(value.displayFriendRequestBtn.validate());
       appStore.setShopEnable(value.isShopEnable.validate());
-      storyActions = value.storyActions.validate();
     }).catchError(onError);
   }
 
@@ -240,7 +238,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                 child: SliverAppBar(
                   forceElevated: true,
                   elevation: 0.5,
-                  expandedHeight: 100,
+                  expandedHeight: 50,
                   floating: true,
                   pinned: true,
                   backgroundColor: context.scaffoldBackgroundColor,
@@ -376,132 +374,6 @@ class _DashboardScreenState extends State<DashboardScreen>
                                   .cornerRadiusWithClipRRect(15)),
                     )
                   ],
-                  bottom: TabBar(
-                    indicatorColor: context.primaryColor,
-                    controller: tabController,
-                    onTap: (val) async {
-                      selectedIndex = val;
-                      setState(() {});
-                    },
-                    tabs: [
-                      Tooltip(
-                        richMessage: TextSpan(
-                            text: language.home,
-                            style: secondaryTextStyle(color: Colors.white)),
-                        child: Image.asset(
-                          selectedIndex == 0 ? ic_home_selected : ic_home,
-                          height: 24,
-                          width: 24,
-                          fit: BoxFit.cover,
-                          color: selectedIndex == 0
-                              ? context.primaryColor
-                              : Colors.black,
-                        ).paddingSymmetric(vertical: 11),
-                      ),
-                      Tooltip(
-                        richMessage: TextSpan(
-                            text: language.searchHere,
-                            style: secondaryTextStyle(color: Colors.white)),
-                        child: Image.asset(
-                          selectedIndex == 1 ? ic_search_selected : ic_search,
-                          height: 24,
-                          width: 24,
-                          fit: BoxFit.cover,
-                          color: selectedIndex == 1
-                              ? context.primaryColor
-                              : Colors.black,
-                        ).paddingSymmetric(vertical: 11),
-                      ),
-                      Tooltip(
-                        richMessage: TextSpan(
-                            text: language.forums,
-                            style: secondaryTextStyle(color: Colors.white)),
-                        child: Image.asset(
-                          selectedIndex == 2
-                              ? ic_three_user_filled
-                              : ic_three_user,
-                          height: 28,
-                          width: 28,
-                          fit: BoxFit.fill,
-                          color: selectedIndex == 2
-                              ? context.primaryColor
-                              : Colors.black,
-                        ).paddingSymmetric(vertical: 9),
-                      ),
-                      Tooltip(
-                        richMessage: TextSpan(
-                            text: language.notifications,
-                            style: secondaryTextStyle(color: Colors.white)),
-                        child: selectedIndex == 3
-                            ? Image.asset(ic_notification_selected,
-                                    height: 24, width: 24, fit: BoxFit.cover)
-                                .paddingSymmetric(vertical: 11)
-                            : Observer(
-                                builder: (_) => Stack(
-                                  clipBehavior: Clip.none,
-                                  alignment: Alignment.center,
-                                  children: [
-                                    Image.asset(
-                                      ic_notification,
-                                      height: 24,
-                                      width: 24,
-                                      fit: BoxFit.cover,
-                                      color: Colors.black,
-                                    ).paddingSymmetric(vertical: 11),
-                                    if (appStore.notificationCount != 0)
-                                      Positioned(
-                                        right: appStore.notificationCount
-                                                    .toString()
-                                                    .length >
-                                                1
-                                            ? -6
-                                            : -4,
-                                        top: 3,
-                                        child: Container(
-                                          padding: EdgeInsets.all(appStore
-                                                      .notificationCount
-                                                      .toString()
-                                                      .length >
-                                                  1
-                                              ? 4
-                                              : 6),
-                                          decoration: BoxDecoration(
-                                              color: appColorPrimary,
-                                              shape: BoxShape.circle),
-                                          child: Text(
-                                            appStore.notificationCount
-                                                .toString(),
-                                            style: boldTextStyle(
-                                                color: Colors.white,
-                                                size: 10,
-                                                weight: FontWeight.w700,
-                                                letterSpacing: 0.7),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                              ),
-                      ),
-                      Tooltip(
-                        richMessage: TextSpan(
-                            text: language.profile,
-                            style: secondaryTextStyle(
-                              color: Colors.white,
-                            )),
-                        child: Image.asset(
-                          selectedIndex == 4 ? ic_profile_filled : ic_profile,
-                          height: 24,
-                          width: 24,
-                          fit: BoxFit.cover,
-                          color: selectedIndex == 4
-                              ? context.primaryColor
-                              : Colors.black,
-                        ).paddingSymmetric(vertical: 11),
-                      ),
-                    ],
-                  ),
                 ),
               ),
               SliverList(
@@ -511,6 +383,133 @@ class _DashboardScreenState extends State<DashboardScreen>
                   },
                   childCount: 1,
                 ),
+              ),
+            ],
+          ),
+          bottomNavigationBar: TabBar(
+            indicator: BoxDecoration(
+              border: Border(
+                top: BorderSide(
+                  color: context.primaryColor,
+                  width: 1.5,
+                ),
+              ),
+            ),
+            indicatorWeight: 4.0,
+            controller: tabController,
+            onTap: (val) async {
+              selectedIndex = val;
+              setState(() {});
+            },
+            tabs: [
+              Tooltip(
+                richMessage: TextSpan(
+                    text: language.home,
+                    style: secondaryTextStyle(color: Colors.white)),
+                child: Image.asset(
+                  selectedIndex == 0 ? ic_home_selected : ic_home,
+                  height: 24,
+                  width: 24,
+                  fit: BoxFit.cover,
+                  color:
+                      selectedIndex == 0 ? context.primaryColor : Colors.black,
+                ).paddingSymmetric(vertical: 11),
+              ),
+              Tooltip(
+                richMessage: TextSpan(
+                    text: language.searchHere,
+                    style: secondaryTextStyle(color: Colors.white)),
+                child: Image.asset(
+                  selectedIndex == 1 ? ic_search_selected : ic_search,
+                  height: 24,
+                  width: 24,
+                  fit: BoxFit.cover,
+                  color:
+                      selectedIndex == 1 ? context.primaryColor : Colors.black,
+                ).paddingSymmetric(vertical: 11),
+              ),
+              Tooltip(
+                richMessage: TextSpan(
+                    text: language.forums,
+                    style: secondaryTextStyle(color: Colors.white)),
+                child: Image.asset(
+                  selectedIndex == 2 ? ic_three_user_filled : ic_three_user,
+                  height: 28,
+                  width: 28,
+                  fit: BoxFit.fill,
+                  color:
+                      selectedIndex == 2 ? context.primaryColor : Colors.black,
+                ).paddingSymmetric(vertical: 9),
+              ),
+              Tooltip(
+                richMessage: TextSpan(
+                    text: language.notifications,
+                    style: secondaryTextStyle(color: Colors.white)),
+                child: selectedIndex == 3
+                    ? Image.asset(ic_notification_selected,
+                            height: 24, width: 24, fit: BoxFit.cover)
+                        .paddingSymmetric(vertical: 11)
+                    : Observer(
+                        builder: (_) => Stack(
+                          clipBehavior: Clip.none,
+                          alignment: Alignment.center,
+                          children: [
+                            Image.asset(
+                              ic_notification,
+                              height: 24,
+                              width: 24,
+                              fit: BoxFit.cover,
+                              color: Colors.black,
+                            ).paddingSymmetric(vertical: 11),
+                            if (appStore.notificationCount != 0)
+                              Positioned(
+                                right: appStore.notificationCount
+                                            .toString()
+                                            .length >
+                                        1
+                                    ? -6
+                                    : -4,
+                                top: 3,
+                                child: Container(
+                                  padding: EdgeInsets.all(appStore
+                                              .notificationCount
+                                              .toString()
+                                              .length >
+                                          1
+                                      ? 4
+                                      : 6),
+                                  decoration: BoxDecoration(
+                                      color: appColorPrimary,
+                                      shape: BoxShape.circle),
+                                  child: Text(
+                                    appStore.notificationCount.toString(),
+                                    style: boldTextStyle(
+                                        color: Colors.white,
+                                        size: 10,
+                                        weight: FontWeight.w700,
+                                        letterSpacing: 0.7),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+              ),
+              Tooltip(
+                richMessage: TextSpan(
+                    text: language.profile,
+                    style: secondaryTextStyle(
+                      color: Colors.white,
+                    )),
+                child: Image.asset(
+                  selectedIndex == 4 ? ic_profile_filled : ic_profile,
+                  height: 24,
+                  width: 24,
+                  fit: BoxFit.cover,
+                  color:
+                      selectedIndex == 4 ? context.primaryColor : Colors.black,
+                ).paddingSymmetric(vertical: 11),
               ),
             ],
           ),
