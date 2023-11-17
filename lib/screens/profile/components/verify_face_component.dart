@@ -18,25 +18,17 @@ import '../../../utils/colors.dart';
 import '../../../utils/common.dart';
 import '../../../utils/constants.dart';
 
-class VerifyUserComponent extends StatefulWidget {
+class VerifyFaceComponent extends StatefulWidget {
   final Function(int)? onNextPage;
 
-  VerifyUserComponent({Key? key, this.onNextPage}) : super(key: key);
+  VerifyFaceComponent({Key? key, this.onNextPage}) : super(key: key);
 
   @override
-  State<VerifyUserComponent> createState() => _VerifyUserComponentState();
+  State<VerifyFaceComponent> createState() => _VerifyFaceComponentState();
 }
 
-int? albumId;
-
-class _VerifyUserComponentState extends State<VerifyUserComponent> {
-  PostMedia? frontIdMedia;
-  PostMedia? backIdMedia;
+class _VerifyFaceComponentState extends State<VerifyFaceComponent> {
   PostMedia? portraitMedia;
-  TextEditingController titleCont = TextEditingController();
-  TextEditingController discCont = TextEditingController();
-  FocusNode titleNode = FocusNode();
-  FocusNode discNode = FocusNode();
 
   late GalleryController galleryController = Get.put(GalleryController());
   late CameraController _cameraController;
@@ -53,8 +45,6 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
 
   @override
   void dispose() {
-    titleNode.dispose();
-    discNode.dispose();
     _cameraController.dispose();
     _cameraController.stopImageStream();
     super.dispose();
@@ -81,120 +71,6 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   24.height,
-                  Text(
-                    "Take a photo of the front of your ID card",
-                    style: primaryTextStyle(
-                        color: appStore.isDarkMode ? bodyDark : bodyWhite,
-                        size: 18),
-                  ),
-                  16.height,
-                  Stack(
-                    children: [
-                      DottedBorderWidget(
-                        padding: EdgeInsets.symmetric(vertical: 10),
-                        radius: defaultAppButtonRadius,
-                        dotsWidth: 8,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            frontIdMedia == null
-                                ? IconButton(
-                                    color: appColorPrimary,
-                                    icon: Icon(Icons.camera_alt_outlined),
-                                    iconSize: 40,
-                                    onPressed: () async {
-                                      onCaptureImage('frontId');
-                                    },
-                                  ).center()
-                                : Stack(
-                                    children: [
-                                      cachedImage(
-                                              frontIdMedia!.isLink
-                                                  ? frontIdMedia!.link
-                                                  : frontIdMedia!.file!.path
-                                                      .validate(),
-                                              height: 150,
-                                              width: 330,
-                                              fit: BoxFit.cover)
-                                          .cornerRadiusWithClipRRect(
-                                              commonRadius),
-                                      Positioned(
-                                        child: Icon(Icons.cancel_outlined,
-                                                color: Colors.white, size: 18)
-                                            .onTap(() {
-                                          frontIdMedia = null;
-                                          setState(() {});
-                                        },
-                                                splashColor: Colors.transparent,
-                                                highlightColor:
-                                                    Colors.transparent),
-                                        right: 4,
-                                        top: 4,
-                                      ),
-                                    ],
-                                  ).center(),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ).paddingAll(16),
-                  Text(
-                    "Take a photo of the back of your ID card",
-                    style: primaryTextStyle(
-                        color: appStore.isDarkMode ? bodyDark : bodyWhite,
-                        size: 18),
-                  ),
-                  16.height,
-                  Stack(
-                    children: [
-                      DottedBorderWidget(
-                        padding: EdgeInsets.symmetric(vertical: 10),
-                        radius: defaultAppButtonRadius,
-                        dotsWidth: 8,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            backIdMedia == null
-                                ? IconButton(
-                                    color: appColorPrimary,
-                                    icon: Icon(Icons.camera_alt_outlined),
-                                    iconSize: 40,
-                                    onPressed: () async {
-                                      onCaptureImage('backId');
-                                    },
-                                  ).center()
-                                : Stack(
-                                    children: [
-                                      cachedImage(
-                                              backIdMedia!.isLink
-                                                  ? backIdMedia!.link
-                                                  : backIdMedia!.file!.path
-                                                      .validate(),
-                                              height: 150,
-                                              width: 330,
-                                              fit: BoxFit.cover)
-                                          .cornerRadiusWithClipRRect(
-                                              commonRadius),
-                                      Positioned(
-                                        child: Icon(Icons.cancel_outlined,
-                                                color: Colors.white, size: 18)
-                                            .onTap(() {
-                                          backIdMedia = null;
-                                          setState(() {});
-                                        },
-                                                splashColor: Colors.transparent,
-                                                highlightColor:
-                                                    Colors.transparent),
-                                        right: 4,
-                                        top: 4,
-                                      ),
-                                    ],
-                                  ).center(),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ).paddingAll(16),
                   Text(
                     "Take a photo of your portrait",
                     style: primaryTextStyle(
@@ -274,29 +150,6 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
                         //     });
                         // await galleryController.createAlbum(
                         //     titleCont.text, discCont.text, mediaList);
-
-                        String path = "";
-                        await getImageSource(isCamera: false, isVideo: false)
-                            .then((value) {
-                          appStore.setLoading(false);
-                          path = value!.path;
-                          setState(() {});
-                        }).catchError((e) {
-                          log('Error: ${e.toString()}');
-                          appStore.setLoading(false);
-                        });
-                        final textDetector = TextRecognizer();
-                        final inputImage = InputImage.fromFilePath(path);
-                        final RecognizedText recognisedText =
-                            await textDetector.processImage(inputImage);
-                        //Navigator.pop(context);
-
-                        var text = recognisedText.text;
-                        print(text);
-                        text.toLowerCase().contains(
-                                'Personal identification'.toLowerCase())
-                            ? toast('Match')
-                            : toast('Not Match');
 
                         // if (galleryController.isCreateSuccess.value) {
                         //   galleryController.fetchAlbums();
@@ -403,14 +256,11 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
 
   Future<void> onCaptureImage(String mediaType) async {
     //appStore.setLoading(true);
-    bool isDataDetected = false;
     int frameCount = 0;
     StreamController<bool> dataDetectedController = StreamController<bool>();
     List<Face> faces = [];
     final cameras = await availableCameras();
-    final camera = mediaType == 'frontId' || mediaType == 'backId'
-        ? cameras[0]
-        : cameras[1];
+    final camera = cameras[1];
     _cameraController = CameraController(
       camera,
       ResolutionPreset.high,
@@ -418,27 +268,14 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
     );
     await _cameraController.initialize();
 
-    if (mediaType == 'frontId' || mediaType == 'backId') {
-      _cameraController.startImageStream((CameraImage image) async {
-        frameCount++;
-        if (frameCount % 10 == 0) {
-          // process every 10th frame
-          isDataDetected = await checkImageData(image, mediaType);
-          dataDetectedController.add(isDataDetected);
-        }
-      });
-    }
-
-    if (mediaType == 'potraitMedia') {
-      _cameraController.startImageStream((CameraImage image) async {
-        frameCount++;
-        if (frameCount % 10 == 0) {
-          // process every 10th frame
-          faces = await detectFace(image);
-          setState(() {});
-        }
-      });
-    }
+    _cameraController.startImageStream((CameraImage image) async {
+      frameCount++;
+      if (frameCount % 10 == 0) {
+        // process every 10th frame
+        faces = await detectFace(image);
+        setState(() {});
+      }
+    });
 
     await showDialog(
       context: context,
@@ -462,41 +299,15 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
               ),
             ),
           ),
-          if (mediaType == 'potraitMedia')
-            for (final face in faces)
-              Positioned(
-                  left: face.boundingBox.left,
-                  top: face.boundingBox.top,
-                  width: face.boundingBox.width,
-                  height: face.boundingBox.height,
-                  child: CustomPaint(
-                    painter: FaceRectanglePainter(face.boundingBox),
-                  ))
-          else
-            Center(
-              child: StreamBuilder<bool>(
-                stream: dataDetectedController.stream,
-                initialData: false,
-                builder: (context, snapshot) {
-                  bool isDataDetected = snapshot.data ?? false;
-                  return Container(
-                    padding: EdgeInsets.all(30),
-                    width: MediaQuery.of(context).size.width,
-                    height: 250,
-                    decoration: BoxDecoration(
-                      color: isDataDetected
-                          ? Color.fromARGB(75, 76, 175, 79)
-                          : Color.fromARGB(75, 244, 67, 54),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: isDataDetected ? Colors.green : Colors.red,
-                        width: 3.0,
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
+          for (final face in faces)
+            Positioned(
+                left: face.boundingBox.left,
+                top: face.boundingBox.top,
+                width: face.boundingBox.width,
+                height: face.boundingBox.height,
+                child: CustomPaint(
+                  painter: FaceRectanglePainter(face.boundingBox),
+                )),
           Positioned(
             bottom: 30,
             left: 0,
@@ -509,28 +320,13 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
                 color: Colors.white,
               ),
               onTap: () async {
-                if (mediaType == 'frontId' || mediaType == 'backId') {
-                  if (isDataDetected) {
-                    var value = await _cameraController.takePicture();
-                    if (mediaType == 'frontId')
-                      PostMedia(file: File(value.path));
-                    if (mediaType == 'backId')
-                      backIdMedia = PostMedia(file: File(value.path));
-                    setState(() {});
-                    Navigator.pop(context);
-                  } else {
-                    toast('Please place your ID card in the frame!');
-                  }
-                }
-                if (mediaType == 'potraitMedia') {
-                  if (faces.isNotEmpty) {
-                    var value = await _cameraController.takePicture();
-                    portraitMedia = PostMedia(file: File(value.path));
-                    setState(() {});
-                    Navigator.pop(context);
-                  } else {
-                    toast('Please keep your face on the camera!');
-                  }
+                if (faces.isNotEmpty) {
+                  var value = await _cameraController.takePicture();
+                  portraitMedia = PostMedia(file: File(value.path));
+                  setState(() {});
+                  Navigator.pop(context);
+                } else {
+                  toast('Please keep your face on the camera!');
                 }
               },
             ),
@@ -543,54 +339,6 @@ class _VerifyUserComponentState extends State<VerifyUserComponent> {
       _cameraController.stopImageStream();
     }
     dataDetectedController.close();
-  }
-
-  Future<bool> checkImageData(CameraImage image, String type) async {
-    // Convert the CameraImage to InputImage
-    final WriteBuffer allBytes = WriteBuffer();
-    for (Plane plane in image.planes) {
-      allBytes.putUint8List(plane.bytes);
-    }
-    final bytes = allBytes.done().buffer.asUint8List();
-
-    final Size imageSize =
-        Size(image.width.toDouble(), image.height.toDouble());
-
-    final InputImageRotation rotation = InputImageRotation.rotation0deg;
-
-    final InputImageFormat format =
-        image.format.group == ImageFormatGroup.yuv420
-            ? InputImageFormat.yuv420
-            : InputImageFormat.bgra8888;
-
-    final inputImage = InputImage.fromBytes(
-      bytes: bytes,
-      metadata: InputImageMetadata(
-        size: imageSize,
-        rotation: rotation,
-        format: format,
-        bytesPerRow: image.planes[0].bytesPerRow,
-      ),
-    );
-
-    // Create an instance of TextRecognizer
-    TextRecognizer textRecognizer = TextRecognizer();
-
-    // Process the image and get the detected text
-    RecognizedText text = await textRecognizer.processImage(inputImage);
-
-    // Close the TextRecognizer
-    textRecognizer.close();
-
-    // Check if the detected text is not null or empty
-    bool hasData = type == 'frontId'
-        ? text.text.toLowerCase().contains('citizen') ||
-            text.text.toLowerCase().contains('căn cước công dân') ||
-            text.text.toLowerCase().contains('căn cước')
-        : text.text.toLowerCase().contains('Personal identification') ||
-            text.text.toLowerCase().contains('Personal') ||
-            text.text.toLowerCase().contains('identification');
-    return hasData;
   }
 
   Future<List<Face>> detectFace(CameraImage image) async {

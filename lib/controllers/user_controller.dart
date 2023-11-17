@@ -6,14 +6,17 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/models/response_model.dart';
 
 import '../configs.dart';
+import '../models/common_models.dart';
 import '../models/common_models/user.dart';
 import '../screens/dashboard_screen.dart';
+import 'package:http_parser/http_parser.dart';
 
 class UserController extends GetxController {
   final storage = new FlutterSecureStorage();
   var isLoggedIn = false.obs;
   var isRegistered = false.obs;
   var user = User().obs;
+  var isVerifySuccess = false.obs;
 
   @override
   void onInit() async {
@@ -112,6 +115,41 @@ class UserController extends GetxController {
     isLoggedIn.value = false;
     user.value = User();
     push(DashboardScreen(),
-        isNewTask: true, pageRouteAnimation: PageRouteAnimation.Slide);
+        isNewTask: false, pageRouteAnimation: PageRouteAnimation.Slide);
+  }
+
+  Future<void> verifyIdCard(PostMedia frontId, PostMedia backId) async {
+    try {
+      var url = Uri.parse('$BASE_URL/Identity/identity-card');
+      var request = http.MultipartRequest('POST', url);
+      request.headers['Authorization'] =
+          'Bearer ${await storage.read(key: 'jwt')}';
+
+      var frontIdfile = await http.MultipartFile.fromPath(
+        'frontIdentityCard',
+        frontId.file!.path,
+        filename: frontId.file!.path.split('/').last,
+        contentType: MediaType('image', 'jpeg'),
+      );
+      request.files.add(frontIdfile);
+
+      var backIdfile = await http.MultipartFile.fromPath(
+        'backIdentityCard',
+        backId.file!.path,
+        filename: backId.file!.path.split('/').last,
+        contentType: MediaType('image', 'jpeg'),
+      );
+      request.files.add(backIdfile);
+      var response = await request.send();
+      ResponseModel responseModel = ResponseModel.fromJson(
+          jsonDecode(await response.stream.bytesToString()));
+      if (responseModel.statusCode == 200) {
+        isVerifySuccess(true);
+      } else {
+        print('Request failed with status: ${response.statusCode}');
+      }
+    } on Exception catch (e) {
+      print(e);
+    }
   }
 }

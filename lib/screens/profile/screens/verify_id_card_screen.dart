@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:socialv/screens/profile/components/verify_user_component.dart';
+import 'package:socialv/screens/profile/components/verify_Id_card_component.dart';
 import '../../../models/posts/media_model.dart';
 
-class VerifyUserScreen extends StatefulWidget {
+class VerifyIdCardScreen extends StatefulWidget {
   //final MediaModel mediaType;
   final int? groupID;
 
-  const VerifyUserScreen({Key? key, this.groupID}) : super(key: key);
+  const VerifyIdCardScreen({Key? key, this.groupID}) : super(key: key);
 
   @override
-  State<VerifyUserScreen> createState() => _VerifyUserState();
+  State<VerifyIdCardScreen> createState() => _VerifyIdCardState();
 }
 
 MediaModel? selectedAlbumMedia;
 bool isAlbumCreated = false;
 
-class _VerifyUserState extends State<VerifyUserScreen> {
+class _VerifyIdCardState extends State<VerifyIdCardScreen> {
   PageController _pageController = PageController(initialPage: 0);
   List<Widget> createAlbumWidgets = [];
 
@@ -29,7 +29,7 @@ class _VerifyUserState extends State<VerifyUserScreen> {
   Future<void> init() async {
     createAlbumWidgets.addAll(
       [
-        VerifyUserComponent(
+        VerifyIdCardComponent(
           onNextPage: (int nextPageIndex) {
             _pageController.animateToPage(nextPageIndex,
                 duration: const Duration(milliseconds: 250),

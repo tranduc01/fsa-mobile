@@ -10,6 +10,7 @@ import 'package:socialv/controllers/user_controller.dart';
 import 'package:socialv/main.dart';
 import 'package:socialv/models/members/profile_field_model.dart';
 import 'package:socialv/network/rest_apis.dart';
+import 'package:socialv/screens/common/loading_dialog.dart';
 import 'package:socialv/screens/profile/components/expansion_body.dart';
 import 'package:socialv/utils/app_constants.dart';
 import 'package:socialv/utils/cached_network_image.dart';
@@ -132,15 +133,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       context: context,
                       barrierDismissible: false,
                       builder: (context) {
-                        return Dialog(
-                          shadowColor: Colors.transparent,
-                          backgroundColor: Colors.transparent,
-                          child: Image.asset(
-                            'assets/icons/loading.gif',
-                            height: 180,
-                            width: 180,
-                          ),
-                        );
+                        return LoadingDialog();
                       });
                   Future.delayed(Duration(seconds: 5), () {
                     Navigator.pop(context);

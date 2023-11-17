@@ -5,6 +5,8 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/controllers/user_controller.dart';
 import 'package:socialv/main.dart';
 import 'package:socialv/screens/auth/screens/forget_password_screen.dart';
+import 'package:socialv/screens/common/fail_dialog.dart';
+import 'package:socialv/screens/common/loading_dialog.dart';
 import 'package:socialv/screens/dashboard_screen.dart';
 
 import '../../../utils/app_constants.dart';
@@ -155,15 +157,7 @@ class _LoginInComponentState extends State<LoginInComponent> {
                               context: context,
                               barrierDismissible: false,
                               builder: (context) {
-                                return Dialog(
-                                  shadowColor: Colors.transparent,
-                                  backgroundColor: Colors.transparent,
-                                  child: Image.asset(
-                                    'assets/icons/loading.gif',
-                                    height: 180,
-                                    width: 180,
-                                  ),
-                                );
+                                return LoadingDialog();
                               });
 
                           await userController.login(
@@ -181,77 +175,7 @@ class _LoginInComponentState extends State<LoginInComponent> {
                               context: context,
                               barrierDismissible: false,
                               builder: (context) {
-                                return Dialog(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Container(
-                                    width: 200,
-                                    padding: EdgeInsets.all(16),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Image.asset('assets/images/fail.gif'),
-                                        SizedBox(
-                                          height: 20,
-                                        ),
-                                        Text(
-                                          'Login Failed',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 20),
-                                        ),
-                                        SizedBox(height: 20),
-                                        Text(
-                                          'Please check your Email and Password!',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            color: const Color.fromARGB(
-                                                106, 0, 0, 0),
-                                          ),
-                                        ),
-                                        SizedBox(height: 20),
-                                        Center(
-                                          child: ElevatedButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                            child: Text(
-                                              'Try Again',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.black),
-                                            ),
-                                            style: ButtonStyle(
-                                              backgroundColor:
-                                                  MaterialStateColor
-                                                      .resolveWith((states) {
-                                                if (states.contains(
-                                                    MaterialState.pressed)) {
-                                                  return const Color.fromARGB(
-                                                      137, 244, 67, 54);
-                                                }
-                                                return Colors.white;
-                                              }),
-                                              shape: MaterialStateProperty.all<
-                                                  RoundedRectangleBorder>(
-                                                RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                    side: BorderSide(
-                                                        color: Colors.red,
-                                                        width: 2)),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
+                                return FailDialog(text: 'Login Failed');
                               },
                             );
                           }

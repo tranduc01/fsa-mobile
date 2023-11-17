@@ -13,11 +13,10 @@ import 'package:socialv/screens/post/components/post_component.dart';
 import 'package:socialv/screens/profile/components/profile_header_component.dart';
 
 import '../../models/posts/post.dart';
-import '../../models/posts/post_model.dart';
 import '../../utils/app_constants.dart';
 import '../gallery/screens/gallery_screen.dart';
 import '../profile/screens/personal_info_screen.dart';
-import '../profile/screens/verify_user_screen.dart';
+import '../profile/screens/verify_id_card_screen.dart';
 
 class ProfileFragment extends StatefulWidget {
   final ScrollController? controller;
@@ -184,7 +183,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                           height: 20,
                                         ),
                                         onTap: () async {
-                                          VerifyUserScreen().launch(context);
+                                          VerifyIdCardScreen().launch(context);
                                           toast('Please verify your account');
                                         },
                                       ).paddingSymmetric(horizontal: 4),
