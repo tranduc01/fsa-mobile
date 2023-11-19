@@ -207,7 +207,8 @@ class _VerifyIdCardComponentState extends State<VerifyIdCardComponent> {
 
                           if (userController.isVerifySuccess.value) {
                             Navigator.pop(context);
-                            VerifyFaceScreen().launch(context);
+                            VerifyFaceScreen(frontIdMedia: frontIdMedia!)
+                                .launch(context);
                           } else {
                             Navigator.pop(context);
                             showDialog(

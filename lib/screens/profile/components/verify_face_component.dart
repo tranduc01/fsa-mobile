@@ -21,8 +21,10 @@ import '../../../utils/constants.dart';
 
 class VerifyFaceComponent extends StatefulWidget {
   final Function(int)? onNextPage;
+  final PostMedia frontIdMedia;
 
-  VerifyFaceComponent({Key? key, this.onNextPage}) : super(key: key);
+  VerifyFaceComponent({required this.frontIdMedia, Key? key, this.onNextPage})
+      : super(key: key);
 
   @override
   State<VerifyFaceComponent> createState() => _VerifyFaceComponentState();
@@ -142,8 +144,10 @@ class _VerifyFaceComponentState extends State<VerifyFaceComponent> {
                               builder: (context) {
                                 return LoadingDialog();
                               });
-                          await userController.verifyFace(portraitMedia!);
+                          await userController.verifyFace(
+                              widget.frontIdMedia, portraitMedia!);
                           if (userController.isVerifySuccess.value) {
+                            Navigator.pop(context);
                             toast('User Verify Successfully!');
                             Navigator.pop(context);
                           } else {

@@ -42,19 +42,19 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppleMusicUsageDescription</key>
-	<string>SoicalV app requires access to the photo library to upload your profile photo.</string>
+	<string>OKA app requires access to the photo library to upload your profile photo.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>SocialV app requires access to the Camera to upload your profile photo.</string>
+	<string>OKA app requires access to the Camera to upload your profile photo.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>SocialV app requires address permission access to get the current location of the user instead of typing address manually.</string>
+	<string>OKA app requires address permission access to get the current location of the user instead of typing address manually.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>SocialV app requires address permission access to get the current location of the user instead of typing address manually.</string>
+	<string>OKA app requires address permission access to get the current location of the user instead of typing address manually.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>SocialV app requires address permission access to get the current location of the user instead of typing address manually.</string>
+	<string>OKA app requires address permission access to get the current location of the user instead of typing address manually.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>SocialV app requires access to microphone when you will be used to record your speech at time of  press the "Mic" button.</string>
+	<string>OKA app requires access to microphone when you will be used to record your speech at time of  press the "Mic" button.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>SocialV app requires access to the photo library to upload your profile photo.</string>
+	<string>OKA app requires access to the photo library to upload your profile photo.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>
@@ -63,6 +63,8 @@
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+	<key>UIStatusBarStyle</key>
+	<string></string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

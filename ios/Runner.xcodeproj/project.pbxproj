@@ -7,8 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		13760A70299B711E73A1C2F1 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A22738A7CDE09A0EE0EA790 /* Pods_Runner.framework */; };
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
+		2FD6A20F2B0A7D6300CF2715 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A22738A7CDE09A0EE0EA790 /* Pods_Runner.framework */; };
+		2FD6A2102B0A7D6300CF2715 /* Pods_Runner.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5A22738A7CDE09A0EE0EA790 /* Pods_Runner.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
@@ -24,6 +25,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				2FD6A2102B0A7D6300CF2715 /* Pods_Runner.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -71,7 +73,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				13760A70299B711E73A1C2F1 /* Pods_Runner.framework in Frameworks */,
+				2FD6A20F2B0A7D6300CF2715 /* Pods_Runner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -348,6 +350,7 @@
 		249021D3217E4FDB00AE95B9 /* Profile */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -399,7 +402,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
@@ -483,18 +485,15 @@
 					"-framework",
 					"\"LocalAuthentication\"",
 					"-framework",
-					"\"MLImage\"",					
+					"\"MLImage\"",
 					"-framework",
 					"\"MLKitCommon\"",
-					
-					
 					"-framework",
 					"\"MLKitFaceDetection\"",
-					
 					"-framework",
 					"\"MLKitTextRecognition\"",
 					"-framework",
-					"\"MLKitTextRecognitionCommon\"",					
+					"\"MLKitTextRecognitionCommon\"",
 					"-framework",
 					"\"Network\"",
 					"-framework",
@@ -509,7 +508,6 @@
 					"\"RecaptchaInterop\"",
 					"-framework",
 					"\"SDWebImage\"",
-					
 					"-framework",
 					"\"SafariServices\"",
 					"-framework",
@@ -546,16 +544,12 @@
 					"\"flutter_secure_storage\"",
 					"-framework",
 					"\"fluttertoast\"",
-
 					"-framework",
 					"\"google_mlkit_commons\"",
-					
 					"-framework",
 					"\"google_mlkit_face_detection\"",
-					
 					"-framework",
 					"\"google_mlkit_text_recognition\"",
-
 					"-framework",
 					"\"google_sign_in_ios\"",
 					"-framework",
@@ -601,6 +595,7 @@
 		97C147031CF9000F007C117D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -656,6 +651,7 @@
 		97C147041CF9000F007C117D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -709,7 +705,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9740EEB21CF90195004384FC /* Debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
@@ -794,19 +789,14 @@
 					"\"LocalAuthentication\"",
 					"-framework",
 					"\"MLImage\"",
-					
 					"-framework",
 					"\"MLKitCommon\"",
-					
-					
 					"-framework",
 					"\"MLKitFaceDetection\"",
-					
 					"-framework",
 					"\"MLKitTextRecognition\"",
 					"-framework",
 					"\"MLKitTextRecognitionCommon\"",
-					
 					"-framework",
 					"\"Network\"",
 					"-framework",
@@ -821,7 +811,6 @@
 					"\"RecaptchaInterop\"",
 					"-framework",
 					"\"SDWebImage\"",
-					
 					"-framework",
 					"\"SafariServices\"",
 					"-framework",
@@ -858,16 +847,12 @@
 					"\"flutter_secure_storage\"",
 					"-framework",
 					"\"fluttertoast\"",
-
 					"-framework",
 					"\"google_mlkit_commons\"",
-					
 					"-framework",
 					"\"google_mlkit_face_detection\"",
-					
 					"-framework",
 					"\"google_mlkit_text_recognition\"",
-
 					"-framework",
 					"\"google_sign_in_ios\"",
 					"-framework",
@@ -914,7 +899,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
@@ -999,19 +983,14 @@
 					"\"LocalAuthentication\"",
 					"-framework",
 					"\"MLImage\"",
-					
 					"-framework",
 					"\"MLKitCommon\"",
-					
-					
 					"-framework",
 					"\"MLKitFaceDetection\"",
-					
 					"-framework",
 					"\"MLKitTextRecognition\"",
 					"-framework",
 					"\"MLKitTextRecognitionCommon\"",
-					
 					"-framework",
 					"\"Network\"",
 					"-framework",
@@ -1026,7 +1005,6 @@
 					"\"RecaptchaInterop\"",
 					"-framework",
 					"\"SDWebImage\"",
-					
 					"-framework",
 					"\"SafariServices\"",
 					"-framework",
@@ -1063,16 +1041,12 @@
 					"\"flutter_secure_storage\"",
 					"-framework",
 					"\"fluttertoast\"",
-
 					"-framework",
 					"\"google_mlkit_commons\"",
-					
 					"-framework",
 					"\"google_mlkit_face_detection\"",
-					
 					"-framework",
 					"\"google_mlkit_text_recognition\"",
-
 					"-framework",
 					"\"google_sign_in_ios\"",
 					"-framework",

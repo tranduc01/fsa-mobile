@@ -122,7 +122,8 @@ class UserController extends GetxController {
   Future<void> verifyIdCard(PostMedia frontId, PostMedia backId) async {
     try {
       isVerifySuccess(false);
-      var url = Uri.parse('$BASE_URL/Identity/identity-card');
+      print('verifyIdCard');
+      var url = Uri.parse('$BASE_URL/Identify/identity-card');
       var request = http.MultipartRequest('POST', url);
       request.headers['Authorization'] =
           'Bearer ${await storage.read(key: 'jwt')}';
@@ -144,12 +145,13 @@ class UserController extends GetxController {
       request.files.add(backIdfile);
 
       var response = await request.send();
-      ResponseModel responseModel = ResponseModel.fromJson(
-          jsonDecode(await response.stream.bytesToString()));
-      if (responseModel.statusCode == 200) {
+      // ResponseModel responseModel = ResponseModel.fromJson(
+      //     jsonDecode(await response.stream.bytesToString()));
+      print(await response.stream.bytesToString());
+      if (response.statusCode == 200) {
         isVerifySuccess(true);
       } else {
-        message.value = responseModel.data['errorMessage'];
+        //message.value = responseModel.data['errorMessage'];
         print('Request failed with status: ${response.statusCode}');
       }
     } on Exception catch (e) {
@@ -157,16 +159,24 @@ class UserController extends GetxController {
     }
   }
 
-  Future<void> verifyFace(PostMedia face) async {
+  Future<void> verifyFace(PostMedia frontId, PostMedia face) async {
     try {
       isVerifySuccess(false);
-      var url = Uri.parse('$BASE_URL/Identity/face-match');
+      var url = Uri.parse('$BASE_URL/Identify/face-match');
       var request = http.MultipartRequest('POST', url);
       request.headers['Authorization'] =
           'Bearer ${await storage.read(key: 'jwt')}';
 
+      var frontIdfile = await http.MultipartFile.fromPath(
+        'frontIdentityCard',
+        frontId.file!.path,
+        filename: frontId.file!.path.split('/').last,
+        contentType: MediaType('image', 'jpeg'),
+      );
+      request.files.add(frontIdfile);
+
       var facefile = await http.MultipartFile.fromPath(
-        'face',
+        'faceImage',
         face.file!.path,
         filename: face.file!.path.split('/').last,
         contentType: MediaType('image', 'jpeg'),
@@ -174,12 +184,13 @@ class UserController extends GetxController {
       request.files.add(facefile);
 
       var response = await request.send();
-      ResponseModel responseModel = ResponseModel.fromJson(
-          jsonDecode(await response.stream.bytesToString()));
-      if (responseModel.statusCode == 200) {
+      // ResponseModel responseModel = ResponseModel.fromJson(
+      //     jsonDecode(await response.stream.bytesToString()));
+      print(await response.stream.bytesToString());
+      if (response.statusCode == 200) {
         isVerifySuccess(true);
       } else {
-        message.value = responseModel.data['errorMessage'];
+        //message.value = responseModel.data['errorMessage'];
         print('Request failed with status: ${response.statusCode}');
       }
     } on Exception catch (e) {

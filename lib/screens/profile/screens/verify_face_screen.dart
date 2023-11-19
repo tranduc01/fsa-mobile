@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/screens/profile/components/verify_face_component.dart';
+import '../../../models/common_models.dart';
 import '../../../models/posts/media_model.dart';
 
 class VerifyFaceScreen extends StatefulWidget {
-  //final MediaModel mediaType;
-  final int? groupID;
+  final PostMedia frontIdMedia;
 
-  const VerifyFaceScreen({Key? key, this.groupID}) : super(key: key);
+  const VerifyFaceScreen({Key? key, required this.frontIdMedia})
+      : super(key: key);
 
   @override
   State<VerifyFaceScreen> createState() => _VerifyFaceState();
@@ -36,6 +37,7 @@ class _VerifyFaceState extends State<VerifyFaceScreen> {
                 curve: Curves.linear);
             setState(() {});
           },
+          frontIdMedia: widget.frontIdMedia,
         ),
         //AlbumUploadScreen(),
       ],
