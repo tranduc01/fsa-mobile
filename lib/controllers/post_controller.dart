@@ -24,7 +24,7 @@ class PostController extends GetxController {
       if (response.statusCode == 200) {
         isLoading(false);
         isError(false);
-        print(responseModel.data);
+
         return posts.value = (responseModel.data['items'] as List)
             .map((e) => Post.fromJson(e))
             .toList();

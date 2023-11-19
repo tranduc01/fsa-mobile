@@ -97,8 +97,19 @@ class _HomeFragmentState extends State<HomeFragment>
                                     child: Stack(
                                       children: <Widget>[
                                         item.thumbnail != null
-                                            ? Image.network(item.thumbnail!,
-                                                fit: BoxFit.cover)
+                                            ? Image.network(
+                                                item.thumbnail!,
+                                                fit: BoxFit.cover,
+                                                errorBuilder: (BuildContext
+                                                        context,
+                                                    Object exception,
+                                                    StackTrace? stackTrace) {
+                                                  return Image.asset(
+                                                    'assets/images/images.png',
+                                                    fit: BoxFit.cover,
+                                                  );
+                                                },
+                                              )
                                             : Image.asset(
                                                 'assets/images/images.png',
                                                 fit: BoxFit.cover),

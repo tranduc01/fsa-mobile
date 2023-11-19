@@ -88,9 +88,22 @@ class _PostComponentState extends State<PostComponent> {
                             height: 100,
                             width: 100,
                             fit: BoxFit.cover,
+                            errorBuilder: (BuildContext context,
+                                Object exception, StackTrace? stackTrace) {
+                              return Image.asset(
+                                'assets/images/images.png',
+                                height: 100,
+                                width: 100,
+                                fit: BoxFit.cover,
+                              ).cornerRadiusWithClipRRect(15);
+                            },
                           ).cornerRadiusWithClipRRect(15)
-                        : Image.asset('assets/images/images.png',
-                            fit: BoxFit.cover, width: 100.0),
+                        : Image.asset(
+                            'assets/images/images.png',
+                            fit: BoxFit.cover,
+                            height: 100,
+                            width: 100,
+                          ).cornerRadiusWithClipRRect(15),
                     12.width,
                     Expanded(
                         child: Container(
@@ -112,6 +125,9 @@ class _PostComponentState extends State<PostComponent> {
                             children: [
                               Text(
                                 widget.post.topic!.name!,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                                textAlign: TextAlign.start,
                                 style: boldTextStyle(
                                   size: 15,
                                   fontFamily: 'Roboto',
