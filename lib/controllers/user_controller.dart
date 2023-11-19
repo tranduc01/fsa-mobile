@@ -160,7 +160,7 @@ class UserController extends GetxController {
   Future<void> verifyFace(PostMedia face) async {
     try {
       isVerifySuccess(false);
-      var url = Uri.parse('$BASE_URL/Identity/face');
+      var url = Uri.parse('$BASE_URL/Identity/face-match');
       var request = http.MultipartRequest('POST', url);
       request.headers['Authorization'] =
           'Bearer ${await storage.read(key: 'jwt')}';

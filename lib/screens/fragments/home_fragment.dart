@@ -96,8 +96,13 @@ class _HomeFragmentState extends State<HomeFragment>
                                         BorderRadius.all(Radius.circular(16)),
                                     child: Stack(
                                       children: <Widget>[
-                                        Image.network(item.thumbnail!,
-                                            fit: BoxFit.cover, width: 1000.0),
+                                        item.thumbnail != null
+                                            ? Image.network(item.thumbnail!,
+                                                fit: BoxFit.cover, width: 100.0)
+                                            : Image.asset(
+                                                'assets/images/images.png',
+                                                fit: BoxFit.cover,
+                                                width: 100.0),
                                         Positioned(
                                           bottom: 0.0,
                                           left: 0.0,

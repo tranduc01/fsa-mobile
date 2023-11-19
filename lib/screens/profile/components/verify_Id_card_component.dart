@@ -325,13 +325,15 @@ class _VerifyIdCardComponentState extends State<VerifyIdCardComponent> {
               onTap: () async {
                 if (isDataDetected) {
                   var value = await _cameraController.takePicture();
-                  if (mediaType == 'frontId') PostMedia(file: File(value.path));
-                  if (mediaType == 'backId')
-                    backIdMedia = PostMedia(file: File(value.path));
+
+                  mediaType == 'frontId'
+                      ? frontIdMedia = PostMedia(file: File(value.path))
+                      : backIdMedia = PostMedia(file: File(value.path));
+
                   setState(() {});
                   Navigator.pop(context);
                 } else {
-                  toast('Please place your ID card in the frame!');
+                  toast('Please place your ID card in the frameeee!');
                 }
               },
             ),
