@@ -98,11 +98,10 @@ class _HomeFragmentState extends State<HomeFragment>
                                       children: <Widget>[
                                         item.thumbnail != null
                                             ? Image.network(item.thumbnail!,
-                                                fit: BoxFit.cover, width: 100.0)
+                                                fit: BoxFit.cover)
                                             : Image.asset(
                                                 'assets/images/images.png',
-                                                fit: BoxFit.cover,
-                                                width: 100.0),
+                                                fit: BoxFit.cover),
                                         Positioned(
                                           bottom: 0.0,
                                           left: 0.0,

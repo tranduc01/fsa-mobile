@@ -82,12 +82,15 @@ class _PostComponentState extends State<PostComponent> {
                 padding: EdgeInsets.all(10),
                 child: Row(
                   children: [
-                    Image.network(
-                      widget.post.thumbnail!,
-                      height: 100,
-                      width: 100,
-                      fit: BoxFit.cover,
-                    ).cornerRadiusWithClipRRect(15),
+                    widget.post.thumbnail != null
+                        ? Image.network(
+                            widget.post.thumbnail!,
+                            height: 100,
+                            width: 100,
+                            fit: BoxFit.cover,
+                          ).cornerRadiusWithClipRRect(15)
+                        : Image.asset('assets/images/images.png',
+                            fit: BoxFit.cover, width: 100.0),
                     12.width,
                     Expanded(
                         child: Container(
