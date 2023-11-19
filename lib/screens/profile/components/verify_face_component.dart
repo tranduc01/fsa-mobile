@@ -7,10 +7,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get/get.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
-import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:socialv/controllers/gallery_controller.dart';
+import 'package:socialv/screens/common/fail_dialog.dart';
+import 'package:socialv/screens/common/loading_dialog.dart';
 import '../../../components/loading_widget.dart';
+import '../../../controllers/user_controller.dart';
 import '../../../main.dart';
 import '../../../models/common_models.dart';
 import '../../../utils/cached_network_image.dart';
@@ -30,7 +31,7 @@ class VerifyFaceComponent extends StatefulWidget {
 class _VerifyFaceComponentState extends State<VerifyFaceComponent> {
   PostMedia? portraitMedia;
 
-  late GalleryController galleryController = Get.put(GalleryController());
+  late UserController userController = Get.put(UserController());
   late CameraController _cameraController;
 
   @override
@@ -134,108 +135,31 @@ class _VerifyFaceComponentState extends State<VerifyFaceComponent> {
                     child: appButton(
                       text: 'Verify',
                       onTap: () async {
-                        // showDialog(
-                        //     context: context,
-                        //     barrierDismissible: false,
-                        //     builder: (context) {
-                        //       return Dialog(
-                        //         shadowColor: Colors.transparent,
-                        //         backgroundColor: Colors.transparent,
-                        //         child: Image.asset(
-                        //           'assets/icons/loading.gif',
-                        //           height: 180,
-                        //           width: 180,
-                        //         ),
-                        //       );
-                        //     });
-                        // await galleryController.createAlbum(
-                        //     titleCont.text, discCont.text, mediaList);
-
-                        // if (galleryController.isCreateSuccess.value) {
-                        //   galleryController.fetchAlbums();
-                        //   Navigator.pop(context);
-                        //   toast('Album Created Successfully');
-                        //   Navigator.pop(context);
-                        // } else {
-                        //   Navigator.pop(context);
-                        //   showDialog(
-                        //     context: context,
-                        //     barrierDismissible: false,
-                        //     builder: (context) {
-                        //       return Dialog(
-                        //         shape: RoundedRectangleBorder(
-                        //           borderRadius: BorderRadius.circular(20),
-                        //         ),
-                        //         child: Container(
-                        //           width: 200,
-                        //           padding: EdgeInsets.all(16),
-                        //           child: Column(
-                        //             mainAxisSize: MainAxisSize.min,
-                        //             children: [
-                        //               Image.asset('assets/images/fail.gif'),
-                        //               SizedBox(
-                        //                 height: 20,
-                        //               ),
-                        //               Text(
-                        //                 'Create Failed',
-                        //                 textAlign: TextAlign.center,
-                        //                 style: TextStyle(
-                        //                     color: Colors.black,
-                        //                     fontWeight: FontWeight.bold,
-                        //                     fontSize: 20),
-                        //               ),
-                        //               SizedBox(height: 20),
-                        //               Text(
-                        //                 'Please try again!',
-                        //                 textAlign: TextAlign.center,
-                        //                 style: TextStyle(
-                        //                   color: const Color.fromARGB(
-                        //                       106, 0, 0, 0),
-                        //                 ),
-                        //               ),
-                        //               SizedBox(height: 20),
-                        //               Center(
-                        //                 child: ElevatedButton(
-                        //                   onPressed: () {
-                        //                     Navigator.pop(context);
-                        //                   },
-                        //                   child: Text(
-                        //                     'Try Again',
-                        //                     style: TextStyle(
-                        //                         fontWeight: FontWeight.bold,
-                        //                         color: Colors.black),
-                        //                   ),
-                        //                   style: ButtonStyle(
-                        //                     backgroundColor:
-                        //                         MaterialStateColor
-                        //                             .resolveWith((states) {
-                        //                       if (states.contains(
-                        //                           MaterialState.pressed)) {
-                        //                         return const Color.fromARGB(
-                        //                             137, 244, 67, 54);
-                        //                       }
-                        //                       return Colors.white;
-                        //                     }),
-                        //                     shape: MaterialStateProperty.all<
-                        //                         RoundedRectangleBorder>(
-                        //                       RoundedRectangleBorder(
-                        //                           borderRadius:
-                        //                               BorderRadius.circular(
-                        //                                   10),
-                        //                           side: BorderSide(
-                        //                               color: Colors.red,
-                        //                               width: 2)),
-                        //                     ),
-                        //                   ),
-                        //                 ),
-                        //               ),
-                        //             ],
-                        //           ),
-                        //         ),
-                        //       );
-                        //     },
-                        //   );
-                        // }
+                        if (portraitMedia != null) {
+                          showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (context) {
+                                return LoadingDialog();
+                              });
+                          await userController.verifyFace(portraitMedia!);
+                          if (userController.isVerifySuccess.value) {
+                            toast('User Verify Successfully!');
+                            Navigator.pop(context);
+                          } else {
+                            Navigator.pop(context);
+                            showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (context) {
+                                return FailDialog(
+                                    text: userController.message.value);
+                              },
+                            );
+                          }
+                        } else {
+                          toast('Please take a photo of your portrait!');
+                        }
                       },
                       context: context,
                     ),

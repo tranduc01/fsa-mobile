@@ -214,7 +214,8 @@ class _VerifyIdCardComponentState extends State<VerifyIdCardComponent> {
                               context: context,
                               barrierDismissible: false,
                               builder: (context) {
-                                return FailDialog(text: 'Verify Fail!');
+                                return FailDialog(
+                                    text: userController.message.value);
                               },
                             );
                           }

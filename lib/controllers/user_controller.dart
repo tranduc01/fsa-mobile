@@ -17,6 +17,7 @@ class UserController extends GetxController {
   var isRegistered = false.obs;
   var user = User().obs;
   var isVerifySuccess = false.obs;
+  var message = ''.obs;
 
   @override
   void onInit() async {
@@ -115,11 +116,12 @@ class UserController extends GetxController {
     isLoggedIn.value = false;
     user.value = User();
     push(DashboardScreen(),
-        isNewTask: false, pageRouteAnimation: PageRouteAnimation.Slide);
+        isNewTask: true, pageRouteAnimation: PageRouteAnimation.Slide);
   }
 
   Future<void> verifyIdCard(PostMedia frontId, PostMedia backId) async {
     try {
+      isVerifySuccess(false);
       var url = Uri.parse('$BASE_URL/Identity/identity-card');
       var request = http.MultipartRequest('POST', url);
       request.headers['Authorization'] =
@@ -140,12 +142,44 @@ class UserController extends GetxController {
         contentType: MediaType('image', 'jpeg'),
       );
       request.files.add(backIdfile);
+
       var response = await request.send();
       ResponseModel responseModel = ResponseModel.fromJson(
           jsonDecode(await response.stream.bytesToString()));
       if (responseModel.statusCode == 200) {
         isVerifySuccess(true);
       } else {
+        message.value = responseModel.data['errorMessage'];
+        print('Request failed with status: ${response.statusCode}');
+      }
+    } on Exception catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> verifyFace(PostMedia face) async {
+    try {
+      isVerifySuccess(false);
+      var url = Uri.parse('$BASE_URL/Identity/face');
+      var request = http.MultipartRequest('POST', url);
+      request.headers['Authorization'] =
+          'Bearer ${await storage.read(key: 'jwt')}';
+
+      var facefile = await http.MultipartFile.fromPath(
+        'face',
+        face.file!.path,
+        filename: face.file!.path.split('/').last,
+        contentType: MediaType('image', 'jpeg'),
+      );
+      request.files.add(facefile);
+
+      var response = await request.send();
+      ResponseModel responseModel = ResponseModel.fromJson(
+          jsonDecode(await response.stream.bytesToString()));
+      if (responseModel.statusCode == 200) {
+        isVerifySuccess(true);
+      } else {
+        message.value = responseModel.data['errorMessage'];
         print('Request failed with status: ${response.statusCode}');
       }
     } on Exception catch (e) {
