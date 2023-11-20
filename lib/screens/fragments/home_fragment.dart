@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/controllers/post_controller.dart';
-import 'package:socialv/screens/dashboard_screen.dart';
 import 'package:socialv/screens/home/components/ad_component.dart';
 import 'package:socialv/screens/home/components/suggested_user_component.dart';
 import 'package:socialv/screens/post/components/post_component.dart';
@@ -28,14 +27,18 @@ class _HomeFragmentState extends State<HomeFragment>
   late PostController postController = Get.put(PostController());
   List<Post> postList = [];
   late Future<List<Post>> future;
-
   int mPage = 1;
   bool mIsLastPage = false;
 
   @override
   void initState() {
-    postController.fetchPosts();
-    postList = postController.posts;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      postController.fetchPosts().then((_) {
+        setState(() {
+          postList = postController.posts;
+        });
+      });
+    });
     _animationController = BottomSheet.createAnimationController(this);
     _animationController.duration = const Duration(milliseconds: 500);
     _animationController.drive(CurveTween(curve: Curves.easeOutQuad));
@@ -46,15 +49,15 @@ class _HomeFragmentState extends State<HomeFragment>
 
     widget.controller.addListener(() {
       /// pagination
-      if (selectedIndex == 0) {
-        if (widget.controller.position.pixels ==
-            widget.controller.position.maxScrollExtent) {
-          if (!mIsLastPage) {
-            mPage++;
-            future = postController.fetchPosts();
-          }
-        }
-      }
+      // if (selectedIndex == 0) {
+      //   if (widget.controller.position.pixels ==
+      //       widget.controller.position.maxScrollExtent) {
+      //     if (!mIsLastPage) {
+      //       mPage++;
+      //       future = postController.fetchPosts();
+      //     }
+      //   }
+      // }
     });
   }
 
@@ -74,109 +77,105 @@ class _HomeFragmentState extends State<HomeFragment>
     return Stack(
       alignment: Alignment.topCenter,
       children: [
-        Obx(() => Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                15.height,
-                Container(
-                  child: CarouselSlider(
-                    options: CarouselOptions(
-                      height: 280,
-                      autoPlay: true,
-                      aspectRatio: 2.0,
-                      enlargeCenterPage: true,
-                      enlargeStrategy: CenterPageEnlargeStrategy.height,
-                    ),
-                    items: postList
-                        .map((item) => Container(
-                              child: Container(
-                                margin: EdgeInsets.all(5.0),
-                                child: ClipRRect(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(16)),
-                                    child: Stack(
-                                      children: <Widget>[
-                                        item.thumbnail != null
-                                            ? Image.network(
-                                                item.thumbnail!,
-                                                fit: BoxFit.cover,
-                                                errorBuilder: (BuildContext
-                                                        context,
-                                                    Object exception,
-                                                    StackTrace? stackTrace) {
-                                                  return Image.asset(
-                                                    'assets/images/images.png',
-                                                    fit: BoxFit.cover,
-                                                  );
-                                                },
-                                              )
-                                            : Image.asset(
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            15.height,
+            Container(
+              child: CarouselSlider(
+                options: CarouselOptions(
+                  height: 280,
+                  autoPlay: true,
+                  aspectRatio: 2.0,
+                  enlargeCenterPage: true,
+                  enlargeStrategy: CenterPageEnlargeStrategy.height,
+                ),
+                items: postList
+                    .map((item) => Container(
+                          child: Container(
+                            margin: EdgeInsets.all(5.0),
+                            child: ClipRRect(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(16)),
+                                child: Stack(
+                                  children: [
+                                    item.thumbnail != null
+                                        ? Image.network(
+                                            item.thumbnail!,
+                                            fit: BoxFit.cover,
+                                            errorBuilder: (BuildContext context,
+                                                Object exception,
+                                                StackTrace? stackTrace) {
+                                              return Image.asset(
                                                 'assets/images/images.png',
-                                                fit: BoxFit.cover),
-                                        Positioned(
-                                          bottom: 0.0,
-                                          left: 0.0,
-                                          right: 0.0,
-                                          child: Container(
-                                              decoration: BoxDecoration(
-                                                gradient: LinearGradient(
-                                                  colors: [
-                                                    Color.fromARGB(
-                                                        213, 0, 0, 0),
-                                                    Color.fromARGB(0, 0, 0, 0)
-                                                  ],
-                                                  begin: Alignment.bottomCenter,
-                                                  end: Alignment.topCenter,
-                                                ),
-                                              ),
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: 10.0,
-                                                  horizontal: 20.0),
-                                              child: Center(
-                                                child: Text(
-                                                  item.title!,
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 17.0,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontFamily: 'Roboto'),
-                                                ),
-                                              )),
-                                        ),
-                                      ],
-                                    )),
-                              ),
-                            ))
-                        .toList(),
-                  ),
-                ),
-                10.height,
-                AnimatedListView(
-                  padding: EdgeInsets.only(bottom: mIsLastPage ? 16 : 60),
-                  itemCount: postList.length,
-                  slideConfiguration: SlideConfiguration(
-                      delay: Duration(milliseconds: 80), verticalOffset: 300),
-                  itemBuilder: (context, index) {
-                    return Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        PostComponent(
-                          post: postList[index],
-                          callback: () {
-                            mPage = 1;
-                            future = postController.fetchPosts();
-                          },
-                        ).paddingSymmetric(horizontal: 8),
-                        if ((index + 1) % 5 == 0) AdComponent(),
-                        if ((index + 1) == 3) SuggestedUserComponent(),
-                      ],
-                    );
-                  },
-                  shrinkWrap: true,
-                ),
-              ],
-            )),
+                                                fit: BoxFit.cover,
+                                              );
+                                            },
+                                          )
+                                        : Image.asset(
+                                            'assets/images/images.png',
+                                            fit: BoxFit.cover),
+                                    Positioned(
+                                      bottom: 0.0,
+                                      left: 0.0,
+                                      right: 0.0,
+                                      child: Container(
+                                          decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                              colors: [
+                                                Color.fromARGB(213, 0, 0, 0),
+                                                Color.fromARGB(0, 0, 0, 0)
+                                              ],
+                                              begin: Alignment.bottomCenter,
+                                              end: Alignment.topCenter,
+                                            ),
+                                          ),
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 10.0, horizontal: 20.0),
+                                          child: Center(
+                                            child: Text(
+                                              item.title!,
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 17.0,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontFamily: 'Roboto'),
+                                            ),
+                                          )),
+                                    ),
+                                  ],
+                                )),
+                          ),
+                        ))
+                    .toList(),
+              ),
+            ),
+            10.height,
+            AnimatedListView(
+              padding: EdgeInsets.only(bottom: mIsLastPage ? 16 : 60),
+              itemCount: postList.length,
+              slideConfiguration: SlideConfiguration(
+                  delay: Duration(milliseconds: 80), verticalOffset: 300),
+              itemBuilder: (context, index) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    PostComponent(
+                      post: postList[index],
+                      callback: () {
+                        mPage = 1;
+                        postController.fetchPosts();
+                      },
+                    ).paddingSymmetric(horizontal: 8),
+                    if ((index + 1) % 5 == 0) AdComponent(),
+                    if ((index + 1) == 3) SuggestedUserComponent(),
+                  ],
+                );
+              },
+              shrinkWrap: true,
+            ),
+          ],
+        ),
         if (postController.isError.value && postList.isEmpty)
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.8,

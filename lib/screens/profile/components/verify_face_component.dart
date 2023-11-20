@@ -148,6 +148,7 @@ class _VerifyFaceComponentState extends State<VerifyFaceComponent> {
                               widget.frontIdMedia, portraitMedia!);
                           if (userController.isVerifySuccess.value) {
                             Navigator.pop(context);
+                            userController.user.value.isVerified = true;
                             toast('User Verify Successfully!');
                             Navigator.pop(context);
                           } else {

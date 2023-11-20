@@ -170,7 +170,8 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                             style: boldTextStyle(size: 20),
                             children: [
                               WidgetSpan(
-                                child: userController.user.value.isVerified ??
+                                child: Obx(() => userController
+                                            .user.value.isVerified ??
                                         false
                                     ? Image.asset(ic_tick_filled,
                                         width: 20,
@@ -186,7 +187,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                           VerifyIdCardScreen().launch(context);
                                           toast('Please verify your account');
                                         },
-                                      ).paddingSymmetric(horizontal: 4),
+                                      ).paddingSymmetric(horizontal: 4)),
                               ),
                             ],
                           ),

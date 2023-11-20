@@ -11,6 +11,12 @@ class PostController extends GetxController {
   var isLoading = false.obs;
   var isError = false.obs;
 
+  @override
+  void onInit() {
+    super.onInit();
+    fetchPosts();
+  }
+
   Future<List<Post>> fetchPosts() async {
     isLoading(true);
     var url = '$BASE_URL/Post';
