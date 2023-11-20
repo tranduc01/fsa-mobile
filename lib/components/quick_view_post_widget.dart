@@ -1,19 +1,12 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:socialv/components/like_button_widget.dart';
-import 'package:socialv/models/posts/post_model.dart';
-import 'package:socialv/screens/post/components/post_content_component.dart';
-import 'package:socialv/screens/post/components/post_component.dart';
-import 'package:socialv/screens/post/components/post_media_component.dart';
 import 'package:socialv/utils/app_constants.dart';
-import 'package:socialv/utils/cached_network_image.dart';
 
 import '../main.dart';
 import '../models/posts/post.dart';
-import '../screens/dashboard_screen.dart';
-import '../screens/post/components/reaction_button_widget.dart';
 
 class QuickViewPostWidget extends StatefulWidget {
   final Post post;
@@ -83,22 +76,99 @@ class _QuickViewPostWidgetState extends State<QuickViewPostWidget>
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // PostContentComponent(
-                    //     blogId: widget.postModel.blogId,
-                    //     postType: widget.postModel.type,
-                    //     hasMentions: widget.postModel.hasMentions == 1,
-                    //     postContent: widget.postModel.content),
-                    // PostMediaComponent(
-                    //   mediaTitle: widget.postModel.userName.validate(),
-                    //   mediaType: widget.postModel.mediaType.validate(),
-                    //   mediaList: widget.postModel.medias.validate(),
-                    //   isFromPostDetail: true,
-                    //   initialPageIndex: widget.pageIndex.validate(),
-                    // ).paddingSymmetric(horizontal: 8),
-
-                    PostComponent(
-                      post: widget.post,
-                      color: context.scaffoldBackgroundColor,
+                    Container(
+                        margin: EdgeInsets.symmetric(vertical: 8),
+                        decoration: BoxDecoration(
+                            border:
+                                Border.all(color: Color.fromARGB(24, 0, 0, 0)),
+                            borderRadius: radius(10),
+                            color: Color.fromARGB(33, 200, 198, 198)),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Row(
+                                children: [
+                                  widget.post.thumbnail != null
+                                      ? Image.network(
+                                          widget.post.thumbnail!,
+                                          height: 100,
+                                          width: 100,
+                                          fit: BoxFit.cover,
+                                          errorBuilder: (BuildContext context,
+                                              Object exception,
+                                              StackTrace? stackTrace) {
+                                            return Image.asset(
+                                              'assets/images/images.png',
+                                              height: 100,
+                                              width: 100,
+                                              fit: BoxFit.cover,
+                                            ).cornerRadiusWithClipRRect(15);
+                                          },
+                                        ).cornerRadiusWithClipRRect(15)
+                                      : Image.asset(
+                                          'assets/images/images.png',
+                                          fit: BoxFit.cover,
+                                          height: 100,
+                                          width: 100,
+                                        ).cornerRadiusWithClipRRect(15),
+                                  12.width,
+                                  Expanded(
+                                      child: Container(
+                                    height: 90,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          widget.post.title!,
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 3,
+                                          textAlign: TextAlign.start,
+                                          style: boldTextStyle(
+                                              fontFamily: 'Roboto', size: 18),
+                                        ),
+                                        Spacer(),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              widget.post.topic!.name!,
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 2,
+                                              textAlign: TextAlign.start,
+                                              style: boldTextStyle(
+                                                size: 15,
+                                                fontFamily: 'Roboto',
+                                                color: Color.fromARGB(
+                                                    118, 0, 0, 0),
+                                              ),
+                                            ),
+                                            Text(
+                                                convertToAgo(widget
+                                                    .post.publishedAt
+                                                    .toString()
+                                                    .validate()),
+                                                style: boldTextStyle(
+                                                    size: 15,
+                                                    fontFamily: 'Roboto',
+                                                    color: Color.fromARGB(
+                                                        118, 0, 0, 0))),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  )),
+                                ],
+                              ),
+                            )
+                          ],
+                        )),
+                    12.height,
+                    Html(
+                      data: widget.post.contributeSessions![0].content ?? "",
                     ),
                   ],
                 ),
