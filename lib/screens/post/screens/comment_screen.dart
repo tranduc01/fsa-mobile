@@ -15,6 +15,8 @@ import 'package:socialv/screens/post/screens/comment_reply_screen.dart';
 import 'package:socialv/utils/app_constants.dart';
 import 'package:socialv/utils/cached_network_image.dart';
 
+import '../../blockReport/components/show_report_dialog.dart';
+
 class CommentScreen extends StatefulWidget {
   final int postId;
 
@@ -28,7 +30,28 @@ class _CommentScreenState extends State<CommentScreen> {
   TextEditingController commentController = TextEditingController();
   FocusNode commentFocus = FocusNode();
 
-  List<CommentModel> commentList = [];
+  List<CommentModel> commentList = [
+    CommentModel(
+      content: "This is a comment",
+      userEmail: 'doantranduc01@gmail.com',
+      isUserVerified: true,
+      userImage:
+          'https://scontent.fsgn2-7.fna.fbcdn.net/v/t39.30808-6/353017930_6153557468098795_166607921767111563_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=5f2048&_nc_ohc=G2C7rGssBqwAX9-9bRW&_nc_ht=scontent.fsgn2-7.fna&oh=00_AfDYjlgPJ0GPSeKeHlM9Sbr8IJbW3og1_VzkJwtaN1u-0Q&oe=6562C7AC',
+      dateRecorded: DateFormat(DATE_FORMAT_1).format(DateTime.now()),
+      userName: 'Tran Duc',
+      medias: [],
+    ),
+    CommentModel(
+      content: "This is a comment",
+      userEmail: 'doantranduc01@gmail.com',
+      isUserVerified: true,
+      userImage:
+          'https://scontent.fsgn2-7.fna.fbcdn.net/v/t39.30808-6/353017930_6153557468098795_166607921767111563_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=5f2048&_nc_ohc=G2C7rGssBqwAX9-9bRW&_nc_ht=scontent.fsgn2-7.fna&oh=00_AfDYjlgPJ0GPSeKeHlM9Sbr8IJbW3og1_VzkJwtaN1u-0Q&oe=6562C7AC',
+      dateRecorded: DateFormat(DATE_FORMAT_1).format(DateTime.now()),
+      userName: 'Tran Duc',
+      medias: [],
+    )
+  ];
   late Future<List<CommentModel>> future;
 
   GiphyGif? gif;
@@ -321,6 +344,59 @@ class _CommentScreenState extends State<CommentScreen> {
                                                   mPage = 1;
                                                   future = getCommentsList();
                                                 },
+                                              );
+                                            },
+                                          );
+                                        },
+                                        onReport: () {
+                                          showModalBottomSheet(
+                                            context: context,
+                                            isScrollControlled: true,
+                                            isDismissible: true,
+                                            backgroundColor: Colors.transparent,
+                                            builder: (context) {
+                                              return FractionallySizedBox(
+                                                heightFactor: 0.80,
+                                                child: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Container(
+                                                      width: 45,
+                                                      height: 5,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(16),
+                                                          color: Colors.white),
+                                                    ),
+                                                    8.height,
+                                                    Container(
+                                                      padding: EdgeInsets.only(
+                                                          bottom: MediaQuery.of(
+                                                                  context)
+                                                              .viewInsets
+                                                              .bottom),
+                                                      decoration: BoxDecoration(
+                                                        color:
+                                                            context.cardColor,
+                                                        borderRadius:
+                                                            BorderRadius.only(
+                                                                topLeft: Radius
+                                                                    .circular(
+                                                                        16),
+                                                                topRight: Radius
+                                                                    .circular(
+                                                                        16)),
+                                                      ),
+                                                      child: ShowReportDialog(
+                                                        isPostReport: true,
+                                                        postId: 1,
+                                                        userId: 2,
+                                                      ),
+                                                    ).expand(),
+                                                  ],
+                                                ),
                                               );
                                             },
                                           );

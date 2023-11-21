@@ -24,6 +24,7 @@ class CommentComponent extends StatefulWidget {
   final VoidCallback? onDelete;
   final VoidCallback? onEdit;
   final VoidCallback? callback;
+  final VoidCallback? onReport;
 
   CommentComponent({
     required this.isParent,
@@ -33,6 +34,7 @@ class CommentComponent extends StatefulWidget {
     this.fromReplyScreen = false,
     this.callback,
     this.onEdit,
+    this.onReport,
     required this.comment,
   });
 
@@ -65,17 +67,37 @@ class _CommentComponentState extends State<CommentComponent> {
     ifNotTester(() async {
       if (addReaction) {
         if (commentReactionList.length < 3 && isReacted.validate()) {
-          if (commentReactionList.any((element) => element.user!.id.validate().toString() == appStore.loginUserId)) {
-            int index = commentReactionList.indexWhere((element) => element.user!.id.validate().toString() == appStore.loginUserId);
+          if (commentReactionList.any((element) =>
+              element.user!.id.validate().toString() == appStore.loginUserId)) {
+            int index = commentReactionList.indexWhere((element) =>
+                element.user!.id.validate().toString() == appStore.loginUserId);
             commentReactionList[index].id = reactionID.validate().toString();
-            commentReactionList[index].icon = reactions.firstWhere((element) => element.id == reactionID.validate().toString().validate()).imageUrl.validate();
-            commentReactionList[index].reaction = reactions.firstWhere((element) => element.id == reactionID.validate().toString().validate()).name.validate();
+            commentReactionList[index].icon = reactions
+                .firstWhere((element) =>
+                    element.id == reactionID.validate().toString().validate())
+                .imageUrl
+                .validate();
+            commentReactionList[index].reaction = reactions
+                .firstWhere((element) =>
+                    element.id == reactionID.validate().toString().validate())
+                .name
+                .validate();
           } else {
             commentReactionList.add(
               Reactions(
                 id: reactionID.validate().toString(),
-                icon: reactions.firstWhere((element) => element.id == reactionID.validate().toString().validate()).imageUrl.validate(),
-                reaction: reactions.firstWhere((element) => element.id == reactionID.validate().toString().validate()).name.validate(),
+                icon: reactions
+                    .firstWhere((element) =>
+                        element.id ==
+                        reactionID.validate().toString().validate())
+                    .imageUrl
+                    .validate(),
+                reaction: reactions
+                    .firstWhere((element) =>
+                        element.id ==
+                        reactionID.validate().toString().validate())
+                    .name
+                    .validate(),
                 user: ReactedUser(
                   id: appStore.loginUserId.validate().toInt(),
                   displayName: appStore.loginFullName,
@@ -87,18 +109,25 @@ class _CommentComponentState extends State<CommentComponent> {
           }
         }
 
-        await addPostReaction(id: widget.comment.id.toInt().validate(), reactionId: reactionID.validate(), isComments: true).then((value) {
+        await addPostReaction(
+                id: widget.comment.id.toInt().validate(),
+                reactionId: reactionID.validate(),
+                isComments: true)
+            .then((value) {
           //
         }).catchError((e) {
           log('Error: ${e.toString()}');
         });
         setState(() {});
       } else {
-        commentReactionList.removeWhere((element) => element.user!.id.validate().toString() == appStore.loginUserId);
+        commentReactionList.removeWhere((element) =>
+            element.user!.id.validate().toString() == appStore.loginUserId);
 
         commentReactionCount--;
         setState(() {});
-        await deletePostReaction(id: widget.comment.id.toInt().validate(), isComments: true).then((value) {
+        await deletePostReaction(
+                id: widget.comment.id.toInt().validate(), isComments: true)
+            .then((value) {
           //
         }).catchError((e) {
           log('Error: ${e.toString()}');
@@ -135,8 +164,17 @@ class _CommentComponentState extends State<CommentComponent> {
                 RichText(
                   text: TextSpan(
                     children: [
-                      TextSpan(text: '${widget.comment.userName.validate()} ', style: boldTextStyle(size: 14, fontFamily: fontFamily)),
-                      if (widget.comment.isUserVerified.validate()) WidgetSpan(child: Image.asset(ic_tick_filled, height: 18, width: 18, color: blueTickColor, fit: BoxFit.cover)),
+                      TextSpan(
+                          text: '${widget.comment.userName.validate()} ',
+                          style:
+                              boldTextStyle(size: 14, fontFamily: fontFamily)),
+                      if (widget.comment.isUserVerified.validate())
+                        WidgetSpan(
+                            child: Image.asset(ic_tick_filled,
+                                height: 18,
+                                width: 18,
+                                color: blueTickColor,
+                                fit: BoxFit.cover)),
                     ],
                   ),
                   maxLines: 1,
@@ -144,17 +182,22 @@ class _CommentComponentState extends State<CommentComponent> {
                   textAlign: TextAlign.start,
                 ),
                 4.height,
-                Text(convertToAgo(widget.comment.dateRecorded.validate()), style: secondaryTextStyle(size: 12)),
+                Text(convertToAgo(widget.comment.dateRecorded.validate()),
+                    style: secondaryTextStyle(size: 12)),
               ],
             ).expand(),
           ],
         ).onTap(() {
-          MemberProfileScreen(memberId: widget.comment.userId.validate().toInt()).launch(context);
+          MemberProfileScreen(
+                  memberId: widget.comment.userId.validate().toInt())
+              .launch(context);
         }, splashColor: Colors.transparent, highlightColor: Colors.transparent),
         8.height,
-        (widget.comment.hasMentions == 1 || widget.comment.content.validate().contains('href'))
+        (widget.comment.hasMentions == 1 ||
+                widget.comment.content.validate().contains('href'))
             ? HtmlWidget(postContent: widget.comment.content.validate())
-            : Text(parseHtmlString(widget.comment.content.validate()), style: primaryTextStyle()),
+            : Text(parseHtmlString(widget.comment.content.validate()),
+                style: primaryTextStyle()),
         8.height,
         if (widget.comment.medias.validate().isNotEmpty)
           SizedBox(
@@ -174,7 +217,9 @@ class _CommentComponentState extends State<CommentComponent> {
           children: [
             Row(
               children: [
-                if (appStore.isReactionEnable==1 && reactions.validate().isNotEmpty && widget.comment.id != null)
+                if (appStore.isReactionEnable == 1 &&
+                    reactions.validate().isNotEmpty &&
+                    widget.comment.id != null)
                   ReactionButton(
                     isComments: true,
                     isReacted: isReacted,
@@ -188,39 +233,49 @@ class _CommentComponentState extends State<CommentComponent> {
                       postReaction(addReaction: false);
                     },
                   ).paddingRight(6),
-                if (widget.comment.id != null)
-                  IconButton(
+                IconButton(
+                  onPressed: () {
+                    if (!appStore.isLoading) {
+                      isChange = true;
+                      widget.onReply?.call();
+                    }
+                  },
+                  icon: cachedImage(ic_reply,
+                      color: context.primaryColor, width: 16, height: 16),
+                ),
+                IconButton(
+                  onPressed: () {
+                    if (!appStore.isLoading) {
+                      isChange = true;
+                      widget.onDelete?.call();
+                    }
+                  },
+                  icon: cachedImage(ic_delete,
+                      color: Colors.red, width: 16, height: 16),
+                ),
+                IconButton(
+                  onPressed: () {
+                    if (!appStore.isLoading) {
+                      isChange = true;
+                      widget.onEdit?.call();
+                    }
+                  },
+                  icon: cachedImage(ic_edit,
+                      color: context.primaryColor, width: 16, height: 16),
+                ),
+                IconButton(
                     onPressed: () {
                       if (!appStore.isLoading) {
                         isChange = true;
-                        widget.onReply?.call();
+                        widget.onReport?.call();
                       }
                     },
-                    icon: cachedImage(ic_reply, color: context.primaryColor, width: 16, height: 16),
-                  ),
-                if (widget.comment.userId == appStore.loginUserId && widget.comment.id != null)
-                  IconButton(
-                    onPressed: () {
-                      if (!appStore.isLoading) {
-                        isChange = true;
-                        widget.onDelete?.call();
-                      }
-                    },
-                    icon: cachedImage(ic_delete, color: Colors.red, width: 16, height: 16),
-                  ),
-                if (widget.comment.userId == appStore.loginUserId && widget.comment.id != null)
-                  IconButton(
-                    onPressed: () {
-                      if (!appStore.isLoading) {
-                        isChange = true;
-                        widget.onEdit?.call();
-                      }
-                    },
-                    icon: cachedImage(ic_edit, color: context.primaryColor, width: 16, height: 16),
-                  ),
+                    icon: Icon(Icons.warning_amber_rounded,
+                        color: context.primaryColor, size: 16)),
               ],
             ),
-            if (!widget.isParent && widget.comment.children.validate().isNotEmpty)
+            if (!widget.isParent &&
+                widget.comment.children.validate().isNotEmpty)
               TextButton(
                 onPressed: () {
                   if (!appStore.isLoading) {
@@ -240,7 +295,9 @@ class _CommentComponentState extends State<CommentComponent> {
                     });
                   }
                 },
-                child: Text(' ${language.replies}(${widget.comment.children.validate().length.validate()})', style: secondaryTextStyle(size: 12)),
+                child: Text(
+                    ' ${language.replies}(${widget.comment.children.validate().length.validate()})',
+                    style: secondaryTextStyle(size: 12)),
               )
           ],
         ),

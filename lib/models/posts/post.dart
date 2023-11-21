@@ -1,3 +1,4 @@
+import 'package:socialv/models/posts/comment.dart';
 import 'package:socialv/models/posts/contribute_section.dart';
 import 'package:socialv/models/posts/orchid_tag.dart';
 
@@ -16,6 +17,7 @@ class Post {
   User? createdBy;
   List<OrchidTag>? tags;
   List<ContributeSession>? contributeSessions;
+  List<Comment>? comments;
 
   Post(
       {this.id,
@@ -28,7 +30,8 @@ class Post {
       this.createdBy,
       this.topic,
       this.tags,
-      this.contributeSessions});
+      this.contributeSessions,
+      this.comments});
 
   factory Post.fromJson(Map<String, dynamic> json) {
     return Post(
@@ -46,6 +49,9 @@ class Post {
             .toList(),
         contributeSessions: (json['contributeSections'] as List)
             .map((e) => ContributeSession.fromJson(e))
+            .toList(),
+        comments: (json['comments'] as List)
+            .map((e) => Comment.fromJson(e))
             .toList());
   }
 }

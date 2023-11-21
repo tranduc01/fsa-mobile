@@ -51,7 +51,7 @@ class PostController extends GetxController {
 
     ResponseModel responseModel =
         ResponseModel.fromJson(jsonDecode(response.bodyString ?? ''));
-
+    print(responseModel.data);
     if (response.statusCode == 200) {
       isLoading(false);
       isError(false);
