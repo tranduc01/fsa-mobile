@@ -28,30 +28,64 @@ class _AutionScreenState extends State<AutionScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
-                  height: 200.0,
-                  child: CarouselSlider(
-                    options: CarouselOptions(
-                      height: 200.0,
-                      autoPlay: true,
-                    ),
-                    items: [
-                      auctionWidget(heroTag1),
-                      auctionWidget(heroTag2),
-                      auctionWidget(heroTag3),
-                      auctionWidget(heroTag4),
-                      auctionWidget(heroTag5),
-                    ].map((i) {
-                      return Builder(
-                        builder: (BuildContext context) {
-                          return Container(
-                              width: MediaQuery.of(context).size.width,
-                              margin: EdgeInsets.symmetric(horizontal: 5.0),
-                              decoration: BoxDecoration(color: Colors.amber),
-                              child: i);
-                        },
-                      );
-                    }).toList(),
-                  )),
+                height: 200.0,
+                child: CarouselSlider(
+                  options: CarouselOptions(
+                    height: 200.0,
+                    autoPlay: true,
+                  ),
+                  items: [
+                    auctionWidget(heroTag1, true),
+                    auctionWidget(heroTag2, true),
+                    auctionWidget(heroTag3, true),
+                    auctionWidget(heroTag4, true),
+                    auctionWidget(heroTag5, true),
+                  ].map((i) {
+                    return Builder(
+                      builder: (BuildContext context) {
+                        return Container(
+                            width: MediaQuery.of(context).size.width,
+                            margin: EdgeInsets.symmetric(horizontal: 5.0),
+                            decoration: BoxDecoration(color: Colors.amber),
+                            child: i);
+                      },
+                    );
+                  }).toList(),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 20.0),
+                child: Text(
+                  "Có thể bạn sẽ thích",
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 10.0,
+              ),
+              Container(
+                height: 130.0,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: <Widget>[
+                    Padding(
+                        padding: EdgeInsets.only(right: 10.0),
+                        child: auctionWidget(heroTag1, false)),
+                    Padding(
+                        padding: EdgeInsets.only(right: 10.0),
+                        child: auctionWidget(heroTag2, false)),
+                    Padding(
+                        padding: EdgeInsets.only(right: 10.0),
+                        child: auctionWidget(heroTag3, false)),
+                    Padding(
+                        padding: EdgeInsets.only(right: 10.0),
+                        child: auctionWidget(heroTag4, false)),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
@@ -68,7 +102,7 @@ class _AutionScreenState extends State<AutionScreen> {
   String heroTag4 = "https://hoatuoithanhthao.com/media/ftp/hoa-lan-3.jpg";
   String heroTag5 =
       "https://dienhoaxanh.com/wp-content/uploads/2021/09/y-nghia-hoa-lan-do.jpg";
-  Widget auctionWidget(String heroTag) {
+  Widget auctionWidget(String heroTag, bool isDisplay) {
     return InkWell(
       onTap: () {
         Navigator.of(context).push(
@@ -82,8 +116,8 @@ class _AutionScreenState extends State<AutionScreen> {
       child: Hero(
         tag: heroTag,
         child: Container(
-          height: 250.0,
-          width: 400.0,
+          height: isDisplay ? 250.0 : 100.0,
+          width: isDisplay ? 400.0 : 150.0,
           child: Stack(
             children: <Widget>[
               Container(
@@ -94,45 +128,46 @@ class _AutionScreenState extends State<AutionScreen> {
                   ),
                 ),
               ),
-              Positioned(
-                bottom: 20,
-                left: 13,
-                child: Container(
-                  padding: EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(138, 255, 255, 255),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        "Hoa lan đột biến",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 17.0,
-                        ),
-                      ),
-                      Row(
-                        children: <Widget>[
-                          Icon(
-                            Icons.monetization_on_outlined,
+              if (isDisplay)
+                Positioned(
+                  bottom: 20,
+                  left: 13,
+                  child: Container(
+                    padding: EdgeInsets.all(8.0),
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(138, 255, 255, 255),
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          "Hoa lan đột biến",
+                          style: TextStyle(
                             color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 17.0,
                           ),
-                          Text(
-                            "Giá khởi điểm: 100.000đ",
-                            style: TextStyle(
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Icon(
+                              Icons.monetization_on_outlined,
                               color: Colors.black,
-                              fontWeight: FontWeight.bold,
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                            Text(
+                              "Giá khởi điểm: 100.000đ",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              )
             ],
           ),
         ),
