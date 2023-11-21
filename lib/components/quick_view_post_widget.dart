@@ -168,7 +168,10 @@ class _QuickViewPostWidgetState extends State<QuickViewPostWidget>
                         )),
                     12.height,
                     Html(
-                      data: widget.post.contributeSessions![0].content ?? "",
+                      data: widget.post.contributeSessions!
+                              .firstWhere((element) => element.index == 1)
+                              .content ??
+                          "",
                     ),
                   ],
                 ),
