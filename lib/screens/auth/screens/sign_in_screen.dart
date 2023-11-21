@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:socialv/components/loading_widget.dart';
 import 'package:socialv/main.dart';
 import 'package:socialv/screens/auth/components/login_in_component.dart';
 import 'package:socialv/screens/auth/components/sign_up_component.dart';
@@ -24,7 +22,6 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   void initState() {
     super.initState();
-    appStore.setLoading(false);
     setStatusBarColorBasedOnTheme();
   }
 
@@ -56,6 +53,17 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        shadowColor: Colors.transparent,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ),
       body: Stack(
         children: [
           GestureDetector(
@@ -75,7 +83,6 @@ class _SignInScreenState extends State<SignInScreen> {
                   hasScrollBody: false,
                   child: Column(
                     children: [
-                      SizedBox(height: context.statusBarHeight + 50),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -124,9 +131,6 @@ class _SignInScreenState extends State<SignInScreen> {
               ],
             ),
           ),
-          Observer(
-              builder: (_) =>
-                  LoadingWidget().visible(appStore.isLoading).center())
         ],
       ),
     );

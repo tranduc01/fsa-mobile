@@ -34,10 +34,6 @@ List<DrawerModel> getDrawerOptions() {
   List<DrawerModel> list = [];
 
   list.add(DrawerModel(
-      image: ic_story,
-      title: language.myStories,
-      attachedScreen: UserStoryScreen()));
-  list.add(DrawerModel(
       image: ic_two_user,
       title: language.friends,
       attachedScreen: ProfileFriendsScreen()));

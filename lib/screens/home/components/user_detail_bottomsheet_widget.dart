@@ -23,7 +23,7 @@ class UserDetailBottomSheetWidget extends StatefulWidget {
 class _UserDetailBottomSheetWidgetState
     extends State<UserDetailBottomSheetWidget> {
   List<DrawerModel> options = getDrawerOptions();
-  final UserController userController = Get.put(UserController());
+  final UserController userController = Get.find();
 
   int selectedIndex = -1;
   bool isLoading = false;
@@ -60,12 +60,21 @@ class _UserDetailBottomSheetWidgetState
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    userController.isLoggedIn.value
+                    Obx(() => userController.isLoggedIn.value
                         ? Row(
                             children: [
-                              Image.asset("assets/images/flower-pot.png",
-                                      height: 62, width: 62, fit: BoxFit.cover)
-                                  .cornerRadiusWithClipRRect(100),
+                              userController.user.value.avatarUrl.isEmptyOrNull
+                                  ? Image.asset("assets/images/profile.gif",
+                                          height: 62,
+                                          width: 62,
+                                          fit: BoxFit.cover)
+                                      .cornerRadiusWithClipRRect(100)
+                                  : Image.network(
+                                          userController.user.value.avatarUrl!,
+                                          height: 62,
+                                          width: 62,
+                                          fit: BoxFit.cover)
+                                      .cornerRadiusWithClipRRect(100),
                               //cachedImage(appStore.loginAvatarUrl, height: 62, width: 62, fit: BoxFit.cover).cornerRadiusWithClipRRect(100),
                               16.width,
                               Column(
@@ -73,10 +82,10 @@ class _UserDetailBottomSheetWidgetState
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Text('Tran Duc',
+                                  Text(userController.user.value.name!,
                                       style: boldTextStyle(size: 18)),
                                   8.height,
-                                  Text('doantranduc01@gmail.com',
+                                  Text(userController.user.value.userName!,
                                       style: secondaryTextStyle(),
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 1),
@@ -98,7 +107,7 @@ class _UserDetailBottomSheetWidgetState
                         : InkWell(
                             child: Row(
                               children: [
-                                Image.asset("assets/images/flower-pot.png",
+                                Image.asset("assets/images/profile.gif",
                                         height: 62,
                                         width: 62,
                                         fit: BoxFit.cover)
@@ -126,9 +135,9 @@ class _UserDetailBottomSheetWidgetState
                             ).paddingOnly(
                                 left: 16, right: 8, bottom: 16, top: 16),
                             onTap: () {
-                              SignInScreen().launch(context, isNewTask: true);
+                              SignInScreen().launch(context, isNewTask: false);
                             },
-                          ),
+                          )),
                     Column(
                       mainAxisSize: MainAxisSize.min,
                       children: options.map((e) {
@@ -188,7 +197,7 @@ class _UserDetailBottomSheetWidgetState
                               primaryColor: appColorPrimary,
                               title: language.logoutConfirmation,
                               onAccept: (s) {
-                                userController.Logout();
+                                userController.logout();
                               },
                             );
                           },

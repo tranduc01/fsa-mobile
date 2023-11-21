@@ -40,7 +40,11 @@ class _GroupScreenState extends State<GroupScreen> {
   Future<List<GroupModel>> getGroups() async {
     appStore.setLoading(true);
 
-    await getGroupList(userId: widget.userId, groupType: GroupRequestType.myGroup, page: mPage).then((value) {
+    await getGroupList(
+            userId: widget.userId,
+            groupType: GroupRequestType.myGroup,
+            page: mPage)
+        .then((value) {
       if (mPage == 1) groupList.clear();
       mIsLastPage = value.length != PER_PAGE;
       groupList.addAll(value);
@@ -128,7 +132,9 @@ class _GroupScreenState extends State<GroupScreen> {
                   if (snap.hasError) {
                     return NoDataWidget(
                       imageWidget: NoDataLottieWidget(),
-                      title: isError ? language.somethingWentWrong : language.noDataFound,
+                      title: isError
+                          ? language.somethingWentWrong
+                          : language.noDataFound,
                       onRetry: () {
                         onRefresh();
                       },
@@ -140,7 +146,9 @@ class _GroupScreenState extends State<GroupScreen> {
                     if (snap.data.validate().isEmpty) {
                       return NoDataWidget(
                         imageWidget: NoDataLottieWidget(),
-                        title: isError ? language.somethingWentWrong : language.noDataFound,
+                        title: isError
+                            ? language.somethingWentWrong
+                            : language.noDataFound,
                         onRetry: () {
                           onRefresh();
                         },
@@ -152,7 +160,8 @@ class _GroupScreenState extends State<GroupScreen> {
                           delay: 80.milliseconds,
                           verticalOffset: 300,
                         ),
-                        padding: EdgeInsets.only(left: 16, right: 16, bottom: 50),
+                        padding:
+                            EdgeInsets.only(left: 16, right: 16, bottom: 50),
                         itemCount: groupList.length,
                         itemBuilder: (context, index) {
                           GroupModel data = groupList[index];
@@ -164,18 +173,20 @@ class _GroupScreenState extends State<GroupScreen> {
                               future = getGroups();
                             },
                           ).paddingSymmetric(vertical: 8).onTap(() {
-                            GroupDetailScreen(
-                              groupId: data.id.validate(),
-                              groupAvatarImage: data.groupAvatarImage,
-                              groupCoverImage: data.groupCoverImage,
-                            ).launch(context).then((value) {
-                              if (value ?? false) {
-                                isChange = value;
-                                mPage = 1;
-                                future = getGroups();
-                              }
-                            });
-                          }, splashColor: Colors.transparent, highlightColor: Colors.transparent);
+                            // GroupDetailScreen(
+                            //   groupId: data.id.validate(),
+                            //   groupAvatarImage: data.groupAvatarImage,
+                            //   groupCoverImage: data.groupCoverImage,
+                            // ).launch(context).then((value) {
+                            //   if (value ?? false) {
+                            //     isChange = value;
+                            //     mPage = 1;
+                            //     future = getGroups();
+                            //   }
+                            // });
+                          },
+                              splashColor: Colors.transparent,
+                              highlightColor: Colors.transparent);
                         },
                         onNextPage: () {
                           if (!mIsLastPage) {
@@ -194,7 +205,8 @@ class _GroupScreenState extends State<GroupScreen> {
                   if (appStore.isLoading) {
                     return Positioned(
                       bottom: mPage != 1 ? 10 : null,
-                      child: LoadingWidget(isBlurBackground: mPage == 1 ? true : false),
+                      child: LoadingWidget(
+                          isBlurBackground: mPage == 1 ? true : false),
                     );
                   } else {
                     return Offstage();

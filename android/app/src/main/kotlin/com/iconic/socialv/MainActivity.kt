@@ -1,4 +1,4 @@
-package com.iconic.socialv
+package com.capstone.orchid
 
 import io.flutter.embedding.android.FlutterActivity
 

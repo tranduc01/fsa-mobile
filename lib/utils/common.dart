@@ -9,7 +9,6 @@ import 'package:html/parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:socialv/main.dart';
 import 'package:socialv/models/groups/group_response.dart';
@@ -236,37 +235,31 @@ Future<List<File>> getMultipleFiles({required MediaModel mediaType}) async {
   FilePickerResult? filePickerResult;
   List<File> imgList = [];
 
-  FileType type = FileType.custom;
-
-  if (isIOS) {
-    log('${mediaType.type}');
-    if (mediaType.type == MediaTypes.photo)
-      type = FileType.image;
-    else if (mediaType.type == MediaTypes.video)
-      type = FileType.video;
-    else
-      type = FileType.custom;
-  } else {
-    type = FileType.custom;
-  }
+  // if (isIOS) {
+  //   log('${mediaType.type}');
+  //   if (mediaType.type == MediaTypes.photo)
+  //     type = FileType.image;
+  //   else if (mediaType.type == MediaTypes.video)
+  //     type = FileType.video;
+  //   else
+  //     type = FileType.custom;
+  // } else {
+  //   type = FileType.custom;
+  // }
 
   filePickerResult = await FilePicker.platform.pickFiles(
-      allowMultiple: true,
-      type: type,
-      allowedExtensions:
-          type == FileType.custom ? mediaType.allowedType.validate() : null);
+      allowMultiple: true, allowedExtensions: mediaType.allowedType.validate());
 
   if (filePickerResult != null) {
     filePickerResult.files.forEach((element) {
       log('element: ${element.path.validate().split("/").last.split(".").last}');
-
-      if (element.path.validate().split("/").last.split(".").last.isNotEmpty &&
-          mediaType.allowedType!.any((e) =>
-              e == element.path.validate().split("/").last.split(".").last)) {
-        imgList.add(File(element.path!));
-      } else {
-        toast(language.cannotAddThisFile);
-      }
+      // if (element.path.validate().split("/").last.split(".").last.isNotEmpty &&
+      //     mediaType.allowedType!.any((e) =>
+      //         e == element.path.validate().split("/").last.split(".").last)) {
+      imgList.add(File(element.path!));
+      // } else {
+      //   toast(language.cannotAddThisFile);
+      // }
     });
   }
   return imgList;
@@ -481,32 +474,32 @@ String countYears(int difference) {
       (count > 1 ? ' ${language.years}' : ' ${language.year}');
 }
 
-void initializeOneSignal() async {
-  OneSignal.shared
-      .setAppId(
-          getStringAsync(ONESIGNAL_APP_ID, defaultValue: ONESIGNAL_APP_ID))
-      .then((value) async {
-    OneSignal.shared.setNotificationOpenedHandler((openedResult) {
-      //
-    });
+// void initializeOneSignal() async {
+//   OneSignal.shared
+//       .setAppId(
+//           getStringAsync(ONESIGNAL_APP_ID, defaultValue: ONESIGNAL_APP_ID))
+//       .then((value) async {
+//     OneSignal.shared.setNotificationOpenedHandler((openedResult) {
+//       //
+//     });
 
-    OneSignal.shared.setNotificationWillShowInForegroundHandler(
-        (OSNotificationReceivedEvent event) {
-      event.complete(event.notification);
-    });
+//     OneSignal.shared.setNotificationWillShowInForegroundHandler(
+//         (OSNotificationReceivedEvent event) {
+//       event.complete(event.notification);
+//     });
 
-    OneSignal.shared.consentGranted(true);
-    OneSignal.shared.promptUserForPushNotificationPermission();
+//     OneSignal.shared.consentGranted(true);
+//     OneSignal.shared.promptUserForPushNotificationPermission();
 
-    final status = await OneSignal.shared.getDeviceState();
+//     final status = await OneSignal.shared.getDeviceState();
 
-    log('--------------------------------');
-    log(status?.userId.validate());
-    if (status!.userId.validate().isNotEmpty)
-      setValue(
-          SharePreferencesKey.ONE_SIGNAL_PLAYER_ID, status.userId.validate());
-  });
-}
+//     log('--------------------------------');
+//     log(status?.userId.validate());
+//     if (status!.userId.validate().isNotEmpty)
+//       setValue(
+//           SharePreferencesKey.ONE_SIGNAL_PLAYER_ID, status.userId.validate());
+//   });
+// }
 
 String getPostContent(String? postContent) {
   String content = '';

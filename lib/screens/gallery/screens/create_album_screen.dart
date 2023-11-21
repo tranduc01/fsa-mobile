@@ -2,21 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import '../../../main.dart';
 import '../../../models/posts/media_model.dart';
-import '../components/album_upload_component.dart';
 import '../components/create_album_component.dart';
 
 class CreateAlbumScreen extends StatefulWidget {
   final List<MediaModel> mediaTypeList;
   final int? groupID;
 
-  const CreateAlbumScreen({Key? key, required this.mediaTypeList, this.groupID}) : super(key: key);
+  const CreateAlbumScreen({Key? key, required this.mediaTypeList, this.groupID})
+      : super(key: key);
 
   @override
   State<CreateAlbumScreen> createState() => _CreateAlbumScreenState();
 }
 
 MediaModel? selectedAlbumMedia;
-bool isAlbumCreated=false;
+bool isAlbumCreated = false;
 
 class _CreateAlbumScreenState extends State<CreateAlbumScreen> {
   PageController _pageController = PageController(initialPage: 0);
@@ -35,11 +35,13 @@ class _CreateAlbumScreenState extends State<CreateAlbumScreen> {
           mediaTypeList: widget.mediaTypeList,
           groupId: widget.groupID,
           onNextPage: (int nextPageIndex) {
-            _pageController.animateToPage(nextPageIndex, duration: const Duration(milliseconds: 250), curve: Curves.linear);
+            _pageController.animateToPage(nextPageIndex,
+                duration: const Duration(milliseconds: 250),
+                curve: Curves.linear);
             setState(() {});
           },
         ),
-        AlbumUploadScreen(),
+        //AlbumUploadScreen(),
       ],
     );
   }
@@ -66,15 +68,15 @@ class _CreateAlbumScreenState extends State<CreateAlbumScreen> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: context.iconColor),
           onPressed: () {
-
-            finish(context,isAlbumCreated);
+            finish(context, isAlbumCreated);
           },
         ),
       ),
       body: Container(
         decoration: BoxDecoration(
           color: context.cardColor,
-          borderRadius: radiusOnly(topRight: defaultRadius, topLeft: defaultRadius),
+          borderRadius:
+              radiusOnly(topRight: defaultRadius, topLeft: defaultRadius),
         ),
         child: PageView(
           physics: NeverScrollableScrollPhysics(),

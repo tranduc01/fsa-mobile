@@ -5,6 +5,8 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/controllers/user_controller.dart';
 import 'package:socialv/main.dart';
 import 'package:socialv/screens/auth/screens/forget_password_screen.dart';
+import 'package:socialv/screens/common/fail_dialog.dart';
+import 'package:socialv/screens/common/loading_dialog.dart';
 import 'package:socialv/screens/dashboard_screen.dart';
 
 import '../../../utils/app_constants.dart';
@@ -96,7 +98,7 @@ class _LoginInComponentState extends State<LoginInComponent> {
                           loginFormKey.currentState!.save();
                           hideKeyboard(context);
 
-                          userController.Login(nameCont.text.trim().validate(),
+                          userController.login(nameCont.text.trim().validate(),
                               passwordCont.text.trim().validate());
                         } else {
                           appStore.setLoading(false);
@@ -146,7 +148,7 @@ class _LoginInComponentState extends State<LoginInComponent> {
                     appButton(
                       context: context,
                       text: language.login.capitalizeFirstLetter(),
-                      onTap: () {
+                      onTap: () async {
                         if (loginFormKey.currentState!.validate()) {
                           loginFormKey.currentState!.save();
                           hideKeyboard(context);
@@ -155,60 +157,28 @@ class _LoginInComponentState extends State<LoginInComponent> {
                               context: context,
                               barrierDismissible: false,
                               builder: (context) {
-                                return Dialog(
-                                  shadowColor: Colors.transparent,
-                                  backgroundColor: Colors.transparent,
-                                  child: Image.asset(
-                                    'assets/icons/loading.gif',
-                                    height: 180,
-                                    width: 180,
-                                  ),
-                                );
+                                return LoadingDialog();
                               });
 
-                          userController.Login(nameCont.text.trim().validate(),
+                          await userController.login(
+                              nameCont.text.trim().validate(),
                               passwordCont.text.trim().validate());
 
-                          Future.delayed(Duration(seconds: 3), () {
-                            if (userController.isLoggedIn.value) {
-                              toast('Login Successfully');
-                              push(DashboardScreen(),
-                                  isNewTask: true,
-                                  pageRouteAnimation: PageRouteAnimation.Slide);
-                            } else {
-                              Navigator.pop(context);
-                              showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: Text('Login Failed',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            color: Colors.red,
-                                            fontWeight: FontWeight.bold)),
-                                    content: Text(
-                                      'Please check your Email and Password!',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    actions: [
-                                      Center(
-                                        child: ElevatedButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: Text('OK'),
-                                        ),
-                                      )
-                                    ],
-                                  );
-                                },
-                              );
-                            }
-                          });
+                          if (userController.isLoggedIn.value) {
+                            toast('Login Successfully');
+                            push(DashboardScreen(),
+                                isNewTask: true,
+                                pageRouteAnimation: PageRouteAnimation.Slide);
+                          } else {
+                            Navigator.pop(context);
+                            showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (context) {
+                                return FailDialog(text: 'Login Failed');
+                              },
+                            );
+                          }
                         } else {
                           appStore.setLoading(false);
                         }

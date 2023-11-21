@@ -1,10 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/app_theme.dart';
+import 'package:socialv/controllers/user_controller.dart';
 import 'package:socialv/language/app_localizations.dart';
 import 'package:socialv/language/languages.dart';
 import 'package:socialv/models/common_models.dart';
@@ -26,20 +27,15 @@ void main() async {
 
   await initialize(aLocaleLanguageList: languageList());
 
-  Firebase.initializeApp().then((value) {
-    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
-    //MobileAds.instance.initialize();
-  }).catchError((e) {
+  Firebase.initializeApp().then((value) {}).catchError((e) {
     log('Error: ${e.toString()}');
   });
 
   defaultRadius = 32.0;
   defaultAppButtonRadius = 12;
 
-  initializeOneSignal();
-
   exitFullScreen();
-
+  Get.put(UserController());
   runApp(const MyApp());
 }
 

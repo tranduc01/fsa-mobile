@@ -1,35 +1,28 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:socialv/components/like_button_widget.dart';
-import 'package:socialv/models/posts/post_model.dart';
-import 'package:socialv/screens/post/components/post_content_component.dart';
-import 'package:socialv/screens/post/components/post_component.dart';
-import 'package:socialv/screens/post/components/post_media_component.dart';
 import 'package:socialv/utils/app_constants.dart';
-import 'package:socialv/utils/cached_network_image.dart';
 
 import '../main.dart';
-import '../screens/dashboard_screen.dart';
-import '../screens/post/components/reaction_button_widget.dart';
+import '../models/posts/post.dart';
 
 class QuickViewPostWidget extends StatefulWidget {
-  final PostModel postModel;
-  final bool isPostLiked;
-  final Function()? onPostLike;
-  final Function(int)? onPostReacted;
-  final Function()? onReactionRemoved;
+  final Post post;
   final int? pageIndex;
-  final bool isPostReacted;
 
-  QuickViewPostWidget({this.pageIndex, required this.postModel, this.isPostLiked = false, this.onPostLike, this.onPostReacted, required this.isPostReacted, this.onReactionRemoved});
+  QuickViewPostWidget({
+    this.pageIndex,
+    required this.post,
+  });
 
   @override
   State<QuickViewPostWidget> createState() => _QuickViewPostWidgetState();
 }
 
-class _QuickViewPostWidgetState extends State<QuickViewPostWidget> with SingleTickerProviderStateMixin {
+class _QuickViewPostWidgetState extends State<QuickViewPostWidget>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _animation;
   String postContent = '';
@@ -38,8 +31,12 @@ class _QuickViewPostWidgetState extends State<QuickViewPostWidget> with SingleTi
   void initState() {
     super.initState();
 
-    _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 200), reverseDuration: const Duration(milliseconds: 700));
-    _animation = CurvedAnimation(parent: _animationController, curve: Curves.easeOutQuad);
+    _animationController = AnimationController(
+        vsync: this,
+        duration: const Duration(milliseconds: 200),
+        reverseDuration: const Duration(milliseconds: 700));
+    _animation = CurvedAnimation(
+        parent: _animationController, curve: Curves.easeOutQuad);
     _animationController.forward();
   }
 
@@ -58,93 +55,124 @@ class _QuickViewPostWidgetState extends State<QuickViewPostWidget> with SingleTi
   Widget build(BuildContext context) {
     return SafeArea(
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3, tileMode: TileMode.repeated),
+        filter:
+            ImageFilter.blur(sigmaX: 3, sigmaY: 3, tileMode: TileMode.repeated),
         child: Container(
           child: ScaleTransition(
             scale: _animation,
             child: Dialog(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
-                side: BorderSide(color: appStore.isDarkMode ? Colors.white12 : Colors.transparent),
+                side: BorderSide(
+                    color: appStore.isDarkMode
+                        ? Colors.white12
+                        : Colors.transparent),
               ),
               backgroundColor: context.cardColor,
-              insetPadding: EdgeInsets.only(left: 12, top: 24, right: 12, bottom: 24),
+              insetPadding:
+                  EdgeInsets.only(left: 12, top: 24, right: 12, bottom: 24),
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        cachedImage(
-                          widget.postModel.userImage.validate(),
-                          height: 40,
-                          width: 40,
-                          fit: BoxFit.cover,
-                        ).cornerRadiusWithClipRRect(100),
-                        12.width,
-                        Column(
+                    Container(
+                        margin: EdgeInsets.symmetric(vertical: 8),
+                        decoration: BoxDecoration(
+                            border:
+                                Border.all(color: Color.fromARGB(24, 0, 0, 0)),
+                            borderRadius: radius(10),
+                            color: Color.fromARGB(33, 200, 198, 198)),
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text(widget.postModel.userName.validate(), style: boldTextStyle()),
-                            4.height,
-                            Text(convertToAgo(widget.postModel.dateRecorded.validate()), style: secondaryTextStyle()),
-                          ],
-                        ),
-                      ],
-                    ).paddingOnly(left: 8, top: 8, right: 8),
-                    Divider(),
-                    PostContentComponent(blogId: widget.postModel.blogId,postType: widget.postModel.type, hasMentions: widget.postModel.hasMentions == 1, postContent: widget.postModel.content),
-                    PostMediaComponent(
-                      mediaTitle: widget.postModel.userName.validate(),
-                      mediaType: widget.postModel.mediaType.validate(),
-                      mediaList: widget.postModel.medias.validate(),
-                      isFromPostDetail: true,
-                      initialPageIndex: widget.pageIndex.validate(),
-                    ).paddingSymmetric(horizontal: 8),
-                    if (widget.postModel.childPost != null)
-                      PostComponent(
-                        post: widget.postModel.childPost!,
-                        color: context.scaffoldBackgroundColor,
-                        childPost: true,
-                      ),
-                    Row(
-                      children: [
-                        if (appStore.isReactionEnable==1)
-                          if (reactions.validate().isNotEmpty)
-                            ReactionButton(
-                              isComments: false,
-                              currentUserReaction: widget.postModel.curUserReaction,
-                              onReacted: (id) {
-                                widget.onPostReacted?.call(id);
-                              },
-                              onReactionRemoved: () {
-                                widget.onReactionRemoved?.call();
-                              },
+                            Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Row(
+                                children: [
+                                  widget.post.thumbnail != null
+                                      ? Image.network(
+                                          widget.post.thumbnail!,
+                                          height: 100,
+                                          width: 100,
+                                          fit: BoxFit.cover,
+                                          errorBuilder: (BuildContext context,
+                                              Object exception,
+                                              StackTrace? stackTrace) {
+                                            return Image.asset(
+                                              'assets/images/images.png',
+                                              height: 100,
+                                              width: 100,
+                                              fit: BoxFit.cover,
+                                            ).cornerRadiusWithClipRRect(15);
+                                          },
+                                        ).cornerRadiusWithClipRRect(15)
+                                      : Image.asset(
+                                          'assets/images/images.png',
+                                          fit: BoxFit.cover,
+                                          height: 100,
+                                          width: 100,
+                                        ).cornerRadiusWithClipRRect(15),
+                                  12.width,
+                                  Expanded(
+                                      child: Container(
+                                    height: 90,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          widget.post.title!,
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 3,
+                                          textAlign: TextAlign.start,
+                                          style: boldTextStyle(
+                                              fontFamily: 'Roboto', size: 18),
+                                        ),
+                                        Spacer(),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              widget.post.topic!.name!,
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 2,
+                                              textAlign: TextAlign.start,
+                                              style: boldTextStyle(
+                                                size: 15,
+                                                fontFamily: 'Roboto',
+                                                color: Color.fromARGB(
+                                                    118, 0, 0, 0),
+                                              ),
+                                            ),
+                                            Text(
+                                                convertToAgo(widget
+                                                    .post.publishedAt
+                                                    .toString()
+                                                    .validate()),
+                                                style: boldTextStyle(
+                                                    size: 15,
+                                                    fontFamily: 'Roboto',
+                                                    color: Color.fromARGB(
+                                                        118, 0, 0, 0))),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  )),
+                                ],
+                              ),
                             )
-                          else
-                            Offstage()
-                        else
-                          LikeButtonWidget(
-                            onPostLike: () {
-                              widget.onPostLike?.call();
-                            },
-                            isPostLiked: widget.isPostLiked,
-                          ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: Image.asset(
-                            ic_chat,
-                            height: 22,
-                            width: 22,
-                            fit: BoxFit.cover,
-                            color: context.iconColor,
-                          ),
-                        ),
-                      ],
-                    ).paddingSymmetric(horizontal: 16),
+                          ],
+                        )),
+                    12.height,
+                    Html(
+                      data: widget.post.contributeSessions!
+                              .firstWhere((element) => element.index == 1)
+                              .content ??
+                          "",
+                    ),
                   ],
                 ),
               ),

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/controllers/user_controller.dart';
 import 'package:socialv/main.dart';
+import 'package:socialv/screens/common/fail_dialog.dart';
+import 'package:socialv/screens/common/loading_dialog.dart';
 
 import '../../../utils/app_constants.dart';
 
@@ -130,20 +132,16 @@ class _SignUpComponentState extends State<SignUpComponent> {
                         labelStyle: secondaryTextStyle(weight: FontWeight.w600),
                       ),
                       isPassword: true,
-                      onFieldSubmitted: (x) {
-                        if (signupFormKey.currentState!.validate()) {
-                          signupFormKey.currentState!.save();
-                          hideKeyboard(context);
-
-                          if (agreeTNC) {
-                            userController.Register(
-                                fullNameCont.text.trim().validate(),
-                                emailCont.text.trim().validate(),
-                                passwordCont.text.trim().validate(),
-                                confirmPasswordCont.text.trim().validate());
-                          } else {
-                            toast(language.pleaseAgreeOurTerms);
-                          }
+                      validator: (value) {
+                        RegExp passwordPattern = RegExp(
+                            r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{6,}$');
+                        if (passwordCont.text.isEmptyOrNull) {
+                          return 'This field is required';
+                        } else if (!passwordPattern
+                            .hasMatch(passwordCont.text.trim())) {
+                          return 'Password must contain at least 6 characters, 1 uppercase letter, 1 lowercase letter, 1 number and 1 special character';
+                        } else {
+                          return null;
                         }
                       },
                     ).paddingSymmetric(horizontal: 16),
@@ -165,20 +163,14 @@ class _SignUpComponentState extends State<SignUpComponent> {
                         labelStyle: secondaryTextStyle(weight: FontWeight.w600),
                       ),
                       isPassword: true,
-                      onFieldSubmitted: (x) {
-                        if (signupFormKey.currentState!.validate()) {
-                          signupFormKey.currentState!.save();
-                          hideKeyboard(context);
-
-                          if (agreeTNC) {
-                            userController.Register(
-                                fullNameCont.text.trim().validate(),
-                                emailCont.text.trim().validate(),
-                                passwordCont.text.trim().validate(),
-                                confirmPasswordCont.text.trim().validate());
-                          } else {
-                            toast(language.pleaseAgreeOurTerms);
-                          }
+                      validator: (value) {
+                        if (passwordCont.text.isEmptyOrNull) {
+                          return 'This field is required';
+                        } else if (passwordCont.text.trim() !=
+                            confirmPasswordCont.text.trim()) {
+                          return 'Password does not match';
+                        } else {
+                          return null;
                         }
                       },
                     ).paddingSymmetric(horizontal: 16),
@@ -235,76 +227,38 @@ class _SignUpComponentState extends State<SignUpComponent> {
                     appButton(
                       context: context,
                       text: language.signUp.capitalizeFirstLetter(),
-                      onTap: () {
+                      onTap: () async {
                         if (signupFormKey.currentState!.validate()) {
                           signupFormKey.currentState!.save();
                           hideKeyboard(context);
 
                           if (agreeTNC) {
-                            if (passwordCont.text.trim() ==
-                                confirmPasswordCont.text.trim()) {
-                              showDialog(
-                                  context: context,
-                                  barrierDismissible: false,
-                                  builder: (context) {
-                                    return Dialog(
-                                      shadowColor: Colors.transparent,
-                                      backgroundColor: Colors.transparent,
-                                      child: Image.asset(
-                                        'assets/icons/loading.gif',
-                                        height: 180,
-                                        width: 180,
-                                      ),
-                                    );
-                                  });
+                            showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (context) {
+                                  return LoadingDialog();
+                                });
 
-                              userController.Register(
-                                  fullNameCont.text.trim().validate(),
-                                  emailCont.text.trim().validate(),
-                                  passwordCont.text.trim().validate(),
-                                  confirmPasswordCont.text.trim().validate());
-                              Future.delayed(Duration(seconds: 3), () {
-                                if (userController.isRegistered.value) {
-                                  Navigator.pop(context);
-                                  widget.callback?.call();
-                                  toast('Registered Successfully');
-                                } else {
-                                  Navigator.pop(context);
-                                  showDialog(
-                                    context: context,
-                                    barrierDismissible: false,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        title: Text('Register Failed',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                color: Colors.red,
-                                                fontWeight: FontWeight.bold)),
-                                        content: Text(
-                                          'PLease try again!',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                        actions: [
-                                          Center(
-                                            child: ElevatedButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              },
-                                              child: Text('OK'),
-                                            ),
-                                          )
-                                        ],
-                                      );
-                                    },
-                                  );
-                                }
-                              });
+                            await userController.register(
+                                fullNameCont.text.trim().validate(),
+                                emailCont.text.trim().validate(),
+                                passwordCont.text.trim(),
+                                confirmPasswordCont.text.trim().validate());
+
+                            if (userController.isRegistered.value) {
+                              Navigator.pop(context);
+                              widget.callback?.call();
+                              toast('Registered Successfully');
                             } else {
-                              toast(
-                                  'Password and Confirm Password does not match');
+                              Navigator.pop(context);
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (context) {
+                                  return FailDialog(text: 'Register Failed');
+                                },
+                              );
                             }
                           } else {
                             toast(language.pleaseAgreeOurTerms);

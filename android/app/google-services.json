@@ -1,36 +1,26 @@
 {
   "project_info": {
-    "project_number": "203176417957",
-    "project_id": "socialv-flutter",
-    "storage_bucket": "socialv-flutter.appspot.com"
+    "project_number": "488242939291",
+    "project_id": "orchid-sharing",
+    "storage_bucket": "orchid-sharing.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:203176417957:android:6d2dde980112558149cb4c",
+        "mobilesdk_app_id": "1:488242939291:android:01a79546681e744c440d3e",
         "android_client_info": {
-          "package_name": "com.iconic.socialv"
+          "package_name": "com.capstone.orchid"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "203176417957-85qj4djghloja46aci7smcjtd701ea4m.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDgYJs0fijqzbOGCzZ_HTM8-t7NTrjOSmw"
+          "current_key": "AIzaSyDRSnx2zyOKvYQRINmYzITN9p5jIjRPUlk"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "203176417957-85qj4djghloja46aci7smcjtd701ea4m.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }
