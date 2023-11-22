@@ -2,11 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:socialv/controllers/post_controller.dart';
 import 'package:socialv/main.dart';
-import 'package:socialv/models/dashboard_api_response.dart';
-import 'package:socialv/models/posts/post_in_list_model.dart';
-import 'package:socialv/models/reactions/reactions_model.dart';
-import 'package:socialv/network/rest_apis.dart';
 import 'package:socialv/screens/fragments/forums_fragment.dart';
 import 'package:socialv/screens/fragments/home_fragment.dart';
 import 'package:socialv/screens/fragments/notification_fragment.dart';
@@ -27,28 +24,13 @@ class DashboardScreen extends StatefulWidget {
   State<DashboardScreen> createState() => _DashboardScreenState();
 }
 
-List<VisibilityOptions>? visibilities;
-List<VisibilityOptions>? accountPrivacyVisibility;
-List<ReportType>? reportTypes;
-List<PostInListModel>? postInListDashboard;
-List<ReactionsModel> reactions = [
-  ReactionsModel(
-      id: "1",
-      imageUrl:
-          "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.freepik.com%2Ffree-photos-vectors%2Fcute-anima&psig=AOvVaw2RMtRmFfL-lDZ7FDxcK4X_&ust=1692713440659000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCKCbi4337YADFQAAAAAdAAAAABAE",
-      name: "Tran Duc",
-      defaultImageUrl:
-          "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.freepik.com%2Ffree-photos-vectors%2Fcute-anima&psig=AOvVaw2RMtRmFfL-lDZ7FDxcK4X_&ust=1692713440659000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCKCbi4337YADFQAAAAAdAAAAABAE")
-];
-
 class _DashboardScreenState extends State<DashboardScreen>
     with TickerProviderStateMixin {
   bool hasUpdate = false;
   late AnimationController _animationController;
-
   ScrollController _controller = ScrollController();
-
   late TabController tabController;
+  late PostController postController = Get.put(PostController());
 
   bool onAnimationEnd = true;
 
@@ -77,9 +59,6 @@ class _DashboardScreenState extends State<DashboardScreen>
       ProfileFragment(controller: _controller),
     ]);
 
-    await getReactionsList();
-    defaultReactionsList();
-
     _controller.addListener(() {
       //
     });
@@ -87,105 +66,7 @@ class _DashboardScreenState extends State<DashboardScreen>
     selectedIndex = 0;
     setState(() {});
 
-    //getDetails();
-
-    // Map req = {
-    //   "player_id": getStringAsync(SharePreferencesKey.ONE_SIGNAL_PLAYER_ID),
-    //   "add": 1
-    // };
-
-    // await setPlayerId(req).then((value) {
-    //   //
-    // }).catchError((e) {
-    //   log("Player id error : ${e.toString()}");
-    // });
-
-    // getNonce().then((value) {
-    //   appStore.setNonce(value.storeApiNonce.validate());
-    // }).catchError(onError);
-
     setStatusBarColorBasedOnTheme();
-
-    //activeUser();
-    //getNotificationCount();
-    //getMediaList();
-  }
-
-  Future<void> getMediaList() async {
-    await getMediaTypes().then((value) {
-      if (value.any((element) => element.type == MediaTypes.gif)) {
-        appStore.setShowGif(true);
-      }
-    }).catchError((e) {
-      //
-    });
-    setState(() {});
-  }
-
-  Future<void> getDetails() async {
-    await getDashboardDetails().then((value) {
-      appStore.setNotificationCount(value.notificationCount.validate());
-      appStore.setVerificationStatus(value.verificationStatus.validate());
-      visibilities = value.visibilities.validate();
-      accountPrivacyVisibility = value.accountPrivacyVisibility.validate();
-      reportTypes = value.reportTypes.validate();
-      log('=======================');
-      log('Report Types ========== ${reportTypes!.length}');
-      appStore.setShowStoryHighlight(value.isHighlightStoryEnable.validate());
-      appStore.suggestedUserList = value.suggestedUser.validate();
-      appStore.suggestedGroupsList = value.suggestedGroups.validate();
-      appStore.setShowWooCommerce(value.isWoocommerceEnable.validate());
-      appStore.setWooCurrency(parseHtmlString(value.wooCurrency.validate()));
-      appStore.setGiphyKey(parseHtmlString(value.giphyKey.validate()));
-      appStore.setReactionsEnable(value.isReactionEnable.validate());
-      appStore.setLMSEnable(value.isLMSEnable.validate());
-      appStore.setCourseEnable(value.isCourseEnable.validate());
-      appStore.setDisplayPostCount(value.displayPostCount.validate());
-      appStore.setDisplayPostCommentsCount(
-          value.displayPostCommentsCount.validate());
-      appStore
-          .setDisplayFriendRequestBtn(value.displayFriendRequestBtn.validate());
-      appStore.setShopEnable(value.isShopEnable.validate());
-    }).catchError(onError);
-  }
-
-  Future<void> getReactionsList() async {
-    // await getReactions().then((value) {
-    //   reactions = value;
-    //   log('Reactions: ${reactions.length}');
-    // }).catchError((e) {
-    //   log('Error: ${e.toString()}');
-    // });
-
-    reactions = reactions;
-
-    setState(() {});
-  }
-
-  Future<void> defaultReactionsList() async {
-    // await getDefaultReaction().then((value) {
-    //   if (value.isNotEmpty) {
-    //     appStore.setDefaultReaction(value.first);
-    //   } else {
-    //     if (reactions.isNotEmpty) appStore.setDefaultReaction(reactions.first);
-    //   }
-    // }).catchError((e) {
-    //   log('Error: ${e.toString()}');
-    // });
-
-    reactions = reactions;
-    setState(() {});
-  }
-
-  Future<void> postIn() async {
-    // await getPostInList().then((value) {
-    //   if (value.isNotEmpty) {
-    //     postInListDashboard = value;
-    //   }
-    // }).catchError(onError);
-
-    //postInListDashboard = PostInListModel().listPostInList;
-    setState(() {});
   }
 
   @override
@@ -215,16 +96,7 @@ class _DashboardScreenState extends State<DashboardScreen>
       },
       child: RefreshIndicator(
         onRefresh: () {
-          if (tabController.index == 0) {
-            LiveStream().emit(GetUserStories);
-            LiveStream().emit(OnAddPost);
-          } else if (tabController.index == 2) {
-            LiveStream().emit(RefreshForumsFragment);
-          } else if (tabController.index == 3) {
-            LiveStream().emit(RefreshNotifications);
-          } else if (tabController.index == 4) {
-            LiveStream().emit(OnAddPostProfile);
-          }
+          postController.fetchPosts();
 
           return Future.value(true);
         },
@@ -358,7 +230,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                           icon: userController.isLoggedIn.value
                               ? userController
                                       .user.value.avatarUrl.isEmptyOrNull
-                                  ? Image.asset("assets/images/profile.gif",
+                                  ? Image.asset("assets/images/profile.png",
                                           height: 60,
                                           width: 60,
                                           fit: BoxFit.cover)
@@ -369,7 +241,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                                           width: 60,
                                           fit: BoxFit.cover)
                                       .cornerRadiusWithClipRRect(15)
-                              : Image.asset("assets/images/profile.gif",
+                              : Image.asset("assets/images/profile.png",
                                       height: 60, width: 60, fit: BoxFit.cover)
                                   .cornerRadiusWithClipRRect(15)),
                     )

@@ -13,12 +13,15 @@ import 'package:socialv/screens/post/components/update_comment_component.dart';
 import 'package:socialv/utils/app_constants.dart';
 import 'package:socialv/utils/cached_network_image.dart';
 
+import '../../../models/posts/comment.dart';
+
 class CommentReplyScreen extends StatefulWidget {
-  final CommentModel comment;
+  final Comment comment;
   final int postId;
   final VoidCallback? callback;
 
-  CommentReplyScreen({required this.comment, required this.postId, this.callback});
+  CommentReplyScreen(
+      {required this.comment, required this.postId, this.callback});
 
   @override
   State<CommentReplyScreen> createState() => _CommentReplyScreenState();
@@ -29,7 +32,7 @@ class _CommentReplyScreenState extends State<CommentReplyScreen> {
   FocusNode commentFocus = FocusNode();
 
   int commentParentId = -1;
-  List<CommentModel> commentList = [];
+  List<Comment> commentList = [];
 
   bool isChange = false;
   GiphyGif? gif;
@@ -37,7 +40,7 @@ class _CommentReplyScreenState extends State<CommentReplyScreen> {
   @override
   void initState() {
     commentParentId = widget.comment.id.validate().toInt();
-    commentList = widget.comment.children.validate();
+    //commentList = widget.comment.children.validate();
     super.initState();
   }
 
@@ -49,8 +52,10 @@ class _CommentReplyScreenState extends State<CommentReplyScreen> {
   void deleteComment({required int commentId, bool isParent = false}) async {
     ifNotTester(() async {
       appStore.setLoading(true);
-      await deletePostComment(postId: widget.postId, commentId: commentId).then((value) {
-        commentList.removeWhere((element) => element.id == commentId.toString());
+      await deletePostComment(postId: widget.postId, commentId: commentId)
+          .then((value) {
+        commentList
+            .removeWhere((element) => element.id == commentId.toString());
         isChange = true;
         widget.callback?.call();
         setState(() {});
@@ -85,9 +90,11 @@ class _CommentReplyScreenState extends State<CommentReplyScreen> {
           userName: appStore.loginFullName,
           userId: appStore.loginUserId,
           id: value.commentId.validate().toString(),
-          medias: gif != null ? [PostMediaModel(url: gif!.images!.original!.url.validate())] : [],
+          medias: gif != null
+              ? [PostMediaModel(url: gif!.images!.original!.url.validate())]
+              : [],
         );
-        commentList.add(comment);
+        //commentList.add(comment);
         isChange = true;
         gif = null;
 
@@ -130,7 +137,6 @@ class _CommentReplyScreenState extends State<CommentReplyScreen> {
                 child: Column(
                   children: [
                     CommentComponent(
-                      fromReplyScreen: true,
                       isParent: true,
                       comment: widget.comment,
                       onDelete: () {
@@ -138,13 +144,11 @@ class _CommentReplyScreenState extends State<CommentReplyScreen> {
                           context,
                           dialogType: DialogType.DELETE,
                           onAccept: (c) {
-                            deleteComment(commentId: widget.comment.id.validate().toInt(), isParent: true);
+                            deleteComment(
+                                commentId: widget.comment.id.validate().toInt(),
+                                isParent: true);
                           },
                         );
-                      },
-                      onReply: () async {
-                        FocusScope.of(context).requestFocus(commentFocus);
-                        commentParentId = widget.comment.id.validate().toInt();
                       },
                       onEdit: () {
                         showInDialog(
@@ -153,10 +157,13 @@ class _CommentReplyScreenState extends State<CommentReplyScreen> {
                           builder: (p0) {
                             return UpdateCommentComponent(
                               id: widget.comment.id.validate().toInt(),
-                              activityId: widget.comment.itemId.validate().toInt(),
+                              // activityId:
+                              //     widget.comment.itemId.validate().toInt(),
                               comment: widget.comment.content,
-                              parentId: widget.comment.secondaryItemId.validate().toInt(),
-                              medias: widget.comment.medias.validate(),
+                              // parentId: widget.comment.secondaryItemId
+                              //     .validate()
+                              //     .toInt(),
+                              //medias: widget.comment.medias.validate(),
                               callback: (text) {
                                 isChange = true;
                                 widget.comment.content = text;
@@ -172,27 +179,17 @@ class _CommentReplyScreenState extends State<CommentReplyScreen> {
                     if (commentList.isNotEmpty)
                       ListView.separated(
                         itemBuilder: (context, i) {
-                          CommentModel childComment = commentList[i];
+                          Comment childComment = commentList[i];
 
                           return CommentComponent(
-                            fromReplyScreen: true,
                             postId: widget.postId,
                             isParent: false,
                             comment: childComment,
                             onDelete: () {
-                              deleteComment(commentId: childComment.id.toInt());
+                              //deleteComment(commentId: childComment.id.toInt());
                             },
                             callback: () {
                               widget.callback?.call();
-                            },
-                            onReply: () async {
-                              finish(context, isChange);
-                              CommentReplyScreen(
-                                postId: widget.postId,
-                                comment: childComment,
-                              ).launch(context).then((value) {
-                                if (value ?? false) widget.callback?.call();
-                              });
                             },
                             onEdit: () {
                               showInDialog(
@@ -201,10 +198,13 @@ class _CommentReplyScreenState extends State<CommentReplyScreen> {
                                 builder: (p0) {
                                   return UpdateCommentComponent(
                                     id: childComment.id.validate().toInt(),
-                                    activityId: childComment.itemId.validate().toInt(),
+                                    // activityId:
+                                    //     childComment.itemId.validate().toInt(),
                                     comment: childComment.content,
-                                    parentId: childComment.secondaryItemId.validate().toInt(),
-                                    medias: childComment.medias.validate(),
+                                    // parentId: childComment.secondaryItemId
+                                    //     .validate()
+                                    //     .toInt(),
+                                    //medias: childComment.medias.validate(),
                                     callback: (text) {
                                       isChange = true;
                                       commentList[i].content = text;
@@ -237,7 +237,9 @@ class _CommentReplyScreenState extends State<CommentReplyScreen> {
                     children: [
                       Row(
                         children: [
-                          cachedImage(appStore.loginAvatarUrl, height: 36, width: 36, fit: BoxFit.cover).cornerRadiusWithClipRRect(100),
+                          cachedImage(appStore.loginAvatarUrl,
+                                  height: 36, width: 36, fit: BoxFit.cover)
+                              .cornerRadiusWithClipRRect(100),
                           10.width,
                           AppTextField(
                             focus: commentFocus,
@@ -251,7 +253,8 @@ class _CommentReplyScreenState extends State<CommentReplyScreen> {
                               enabledBorder: InputBorder.none,
                             ),
                             onTap: () {
-                              commentParentId = widget.comment.id.validate().toInt();
+                              commentParentId =
+                                  widget.comment.id.validate().toInt();
                             },
                           ).expand(),
                           if (appStore.showGif)
@@ -265,30 +268,50 @@ class _CommentReplyScreenState extends State<CommentReplyScreen> {
                                   }
                                 });
                               },
-                              icon: cachedImage(ic_gif, color: appStore.isDarkMode ? bodyDark : bodyWhite, width: 30, height: 24, fit: BoxFit.contain),
+                              icon: cachedImage(ic_gif,
+                                  color: appStore.isDarkMode
+                                      ? bodyDark
+                                      : bodyWhite,
+                                  width: 30,
+                                  height: 24,
+                                  fit: BoxFit.contain),
                             ),
                           InkWell(
                             onTap: () {
-                              if (commentController.text.isNotEmpty || gif != null) {
+                              if (commentController.text.isNotEmpty ||
+                                  gif != null) {
                                 hideKeyboard(context);
 
                                 String content = commentController.text.trim();
                                 commentController.clear();
 
-                                postComment(content, parentId: commentParentId == -1 ? null : commentParentId);
+                                postComment(content,
+                                    parentId: commentParentId == -1
+                                        ? null
+                                        : commentParentId);
                               } else {
                                 toast(language.writeComment);
                               }
                             },
-                            child: cachedImage(ic_send, color: appStore.isDarkMode ? bodyDark : bodyWhite, width: 24, height: 24, fit: BoxFit.cover),
+                            child: cachedImage(ic_send,
+                                color:
+                                    appStore.isDarkMode ? bodyDark : bodyWhite,
+                                width: 24,
+                                height: 24,
+                                fit: BoxFit.cover),
                           ),
                         ],
                       ),
                       if (gif != null)
                         Stack(
                           children: [
-                            LoadingWidget(isBlurBackground: false).paddingSymmetric(vertical: 16),
-                            cachedImage(gif!.images!.original!.url.validate(), height: 200).cornerRadiusWithClipRRect(defaultAppButtonRadius).paddingSymmetric(vertical: 8),
+                            LoadingWidget(isBlurBackground: false)
+                                .paddingSymmetric(vertical: 16),
+                            cachedImage(gif!.images!.original!.url.validate(),
+                                    height: 200)
+                                .cornerRadiusWithClipRRect(
+                                    defaultAppButtonRadius)
+                                .paddingSymmetric(vertical: 8),
                           ],
                         )
                     ],

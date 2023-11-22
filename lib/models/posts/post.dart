@@ -16,7 +16,7 @@ class Post {
   Topic? topic;
   User? createdBy;
   List<OrchidTag>? tags;
-  List<ContributeSession>? contributeSessions;
+  List<ContributeSession> contributeSessions;
   List<Comment>? comments;
 
   Post(
@@ -30,7 +30,7 @@ class Post {
       this.createdBy,
       this.topic,
       this.tags,
-      this.contributeSessions,
+      required this.contributeSessions,
       this.comments});
 
   factory Post.fromJson(Map<String, dynamic> json) {
@@ -47,11 +47,15 @@ class Post {
         tags: (json['orchidTags'] as List)
             .map((e) => OrchidTag.fromJson(e))
             .toList(),
-        contributeSessions: (json['contributeSections'] as List)
-            .map((e) => ContributeSession.fromJson(e))
-            .toList(),
-        comments: (json['comments'] as List)
-            .map((e) => Comment.fromJson(e))
-            .toList());
+        contributeSessions: json['contributeSections'] != null
+            ? (json['contributeSections'] as List)
+                .map((e) => ContributeSession.fromJson(e))
+                .toList()
+            : [],
+        comments: json['comments'] != null
+            ? (json['comments'] as List)
+                .map((e) => Comment.fromJson(e))
+                .toList()
+            : []);
   }
 }

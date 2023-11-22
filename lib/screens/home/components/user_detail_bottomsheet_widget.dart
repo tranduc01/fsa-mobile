@@ -64,7 +64,7 @@ class _UserDetailBottomSheetWidgetState
                         ? Row(
                             children: [
                               userController.user.value.avatarUrl.isEmptyOrNull
-                                  ? Image.asset("assets/images/profile.gif",
+                                  ? Image.asset("assets/images/profile.png",
                                           height: 62,
                                           width: 62,
                                           fit: BoxFit.cover)
@@ -107,7 +107,7 @@ class _UserDetailBottomSheetWidgetState
                         : InkWell(
                             child: Row(
                               children: [
-                                Image.asset("assets/images/profile.gif",
+                                Image.asset("assets/images/profile.png",
                                         height: 62,
                                         width: 62,
                                         fit: BoxFit.cover)

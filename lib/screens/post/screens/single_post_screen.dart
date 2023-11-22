@@ -25,6 +25,8 @@ class _SinglePostScreenState extends State<SinglePostScreen> {
     Future.delayed(Duration.zero, () async {
       await postController.fetchPost(widget.postId);
     });
+    postController.post.value.contributeSessions
+        .sort((a, b) => a.index!.compareTo(b.index!));
     super.initState();
   }
 
@@ -59,7 +61,6 @@ class _SinglePostScreenState extends State<SinglePostScreen> {
             CommentScreen(
               postId: widget.postId,
             ).launch(context);
-            print(postController.post.value.comments?.length.toString());
           },
         ),
       ),
@@ -191,7 +192,7 @@ class _SinglePostScreenState extends State<SinglePostScreen> {
                             postController.post.value.createdBy!.avatarUrl ==
                                     null
                                 ? Image.asset(
-                                    'assets/images/profile.gif',
+                                    'assets/images/profile.png',
                                     height: 50,
                                     width: 50,
                                   ).cornerRadiusWithClipRRect(25)
@@ -208,7 +209,7 @@ class _SinglePostScreenState extends State<SinglePostScreen> {
                         thickness: 1,
                       ),
                       for (var item
-                          in postController.post.value.contributeSessions!)
+                          in postController.post.value.contributeSessions)
                         Container(
                           child: Column(
                             children: [
