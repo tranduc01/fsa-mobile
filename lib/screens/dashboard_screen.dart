@@ -53,7 +53,7 @@ class _DashboardScreenState extends State<DashboardScreen>
   Future<void> init() async {
     appFragments.addAll([
       HomeFragment(controller: _controller),
-      SearchFragment(controller: _controller),
+      ExpertiseRequestFragment(controller: _controller),
       ForumsFragment(controller: _controller),
       NotificationFragment(controller: _controller),
       ProfileFragment(controller: _controller),
@@ -289,10 +289,10 @@ class _DashboardScreenState extends State<DashboardScreen>
               ),
               Tooltip(
                 richMessage: TextSpan(
-                    text: language.searchHere,
+                    text: 'Expertise Request',
                     style: secondaryTextStyle(color: Colors.white)),
                 child: Image.asset(
-                  selectedIndex == 1 ? ic_search_selected : ic_search,
+                  selectedIndex == 1 ? ic_document_filled : ic_document,
                   height: 24,
                   width: 24,
                   fit: BoxFit.cover,

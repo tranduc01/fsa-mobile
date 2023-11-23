@@ -3,145 +3,42 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/components/loading_widget.dart';
 import 'package:socialv/main.dart';
-import 'package:socialv/models/common_models/avatar_urls.dart';
-import 'package:socialv/models/groups/group_response.dart';
-import 'package:socialv/models/members/member_response.dart';
-import 'package:socialv/network/rest_apis.dart';
-import 'package:socialv/screens/search/components/search_group_component.dart';
-import 'package:socialv/screens/search/components/search_member_component.dart';
 
-import '../../models/common_models/links.dart';
-import '../../utils/app_constants.dart';
-
-class SearchFragment extends StatefulWidget {
+class ExpertiseRequestFragment extends StatefulWidget {
   final ScrollController controller;
 
-  const SearchFragment({required this.controller});
+  const ExpertiseRequestFragment({required this.controller});
 
   @override
-  State<SearchFragment> createState() => _SearchFragmentState();
+  State<ExpertiseRequestFragment> createState() =>
+      _ExpertiseRequestFragmentState();
 }
 
-class _SearchFragmentState extends State<SearchFragment>
+class _ExpertiseRequestFragmentState extends State<ExpertiseRequestFragment>
     with SingleTickerProviderStateMixin {
-  List<MemberResponse> memberList = [
-    MemberResponse(
-      links: Links(collection: [], self: [], user: []),
-      avatarUrls: AvatarUrls(full: '', thumb: ''),
-      friendshipStatus: false,
-      friendshipStatusSlug: '',
-      id: 1,
-      link: '',
-      mentionName: '',
-      name: 'Tuan',
-      userLogin: 'Tuanbe',
-      isUserVerified: false,
-      lastActive: DateTime.now().toString(),
-    ),
-    MemberResponse(
-      links: Links(collection: [], self: [], user: []),
-      avatarUrls: AvatarUrls(full: '', thumb: ''),
-      friendshipStatus: false,
-      friendshipStatusSlug: '',
-      id: 2,
-      link: '',
-      mentionName: '',
-      name: 'Duc',
-      userLogin: 'Duc',
-      isUserVerified: false,
-      lastActive: DateTime.now().toString(),
-    ),
-  ];
-  List<GroupResponse> groupList = [];
-
-  List<String> searchOptions = [language.members, language.groups];
-
-  TextEditingController searchController = TextEditingController();
-
-  String dropdownValue = '';
-
   int mPage = 1;
   bool mIsLastPage = false;
-
-  bool hasShowClearTextIcon = false;
-
+  int selectedIndex = 0;
+  final List<String> choicesList = ['All', 'Pending', 'Approved', 'Rejected'];
+  final List<Color> colorList = [
+    const Color.fromARGB(127, 33, 149, 243),
+    const Color.fromARGB(127, 255, 235, 59),
+    Color.fromARGB(127, 76, 175, 79),
+    Color.fromARGB(127, 244, 67, 54)
+  ];
   @override
   void initState() {
     super.initState();
-
-    dropdownValue = searchOptions.first;
-
+    selectedIndex = 0;
     widget.controller.addListener(() {
       if (widget.controller.position.pixels ==
           widget.controller.position.maxScrollExtent) {
         if (!mIsLastPage) {
           mPage++;
           setState(() {});
-
-          if (dropdownValue == searchOptions.first) {
-            getMembersList(text: searchController.text.trim(), page: mPage);
-          } else {
-            getGroups(text: searchController.text.trim(), page: mPage);
-          }
         }
       }
     });
-
-    searchController.addListener(() {
-      if (searchController.text.isNotEmpty) {
-        showClearTextIcon();
-      } else {
-        hasShowClearTextIcon = false;
-        setState(() {});
-      }
-    });
-  }
-
-  Future<void> getMembersList({String? text, int page = 1}) async {
-    if (text!.isEmpty) {
-      memberList.clear();
-    } else {
-      appStore.setLoading(true);
-      await getAllMembers(searchText: text, page: page).then((value) {
-        mIsLastPage = value.length != 20;
-        if (page == 1) memberList.clear();
-        memberList.addAll(value);
-
-        appStore.setLoading(false);
-      }).catchError((e) {
-        toast(e.toString());
-        appStore.setLoading(false);
-      });
-    }
-    setState(() {});
-  }
-
-  Future<void> getGroups({String? text, int page = 1}) async {
-    if (text!.isEmpty) {
-      groupList.clear();
-    } else {
-      appStore.setLoading(true);
-
-      await getUserGroups(searchText: text, page: page).then((value) {
-        mIsLastPage = value.length != 20;
-        if (page == 1) groupList.clear();
-        groupList.addAll(value);
-        appStore.setLoading(false);
-      }).catchError((e) {
-        toast(e.toString());
-        appStore.setLoading(false);
-      });
-    }
-    setState(() {});
-  }
-
-  void showClearTextIcon() {
-    if (!hasShowClearTextIcon) {
-      hasShowClearTextIcon = true;
-      setState(() {});
-    } else {
-      return;
-    }
   }
 
   @override
@@ -151,7 +48,6 @@ class _SearchFragmentState extends State<SearchFragment>
 
   @override
   void dispose() {
-    searchController.dispose();
     super.dispose();
   }
 
@@ -163,124 +59,158 @@ class _SearchFragmentState extends State<SearchFragment>
         Column(
           children: [
             16.height,
-            Row(
-              children: [
-                Container(
-                  width: context.width() * 0.54,
-                  margin: EdgeInsets.only(left: 16, right: 8),
-                  decoration: BoxDecoration(
-                      color: context.cardColor,
-                      borderRadius: radius(commonRadius)),
-                  child: AppTextField(
-                    controller: searchController,
-                    onChanged: (val) {
-                      if (dropdownValue == searchOptions.first) {
-                        getMembersList(text: val);
-                      } else {
-                        getGroups(text: val);
-                      }
-                    },
-                    textFieldType: TextFieldType.USERNAME,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: language.searchHere,
-                      hintStyle: secondaryTextStyle(),
-                      prefixIcon: Image.asset(
-                        ic_search,
-                        height: 16,
-                        width: 16,
-                        fit: BoxFit.cover,
-                        color: appStore.isDarkMode ? bodyDark : bodyWhite,
-                      ).paddingAll(16),
-                      suffixIcon: hasShowClearTextIcon
-                          ? IconButton(
-                              icon: Icon(Icons.cancel,
-                                  color: appStore.isDarkMode
-                                      ? bodyDark
-                                      : bodyWhite,
-                                  size: 18),
-                              onPressed: () {
-                                hideKeyboard(context);
-                                mPage = 1;
-                                memberList.clear();
-                                groupList.clear();
-                                searchController.clear();
-                                hasShowClearTextIcon = false;
-                                setState(() {});
-                              },
-                            )
-                          : null,
-                    ),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: List<Widget>.generate(
+                choicesList.length,
+                (index) => ChoiceChip(
+                  label: Text(
+                    choicesList[index],
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, fontFamily: 'Roboto'),
                   ),
+                  selected: selectedIndex == index,
+                  selectedColor: colorList[index],
+                  onSelected: (selected) {
+                    setState(() {
+                      selectedIndex = selected ? index : 0;
+                    });
+                  },
                 ),
-                Align(
-                  alignment: Alignment.topRight,
-                  child: Container(
-                    width: context.width() * 0.32,
-                    margin: EdgeInsets.only(right: 16, left: 8),
-                    decoration: BoxDecoration(
-                        color: context.cardColor,
-                        borderRadius: radius(commonRadius)),
-                    child: DropdownButtonHideUnderline(
-                      child: ButtonTheme(
-                        alignedDropdown: true,
-                        child: DropdownButton<String>(
-                          borderRadius: BorderRadius.circular(commonRadius),
-                          icon: Icon(Icons.arrow_drop_down,
-                              color:
-                                  appStore.isDarkMode ? bodyDark : bodyWhite),
-                          elevation: 8,
-                          isExpanded: true,
-                          style: primaryTextStyle(),
-                          onChanged: (String? newValue) {
-                            mPage = 1;
-                            dropdownValue = newValue.validate();
-                            setState(() {});
-                            if (newValue == searchOptions.first) {
-                              getMembersList(text: searchController.text);
-                            } else {
-                              getGroups(text: searchController.text);
-                            }
-                          },
-                          items: searchOptions
-                              .validate()
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value,
-                                  style: primaryTextStyle(),
-                                  overflow: TextOverflow.ellipsis),
-                            );
-                          }).toList(),
-                          value: dropdownValue,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+              ).toList(),
             ),
-            16.height,
-            if (dropdownValue == searchOptions.first)
-              SearchMemberComponent(
-                memberList: memberList.isEmpty
-                    ? appStore.recentMemberSearchList
-                    : memberList,
-                showRecent: memberList.isEmpty,
-                callback: () {
-                  setState(() {});
-                },
-              )
-            else
-              SearchGroupComponent(
-                showRecent: groupList.isEmpty,
-                groupList: groupList.isEmpty
-                    ? appStore.recentGroupsSearchList
-                    : groupList,
-                callback: () {
-                  setState(() {});
-                },
-              ),
+            Container(
+                margin: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  borderRadius: radius(10),
+                  color: Color.fromARGB(33, 200, 198, 198),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color(0xffDDDDDD),
+                      blurRadius: 6.0,
+                      spreadRadius: 2.0,
+                      offset: Offset(0.0, 0.0),
+                    )
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Row(
+                        children: [
+                          // widget.post.thumbnail != null
+                          //     ? Image.network(
+                          //         widget.post.thumbnail!,
+                          //         height: 100,
+                          //         width: 100,
+                          //         fit: BoxFit.cover,
+                          //         errorBuilder: (BuildContext context,
+                          //             Object exception, StackTrace? stackTrace) {
+                          //           return Image.asset(
+                          //             'assets/images/images.png',
+                          //             height: 100,
+                          //             width: 100,
+                          //             fit: BoxFit.cover,
+                          //           ).cornerRadiusWithClipRRect(15);
+                          //         },
+                          //       ).cornerRadiusWithClipRRect(15)
+                          //     :
+                          Image.asset(
+                            'assets/images/images.png',
+                            fit: BoxFit.cover,
+                            height: 100,
+                            width: 100,
+                          ).cornerRadiusWithClipRRect(15),
+                          12.width,
+                          Expanded(
+                              child: Container(
+                            height: 90,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      'ER231123110512',
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 3,
+                                      textAlign: TextAlign.start,
+                                      style: boldTextStyle(
+                                          fontFamily: 'Roboto', size: 18),
+                                    ),
+                                    Spacer(),
+                                    Container(
+                                      width: 55,
+                                      decoration: BoxDecoration(
+                                        color: Colors.yellow[700],
+                                        borderRadius: BorderRadius.circular(20),
+                                        border: Border.all(
+                                            color: Color.fromARGB(24, 0, 0, 0)),
+                                      ),
+                                      padding: EdgeInsets.all(6),
+                                      child: Center(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(Icons.star_rate_rounded,
+                                                size: 15),
+                                            Text(
+                                              '10',
+                                              style: boldTextStyle(
+                                                size: 15,
+                                                fontFamily: 'Roboto',
+                                                color: Color.fromARGB(
+                                                    255, 0, 0, 0),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                Spacer(),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text('12-12-2023',
+                                        style: boldTextStyle(
+                                            size: 15,
+                                            fontFamily: 'Roboto',
+                                            color:
+                                                Color.fromARGB(118, 0, 0, 0))),
+                                    Container(
+                                        decoration: BoxDecoration(
+                                            color: colorList[selectedIndex],
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            border: Border.all(
+                                                color: Color.fromARGB(
+                                                    24, 0, 0, 0))),
+                                        padding: EdgeInsets.all(6),
+                                        child: Text(
+                                          choicesList[selectedIndex],
+                                          style: boldTextStyle(
+                                              size: 15,
+                                              fontFamily: 'Roboto',
+                                              color:
+                                                  Color.fromARGB(255, 0, 0, 0)),
+                                        )),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          )),
+                        ],
+                      ),
+                    )
+                  ],
+                ))
           ],
         ),
         Positioned(

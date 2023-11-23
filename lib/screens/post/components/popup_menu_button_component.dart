@@ -60,31 +60,27 @@ class _PopUpMenuButtonComponentState extends State<PopUpMenuButtonComponent> {
             PopupMenuItem(
               value: 1,
               child: TextIcon(
-                  text: language.editPost,
+                  text: 'Edit',
                   textStyle: secondaryTextStyle(),
                   prefix: Image.asset(ic_edit,
-                      color: appStore.isDarkMode ? bodyDark : bodyWhite,
-                      width: 16,
-                      height: 16)),
+                      color: context.primaryColor, width: 16, height: 16)),
               textStyle: primaryTextStyle(),
             ),
           if (userController.user.value.id == widget.comment.user!.id)
             PopupMenuItem(
               value: 2,
               child: TextIcon(
-                  text: language.deletePost,
+                  text: 'Delete',
                   textStyle: secondaryTextStyle(),
                   prefix: Image.asset(ic_delete,
-                      color: appStore.isDarkMode ? bodyDark : bodyWhite,
-                      width: 16,
-                      height: 16)),
+                      color: Colors.red, width: 16, height: 16)),
               textStyle: primaryTextStyle(),
             ),
           if (userController.user.value.id != widget.comment.user!.id)
             PopupMenuItem(
               value: 3,
               child: TextIcon(
-                  text: language.reportPost,
+                  text: 'Report',
                   textStyle: secondaryTextStyle(),
                   prefix: Icon(Icons.report_gmailerrorred,
                       color: appStore.isDarkMode ? bodyDark : bodyWhite,

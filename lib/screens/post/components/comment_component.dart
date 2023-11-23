@@ -111,47 +111,6 @@ class _CommentComponentState extends State<CommentComponent> {
         Text(parseHtmlString(widget.comment.content.validate()),
             style: primaryTextStyle()),
         8.height,
-        // Row(
-        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //   children: [
-        //     Row(
-        //       children: [
-        //         if (userController.user.value.id == widget.comment.user!.id)
-        //           IconButton(
-        //             onPressed: () {
-        //               if (!appStore.isLoading) {
-        //                 isChange = true;
-        //                 widget.onDelete?.call();
-        //               }
-        //             },
-        //             icon: cachedImage(ic_delete,
-        //                 color: Colors.red, width: 16, height: 16),
-        //           ),
-        //         if (userController.user.value.id == widget.comment.user!.id)
-        //           IconButton(
-        //             onPressed: () {
-        //               if (!appStore.isLoading) {
-        //                 isChange = true;
-        //                 widget.onEdit?.call();
-        //               }
-        //             },
-        //             icon: cachedImage(ic_edit,
-        //                 color: context.primaryColor, width: 16, height: 16),
-        //           ),
-        //         if (userController.user.value.id != widget.comment.user!.id)
-        //           IconButton(
-        //               onPressed: () {
-        //                 if (!appStore.isLoading) {
-        //                   isChange = true;
-        //                   widget.onReport?.call();
-        //                 }
-        //               },
-        //               icon: Icon(Icons.warning_amber_rounded,
-        //                   color: context.primaryColor, size: 16)),
-        //       ],
-        //     ),
-        //   ],
-        // ),
       ],
     );
   }
