@@ -106,47 +106,50 @@ class _PostComponentState extends State<PostComponent> {
                           ).cornerRadiusWithClipRRect(15),
                     12.width,
                     Expanded(
-                        child: Container(
-                      height: 90,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.post.title!,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 3,
-                            textAlign: TextAlign.start,
-                            style:
-                                boldTextStyle(fontFamily: 'Roboto', size: 18),
-                          ),
-                          Spacer(),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                widget.post.topic!.name!,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 2,
-                                textAlign: TextAlign.start,
-                                style: boldTextStyle(
-                                  size: 15,
-                                  fontFamily: 'Roboto',
-                                  color: Color.fromARGB(118, 0, 0, 0),
-                                ),
-                              ),
-                              Text(
-                                  convertToAgo(widget.post.publishedAt
-                                      .toString()
-                                      .validate()),
-                                  style: boldTextStyle(
+                      child: Container(
+                        height: 100,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.post.title!,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 3,
+                              textAlign: TextAlign.start,
+                              style:
+                                  boldTextStyle(fontFamily: 'Roboto', size: 18),
+                            ),
+                            Spacer(),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    widget.post.topic!.name!,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    textAlign: TextAlign.start,
+                                    style: boldTextStyle(
                                       size: 15,
                                       fontFamily: 'Roboto',
-                                      color: Color.fromARGB(118, 0, 0, 0))),
-                            ],
-                          ),
-                        ],
+                                      color: Color.fromARGB(118, 0, 0, 0),
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                    convertToAgo(widget.post.publishedAt
+                                        .toString()
+                                        .validate()),
+                                    style: boldTextStyle(
+                                        size: 15,
+                                        fontFamily: 'Roboto',
+                                        color: Color.fromARGB(118, 0, 0, 0))),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    )),
+                    ),
                   ],
                 ),
               )

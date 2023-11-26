@@ -5,9 +5,9 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/main.dart';
 import 'package:socialv/models/groups/group_response.dart';
 import 'package:socialv/screens/groups/components/group_suggestions_component.dart';
-import 'package:socialv/screens/groups/screens/group_detail_screen.dart';
-import 'package:socialv/screens/search/components/search_card_component.dart';
 import 'package:socialv/utils/app_constants.dart';
+
+import 'search_card_component.dart';
 
 class SearchGroupComponent extends StatelessWidget {
   final bool showRecent;

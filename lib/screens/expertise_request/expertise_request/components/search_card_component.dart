@@ -5,7 +5,8 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/main.dart';
 import 'package:socialv/utils/cached_network_image.dart';
 
-import '../../../utils/app_constants.dart';
+import '../../../../utils/app_constants.dart';
+import '../../../../utils/constants.dart';
 
 class SearchCardComponent extends StatefulWidget {
   final int id;
@@ -42,7 +43,8 @@ class _SearchCardComponentState extends State<SearchCardComponent> {
       children: [
         Row(
           children: [
-            cachedImage(widget.image, height: 56, width: 56, fit: BoxFit.cover).cornerRadiusWithClipRRect(100),
+            cachedImage(widget.image, height: 56, width: 56, fit: BoxFit.cover)
+                .cornerRadiusWithClipRRect(100),
             20.width,
             Column(
               children: [
@@ -54,11 +56,17 @@ class _SearchCardComponentState extends State<SearchCardComponent> {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ).flexible(flex: 1),
-                    if (widget.isMember.validate() && widget.isVerified) Image.asset(ic_tick_filled, width: 18, height: 18, color: blueTickColor).paddingSymmetric(horizontal: 4),
+                    if (widget.isMember.validate() && widget.isVerified)
+                      Image.asset(ic_tick_filled,
+                              width: 18, height: 18, color: blueTickColor)
+                          .paddingSymmetric(horizontal: 4),
                   ],
                 ),
                 6.height,
-                Text(widget.subTitle.validate(), style: secondaryTextStyle(), overflow: TextOverflow.ellipsis, maxLines: 1),
+                Text(widget.subTitle.validate(),
+                    style: secondaryTextStyle(),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1),
               ],
               crossAxisAlignment: CrossAxisAlignment.start,
             ).expand(),
@@ -67,11 +75,15 @@ class _SearchCardComponentState extends State<SearchCardComponent> {
         IconButton(
           onPressed: () async {
             if (widget.isMember.validate()) {
-              appStore.recentMemberSearchList.removeWhere((element) => element.id == widget.id);
-              await setValue(SharePreferencesKey.RECENT_SEARCH_MEMBERS, jsonEncode(appStore.recentMemberSearchList));
+              appStore.recentMemberSearchList
+                  .removeWhere((element) => element.id == widget.id);
+              await setValue(SharePreferencesKey.RECENT_SEARCH_MEMBERS,
+                  jsonEncode(appStore.recentMemberSearchList));
             } else {
-              appStore.recentGroupsSearchList.removeWhere((element) => element.id == widget.id);
-              await setValue(SharePreferencesKey.RECENT_SEARCH_GROUPS, jsonEncode(appStore.recentGroupsSearchList));
+              appStore.recentGroupsSearchList
+                  .removeWhere((element) => element.id == widget.id);
+              await setValue(SharePreferencesKey.RECENT_SEARCH_GROUPS,
+                  jsonEncode(appStore.recentGroupsSearchList));
             }
             widget.callback!.call();
           },

@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:socialv/controllers/expertise_request_controller.dart';
 import 'package:socialv/controllers/post_controller.dart';
 import 'package:socialv/main.dart';
 import 'package:socialv/screens/fragments/forums_fragment.dart';
 import 'package:socialv/screens/fragments/home_fragment.dart';
 import 'package:socialv/screens/fragments/notification_fragment.dart';
 import 'package:socialv/screens/fragments/profile_fragment.dart';
-import 'package:socialv/screens/fragments/search_fragment.dart';
+import 'package:socialv/screens/fragments/expertise_request_fragment.dart';
 import 'package:socialv/screens/home/components/ranking_bottomsheet_widget.dart';
 import 'package:socialv/screens/home/components/user_detail_bottomsheet_widget.dart';
 import 'package:socialv/screens/notification/components/latest_activity_component.dart';
+import 'package:socialv/screens/expertise_request/expertise_request/screens/create_expertise_request_screen.dart';
 import 'package:socialv/utils/app_constants.dart';
 import 'package:socialv/utils/cached_network_image.dart';
 
@@ -31,6 +33,8 @@ class _DashboardScreenState extends State<DashboardScreen>
   ScrollController _controller = ScrollController();
   late TabController tabController;
   late PostController postController = Get.put(PostController());
+  late ExpertiseRequestController expertiseRequestController =
+      Get.put(ExpertiseRequestController());
 
   bool onAnimationEnd = true;
 
@@ -96,7 +100,15 @@ class _DashboardScreenState extends State<DashboardScreen>
       },
       child: RefreshIndicator(
         onRefresh: () {
-          postController.fetchPosts();
+          if (selectedIndex == 0) {
+            postController.fetchPosts().then((_) {
+              setState(() {});
+            });
+          } else if (selectedIndex == 1) {
+            expertiseRequestController.fetchExpetiseRequests().then((_) {
+              setState(() {});
+            });
+          }
 
           return Future.value(true);
         },
@@ -433,7 +445,14 @@ class _DashboardScreenState extends State<DashboardScreen>
                       color: Colors.white),
                   backgroundColor: context.primaryColor,
                 )
-              : Offstage(),
+              : tabController.index == 1
+                  ? FloatingActionButton(
+                      child: Icon(Icons.add),
+                      onPressed: () {
+                        CreateExpertiseRequestScreen().launch(context);
+                      },
+                    )
+                  : Offstage(),
         ),
       ),
     );
