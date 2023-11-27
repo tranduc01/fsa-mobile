@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/components/loading_widget.dart';
@@ -7,6 +6,7 @@ import 'package:socialv/controllers/post_controller.dart';
 import 'package:socialv/screens/post/screens/comment_screen.dart';
 
 import '../../../utils/common.dart';
+import '../../../utils/html_widget.dart';
 
 class SinglePostScreen extends StatefulWidget {
   final int postId;
@@ -213,8 +213,8 @@ class _SinglePostScreenState extends State<SinglePostScreen> {
                         Container(
                           child: Column(
                             children: [
-                              Html(
-                                data: item.content ?? '',
+                              HtmlWidget(
+                                postContent: item.content ?? '',
                               ),
                             ],
                           ),

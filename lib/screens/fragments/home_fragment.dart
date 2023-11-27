@@ -82,9 +82,9 @@ class _HomeFragmentState extends State<HomeFragment>
             Container(
               child: CarouselSlider(
                 options: CarouselOptions(
-                  height: 280,
+                  height: 200,
                   autoPlay: true,
-                  aspectRatio: 2.0,
+                  aspectRatio: 1.5,
                   enlargeCenterPage: true,
                   enlargeStrategy: CenterPageEnlargeStrategy.height,
                 ),
@@ -172,7 +172,7 @@ class _HomeFragmentState extends State<HomeFragment>
             ),
           ],
         ),
-        if (postController.isError.value && postList.isEmpty)
+        if (postController.isError.value || postList.isEmpty)
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.8,
             child: NoDataWidget(
@@ -181,17 +181,16 @@ class _HomeFragmentState extends State<HomeFragment>
                   ? 'Something Went Wrong'
                   : 'No data found',
               onRetry: () {
-                postController.isError.value = false;
+                postController.fetchPosts();
               },
               retryText: '   Click to Refresh   ',
             ).center(),
           ),
         Positioned(
           bottom: postList.isNotEmpty || mPage != 1 ? 8 : null,
-          child: Obx(() =>
-              LoadingWidget(isBlurBackground: mPage == 1 ? true : false)
-                  .center()
-                  .visible(postController.isLoading.value)),
+          child: Obx(() => LoadingWidget(isBlurBackground: true)
+              .center()
+              .visible(postController.isLoading.value)),
         ),
       ],
     );

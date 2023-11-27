@@ -22,8 +22,31 @@ class TopicDetailScreen extends StatefulWidget {
 }
 
 class _TopicDetailScreenState extends State<TopicDetailScreen> {
-  TopicModel topic = TopicModel();
-  List<TopicReplyModel> postList = [];
+  TopicModel topic = TopicModel(
+      id: 1,
+      title: '111',
+      description: '111',
+      postCount: '10',
+      postList: [
+        TopicReplyModel(id: 1, content: '111', isUserVerified: true, children: [
+          TopicReplyModel(id: 1, content: '111', isUserVerified: true)
+        ])
+      ]);
+  List<TopicReplyModel> postList = [
+    TopicReplyModel(
+        id: 1,
+        content: '111',
+        isUserVerified: true,
+        children: [
+          TopicReplyModel(id: 1, content: '111', isUserVerified: true)
+        ],
+        profileImage:
+            'https://i.pinimg.com/originals/0f/6a/9a/0f6a9a5a9e2b9e3b9b5b5b5b5b5b5b5b.jpg',
+        title: '123',
+        topicId: 1,
+        createdAtDate: '2021-10-10 10:10:10',
+        topicName: '123'),
+  ];
 
   ScrollController _scrollController = ScrollController();
 
@@ -43,7 +66,8 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
     getDetails();
 
     _scrollController.addListener(() {
-      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
         if (!mIsLastPage) {
           mPage++;
           appStore.setLoading(true);
@@ -61,30 +85,33 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
     isError = false;
     appStore.setLoading(true);
 
-    if (mPage == 1) {
-      postList.clear();
-    }
+    // if (mPage == 1) {
+    //   postList.clear();
+    // }
 
-    await getTopicDetail(topicId: widget.topicId, page: mPage).then((value) async {
-      topic = value.first;
+    // await getTopicDetail(topicId: widget.topicId, page: mPage)
+    //     .then((value) async {
+    //   topic = value.first;
 
-      mIsLastPage = value.first.postList.validate().length != PER_PAGE;
-      postList.addAll(value.first.postList.validate());
+    //   mIsLastPage = value.first.postList.validate().length != PER_PAGE;
+    //   postList.addAll(value.first.postList.validate());
 
-      isSubscribed = value.first.isSubscribed.validate();
-      isFavourite = value.first.isFavorites.validate();
-      isFetched = true;
-      setState(() {});
+    //   isSubscribed = value.first.isSubscribed.validate();
+    //   isFavourite = value.first.isFavorites.validate();
+    //   isFetched = true;
+    //   setState(() {});
 
-      appStore.setLoading(false);
-    }).catchError((e) {
-      isError = true;
-      setState(() {});
-      appStore.setLoading(false);
+    //   appStore.setLoading(false);
+    // }).catchError((e) {
+    //   isError = true;
+    //   setState(() {});
+    //   appStore.setLoading(false);
 
-      toast(e.toString(), print: true);
-    });
+    //   toast(e.toString(), print: true);
+    // });
 
+    appStore.setLoading(false);
+    isFetched = true;
     return topic;
   }
 
@@ -138,26 +165,38 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(topic.title.validate(), style: boldTextStyle(size: 22)),
+                              Text(topic.title.validate(),
+                                  style: boldTextStyle(size: 22)),
                               16.height,
                               Row(
                                 children: [
                                   AppButton(
-                                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 4),
                                     elevation: 0,
-                                    color: isSubscribed ? appOrangeColor : appGreenColor,
-                                    child: Text(isSubscribed ? language.unsubscribe : language.subscribe, style: boldTextStyle(color: Colors.white)),
+                                    color: isSubscribed
+                                        ? appOrangeColor
+                                        : appGreenColor,
+                                    child: Text(
+                                        isSubscribed
+                                            ? language.unsubscribe
+                                            : language.subscribe,
+                                        style:
+                                            boldTextStyle(color: Colors.white)),
                                     onTap: () {
                                       ifNotTester(() {
                                         isSubscribed = !isSubscribed;
                                         setState(() {});
                                         if (isSubscribed) {
-                                          toast(language.subscribedSuccessfully);
+                                          toast(
+                                              language.subscribedSuccessfully);
                                         } else {
-                                          toast(language.unsubscribedSuccessfully);
+                                          toast(language
+                                              .unsubscribedSuccessfully);
                                         }
 
-                                        subscribeForum(forumId: widget.topicId).then((value) {
+                                        subscribeForum(forumId: widget.topicId)
+                                            .then((value) {
                                           isUpdate = true;
                                         }).catchError((e) {
                                           log(e.toString());
@@ -175,13 +214,15 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
                                         setState(() {});
                                         if (isFavourite) {
                                           toast(language.addedToFavourites);
-                                          if (widget.isFromFav) isUpdate = false;
+                                          if (widget.isFromFav)
+                                            isUpdate = false;
                                         } else {
                                           toast(language.removedFromFavourites);
                                           isUpdate = true;
                                         }
 
-                                        favoriteTopic(topicId: widget.topicId).then((value) {
+                                        favoriteTopic(topicId: widget.topicId)
+                                            .then((value) {
                                           log(value.message);
                                         }).catchError((e) {
                                           log(e.toString());
@@ -190,8 +231,17 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
                                     },
                                     child: Container(
                                       padding: EdgeInsets.all(6),
-                                      decoration: BoxDecoration(color: appOrangeColor, borderRadius: radius(defaultAppButtonRadius)),
-                                      child: Image.asset(isFavourite ? ic_star_filled : ic_star, width: 26, height: 26, color: Colors.white),
+                                      decoration: BoxDecoration(
+                                          color: appOrangeColor,
+                                          borderRadius:
+                                              radius(defaultAppButtonRadius)),
+                                      child: Image.asset(
+                                          isFavourite
+                                              ? ic_star_filled
+                                              : ic_star,
+                                          width: 26,
+                                          height: 26,
+                                          color: Colors.white),
                                     ),
                                   ),
                                 ],
@@ -202,12 +252,15 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
                                   children: [
                                     Text(
                                       '${language.tags}: ',
-                                      style: secondaryTextStyle(color: context.iconColor),
+                                      style: secondaryTextStyle(
+                                          color: context.iconColor),
                                     ),
                                     Wrap(
                                       children: topic.tags.validate().map((e) {
                                         int index = topic.tags!.indexOf(e);
-                                        return Text('${e.name.validate()} ${index == topic.tags!.length - 1 ? '' : ','}', style: secondaryTextStyle());
+                                        return Text(
+                                            '${e.name.validate()} ${index == topic.tags!.length - 1 ? '' : ','}',
+                                            style: secondaryTextStyle());
                                       }).toList(),
                                     ),
                                   ],
@@ -217,9 +270,13 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
                                 padding: EdgeInsets.all(8),
                                 decoration: BoxDecoration(
                                   color: context.primaryColor.withAlpha(30),
-                                  border: Border(left: BorderSide(color: context.primaryColor, width: 2)),
+                                  border: Border(
+                                      left: BorderSide(
+                                          color: context.primaryColor,
+                                          width: 2)),
                                 ),
-                                child: Text(topic.lastUpdate.validate(), style: secondaryTextStyle()),
+                                child: Text(topic.lastUpdate.validate(),
+                                    style: secondaryTextStyle()),
                               ),
                               16.height,
                               InitialTopicReplyComponent(
@@ -231,7 +288,9 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
                                   getDetails();
                                 },
                               ).visible(topic.postList.validate().isEmpty),
-                              Text('${language.viewing} ${topic.postCount} ${language.replies.toLowerCase()}').visible(topic.postList.validate().isNotEmpty),
+                              Text('${language.viewing} ${topic.postCount} ${language.replies.toLowerCase()}')
+                                  .visible(
+                                      topic.postList.validate().isNotEmpty),
                               ListView.builder(
                                 shrinkWrap: true,
                                 physics: NeverScrollableScrollPhysics(),
@@ -265,7 +324,8 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
                                         padding: EdgeInsets.only(left: 16),
                                         shrinkWrap: true,
                                         physics: NeverScrollableScrollPhysics(),
-                                        itemCount: reply.children.validate().length,
+                                        itemCount:
+                                            reply.children.validate().length,
                                       ),
                                     ],
                                   );
@@ -276,11 +336,15 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
                           ),
                         ),
                       ).visible(!isError)
-                    : LoadingWidget().center().visible(!appStore.isLoading && !isError),
+                    : LoadingWidget()
+                        .center()
+                        .visible(!appStore.isLoading && !isError),
                 if (isError)
                   NoDataWidget(
                     imageWidget: NoDataLottieWidget(),
-                    title: isError ? language.somethingWentWrong : language.noDataFound,
+                    title: isError
+                        ? language.somethingWentWrong
+                        : language.noDataFound,
                     onRetry: () {
                       getDetails();
                     },
@@ -288,7 +352,10 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
                   ).center().visible(!appStore.isLoading),
                 Positioned(
                   bottom: mPage != 1 ? 10 : null,
-                  child: LoadingWidget(isBlurBackground: mPage == 1 ? true : false).center().visible(appStore.isLoading),
+                  child:
+                      LoadingWidget(isBlurBackground: mPage == 1 ? true : false)
+                          .center()
+                          .visible(appStore.isLoading),
                 ),
               ],
             ),

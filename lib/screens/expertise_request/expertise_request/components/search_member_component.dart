@@ -7,15 +7,17 @@ import 'package:socialv/main.dart';
 import 'package:socialv/models/members/member_response.dart';
 import 'package:socialv/network/rest_apis.dart';
 import 'package:socialv/screens/profile/screens/member_profile_screen.dart';
-import 'package:socialv/screens/search/components/search_card_component.dart';
 import 'package:socialv/utils/app_constants.dart';
+
+import 'search_card_component.dart';
 
 class SearchMemberComponent extends StatelessWidget {
   final bool showRecent;
   final List<MemberResponse> memberList;
   final VoidCallback? callback;
 
-  const SearchMemberComponent({required this.showRecent, required this.memberList, this.callback});
+  const SearchMemberComponent(
+      {required this.showRecent, required this.memberList, this.callback});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,8 @@ class SearchMemberComponent extends StatelessWidget {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(language.active, style: boldTextStyle()).paddingOnly(left: 16, right: 16, top: 8),
+                    Text(language.active, style: boldTextStyle())
+                        .paddingOnly(left: 16, right: 16, top: 8),
                     AnimatedListView(
                       physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
@@ -53,16 +56,24 @@ class SearchMemberComponent extends StatelessWidget {
                             },
                             isVerified: member.isUserVerified.validate(),
                           ).paddingSymmetric(vertical: 8).onTap(() async {
-                            if (!appStore.recentMemberSearchList.any((element) => element.id.validate() == member.id)) {
+                            if (!appStore.recentMemberSearchList.any(
+                                (element) =>
+                                    element.id.validate() == member.id)) {
                               appStore.recentMemberSearchList.add(member);
-                              await setValue(SharePreferencesKey.RECENT_SEARCH_MEMBERS, jsonEncode(appStore.recentMemberSearchList));
+                              await setValue(
+                                  SharePreferencesKey.RECENT_SEARCH_MEMBERS,
+                                  jsonEncode(appStore.recentMemberSearchList));
                             }
                             hideKeyboard(context);
 
-                            MemberProfileScreen(memberId: member.id.validate()).launch(context).then((value) {
+                            MemberProfileScreen(memberId: member.id.validate())
+                                .launch(context)
+                                .then((value) {
                               callback!.call();
                             });
-                          }, splashColor: Colors.transparent, highlightColor: Colors.transparent);
+                          },
+                              splashColor: Colors.transparent,
+                              highlightColor: Colors.transparent);
                         } else {
                           return Offstage();
                         }
@@ -85,10 +96,13 @@ class SearchMemberComponent extends StatelessWidget {
             },
             loadingWidget: Offstage(),
           ),
-        if (showRecent && memberList.isNotEmpty) Text(language.recent, style: boldTextStyle()).paddingOnly(left: 16, right: 16, top: 8),
+        if (showRecent && memberList.isNotEmpty)
+          Text(language.recent, style: boldTextStyle())
+              .paddingOnly(left: 16, right: 16, top: 8),
         if (memberList.isNotEmpty)
           AnimatedListView(
-            slideConfiguration: SlideConfiguration(delay: 80.milliseconds, verticalOffset: 300),
+            slideConfiguration:
+                SlideConfiguration(delay: 80.milliseconds, verticalOffset: 300),
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             padding: EdgeInsets.only(left: 16, right: 16, bottom: 60),
@@ -108,15 +122,21 @@ class SearchMemberComponent extends StatelessWidget {
                 },
                 isVerified: member.isUserVerified.validate(),
               ).paddingSymmetric(vertical: 8).onTap(() async {
-                if (!appStore.recentMemberSearchList.any((element) => element.id.validate() == member.id)) {
+                if (!appStore.recentMemberSearchList
+                    .any((element) => element.id.validate() == member.id)) {
                   appStore.recentMemberSearchList.add(memberList[index]);
-                  await setValue(SharePreferencesKey.RECENT_SEARCH_MEMBERS, jsonEncode(appStore.recentMemberSearchList));
+                  await setValue(SharePreferencesKey.RECENT_SEARCH_MEMBERS,
+                      jsonEncode(appStore.recentMemberSearchList));
                 }
                 hideKeyboard(context);
-                MemberProfileScreen(memberId: memberList[index].id.validate()).launch(context).then((value) {
+                MemberProfileScreen(memberId: memberList[index].id.validate())
+                    .launch(context)
+                    .then((value) {
                   callback!.call();
                 });
-              }, splashColor: Colors.transparent, highlightColor: Colors.transparent);
+              },
+                  splashColor: Colors.transparent,
+                  highlightColor: Colors.transparent);
             },
           ),
       ],
