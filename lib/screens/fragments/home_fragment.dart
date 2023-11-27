@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/controllers/post_controller.dart';
-import 'package:socialv/screens/home/components/ad_component.dart';
-import 'package:socialv/screens/home/components/suggested_user_component.dart';
 import 'package:socialv/screens/post/components/post_component.dart';
 
 import '../../components/loading_widget.dart';
@@ -167,8 +165,6 @@ class _HomeFragmentState extends State<HomeFragment>
                         postController.fetchPosts();
                       },
                     ).paddingSymmetric(horizontal: 8),
-                    if ((index + 1) % 5 == 0) AdComponent(),
-                    if ((index + 1) == 3) SuggestedUserComponent(),
                   ],
                 );
               },

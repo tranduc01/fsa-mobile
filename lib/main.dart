@@ -55,41 +55,12 @@ class _MyAppState extends State<MyApp> {
 
   void init() async {
     afterBuildCreated(() async {
-      int themeModeIndex = getIntAsync(SharePreferencesKey.APP_THEME,
-          defaultValue: AppThemeMode.ThemeModeSystem);
-
-      if (themeModeIndex == AppThemeMode.ThemeModeLight) {
-        appStore.toggleDarkMode(value: false, isFromMain: true);
-      } else {
-        appStore.toggleDarkMode(value: true, isFromMain: true);
-      }
-
-      await appStore
-          .setLoggedIn(getBoolAsync(SharePreferencesKey.IS_LOGGED_IN));
-      if (appStore.isLoggedIn) {
-        appStore.setToken(getStringAsync(SharePreferencesKey.TOKEN));
-        appStore.setVerificationStatus(
-            getStringAsync(SharePreferencesKey.VERIFICATION_STATUS));
-        appStore.setNonce(getStringAsync(SharePreferencesKey.NONCE));
-        appStore.setLoginEmail(getStringAsync(SharePreferencesKey.LOGIN_EMAIL));
-        appStore.setLoginName(
-            getStringAsync(SharePreferencesKey.LOGIN_DISPLAY_NAME));
-        appStore.setLoginFullName(
-            getStringAsync(SharePreferencesKey.LOGIN_FULL_NAME));
-        appStore
-            .setLoginUserId(getStringAsync(SharePreferencesKey.LOGIN_USER_ID));
-        appStore.setLoginAvatarUrl(
-            getStringAsync(SharePreferencesKey.LOGIN_AVATAR_URL));
-      }
-
-      if (getMemberListPref().isNotEmpty)
-        appStore.recentMemberSearchList.addAll(getMemberListPref());
-      if (getGroupListPref().isNotEmpty)
-        appStore.recentGroupsSearchList.addAll(getGroupListPref());
-
-      if (getLmsQuizListPref().isNotEmpty) {
-        lmsStore.quizList.addAll(getLmsQuizListPref());
-      }
+      // if (themeModeIndex == AppThemeMode.ThemeModeLight) {
+      //   appStore.toggleDarkMode(value: false, isFromMain: true);
+      // } else {
+      //   appStore.toggleDarkMode(value: true, isFromMain: true);
+      // }
+      appStore.toggleDarkMode(value: false, isFromMain: true);
     });
   }
 

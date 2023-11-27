@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 
 import '../configs.dart';
@@ -7,10 +8,12 @@ import '../models/posts/post.dart';
 import '../models/response_model.dart';
 
 class PostController extends GetxController {
+  final storage = new FlutterSecureStorage();
   var posts = <Post>[].obs;
-  var post = Post().obs;
+  var post = Post(contributeSessions: []).obs;
   var isLoading = false.obs;
   var isError = false.obs;
+  var isCreateSuccess = false.obs;
 
   @override
   void onInit() {
@@ -63,6 +66,31 @@ class PostController extends GetxController {
       print('Request failed with status: ${response.statusCode}');
       print('Request failed with status: ${responseModel.message}');
       throw Exception('Failed to load post');
+    }
+  }
+
+  Future<void> addComment(int postId, String content) async {
+    try {
+      var url = '$BASE_URL/Comment';
+      String? token = await storage.read(key: 'jwt');
+      var headers = {
+        'Authorization': 'Bearer $token',
+      };
+      var body = jsonEncode({
+        'postId': postId,
+        'content': content,
+      });
+      var response = await GetConnect().post(url, body, headers: headers);
+      print(response.bodyString);
+      if (response.statusCode == 200) {
+        isCreateSuccess(true);
+      } else {
+        print('Request failed with status: ${response.statusCode}');
+        isCreateSuccess(false);
+      }
+    } catch (e) {
+      isError(true);
+      print(e);
     }
   }
 }

@@ -28,9 +28,9 @@ class _GroupSuggestionsComponentState extends State<GroupSuggestionsComponent> {
     await getDashboardDetails().then((value) {
       appStore.setNotificationCount(value.notificationCount.validate());
       appStore.setVerificationStatus(value.verificationStatus.validate());
-      visibilities = value.visibilities.validate();
-      accountPrivacyVisibility = value.accountPrivacyVisibility.validate();
-      reportTypes = value.reportTypes.validate();
+      // visibilities = value.visibilities.validate();
+      // accountPrivacyVisibility = value.accountPrivacyVisibility.validate();
+      // reportTypes = value.reportTypes.validate();
 
       appStore.setShowStoryHighlight(value.isHighlightStoryEnable.validate());
       appStore.suggestedUserList = value.suggestedUser.validate();
