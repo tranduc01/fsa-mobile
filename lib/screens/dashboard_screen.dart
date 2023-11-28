@@ -446,12 +446,14 @@ class _DashboardScreenState extends State<DashboardScreen>
                   backgroundColor: context.primaryColor,
                 )
               : tabController.index == 1
-                  ? FloatingActionButton(
-                      child: Icon(Icons.add),
-                      onPressed: () {
-                        CreateExpertiseRequestScreen().launch(context);
-                      },
-                    )
+                  ? userController.user.value.role.contains('Member')
+                      ? FloatingActionButton(
+                          child: Icon(Icons.add),
+                          onPressed: () {
+                            CreateExpertiseRequestScreen().launch(context);
+                          },
+                        )
+                      : Offstage()
                   : Offstage(),
         ),
       ),

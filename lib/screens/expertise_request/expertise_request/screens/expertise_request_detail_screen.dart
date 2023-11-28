@@ -6,6 +6,8 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/controllers/post_controller.dart';
 import 'package:socialv/models/expertise_request/expertise_request.dart';
 
+import '../../../../controllers/user_controller.dart';
+import '../../../post/screens/image_screen.dart';
 import '../components/expertise_request_bottomsheet_widget.dart';
 
 class ExpertiseRequestDetailScreen extends StatefulWidget {
@@ -25,13 +27,14 @@ class _ExpertiseRequestDetailScreenState
   int _current = 0;
   final CarouselController _controller = CarouselController();
   late AnimationController _animationController;
+  late UserController userController = Get.find();
 
   final List<String> choicesList = [
-    'All',
-    'Pending',
-    'Approved',
-    'Rejected',
-    'Expired'
+    'ALL',
+    'PENDING',
+    'APPROVED',
+    'REJECTED',
+    'EXPIRED'
   ];
   final List<Color> colorList = [
     const Color.fromARGB(127, 33, 149, 243),
@@ -95,30 +98,36 @@ class _ExpertiseRequestDetailScreenState
                               Expanded(
                                 child: CarouselSlider(
                                   items: widget.request.medias!
-                                      .map((item) => Container(
-                                            child: Stack(
-                                              children: [
-                                                item.url != null
-                                                    ? Image.network(
-                                                        item.url!,
-                                                        fit: BoxFit.cover,
-                                                        errorBuilder:
-                                                            (BuildContext
-                                                                    context,
-                                                                Object
-                                                                    exception,
-                                                                StackTrace?
-                                                                    stackTrace) {
-                                                          return Image.asset(
-                                                            'assets/images/images.png',
-                                                            fit: BoxFit.cover,
-                                                          );
-                                                        },
-                                                      )
-                                                    : Image.asset(
-                                                        'assets/images/images.png',
-                                                        fit: BoxFit.cover),
-                                              ],
+                                      .map((item) => GestureDetector(
+                                            onTap: () => ImageScreen(
+                                                    imageURl:
+                                                        item.url.validate())
+                                                .launch(context),
+                                            child: Container(
+                                              child: Stack(
+                                                children: [
+                                                  item.url != null
+                                                      ? Image.network(
+                                                          item.url!,
+                                                          fit: BoxFit.cover,
+                                                          errorBuilder:
+                                                              (BuildContext
+                                                                      context,
+                                                                  Object
+                                                                      exception,
+                                                                  StackTrace?
+                                                                      stackTrace) {
+                                                            return Image.asset(
+                                                              'assets/images/images.png',
+                                                              fit: BoxFit.cover,
+                                                            );
+                                                          },
+                                                        )
+                                                      : Image.asset(
+                                                          'assets/images/images.png',
+                                                          fit: BoxFit.cover),
+                                                ],
+                                              ),
                                             ),
                                           ))
                                       .toList(),
@@ -167,9 +176,15 @@ class _ExpertiseRequestDetailScreenState
                             ],
                           )
                         : widget.request.medias!.isNotEmpty
-                            ? Image.network(
-                                widget.request.medias![0].url!,
-                                fit: BoxFit.cover,
+                            ? GestureDetector(
+                                onTap: () => ImageScreen(
+                                        imageURl: widget.request.medias![0].url
+                                            .validate())
+                                    .launch(context),
+                                child: Image.network(
+                                  widget.request.medias![0].url!,
+                                  fit: BoxFit.cover,
+                                ),
                               )
                             : Image.asset(
                                 'assets/images/images.png',
@@ -225,13 +240,14 @@ class _ExpertiseRequestDetailScreenState
                         ),
                         Container(
                           decoration: BoxDecoration(
-                              color: colorList[widget.request.status! + 1],
+                              color: colorList[choicesList.indexOf(
+                                  widget.request.adminApprovalStatus!)],
                               borderRadius: BorderRadius.circular(20),
                               border: Border.all(
                                   color: Color.fromARGB(24, 0, 0, 0))),
                           padding: EdgeInsets.all(6),
                           child: Text(
-                            choicesList[widget.request.status! + 1],
+                            widget.request.adminApprovalStatus!,
                             style: boldTextStyle(
                                 size: 15,
                                 fontFamily: 'Roboto',
@@ -259,10 +275,10 @@ class _ExpertiseRequestDetailScreenState
                         ),
                         Row(
                           children: [
-                            (widget.request.assignTo != null &&
-                                    widget.request.assignTo!.avatarUrl != null)
+                            (widget.request.expert != null &&
+                                    widget.request.expert!.avatarUrl != null)
                                 ? Image.network(
-                                    widget.request.assignTo!.avatarUrl!,
+                                    widget.request.expert!.avatarUrl!,
                                     height: 30,
                                     width: 30,
                                   )
@@ -273,8 +289,8 @@ class _ExpertiseRequestDetailScreenState
                                   ),
                             5.width,
                             Text(
-                              widget.request.assignTo != null
-                                  ? widget.request.assignTo!.name!
+                              widget.request.expert != null
+                                  ? widget.request.expert!.name!
                                   : 'No one',
                               style: TextStyle(
                                   fontSize: 20,
@@ -362,6 +378,37 @@ class _ExpertiseRequestDetailScreenState
                             textAlign: TextAlign.start,
                           ),
                         ),
+                        10.height,
+                        if (widget.request.adminApprovalStatus == 'REJECTED')
+                          Text(
+                            'Reject Message',
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: Color.fromARGB(130, 0, 0, 0),
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Roboto'),
+                          ),
+                        if (widget.request.adminApprovalStatus == 'REJECTED')
+                          Container(
+                            padding: EdgeInsets.all(6),
+                            width: MediaQuery.of(context).size.width * 0.8,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                            ),
+                            child: Text(
+                              widget.request.rejectMessage!,
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontFamily: 'Roboto',
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 6,
+                              textAlign: TextAlign.start,
+                            ),
+                          ),
                       ],
                     ),
                   ],
@@ -371,57 +418,74 @@ class _ExpertiseRequestDetailScreenState
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          showModalBottomSheet(
-            elevation: 0,
-            context: context,
-            isScrollControlled: true,
-            backgroundColor: Colors.transparent,
-            transitionAnimationController: _animationController,
-            builder: (context) {
-              return FractionallySizedBox(
-                heightFactor: 0.93,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 45,
-                      height: 5,
-                      //clipBehavior: Clip.hardEdge,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          color: Colors.white),
-                    ),
-                    8.height,
-                    Container(
-                      clipBehavior: Clip.antiAliasWithSaveLayer,
-                      decoration: BoxDecoration(
-                        color: context.cardColor,
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(16),
-                            topRight: Radius.circular(16)),
+      floatingActionButton: userController.user.value.role.contains('Member')
+          ? FloatingActionButton.extended(
+              onPressed: () {
+                showModalBottomSheet(
+                  elevation: 0,
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  transitionAnimationController: _animationController,
+                  builder: (context) {
+                    return FractionallySizedBox(
+                      heightFactor: 0.93,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 45,
+                            height: 5,
+                            //clipBehavior: Clip.hardEdge,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16),
+                                color: Colors.white),
+                          ),
+                          8.height,
+                          Container(
+                            clipBehavior: Clip.antiAliasWithSaveLayer,
+                            decoration: BoxDecoration(
+                              color: context.cardColor,
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(16),
+                                  topRight: Radius.circular(16)),
+                            ),
+                            child: ExpertiseResultBottomSheetWidget(),
+                          ).expand(),
+                        ],
                       ),
-                      child: ExpertiseResultBottomSheetWidget(),
-                    ).expand(),
-                  ],
-                ),
-              );
-            },
-          );
-        },
-        label: const Text(
-          'View Result',
-          style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Roboto'),
-        ),
-        icon: Image.asset(
-          'assets/icons/ic_result.png',
-          height: 30,
-          width: 30,
-          color: Colors.white,
-        ),
-        backgroundColor: context.primaryColor,
-      ),
+                    );
+                  },
+                );
+              },
+              label: const Text(
+                'View Result',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, fontFamily: 'Roboto'),
+              ),
+              icon: Image.asset(
+                'assets/icons/ic_result.png',
+                height: 30,
+                width: 30,
+                color: Colors.white,
+              ),
+              backgroundColor: context.primaryColor,
+            )
+          : userController.user.value.role.contains('Expert')
+              ? FloatingActionButton.extended(
+                  label: Text(
+                      postController.post.value.comments?.length.toString() ??
+                          0.toString(),
+                      style: TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.bold)),
+                  icon: Icon(
+                    Icons.messenger_outline_rounded,
+                    color: Colors.black,
+                  ),
+                  backgroundColor: Colors.white,
+                  onPressed: () {},
+                )
+              : Offstage(),
     );
   }
 }

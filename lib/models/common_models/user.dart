@@ -4,11 +4,11 @@ class User {
   String? userName;
   String? avatarUrl;
   bool? isVerified;
-  String? role;
+  List<dynamic> role;
 
   User(
       {this.id,
-      this.role,
+      required this.role,
       this.name,
       this.userName,
       this.avatarUrl,
@@ -17,7 +17,7 @@ class User {
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       id: json['id'],
-      role: json['role'],
+      role: json['roles'] ?? [],
       name: json['name'],
       userName: json['userName'],
       avatarUrl: json['avatarUrl'],
@@ -28,7 +28,7 @@ class User {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['role'] = this.role;
+    role.map((e) => data['role'].add(e));
     data['name'] = this.name;
     data['userName'] = this.userName;
     data['avatarUrl'] = this.avatarUrl;

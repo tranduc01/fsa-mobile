@@ -41,18 +41,14 @@ class ExpertiseRequestController extends GetxController {
     if (response.statusCode == 200) {
       isLoading(false);
       isError(false);
-      // return expertiseRequests.value = (responseModel.data['items'] as List)
-      //     .map((e) => ExpertiseRequest.fromJson(e))
-      //     .toList();
-      return expertiseRequests.value =
-          (jsonDecode(response.bodyString!)['items'] as List)
-              .map((e) => ExpertiseRequest.fromJson(e))
-              .toList();
+      return expertiseRequests.value = (responseModel.data['items'] as List)
+          .map((e) => ExpertiseRequest.fromJson(e))
+          .toList();
     } else {
       isLoading(false);
       isError(true);
       print('Request failed with status: ${response.statusCode}');
-      //print('Request failed with status: ${responseModel.message}');
+      print('Request failed with status: ${responseModel.message}');
       throw Exception('Failed to load requests');
     }
   }

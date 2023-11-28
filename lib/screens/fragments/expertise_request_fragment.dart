@@ -29,12 +29,12 @@ class _ExpertiseRequestFragmentState extends State<ExpertiseRequestFragment>
   bool mIsLastPage = false;
   int selectedIndex = 0;
   final List<String> choicesList = [
-    'All',
-    'Pending',
-    'Approved',
-    'Rejected',
-    'Expired',
-    'Advance'
+    'ALL',
+    'PENDING',
+    'APPROVED',
+    'REJECTED',
+    'EXPIRED',
+    'ADVANCE'
   ];
   final List<Color> colorList = [
     const Color.fromARGB(127, 33, 149, 243),
@@ -85,7 +85,7 @@ class _ExpertiseRequestFragmentState extends State<ExpertiseRequestFragment>
               children: List<Widget>.generate(
                 choicesList.length,
                 (index) => ChoiceChip(
-                  label: choicesList[index] == 'Advance'
+                  label: choicesList[index] == 'ADVANCE'
                       ? Icon(Icons.more_horiz_rounded)
                       : Text(
                           choicesList[index],
@@ -360,58 +360,6 @@ class _ExpertiseRequestFragmentState extends State<ExpertiseRequestFragment>
                                                         fontFamily: 'Roboto',
                                                         size: 18),
                                                   ),
-                                                  Spacer(),
-                                                  if (expertiseRequest.status ==
-                                                      1)
-                                                    Container(
-                                                      width: 55,
-                                                      decoration: BoxDecoration(
-                                                        color:
-                                                            Colors.yellow[700],
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(20),
-                                                        border: Border.all(
-                                                            color:
-                                                                Color.fromARGB(
-                                                                    24,
-                                                                    0,
-                                                                    0,
-                                                                    0)),
-                                                      ),
-                                                      padding:
-                                                          EdgeInsets.all(6),
-                                                      child: Center(
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            Icon(
-                                                                Icons
-                                                                    .star_rate_rounded,
-                                                                size: 15),
-                                                            Text(
-                                                              expertiseRequest
-                                                                  .feedbackRating
-                                                                  .toString(),
-                                                              style:
-                                                                  boldTextStyle(
-                                                                size: 15,
-                                                                fontFamily:
-                                                                    'Roboto',
-                                                                color: Color
-                                                                    .fromARGB(
-                                                                        255,
-                                                                        0,
-                                                                        0,
-                                                                        0),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    )
                                                 ],
                                               ),
                                               Spacer(),
@@ -433,9 +381,9 @@ class _ExpertiseRequestFragmentState extends State<ExpertiseRequestFragment>
                                                   Container(
                                                     decoration: BoxDecoration(
                                                         color: colorList[
-                                                            expertiseRequest
-                                                                    .status! +
-                                                                1],
+                                                            choicesList.indexOf(
+                                                                expertiseRequest
+                                                                    .adminApprovalStatus!)],
                                                         borderRadius:
                                                             BorderRadius
                                                                 .circular(20),
@@ -448,10 +396,8 @@ class _ExpertiseRequestFragmentState extends State<ExpertiseRequestFragment>
                                                                     0))),
                                                     padding: EdgeInsets.all(6),
                                                     child: Text(
-                                                      choicesList[
-                                                          expertiseRequest
-                                                                  .status! +
-                                                              1],
+                                                      expertiseRequest
+                                                          .adminApprovalStatus!,
                                                       style: boldTextStyle(
                                                           size: 15,
                                                           fontFamily: 'Roboto',

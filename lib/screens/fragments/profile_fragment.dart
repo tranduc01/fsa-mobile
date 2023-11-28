@@ -6,11 +6,13 @@ import 'package:socialv/components/loading_widget.dart';
 import 'package:socialv/components/no_data_lottie_widget.dart';
 import 'package:socialv/controllers/user_controller.dart';
 import 'package:socialv/main.dart';
+import 'package:socialv/models/common_models.dart';
 import 'package:socialv/models/members/member_detail_model.dart';
 import 'package:socialv/network/rest_apis.dart';
 import 'package:socialv/screens/dashboard_screen.dart';
 import 'package:socialv/screens/post/components/post_component.dart';
 import 'package:socialv/screens/profile/components/profile_header_component.dart';
+import 'package:socialv/screens/profile/screens/verify_face_screen.dart';
 
 import '../../models/posts/post.dart';
 import '../../utils/app_constants.dart';
@@ -184,8 +186,11 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                           height: 20,
                                         ),
                                         onTap: () async {
-                                          VerifyIdCardScreen().launch(context);
+                                          //VerifyIdCardScreen().launch(context);
                                           toast('Please verify your account');
+                                          VerifyFaceScreen(
+                                            frontIdMedia: PostMedia(),
+                                          ).launch(context);
                                         },
                                       ).paddingSymmetric(horizontal: 4)),
                               ),
@@ -194,6 +199,8 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                         );
                       }),
                       4.height,
+                      Text(userController.user.value.role.join(', '),
+                          style: secondaryTextStyle(size: 12)),
                       TextIcon(
                         edgeInsets: EdgeInsets.zero,
                         spacing: 0,

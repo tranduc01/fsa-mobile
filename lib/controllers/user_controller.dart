@@ -15,7 +15,7 @@ class UserController extends GetxController {
   final storage = new FlutterSecureStorage();
   var isLoggedIn = false.obs;
   var isRegistered = false.obs;
-  var user = User().obs;
+  var user = User(role: []).obs;
   var isVerifySuccess = false.obs;
   var message = ''.obs;
 
@@ -114,7 +114,7 @@ class UserController extends GetxController {
     storage.delete(key: 'jwt');
     storage.delete(key: 'user');
     isLoggedIn.value = false;
-    user.value = User();
+    user.value = User(role: []);
     push(DashboardScreen(),
         isNewTask: true, pageRouteAnimation: PageRouteAnimation.Slide);
   }
