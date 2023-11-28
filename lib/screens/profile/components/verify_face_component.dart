@@ -152,6 +152,8 @@ class _VerifyFaceComponentState extends State<VerifyFaceComponent> {
                             Navigator.pop(context);
                             userController.user.value.isVerified = true;
                             toast('User Verify Successfully!');
+                            userController.saveUser(userController.user.value);
+                            Navigator.pop(context);
                             Navigator.pop(context);
                           } else {
                             Navigator.pop(context);

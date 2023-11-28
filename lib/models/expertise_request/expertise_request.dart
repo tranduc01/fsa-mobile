@@ -12,7 +12,7 @@ class ExpertiseRequest {
   DateTime? feedbackCreatedAt;
   DateTime? createAt;
   String? adminApprovalStatus;
-  bool? isSystemReject;
+  String? isSystemReject;
   User? expert;
   List<Media>? medias;
 
@@ -48,7 +48,7 @@ class ExpertiseRequest {
             ? DateTime.parse(json['createAt'] as String)
             : null,
         adminApprovalStatus: json['adminApprovalStatus'] ?? 'Pending',
-        isSystemReject: json['isSystemReject'] as bool?,
+        isSystemReject: json['isSystemReject'] as String?,
         expert: json['expertAssign'] != null &&
                 json['expertAssign']['expert'] != null
             ? User.fromJson(

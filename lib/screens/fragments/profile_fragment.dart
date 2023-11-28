@@ -173,8 +173,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                             children: [
                               WidgetSpan(
                                 child: Obx(() => userController
-                                            .user.value.isVerified ??
-                                        false
+                                        .user.value.isVerified!
                                     ? Image.asset(ic_tick_filled,
                                         width: 20,
                                         height: 20,
@@ -186,11 +185,11 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                           height: 20,
                                         ),
                                         onTap: () async {
-                                          //VerifyIdCardScreen().launch(context);
+                                          VerifyIdCardScreen().launch(context);
                                           toast('Please verify your account');
-                                          VerifyFaceScreen(
-                                            frontIdMedia: PostMedia(),
-                                          ).launch(context);
+                                          // VerifyFaceScreen(
+                                          //   frontIdMedia: PostMedia(),
+                                          // ).launch(context);
                                         },
                                       ).paddingSymmetric(horizontal: 4)),
                               ),
@@ -308,21 +307,21 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                 Text(language.posts,
                     style:
                         boldTextStyle(color: context.primaryColor, size: 20)),
-                TextIcon(
-                  onTap: () {
-                    isFavorites = !isFavorites;
-                    mPage = 1;
-                    setState(() {});
-                    getUserPostList();
-                  },
-                  prefix: Icon(
-                      isFavorites ? Icons.check_circle : Icons.circle_outlined,
-                      color: appColorPrimary,
-                      size: 18),
-                  text: language.favorites,
-                  textStyle: secondaryTextStyle(
-                      color: isFavorites ? context.primaryColor : null),
-                ),
+                // TextIcon(
+                //   onTap: () {
+                //     isFavorites = !isFavorites;
+                //     mPage = 1;
+                //     setState(() {});
+                //     getUserPostList();
+                //   },
+                //   prefix: Icon(
+                //       isFavorites ? Icons.check_circle : Icons.circle_outlined,
+                //       color: appColorPrimary,
+                //       size: 18),
+                //   text: language.favorites,
+                //   textStyle: secondaryTextStyle(
+                //       color: isFavorites ? context.primaryColor : null),
+                // ),
               ],
             ).paddingSymmetric(horizontal: 8),
             FutureBuilder<List<Post>>(

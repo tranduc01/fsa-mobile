@@ -28,7 +28,7 @@ class User {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    role.map((e) => data['role'].add(e));
+    data['roles'] = this.role;
     data['name'] = this.name;
     data['userName'] = this.userName;
     data['avatarUrl'] = this.avatarUrl;
