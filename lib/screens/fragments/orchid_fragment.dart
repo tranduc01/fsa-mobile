@@ -1,4 +1,3 @@
-import 'package:alphabet_scroll_view/alphabet_scroll_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -6,6 +5,7 @@ import 'package:socialv/controllers/orchid_controller.dart';
 
 import '../../components/loading_widget.dart';
 import '../../components/no_data_lottie_widget.dart';
+import '../../utils/alphabet_scroll.dart';
 
 class OrchidFragment extends StatefulWidget {
   final ScrollController controller;
