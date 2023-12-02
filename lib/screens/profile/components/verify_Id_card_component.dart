@@ -257,7 +257,7 @@ class _VerifyIdCardComponentState extends State<VerifyIdCardComponent> {
     );
     await _cameraController.initialize();
 
-    _cameraController.startImageStream((CameraImage image) async {
+    await _cameraController.startImageStream((CameraImage image) async {
       frameCount++;
       if (frameCount % 10 == 0) {
         // process every 10th frame
@@ -325,6 +325,7 @@ class _VerifyIdCardComponentState extends State<VerifyIdCardComponent> {
               ),
               onTap: () async {
                 if (isDataDetected) {
+                  _cameraController.stopImageStream();
                   var value = await _cameraController.takePicture();
 
                   mediaType == 'frontId'
@@ -393,7 +394,10 @@ class _VerifyIdCardComponentState extends State<VerifyIdCardComponent> {
             text.text.toLowerCase().contains('căn cước')
         : text.text.toLowerCase().contains('Personal identification') ||
             text.text.toLowerCase().contains('Personal') ||
-            text.text.toLowerCase().contains('identification');
+            text.text.toLowerCase().contains('identification') ||
+            text.text.toLowerCase().contains('cục trưởng cục cảnh sát') ||
+            text.text.toLowerCase().contains('cục trưởng') ||
+            text.text.toLowerCase().contains('cảnh sát');
     return hasData;
   }
 }

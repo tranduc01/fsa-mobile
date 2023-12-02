@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/components/loading_widget.dart';
 import 'package:socialv/main.dart';
+import 'package:tap_to_expand/tap_to_expand.dart';
 
 class ExpertiseResultBottomSheetWidget extends StatefulWidget {
   ExpertiseResultBottomSheetWidget({Key? key}) : super(key: key);
@@ -67,8 +68,34 @@ class _ExpertiseResultBottomSheetWidgetState
                       ),
                     ],
                   ),
-                  10.height,
-                  Column(mainAxisSize: MainAxisSize.min, children: []),
+                  20.height,
+                  Text('Kết quả đánh giá', style: boldTextStyle(size: 25)),
+                  Center(
+                    child: TapToExpand(
+                      content: Text(
+                        'Cái cây này có thể dùng để làm gì đó nè Cái cây này có thể dùng để làm gì đó nè Cái cây này có thể dùng để làm gì đó nè Cái cây này có thể dùng để làm gì đó nè Cái cây này có thể dùng để làm gì đó nè Cái cây này có thể dùng để làm gì đó nè Cái cây này có thể dùng để làm gì đó nè Cái cây này có thể dùng để làm gì đó nè ',
+                        style: TextStyle(
+                            fontFamily: 'Roboto',
+                            fontSize: 16,
+                            color: Colors.white,
+                            height: 1.5),
+                      ),
+                      title: const Text(
+                        'Tiêu chí 1',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontFamily: 'Roboto',
+                        ),
+                      ),
+                      color: Colors.blueGrey,
+                      onTapPadding: 10,
+                      closedHeight: 70,
+                      scrollable: true,
+                      borderRadius: 10,
+                      openedHeight: 200,
+                    ),
+                  ),
                 ],
               ),
             ).expand(),

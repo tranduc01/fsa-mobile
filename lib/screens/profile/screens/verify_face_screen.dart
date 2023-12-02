@@ -63,13 +63,6 @@ class _VerifyFaceState extends State<VerifyFaceScreen> {
         title: Text('Verify Your Identity', style: boldTextStyle(size: 20)),
         elevation: 0,
         centerTitle: true,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: context.iconColor),
-          onPressed: () {
-            Navigator.of(context).pop();
-            Navigator.of(context).pop();
-          },
-        ),
       ),
       body: Container(
         decoration: BoxDecoration(

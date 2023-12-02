@@ -35,6 +35,7 @@ class _VerifyFaceComponentState extends State<VerifyFaceComponent> {
 
   late UserController userController = Get.put(UserController());
   late CameraController _cameraController;
+  final faceDetector = FaceDetector(options: FaceDetectorOptions());
 
   @override
   void initState() {
@@ -49,7 +50,8 @@ class _VerifyFaceComponentState extends State<VerifyFaceComponent> {
   @override
   void dispose() {
     _cameraController.dispose();
-    _cameraController.stopImageStream();
+    //_cameraController.stopImageStream();
+    faceDetector.close();
     super.dispose();
   }
 
@@ -150,6 +152,8 @@ class _VerifyFaceComponentState extends State<VerifyFaceComponent> {
                             Navigator.pop(context);
                             userController.user.value.isVerified = true;
                             toast('User Verify Successfully!');
+                            userController.saveUser(userController.user.value);
+                            Navigator.pop(context);
                             Navigator.pop(context);
                           } else {
                             Navigator.pop(context);
@@ -185,9 +189,9 @@ class _VerifyFaceComponentState extends State<VerifyFaceComponent> {
 
   Future<void> onCaptureImage(String mediaType) async {
     //appStore.setLoading(true);
+    bool isDataDetected = false;
     int frameCount = 0;
     StreamController<bool> dataDetectedController = StreamController<bool>();
-    List<Face> faces = [];
     final cameras = await availableCameras();
     final camera = cameras[1];
     _cameraController = CameraController(
@@ -195,13 +199,16 @@ class _VerifyFaceComponentState extends State<VerifyFaceComponent> {
       ResolutionPreset.high,
       enableAudio: false,
     );
+
     await _cameraController.initialize();
 
-    _cameraController.startImageStream((CameraImage image) async {
+    await _cameraController.startImageStream((CameraImage image) async {
       frameCount++;
       if (frameCount % 10 == 0) {
         // process every 10th frame
-        faces = await detectFace(image);
+        var faces = await detectFace(image, faceDetector);
+        isDataDetected = faces.isNotEmpty;
+        dataDetectedController.add(isDataDetected);
         setState(() {});
       }
     });
@@ -228,15 +235,15 @@ class _VerifyFaceComponentState extends State<VerifyFaceComponent> {
               ),
             ),
           ),
-          for (final face in faces)
-            Positioned(
-                left: face.boundingBox.left,
-                top: face.boundingBox.top,
-                width: face.boundingBox.width,
-                height: face.boundingBox.height,
-                child: CustomPaint(
-                  painter: FaceRectanglePainter(face.boundingBox),
-                )),
+          // for (final face in faces)
+          //   Positioned(
+          //       left: face.boundingBox.left,
+          //       top: face.boundingBox.top,
+          //       width: face.boundingBox.width,
+          //       height: face.boundingBox.height,
+          //       child: CustomPaint(
+          //         painter: FaceRectanglePainter(face.boundingBox),
+          //       )),
           Positioned(
             bottom: 30,
             left: 0,
@@ -249,7 +256,8 @@ class _VerifyFaceComponentState extends State<VerifyFaceComponent> {
                 color: Colors.white,
               ),
               onTap: () async {
-                if (faces.isNotEmpty) {
+                if (isDataDetected) {
+                  _cameraController.stopImageStream();
                   var value = await _cameraController.takePicture();
                   portraitMedia = PostMedia(file: File(value.path));
                   setState(() {});
@@ -267,10 +275,12 @@ class _VerifyFaceComponentState extends State<VerifyFaceComponent> {
     if (_cameraController.value.isStreamingImages) {
       _cameraController.stopImageStream();
     }
+    faceDetector.close();
     dataDetectedController.close();
   }
 
-  Future<List<Face>> detectFace(CameraImage image) async {
+  Future<List<Face>> detectFace(
+      CameraImage image, FaceDetector faceDetector) async {
     // Convert the CameraImage to InputImage
     final WriteBuffer allBytes = WriteBuffer();
     for (Plane plane in image.planes) {
@@ -299,15 +309,15 @@ class _VerifyFaceComponentState extends State<VerifyFaceComponent> {
     );
 
     // Create an instance of FaceDetector
-    FaceDetector faceDetector = FaceDetector(options: FaceDetectorOptions());
-
+    print('detectFace');
     // Process the image and get the detected face
     final List<Face> faces = await faceDetector.processImage(inputImage);
     faces.forEach((element) {
       print('BB: ' + element.boundingBox.toString());
     });
+    print(faces.length);
     // Close the FaceDetector
-    faceDetector.close();
+    //faceDetector.close();
 
     return faces;
   }
