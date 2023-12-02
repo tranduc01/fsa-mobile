@@ -33,6 +33,11 @@ dependencies:
   camera:
   extended_image: ^8.1.1
 
+  #Date CountDown
+  date_count_down:
+  flutter_timer_countdown:
+  flutter_staggered_grid_view: 
+
   # APIs
   http:
   intl: ^0.18.0

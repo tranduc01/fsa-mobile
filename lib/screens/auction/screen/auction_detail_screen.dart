@@ -1,7 +1,10 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
+import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
+import 'package:nb_utils/nb_utils.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:socialv/screens/post/screens/image_screen.dart';
 
 class AcutionDetailSceen extends StatefulWidget {
   @override
@@ -19,7 +22,15 @@ class _AcutionDetailSceenState extends State<AcutionDetailSceen> {
   @override
   Widget build(BuildContext context) {
     var screenHeight = MediaQuery.of(context).size.height;
-
+    var listImage = [
+      "https://hoatuoithanhthao.com/media/ftp/hoa-lan-5.jpg",
+      "https://hoatuoithanhthao.com/media/ftp/hoa-lan.jpg",
+      "https://cdn.tgdd.vn/Files/2021/07/24/1370576/hoa-lan-tim-dac-diem-y-nghia-va-cach-trong-hoa-no-dep-202107242028075526.jpg",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7UvPqpugxu0O-yewdWjwrOncoZEjIVaPPbG_JQdqI9w&s",
+      "https://lanhodiep.vn/wp-content/uploads/2022/10/hinh-nen-hoa-lan-ho-diep-1.jpg",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7UvPqpugxu0O-yewdWjwrOncoZEjIVaPPbG_JQdqI9w&s",
+      "https://lanhodiep.vn/wp-content/uploads/2022/10/hinh-nen-hoa-lan-ho-diep-1.jpg"
+    ];
     return Scaffold(
       body: Stack(
         children: [
@@ -27,31 +38,38 @@ class _AcutionDetailSceenState extends State<AcutionDetailSceen> {
             children: [
               Stack(
                 children: [
-                  ImageSlideshow(
+                  // ImageSlideshow(
+                  //   height: screenHeight * 0.535,
+                  //   children: [
+                  //     ClipRRect(
+                  //       child: ImageFiltered(
+                  //         imageFilter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
+                  //         child: Image.network(
+                  //           "https://hoatuoithanhthao.com/media/ftp/hoa-lan-5.jpg",
+                  //           fit: BoxFit.cover,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //     ClipRRect(
+                  //       child: ImageFiltered(
+                  //         imageFilter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
+                  //         child: Image.network(
+                  //           "https://hoatuoithanhthao.com/media/ftp/hoa-lan.jpg",
+                  //           fit: BoxFit.cover,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ],
+                  //   autoPlayInterval: 15000,
+                  //   isLoop: true,
+                  //   initialPage: 0,
+                  // ),
+                  Container(
                     height: screenHeight * 0.535,
-                    children: [
-                      ClipRRect(
-                        child: ImageFiltered(
-                          imageFilter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                          child: Image.network(
-                            "https://hoatuoithanhthao.com/media/ftp/hoa-lan-5.jpg",
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      ClipRRect(
-                        child: ImageFiltered(
-                          imageFilter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                          child: Image.network(
-                            "https://hoatuoithanhthao.com/media/ftp/hoa-lan.jpg",
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                    ],
-                    autoPlayInterval: 15000,
-                    isLoop: true,
-                    initialPage: 0,
+                    child: Image.network(
+                      'https://th.bing.com/th/id/OIG.a.qtRjNjvTlxGYWBWxbS?pid=ImgGn',
+                      fit: BoxFit.cover,
+                    ),
                   ),
                   Stack(
                     children: [
@@ -63,31 +81,6 @@ class _AcutionDetailSceenState extends State<AcutionDetailSceen> {
                           right: 10.0,
                         ),
                         height: screenHeight * 0.4,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20.0),
-                          color: Colors.white.withOpacity(0.5),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(20.0),
-                          ),
-                          child: ImageSlideshow(
-                            height: screenHeight * 0.535,
-                            children: [
-                              Image.network(
-                                "https://hoatuoithanhthao.com/media/ftp/hoa-lan-5.jpg",
-                                fit: BoxFit.cover,
-                              ),
-                              Image.network(
-                                "https://hoatuoithanhthao.com/media/ftp/hoa-lan.jpg",
-                                fit: BoxFit.cover,
-                              ),
-                            ],
-                            autoPlayInterval: 15000,
-                            isLoop: true,
-                            initialPage: 0,
-                          ),
-                        ),
                       ),
                       // Back button
                       Positioned(
@@ -106,6 +99,7 @@ class _AcutionDetailSceenState extends State<AcutionDetailSceen> {
                                 fontSize: 20,
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
+                                fontFamily: 'Roboto',
                               ),
                             ),
                           ],
@@ -114,19 +108,6 @@ class _AcutionDetailSceenState extends State<AcutionDetailSceen> {
                     ],
                   )
                 ],
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment(0.8, 1),
-                    colors: <Color>[
-                      Color(0xFFebf4f5),
-                      Color.fromARGB(160, 181, 198, 224),
-                    ],
-                  ),
-                ),
-                height: screenHeight * 0.07,
               ),
               Container(
                 padding: EdgeInsets.all(10.0),
@@ -140,179 +121,73 @@ class _AcutionDetailSceenState extends State<AcutionDetailSceen> {
                     ],
                   ),
                 ),
-                height: screenHeight * 0.395,
+                height: screenHeight * 0.465,
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "HOA LAN ĐỘT BIẾN",
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          IconButton(
-                            icon: isShowOrchidInfo
-                                ? Icon(Icons.keyboard_arrow_up)
-                                : Icon(Icons.keyboard_arrow_down),
-                            onPressed: () {
-                              setState(() {
-                                isShowOrchidInfo = !isShowOrchidInfo;
-                              });
-                            },
-                          ),
-                        ],
-                      ),
-                      Visibility(
-                        child: Text(
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl sed aliquet ultricies, nunc nisl ultricies nunc, quis aliquam nisl nisl eu nisl. Donec euismod, nisl sed aliquet ultricies, nunc nisl ultricies nunc, quis aliquam nisl nisl eu nisl. Donec euismod, nisl sed aliquet ultricies, nunc nisl ultricies nunc, quis aliquam nisl nisl eu nisl. Donec euismod, nisl sed aliquet ultricies, nunc nisl ultricies nunc, quis aliquam nisl nisl eu nisl. Donec euismod, nisl sed aliquet ultricies, nunc nisl ultricies nunc, quis aliquam nisl nisl eu nisl. Donec euismod, nisl sed aliquet ultricies, nunc nisl ultricies nunc, quis aliquam nisl nisl eu nisl. Donec euismod, nisl sed aliquet ultricies, nunc nisl ultricies nunc, quis aliquam nisl nisl eu nisl."),
-                        visible: isShowOrchidInfo,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "THÔNG TIN ĐẤU GIÁ",
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          IconButton(
-                            icon: isShowAuctionInfo
-                                ? Icon(Icons.keyboard_arrow_up)
-                                : Icon(Icons.keyboard_arrow_down),
-                            onPressed: () {
-                              setState(() {
-                                isShowAuctionInfo = !isShowAuctionInfo;
-                              });
-                            },
-                          ),
-                        ],
-                      ),
-                      Visibility(
+                      DefaultTabController(
+                        length: 2,
                         child: Column(
                           children: [
-                            Row(
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.all(5.0),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20.0),
-                                    color: Colors.white,
-                                  ),
-                                  child: Icon(
-                                    Icons.people_alt_outlined,
+                            TabBar(
+                              tabs: [
+                                Tab(
+                                  child: DefaultTextStyle(
+                                    child:
+                                        Text('ẢNH ' + '(${listImage.length})'),
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 15,
+                                        fontFamily: 'Roboto'),
                                   ),
                                 ),
-                                SizedBox(width: 10.0),
-                                Expanded(
-                                  child: Container(
-                                    padding: EdgeInsets.all(10.0),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      color: Colors.white,
-                                    ),
-                                    child: Text(
-                                      "12 người đã tham gia đấu giá",
-                                      style: TextStyle(
-                                        fontStyle: FontStyle.italic,
+                                Tab(
+                                  child: DefaultTextStyle(
+                                    child: Text('THÔNG TIN ĐẤU GIÁ'),
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 15,
+                                        fontFamily: 'Roboto'),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Container(
+                              height:
+                                  330, // specify the height of the container
+                              child: TabBarView(
+                                children: [
+                                  Container(
+                                    height: 350,
+                                    child: MasonryGridView.builder(
+                                      itemCount: listImage.length,
+                                      gridDelegate:
+                                          const SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 2,
+                                      ),
+                                      itemBuilder: (context, index) => Padding(
+                                        padding: const EdgeInsets.all(2.0),
+                                        child: GestureDetector(
+                                          child: Image.network(
+                                            listImage[index],
+                                            fit: BoxFit.fill,
+                                          ).cornerRadiusWithClipRRect(20),
+                                          onTap: () => ImageScreen(
+                                                  imageURl: listImage[index])
+                                              .launch(context),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                  Container(
+                                    height: 350,
+                                    child: Text("data"),
+                                  ),
+                                ],
+                              ),
                             ),
-                            SizedBox(height: 10.0),
-                            Row(
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.all(5.0),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20.0),
-                                    color: Colors.white,
-                                  ),
-                                  child: Icon(
-                                    Icons.call_made_outlined,
-                                  ),
-                                ),
-                                SizedBox(width: 10.0),
-                                Expanded(
-                                  child: Container(
-                                    padding: EdgeInsets.all(10.0),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      color: Colors.white,
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          "bước nhảy nhỏ nhất: ",
-                                          style: TextStyle(
-                                            fontStyle: FontStyle.italic,
-                                          ),
-                                        ),
-                                        Text(
-                                          "50.000 VND",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 10.0),
-                            Row(
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.all(5.0),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20.0),
-                                    color: Colors.white,
-                                  ),
-                                  child: Icon(
-                                    Icons.campaign_outlined,
-                                  ),
-                                ),
-                                SizedBox(width: 10.0),
-                                Expanded(
-                                  child: Container(
-                                    padding: EdgeInsets.all(10.0),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      color: Colors.white,
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          "giá đấu hiện tại: ",
-                                          style: TextStyle(
-                                            fontStyle: FontStyle.italic,
-                                          ),
-                                        ),
-                                        Text(
-                                          "250.000 VND",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            )
                           ],
                         ),
-                        visible: isShowAuctionInfo,
                       ),
                     ],
                   ),
@@ -321,88 +196,103 @@ class _AcutionDetailSceenState extends State<AcutionDetailSceen> {
             ],
           ),
           Positioned(
-            top: 430,
+            top: screenHeight * 0.31,
             left: 10,
             right: 10,
             child: Container(
-              padding: EdgeInsets.all(10.0),
+              padding: EdgeInsets.only(
+                top: 10.0,
+                left: 20.0,
+                right: 20.0,
+                bottom: 20.0,
+              ),
               width: MediaQuery.of(context).size.width,
-              height: 110,
+              height: 170,
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment(0.8, 1),
-                    colors: <Color>[
-                      Color(0xFFf6d5f7),
-                      Color(0xFFfbe9d7),
-                    ],
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment(0.8, 1),
+                  colors: <Color>[
+                    Color(0xFFf6d5f7),
+                    Color(0xFFfbe9d7),
+                  ],
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 0.8,
+                    blurRadius: 7,
+                    offset: Offset(0, 3), // changes position of shadow
                   ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 0.8,
-                      blurRadius: 7,
-                      offset: Offset(0, 3), // changes position of shadow
-                    ),
-                  ]),
+                ],
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Expanded(
-                        child: Column(
-                          children: [
-                            Text(
-                              "100.000 VND",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 25.0,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                            Text(
-                              "Giá khởi điểm",
-                              style: TextStyle(
-                                color: const Color.fromARGB(194, 0, 0, 0),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18.0,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
+                      TimerCountdown(
+                        format: CountDownTimerFormat.daysHoursMinutesSeconds,
+                        endTime: DateTime.now().add(
+                          Duration(
+                            days: 5,
+                            hours: 14,
+                            minutes: 27,
+                            seconds: 34,
+                          ),
                         ),
-                      ),
-                      Container(
-                        height: 40,
-                        width: 1,
-                        color: Colors.black,
-                      ),
-                      Expanded(
-                        child: Column(
-                          children: [
-                            Text(
-                              "500.000 VND",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 25.0,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                            Text(
-                              "Giá cao nhất",
-                              style: TextStyle(
-                                color: const Color.fromARGB(194, 0, 0, 0),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18.0,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
+                        timeTextStyle: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Roboto',
                         ),
+                        colonsTextStyle: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Roboto',
+                        ),
+                        descriptionTextStyle: TextStyle(
+                          color: Colors.black,
+                          fontSize: 15.0,
+                          fontFamily: 'Roboto',
+                        ),
+                        spacerWidth: 5,
+                        onEnd: () {
+                          print("Timer finished");
+                        },
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Hoa lan đột biến",
+                        style: TextStyle(
+                            color: const Color.fromARGB(194, 0, 0, 0),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20.0,
+                            fontFamily: 'Roboto'),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        "Hoa lan ở bên mỹ",
+                        style: secondaryTextStyle(
+                          fontFamily: 'Roboto',
+                          color: Colors.black,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
                     ],
                   ),
@@ -415,15 +305,28 @@ class _AcutionDetailSceenState extends State<AcutionDetailSceen> {
                         child: Column(
                           children: [
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Icon(Icons.timer_sharp),
                                 Text(
-                                  " 17 ngày 8 giờ",
+                                  "300k",
                                   style: TextStyle(
                                     color: const Color.fromARGB(194, 0, 0, 0),
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 18.0,
+                                    fontSize: 15.0,
+                                    fontFamily: 'Roboto',
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  " Giá khởi điểm",
+                                  style: secondaryTextStyle(
+                                    color: const Color.fromARGB(194, 0, 0, 0),
+                                    fontFamily: 'Roboto',
                                   ),
                                   textAlign: TextAlign.center,
                                 ),
@@ -431,7 +334,75 @@ class _AcutionDetailSceenState extends State<AcutionDetailSceen> {
                             ),
                           ],
                         ),
-                      )
+                      ),
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  " 5000k",
+                                  style: TextStyle(
+                                    color: const Color.fromARGB(194, 0, 0, 0),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15.0,
+                                    fontFamily: 'Roboto',
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  " Giá mua ngay",
+                                  style: secondaryTextStyle(
+                                    color: const Color.fromARGB(194, 0, 0, 0),
+                                    fontFamily: 'Roboto',
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  " 1000k",
+                                  style: TextStyle(
+                                    color: const Color.fromARGB(194, 0, 0, 0),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15.0,
+                                    fontFamily: 'Roboto',
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  " Giá trị hiện tại",
+                                  style: secondaryTextStyle(
+                                    color: const Color.fromARGB(194, 0, 0, 0),
+                                    fontFamily: 'Roboto',
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ],

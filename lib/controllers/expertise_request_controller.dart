@@ -35,8 +35,8 @@ class ExpertiseRequestController extends GetxController {
     };
     var response = await GetConnect().get(url, headers: headers);
 
-    ResponseModel responseModel =
-        ResponseModel.fromJson(jsonDecode(response.bodyString!));
+    // ResponseModel responseModel =
+    //     ResponseModel.fromJson(jsonDecode(response.bodyString!));
 
     if (response.statusCode == 200) {
       isLoading(false);
