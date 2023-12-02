@@ -35,20 +35,27 @@ class ExpertiseRequestController extends GetxController {
     };
     var response = await GetConnect().get(url, headers: headers);
 
-    ResponseModel responseModel =
-        ResponseModel.fromJson(jsonDecode(response.bodyString!));
+    if (response.bodyString != null) {
+      ResponseModel responseModel =
+          ResponseModel.fromJson(jsonDecode(response.bodyString!));
 
-    if (response.statusCode == 200) {
-      isLoading(false);
-      isError(false);
-      return expertiseRequests.value = (responseModel.data['items'] as List)
-          .map((e) => ExpertiseRequest.fromJson(e))
-          .toList();
+      if (response.statusCode == 200) {
+        isLoading(false);
+        isError(false);
+        return expertiseRequests.value = (responseModel.data['items'] as List)
+            .map((e) => ExpertiseRequest.fromJson(e))
+            .toList();
+      } else {
+        isLoading(false);
+        isError(true);
+        print('Request failed with status: ${response.statusCode}');
+        print('Request failed with status: ${responseModel.message}');
+        throw Exception('Failed to load requests');
+      }
     } else {
       isLoading(false);
       isError(true);
       print('Request failed with status: ${response.statusCode}');
-      print('Request failed with status: ${responseModel.message}');
       throw Exception('Failed to load requests');
     }
   }

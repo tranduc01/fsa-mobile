@@ -8,12 +8,11 @@ import 'package:socialv/main.dart';
 import 'package:socialv/screens/fragments/forums_fragment.dart';
 import 'package:socialv/screens/fragments/home_fragment.dart';
 import 'package:socialv/screens/fragments/notification_fragment.dart';
+import 'package:socialv/screens/fragments/orchid_fragment.dart';
 import 'package:socialv/screens/fragments/profile_fragment.dart';
-import 'package:socialv/screens/fragments/expertise_request_fragment.dart';
 import 'package:socialv/screens/home/components/ranking_bottomsheet_widget.dart';
 import 'package:socialv/screens/home/components/user_detail_bottomsheet_widget.dart';
 import 'package:socialv/screens/notification/components/latest_activity_component.dart';
-import 'package:socialv/screens/expertise_request/expertise_request/screens/create_expertise_request_screen.dart';
 import 'package:socialv/utils/app_constants.dart';
 import 'package:socialv/utils/cached_network_image.dart';
 
@@ -57,8 +56,8 @@ class _DashboardScreenState extends State<DashboardScreen>
   Future<void> init() async {
     appFragments.addAll([
       HomeFragment(controller: _controller),
-      ExpertiseRequestFragment(controller: _controller),
       ForumsFragment(controller: _controller),
+      OrchidFragment(controller: _controller),
       NotificationFragment(controller: _controller),
       ProfileFragment(controller: _controller),
     ]);
@@ -301,29 +300,29 @@ class _DashboardScreenState extends State<DashboardScreen>
               ),
               Tooltip(
                 richMessage: TextSpan(
-                    text: 'Expertise Request',
+                    text: 'Topics',
                     style: secondaryTextStyle(color: Colors.white)),
                 child: Image.asset(
-                  selectedIndex == 1 ? ic_document_filled : ic_document,
-                  height: 24,
-                  width: 24,
-                  fit: BoxFit.cover,
-                  color:
-                      selectedIndex == 1 ? context.primaryColor : Colors.black,
-                ).paddingSymmetric(vertical: 11),
-              ),
-              Tooltip(
-                richMessage: TextSpan(
-                    text: language.forums,
-                    style: secondaryTextStyle(color: Colors.white)),
-                child: Image.asset(
-                  selectedIndex == 2 ? ic_three_user_filled : ic_three_user,
+                  selectedIndex == 1 ? ic_three_user_filled : ic_three_user,
                   height: 28,
                   width: 28,
                   fit: BoxFit.fill,
                   color:
-                      selectedIndex == 2 ? context.primaryColor : Colors.black,
+                      selectedIndex == 1 ? context.primaryColor : Colors.black,
                 ).paddingSymmetric(vertical: 9),
+              ),
+              Tooltip(
+                richMessage: TextSpan(
+                    text: 'Orchids',
+                    style: secondaryTextStyle(color: Colors.white)),
+                child: Image.asset(
+                  selectedIndex == 2 ? ic_flower_filled : ic_flower,
+                  height: 24,
+                  width: 24,
+                  fit: BoxFit.cover,
+                  color:
+                      selectedIndex == 2 ? context.primaryColor : Colors.black,
+                ).paddingSymmetric(vertical: 11),
               ),
               Tooltip(
                 richMessage: TextSpan(
@@ -400,7 +399,6 @@ class _DashboardScreenState extends State<DashboardScreen>
           floatingActionButton: tabController.index == 3
               ? FloatingActionButton(
                   onPressed: () {
-                    //openWebPage(context, url: 'http://192.168.1.230/wp_themes/latest/socialv/atest');
                     showModalBottomSheet(
                       context: context,
                       elevation: 0,
@@ -445,16 +443,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                       color: Colors.white),
                   backgroundColor: context.primaryColor,
                 )
-              : tabController.index == 1
-                  ? userController.user.value.role.contains('Member')
-                      ? FloatingActionButton(
-                          child: Icon(Icons.add),
-                          onPressed: () {
-                            CreateExpertiseRequestScreen().launch(context);
-                          },
-                        )
-                      : Offstage()
-                  : Offstage(),
+              : Offstage(),
         ),
       ),
     );

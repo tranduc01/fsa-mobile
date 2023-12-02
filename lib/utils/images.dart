@@ -87,6 +87,8 @@ const ic_exit_full_screen = 'assets/icons/ic_exit_full_screen.png';
 const ic_pause = 'assets/icons/ic_pause.png';
 const ic_play_button = 'assets/icons/ic_play_button.png';
 const ic_ranking = 'assets/icons/ranking.png';
+const ic_flower = 'assets/icons/ic_flower.png';
+const ic_flower_filled = 'assets/icons/ic_flower_filled.png';
 
 /// Lottie Files
 const no_data = "assets/lottie/no_data.json";

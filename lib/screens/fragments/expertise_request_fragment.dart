@@ -288,6 +288,9 @@ class _ExpertiseRequestFragmentState extends State<ExpertiseRequestFragment>
                   itemBuilder: (context, index) {
                     ExpertiseRequest expertiseRequest =
                         expertiseRequestController.expertiseRequests[index];
+                    if (expertiseRequest.isSystemReject == 'True') {
+                      expertiseRequest.adminApprovalStatus == 'REJECTED';
+                    }
                     return GestureDetector(
                       onTap: () => ExpertiseRequestDetailScreen(
                               request: expertiseRequest)

@@ -46,9 +46,9 @@ class _ExpertiseRequestDetailScreenState
 
   @override
   void initState() {
-    // Future.delayed(Duration.zero, () async {
-    //   await postController.fetchPost(widget.postId);
-    // });
+    Future.delayed(Duration.zero, () async {
+      await postController.fetchPost(widget.request.id!);
+    });
     _animationController = BottomSheet.createAnimationController(this);
     _animationController.duration = const Duration(milliseconds: 500);
     _animationController.drive(CurveTween(curve: Curves.easeOutQuad));
@@ -302,45 +302,46 @@ class _ExpertiseRequestDetailScreenState
                       ],
                     ),
                     Spacer(),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          'Rating',
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Color.fromARGB(130, 0, 0, 0),
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Roboto'),
-                        ),
-                        Container(
-                          width: 55,
-                          decoration: BoxDecoration(
-                            color: Colors.yellow[700],
-                            borderRadius: BorderRadius.circular(20),
-                            border:
-                                Border.all(color: Color.fromARGB(24, 0, 0, 0)),
+                    if (!widget.request.feedbackRating.isEmptyOrNull)
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            'Rating',
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: Color.fromARGB(130, 0, 0, 0),
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Roboto'),
                           ),
-                          padding: EdgeInsets.all(6),
-                          child: Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.star_rate_rounded, size: 15),
-                                Text(
-                                  widget.request.feedbackRating.toString(),
-                                  style: boldTextStyle(
-                                    size: 15,
-                                    fontFamily: 'Roboto',
-                                    color: Color.fromARGB(255, 0, 0, 0),
-                                  ),
-                                ),
-                              ],
+                          Container(
+                            width: 55,
+                            decoration: BoxDecoration(
+                              color: Colors.yellow[700],
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                  color: Color.fromARGB(24, 0, 0, 0)),
                             ),
-                          ),
-                        )
-                      ],
-                    ),
+                            padding: EdgeInsets.all(6),
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.star_rate_rounded, size: 15),
+                                  Text(
+                                    widget.request.feedbackRating.toString(),
+                                    style: boldTextStyle(
+                                      size: 15,
+                                      fontFamily: 'Roboto',
+                                      color: Color.fromARGB(255, 0, 0, 0),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
                   ],
                 ),
                 10.height,
@@ -473,9 +474,7 @@ class _ExpertiseRequestDetailScreenState
             )
           : userController.user.value.role.contains('Expert')
               ? FloatingActionButton.extended(
-                  label: Text(
-                      postController.post.value.comments?.length.toString() ??
-                          0.toString(),
+                  label: Text('Expertise',
                       style: TextStyle(
                           color: Colors.black, fontWeight: FontWeight.bold)),
                   icon: Icon(

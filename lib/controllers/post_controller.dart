@@ -27,21 +27,27 @@ class PostController extends GetxController {
 
     var response = await GetConnect().get(url);
 
-    ResponseModel responseModel =
-        ResponseModel.fromJson(jsonDecode(response.bodyString ?? ''));
+    if (response.bodyString != null) {
+      ResponseModel responseModel =
+          ResponseModel.fromJson(jsonDecode(response.bodyString!));
 
-    if (response.statusCode == 200) {
-      isLoading(false);
-      isError(false);
+      if (response.statusCode == 200) {
+        isLoading(false);
+        isError(false);
 
-      return posts.value = (responseModel.data['items'] as List)
-          .map((e) => Post.fromJson(e))
-          .toList();
+        return posts.value = (responseModel.data['items'] as List)
+            .map((e) => Post.fromJson(e))
+            .toList();
+      } else {
+        isLoading(false);
+        isError(true);
+        print('Request failed with status: ${response.statusCode}');
+        print('Request failed with status: ${responseModel.message}');
+        throw Exception('Failed to load post');
+      }
     } else {
       isLoading(false);
       isError(true);
-      print('Request failed with status: ${response.statusCode}');
-      print('Request failed with status: ${responseModel.message}');
       throw Exception('Failed to load post');
     }
   }
@@ -49,22 +55,27 @@ class PostController extends GetxController {
   Future<Post> fetchPost(int id) async {
     isLoading(true);
     var url = '$BASE_URL/Post/member/$id';
-
     var response = await GetConnect().get(url);
 
-    ResponseModel responseModel =
-        ResponseModel.fromJson(jsonDecode(response.bodyString ?? ''));
+    if (response.bodyString != null) {
+      ResponseModel responseModel =
+          ResponseModel.fromJson(jsonDecode(response.bodyString!));
 
-    if (response.statusCode == 200) {
-      isLoading(false);
-      isError(false);
+      if (response.statusCode == 200) {
+        isLoading(false);
+        isError(false);
 
-      return post.value = Post.fromJson(responseModel.data);
+        return post.value = Post.fromJson(responseModel.data);
+      } else {
+        isLoading(false);
+        isError(true);
+        print('Request failed with status: ${response.statusCode}');
+        print('Request failed with status: ${responseModel.message}');
+        throw Exception('Failed to load post');
+      }
     } else {
-      isLoading(false);
       isError(true);
-      print('Request failed with status: ${response.statusCode}');
-      print('Request failed with status: ${responseModel.message}');
+      isLoading(false);
       throw Exception('Failed to load post');
     }
   }
