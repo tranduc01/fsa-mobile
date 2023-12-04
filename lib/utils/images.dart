@@ -89,6 +89,11 @@ const ic_play_button = 'assets/icons/ic_play_button.png';
 const ic_ranking = 'assets/icons/ranking.png';
 const ic_flower = 'assets/icons/ic_flower.png';
 const ic_flower_filled = 'assets/icons/ic_flower_filled.png';
+const ic_family = 'assets/icons/ic_family.png';
+const ic_botanical = 'assets/icons/ic_botanical.png';
+const ic_plant = 'assets/icons/ic_plant.png';
+const ic_plant_height = 'assets/icons/ic_plant_height.png';
+const ic_sun = 'assets/icons/ic_sun.png';
 
 /// Lottie Files
 const no_data = "assets/lottie/no_data.json";
