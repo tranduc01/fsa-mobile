@@ -6,6 +6,8 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:socialv/screens/post/screens/image_screen.dart';
 
+import '../../../utils/images.dart';
+
 class AcutionDetailSceen extends StatefulWidget {
   @override
   _AcutionDetailSceenState createState() => _AcutionDetailSceenState();
@@ -181,7 +183,595 @@ class _AcutionDetailSceenState extends State<AcutionDetailSceen> {
                                   ),
                                   Container(
                                     height: 350,
-                                    child: Text("data"),
+                                    child: SingleChildScrollView(
+                                      child: Padding(
+                                        padding: EdgeInsets.all(10),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            10.height,
+                                            Text(
+                                              'Hoa Lan đột biến',
+                                              style: TextStyle(
+                                                  fontSize: 30,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontFamily: 'Roboto'),
+                                            ),
+                                            15.height,
+                                            Text(
+                                              'bjkmklmlmljmlmkmkmkmlm,lm,lm',
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color.fromARGB(
+                                                      134, 0, 0, 0),
+                                                  fontFamily: 'Roboto'),
+                                            ),
+                                            25.height,
+                                            Align(
+                                              alignment: Alignment.center,
+                                              child: Column(
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Container(
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
+                                                            0.9,
+                                                        height: 80,
+                                                        padding:
+                                                            EdgeInsets.all(10),
+                                                        decoration: BoxDecoration(
+                                                            color: Colors.white,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        20),
+                                                            boxShadow: [
+                                                              BoxShadow(
+                                                                color: Colors
+                                                                    .grey
+                                                                    .withOpacity(
+                                                                        0.5),
+                                                                spreadRadius: 3,
+                                                                blurRadius: 7,
+                                                                offset: Offset(
+                                                                    0,
+                                                                    3), // changes position of shadow
+                                                              ),
+                                                            ]),
+                                                        child: Row(
+                                                          children: [
+                                                            Image.asset(
+                                                                ic_botanical,
+                                                                height: 30,
+                                                                width: 30),
+                                                            10.width,
+                                                            Expanded(
+                                                                child: Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                Text(
+                                                                  'Botanical Name',
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          18,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      fontFamily:
+                                                                          'Roboto'),
+                                                                ),
+                                                                Flexible(
+                                                                  child: Text(
+                                                                    '',
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            16,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .bold,
+                                                                        color: Color.fromARGB(
+                                                                            134,
+                                                                            0,
+                                                                            0,
+                                                                            0),
+                                                                        fontFamily:
+                                                                            'Roboto'),
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .ellipsis,
+                                                                    maxLines: 2,
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .start,
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            ))
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  20.height,
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Container(
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
+                                                            0.4,
+                                                        height: 80,
+                                                        padding:
+                                                            EdgeInsets.all(10),
+                                                        decoration: BoxDecoration(
+                                                            color: Colors.white,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        20),
+                                                            boxShadow: [
+                                                              BoxShadow(
+                                                                color: Colors
+                                                                    .grey
+                                                                    .withOpacity(
+                                                                        0.5),
+                                                                spreadRadius: 3,
+                                                                blurRadius: 7,
+                                                                offset: Offset(
+                                                                    0,
+                                                                    3), // changes position of shadow
+                                                              ),
+                                                            ]),
+                                                        child: Row(
+                                                          children: [
+                                                            Image.asset(
+                                                                ic_plant,
+                                                                height: 30,
+                                                                width: 30),
+                                                            10.width,
+                                                            Expanded(
+                                                                child: Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                Text(
+                                                                  'Plant Type',
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          18,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      fontFamily:
+                                                                          'Roboto'),
+                                                                ),
+                                                                Flexible(
+                                                                  child: Text(
+                                                                    '',
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            16,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .bold,
+                                                                        color: Color.fromARGB(
+                                                                            134,
+                                                                            0,
+                                                                            0,
+                                                                            0),
+                                                                        fontFamily:
+                                                                            'Roboto'),
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .ellipsis,
+                                                                    maxLines: 2,
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .start,
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            ))
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      30.width,
+                                                      Container(
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
+                                                            0.4,
+                                                        height: 80,
+                                                        padding:
+                                                            EdgeInsets.all(10),
+                                                        decoration: BoxDecoration(
+                                                            color: Colors.white,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        20),
+                                                            boxShadow: [
+                                                              BoxShadow(
+                                                                color: Colors
+                                                                    .grey
+                                                                    .withOpacity(
+                                                                        0.5),
+                                                                spreadRadius: 3,
+                                                                blurRadius: 7,
+                                                                offset: Offset(
+                                                                    0,
+                                                                    3), // changes position of shadow
+                                                              ),
+                                                            ]),
+                                                        child: Row(
+                                                          children: [
+                                                            Image.asset(
+                                                                ic_family,
+                                                                height: 30,
+                                                                width: 30),
+                                                            10.width,
+                                                            Expanded(
+                                                              child: Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Text(
+                                                                    'Family',
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            18,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .bold,
+                                                                        fontFamily:
+                                                                            'Roboto'),
+                                                                  ),
+                                                                  Flexible(
+                                                                    child: Text(
+                                                                      '',
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              16,
+                                                                          fontWeight: FontWeight
+                                                                              .bold,
+                                                                          color: Color.fromARGB(
+                                                                              134,
+                                                                              0,
+                                                                              0,
+                                                                              0),
+                                                                          fontFamily:
+                                                                              'Roboto'),
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      maxLines:
+                                                                          2,
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .start,
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            )
+                                                          ],
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                  20.height,
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Container(
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
+                                                            0.9,
+                                                        height: 80,
+                                                        padding:
+                                                            EdgeInsets.all(10),
+                                                        decoration: BoxDecoration(
+                                                            color: Colors.white,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        20),
+                                                            boxShadow: [
+                                                              BoxShadow(
+                                                                color: Colors
+                                                                    .grey
+                                                                    .withOpacity(
+                                                                        0.5),
+                                                                spreadRadius: 3,
+                                                                blurRadius: 7,
+                                                                offset: Offset(
+                                                                    0,
+                                                                    3), // changes position of shadow
+                                                              ),
+                                                            ]),
+                                                        child: Row(
+                                                          children: [
+                                                            Image.asset(
+                                                              ic_location,
+                                                              height: 30,
+                                                              width: 30,
+                                                              color:
+                                                                  Colors.black,
+                                                            ),
+                                                            10.width,
+                                                            Expanded(
+                                                              child: Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Text(
+                                                                    'Native Area',
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            18,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .bold,
+                                                                        fontFamily:
+                                                                            'Roboto'),
+                                                                  ),
+                                                                  Flexible(
+                                                                    child: Text(
+                                                                      '',
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              16,
+                                                                          fontWeight: FontWeight
+                                                                              .bold,
+                                                                          color: Color.fromARGB(
+                                                                              134,
+                                                                              0,
+                                                                              0,
+                                                                              0),
+                                                                          fontFamily:
+                                                                              'Roboto'),
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      maxLines:
+                                                                          2,
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .start,
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            )
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  20.height,
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Container(
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
+                                                            0.4,
+                                                        height: 80,
+                                                        padding:
+                                                            EdgeInsets.all(10),
+                                                        decoration: BoxDecoration(
+                                                            color: Colors.white,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        20),
+                                                            boxShadow: [
+                                                              BoxShadow(
+                                                                color: Colors
+                                                                    .grey
+                                                                    .withOpacity(
+                                                                        0.5),
+                                                                spreadRadius: 3,
+                                                                blurRadius: 7,
+                                                                offset: Offset(
+                                                                    0,
+                                                                    3), // changes position of shadow
+                                                              ),
+                                                            ]),
+                                                        child: Row(
+                                                          children: [
+                                                            Image.asset(
+                                                                ic_plant_height,
+                                                                height: 30,
+                                                                width: 30),
+                                                            10.width,
+                                                            Expanded(
+                                                                child: Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                Text(
+                                                                  'Height',
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          18,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      fontFamily:
+                                                                          'Roboto'),
+                                                                ),
+                                                                Flexible(
+                                                                  child: Text(
+                                                                    '',
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            16,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .bold,
+                                                                        color: Color.fromARGB(
+                                                                            134,
+                                                                            0,
+                                                                            0,
+                                                                            0),
+                                                                        fontFamily:
+                                                                            'Roboto'),
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .ellipsis,
+                                                                    maxLines: 2,
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .start,
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            ))
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      30.width,
+                                                      Container(
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
+                                                            0.4,
+                                                        height: 80,
+                                                        padding:
+                                                            EdgeInsets.all(10),
+                                                        decoration: BoxDecoration(
+                                                            color: Colors.white,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        20),
+                                                            boxShadow: [
+                                                              BoxShadow(
+                                                                color: Colors
+                                                                    .grey
+                                                                    .withOpacity(
+                                                                        0.5),
+                                                                spreadRadius: 3,
+                                                                blurRadius: 7,
+                                                                offset: Offset(
+                                                                    0,
+                                                                    3), // changes position of shadow
+                                                              ),
+                                                            ]),
+                                                        child: Row(
+                                                          children: [
+                                                            Image.asset(
+                                                              ic_sun,
+                                                              height: 30,
+                                                              width: 30,
+                                                              color:
+                                                                  Colors.black,
+                                                            ),
+                                                            10.width,
+                                                            Expanded(
+                                                              child: Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Text(
+                                                                    'Sun Exposure',
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            18,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .bold,
+                                                                        fontFamily:
+                                                                            'Roboto'),
+                                                                  ),
+                                                                  Flexible(
+                                                                    child: Text(
+                                                                      '',
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              16,
+                                                                          fontWeight: FontWeight
+                                                                              .bold,
+                                                                          color: Color.fromARGB(
+                                                                              134,
+                                                                              0,
+                                                                              0,
+                                                                              0),
+                                                                          fontFamily:
+                                                                              'Roboto'),
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      maxLines:
+                                                                          2,
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .start,
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            )
+                                                          ],
+                                                        ),
+                                                      )
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ],
                               ),
