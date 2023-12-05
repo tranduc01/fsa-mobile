@@ -1,6 +1,4 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -40,32 +38,6 @@ class _AcutionDetailSceenState extends State<AcutionDetailSceen> {
             children: [
               Stack(
                 children: [
-                  // ImageSlideshow(
-                  //   height: screenHeight * 0.535,
-                  //   children: [
-                  //     ClipRRect(
-                  //       child: ImageFiltered(
-                  //         imageFilter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
-                  //         child: Image.network(
-                  //           "https://hoatuoithanhthao.com/media/ftp/hoa-lan-5.jpg",
-                  //           fit: BoxFit.cover,
-                  //         ),
-                  //       ),
-                  //     ),
-                  //     ClipRRect(
-                  //       child: ImageFiltered(
-                  //         imageFilter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
-                  //         child: Image.network(
-                  //           "https://hoatuoithanhthao.com/media/ftp/hoa-lan.jpg",
-                  //           fit: BoxFit.cover,
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ],
-                  //   autoPlayInterval: 15000,
-                  //   isLoop: true,
-                  //   initialPage: 0,
-                  // ),
                   Container(
                     height: screenHeight * 0.535,
                     child: Image.asset(
@@ -135,8 +107,12 @@ class _AcutionDetailSceenState extends State<AcutionDetailSceen> {
                               tabs: [
                                 Tab(
                                   child: DefaultTextStyle(
-                                    child:
-                                        Text('ẢNH ' + '(${listImage.length})'),
+                                    child: Text(
+                                      'ẢNH ' + '(${listImage.length})',
+                                      style: TextStyle(
+                                          fontFamily: 'Roboto',
+                                          fontWeight: FontWeight.bold),
+                                    ),
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 15,
@@ -148,8 +124,8 @@ class _AcutionDetailSceenState extends State<AcutionDetailSceen> {
                                     child: Text('THÔNG TIN ĐẤU GIÁ'),
                                     style: TextStyle(
                                         color: Colors.black,
-                                        fontSize: 15,
-                                        fontFamily: 'Roboto'),
+                                        fontFamily: 'Roboto',
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ),
                               ],
@@ -160,7 +136,7 @@ class _AcutionDetailSceenState extends State<AcutionDetailSceen> {
                               child: TabBarView(
                                 children: [
                                   Container(
-                                    height: 350,
+                                    height: 330,
                                     child: MasonryGridView.builder(
                                       itemCount: listImage.length,
                                       gridDelegate:
