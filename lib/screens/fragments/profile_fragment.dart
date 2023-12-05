@@ -331,15 +331,14 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                               alignment: Alignment.center,
                               children: [
                                 Image.asset(
-                                  ic_notification,
-                                  height: 30,
-                                  width: 30,
+                                  ic_pending,
+                                  height: 40,
+                                  width: 40,
                                   fit: BoxFit.cover,
-                                  color: Colors.black,
                                 ).paddingSymmetric(vertical: 11),
                                 Positioned(
                                   right: -8,
-                                  top: 3,
+                                  top: -4,
                                   child: Container(
                                     padding: EdgeInsets.all(6),
                                     decoration: BoxDecoration(
@@ -373,15 +372,14 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                               alignment: Alignment.center,
                               children: [
                                 Image.asset(
-                                  ic_notification,
-                                  height: 30,
-                                  width: 30,
+                                  ic_approved,
+                                  height: 40,
+                                  width: 40,
                                   fit: BoxFit.cover,
-                                  color: Colors.black,
                                 ).paddingSymmetric(vertical: 11),
                                 Positioned(
                                   right: -8,
-                                  top: 3,
+                                  top: -4,
                                   child: Container(
                                     padding: EdgeInsets.all(6),
                                     decoration: BoxDecoration(
@@ -415,15 +413,14 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                               alignment: Alignment.center,
                               children: [
                                 Image.asset(
-                                  ic_notification,
-                                  height: 30,
-                                  width: 30,
+                                  ic_rejected,
+                                  height: 40,
+                                  width: 40,
                                   fit: BoxFit.cover,
-                                  color: Colors.black,
                                 ).paddingSymmetric(vertical: 11),
                                 Positioned(
                                   right: -8,
-                                  top: 3,
+                                  top: -4,
                                   child: Container(
                                     padding: EdgeInsets.all(6),
                                     decoration: BoxDecoration(
@@ -457,15 +454,14 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                               alignment: Alignment.center,
                               children: [
                                 Image.asset(
-                                  ic_notification,
-                                  height: 30,
-                                  width: 30,
+                                  ic_expired,
+                                  height: 40,
+                                  width: 40,
                                   fit: BoxFit.cover,
-                                  color: Colors.black,
                                 ).paddingSymmetric(vertical: 11),
                                 Positioned(
                                   right: -8,
-                                  top: 3,
+                                  top: -4,
                                   child: Container(
                                     padding: EdgeInsets.all(6),
                                     decoration: BoxDecoration(
