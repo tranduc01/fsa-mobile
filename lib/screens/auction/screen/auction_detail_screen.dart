@@ -66,8 +66,8 @@ class _AcutionDetailSceenState extends State<AcutionDetailSceen> {
                   // ),
                   Container(
                     height: screenHeight * 0.535,
-                    child: Image.network(
-                      'https://th.bing.com/th/id/OIG.a.qtRjNjvTlxGYWBWxbS?pid=ImgGn',
+                    child: Image.asset(
+                      'assets/images/auction-cover.jpg',
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -196,7 +196,7 @@ class _AcutionDetailSceenState extends State<AcutionDetailSceen> {
             ],
           ),
           Positioned(
-            top: screenHeight * 0.31,
+            top: screenHeight * 0.33,
             left: 10,
             right: 10,
             child: Container(
