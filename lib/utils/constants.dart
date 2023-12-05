@@ -3,7 +3,7 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/main.dart';
 
 /// DO NOT CHANGE THIS PACKAGE NAME
-const APP_PACKAGE_NAME = "com.iconic.socialv";
+const APP_PACKAGE_NAME = "com.capstone.orchid";
 
 /// Radius
 

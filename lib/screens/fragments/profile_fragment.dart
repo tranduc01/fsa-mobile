@@ -7,16 +7,17 @@ import 'package:socialv/components/no_data_lottie_widget.dart';
 import 'package:socialv/controllers/user_controller.dart';
 import 'package:socialv/main.dart';
 import 'package:socialv/models/members/member_detail_model.dart';
-import 'package:socialv/models/story/highlight_category_list_model.dart';
 import 'package:socialv/network/rest_apis.dart';
 import 'package:socialv/screens/dashboard_screen.dart';
+import 'package:socialv/screens/fragments/expertise_request_fragment.dart';
 import 'package:socialv/screens/post/components/post_component.dart';
 import 'package:socialv/screens/profile/components/profile_header_component.dart';
 
-import '../../models/posts/post_model.dart';
+import '../../models/posts/post.dart';
 import '../../utils/app_constants.dart';
 import '../gallery/screens/gallery_screen.dart';
 import '../profile/screens/personal_info_screen.dart';
+import '../profile/screens/verify_id_card_screen.dart';
 
 class ProfileFragment extends StatefulWidget {
   final ScrollController? controller;
@@ -28,40 +29,40 @@ class ProfileFragment extends StatefulWidget {
 }
 
 class _ProfileFragmentState extends State<ProfileFragment> {
-  MemberDetailModel _memberDetails = MemberDetailModel();
-  List<PostModel> _userPostList = [
-    PostModel(
-        activityId: 1,
-        commentCount: 10,
-        comments: [],
-        content: "Hello",
-        dateRecorded: DateTime.parse("2023-09-09").toString(),
-        isFavorites: 1,
-        isLiked: 1,
-        likeCount: 10,
-        mediaList: [],
-        mediaType: "a",
-        postIn: "image",
-        userEmail: "tuanblep0298@gmail.com"),
-    PostModel(
-        activityId: 2,
-        commentCount: 10,
-        comments: [],
-        content: "Hello",
-        dateRecorded: DateTime.parse("2023-09-09").toString(),
-        isFavorites: 1,
-        isLiked: 1,
-        likeCount: 10,
-        mediaList: [],
-        mediaType: "a",
-        postIn: "image",
-        userEmail: "tuanblep0298@gmail.com"),
-  ];
+  MemberDetailModel _memberDetails = MemberDetailModel(
+      id: '1',
+      email: 'doantranduc01@gmail.com',
+      name: 'Tran Duc',
+      isUserVerified: true,
+      friendsCount: 20,
+      memberAvatarImage:
+          'https://scontent.fsgn5-15.fna.fbcdn.net/v/t39.30808-6/353017930_6153557468098795_166607921767111563_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=5f2048&_nc_ohc=N5pLFu6oHkMAX_AbfkM&_nc_ht=scontent.fsgn5-15.fna&oh=00_AfDA4xqUbAjRrUVVTzz1PT0cybH1iGpdrZHodkqeD6fIFA&oe=654323AC',
+      memberCoverImage:
+          'https://scontent.fsgn5-8.fna.fbcdn.net/v/t39.30808-6/273370641_4708706809250542_6839313790496689506_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=5f2048&_nc_ohc=nyxL_IzJcsEAX-rRpUV&_nc_ht=scontent.fsgn5-8.fna&oh=00_AfCh2QxAAjNgvGHpRfuPKRk-VHX6sbBqrwkbzwobCck1NQ&oe=65435957',
+      postCount: 10,
+      groupsCount: 10,
+      profileInfo: [
+        ProfileInfo(id: 1, name: 'Detail', fields: [
+          Field(id: 1, name: 'Name', value: 'Tran Duc'),
+          Field(id: 2, name: 'Email', value: 'doantranduc01@gmail.com'),
+          Field(id: 3, name: 'DOB', value: '28/05/2001'),
+          Field(id: 4, name: 'Gender', value: 'Male'),
+          Field(id: 5, name: 'Address', value: 'Binh Duong')
+        ]),
+        ProfileInfo(id: 2, name: 'Information', fields: [
+          Field(id: 1, name: 'Name', value: 'Tran Duc'),
+          Field(id: 2, name: 'Email', value: 'doantranduc01@gmail.com'),
+          Field(id: 3, name: 'DOB', value: '28/05/2001'),
+          Field(id: 4, name: 'Gender', value: 'Male'),
+          Field(id: 5, name: 'Address', value: 'Binh Duong')
+        ])
+      ]);
+  List<Post> _userPostList = [];
 
-  late Future<List<PostModel>> future;
+  late Future<List<Post>> future;
 
-  List<HighlightCategoryListModel> categoryList = [];
   late UserController userController = Get.put(UserController());
+  ScrollController _controller = ScrollController();
   int mPage = 1;
   bool mIsLastPage = false;
   bool isError = false;
@@ -85,7 +86,6 @@ class _ProfileFragmentState extends State<ProfileFragment> {
         }
       }
     });
-    getCategoryList();
     getMemberDetails();
     LiveStream().on(OnAddPostProfile, (p0) {
       getMemberDetails();
@@ -98,20 +98,21 @@ class _ProfileFragmentState extends State<ProfileFragment> {
   }
 
   Future<void> getMemberDetails() async {
-    appStore.setLoading(true);
-    await getMemberDetail(userId: appStore.loginUserId.toInt())
-        .then((value) async {
-      _memberDetails = value.first;
-      setState(() {});
+    // appStore.setLoading(true);
+    // await getMemberDetail(userId: appStore.loginUserId.toInt())
+    //     .then((value) async {
+    //   _memberDetails = value.first;
+    //   setState(() {});
 
-      appStore.setLoading(false);
-    }).catchError((e) {
-      appStore.setLoading(false);
-      toast(e.toString(), print: true);
-    });
+    //   appStore.setLoading(false);
+    // }).catchError((e) {
+    //   appStore.setLoading(false);
+    //   toast(e.toString(), print: true);
+    // });
+    _memberDetails = _memberDetails;
   }
 
-  Future<List<PostModel>> getUserPostList() async {
+  Future<List<Post>> getUserPostList() async {
     // if (mPage == 1) _userPostList.clear();
     // isLoading = true;
     // appStore.setLoading(true);
@@ -131,17 +132,6 @@ class _ProfileFragmentState extends State<ProfileFragment> {
     // });
     // setState(() {});
     return _userPostList;
-  }
-
-  Future<void> getCategoryList() async {
-    appStore.setLoading(true);
-    await getHighlightList().then((value) {
-      categoryList = value;
-      appStore.setLoading(false);
-    }).catchError((e) {
-      log(e.toString());
-      appStore.setLoading(false);
-    });
   }
 
   @override
@@ -182,17 +172,34 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                             style: boldTextStyle(size: 20),
                             children: [
                               WidgetSpan(
-                                child: Image.asset(ic_tick_filled,
+                                child: Obx(() => userController
+                                        .user.value.isVerified!
+                                    ? Image.asset(ic_tick_filled,
                                         width: 20,
                                         height: 20,
                                         color: blueTickColor)
-                                    .paddingSymmetric(horizontal: 4),
+                                    : GestureDetector(
+                                        child: Image.asset(
+                                          'assets/icons/ic_cancel.png',
+                                          width: 20,
+                                          height: 20,
+                                        ),
+                                        onTap: () async {
+                                          VerifyIdCardScreen().launch(context);
+                                          toast('Please verify your account');
+                                          // VerifyFaceScreen(
+                                          //   frontIdMedia: PostMedia(),
+                                          // ).launch(context);
+                                        },
+                                      ).paddingSymmetric(horizontal: 4)),
                               ),
                             ],
                           ),
                         );
                       }),
                       4.height,
+                      Text(userController.user.value.role.join(', '),
+                          style: secondaryTextStyle(size: 12)),
                       TextIcon(
                         edgeInsets: EdgeInsets.zero,
                         spacing: 0,
@@ -287,102 +294,309 @@ class _ProfileFragmentState extends State<ProfileFragment> {
             // }),
             TextIcon(
               onTap: () {
-                GalleryScreen(
-                        userId: appStore.loginUserId.toInt(), canEdit: true)
-                    .launch(context);
+                GalleryScreen(canEdit: true).launch(context);
               },
               text: language.viewGallery,
               textStyle: primaryTextStyle(color: appColorPrimary),
               prefix: Image.asset(ic_image,
                   width: 25, height: 25, color: appColorPrimary),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(language.posts,
-                    style:
-                        boldTextStyle(color: context.primaryColor, size: 20)),
-                TextIcon(
-                  onTap: () {
-                    isFavorites = !isFavorites;
-                    mPage = 1;
-                    setState(() {});
-                    getUserPostList();
-                  },
-                  prefix: Icon(
-                      isFavorites ? Icons.check_circle : Icons.circle_outlined,
-                      color: appColorPrimary,
-                      size: 18),
-                  text: language.favorites,
-                  textStyle: secondaryTextStyle(
-                      color: isFavorites ? context.primaryColor : null),
-                ),
-              ],
-            ).paddingSymmetric(horizontal: 8),
-            FutureBuilder<List<PostModel>>(
-              future: future,
-              builder: (ctx, snap) {
-                if (snap.hasError) {
-                  return NoDataWidget(
-                    imageWidget: NoDataLottieWidget(),
-                    title: isError
-                        ? language.somethingWentWrong
-                        : language.noDataFound,
-                    onRetry: () {
-                      isError = false;
-                      LiveStream().emit(OnAddPostProfile);
-                    },
-                    retryText: '   ${language.clickToRefresh}   ',
-                  ).center().paddingBottom(20);
-                }
-
-                if (snap.hasData) {
-                  if (snap.data.validate().isEmpty) {
-                    return appStore.isLoading
-                        ? Offstage()
-                        : NoDataWidget(
-                            imageWidget: NoDataLottieWidget(),
-                            title: language.noDataFound,
-                            retryText: '   ${language.clickToRefresh}   ',
-                          ).center().paddingBottom(20);
-                  } else {
-                    return Stack(
+            if (userController.user.value.role.contains('Member'))
+              Column(
+                children: [
+                  10.height,
+                  Container(
+                    padding: EdgeInsets.only(left: 8, right: 8, top: 8),
+                    child: Row(
                       children: [
-                        AnimatedListView(
-                          padding: EdgeInsets.only(
-                              left: 8, right: 8, bottom: 50, top: 8),
-                          itemCount: _userPostList.length,
-                          slideConfiguration: SlideConfiguration(
-                              delay: Duration(milliseconds: 80),
-                              verticalOffset: 300),
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            return PostComponent(
-                              post: _userPostList[index],
-                              callback: () {
-                                isLoading = true;
-                                mPage = 1;
-                                getMemberDetails();
-                                future = getUserPostList();
-                              },
-                            );
-                          },
-                        ),
-                        if (mPage != 1 && isLoading)
-                          Positioned(
-                            bottom: 0,
-                            right: 0,
-                            left: 0,
-                            child: ThreeBounceLoadingWidget(),
-                          )
+                        Text('Your Request',
+                            style: boldTextStyle(
+                                color: context.primaryColor, size: 20)),
                       ],
-                    );
-                  }
-                }
-                return ThreeBounceLoadingWidget().paddingTop(16);
-              },
-            ),
+                    ),
+                  ),
+                  10.height,
+                  InkWell(
+                    onTap: () =>
+                        ExpertiseRequestFragment(controller: _controller)
+                            .launch(context),
+                    child: Column(
+                      children: [
+                        Divider(thickness: 1),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Stack(
+                              clipBehavior: Clip.none,
+                              alignment: Alignment.center,
+                              children: [
+                                Image.asset(
+                                  ic_notification,
+                                  height: 30,
+                                  width: 30,
+                                  fit: BoxFit.cover,
+                                  color: Colors.black,
+                                ).paddingSymmetric(vertical: 11),
+                                Positioned(
+                                  right: -8,
+                                  top: 3,
+                                  child: Container(
+                                    padding: EdgeInsets.all(6),
+                                    decoration: BoxDecoration(
+                                        color: appColorPrimary,
+                                        shape: BoxShape.circle),
+                                    child: Text(
+                                      '10',
+                                      style: boldTextStyle(
+                                          color: Colors.white,
+                                          size: 10,
+                                          weight: FontWeight.w700,
+                                          letterSpacing: 0.7),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  bottom: -10, // Adjust the position as needed
+                                  child: Text(
+                                    'Pending',
+                                    style: boldTextStyle(
+                                      color: Colors.black,
+                                      size: 12,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Stack(
+                              clipBehavior: Clip.none,
+                              alignment: Alignment.center,
+                              children: [
+                                Image.asset(
+                                  ic_notification,
+                                  height: 30,
+                                  width: 30,
+                                  fit: BoxFit.cover,
+                                  color: Colors.black,
+                                ).paddingSymmetric(vertical: 11),
+                                Positioned(
+                                  right: -8,
+                                  top: 3,
+                                  child: Container(
+                                    padding: EdgeInsets.all(6),
+                                    decoration: BoxDecoration(
+                                        color: appColorPrimary,
+                                        shape: BoxShape.circle),
+                                    child: Text(
+                                      '10',
+                                      style: boldTextStyle(
+                                          color: Colors.white,
+                                          size: 10,
+                                          weight: FontWeight.w700,
+                                          letterSpacing: 0.7),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  bottom: -10, // Adjust the position as needed
+                                  child: Text(
+                                    'Approved',
+                                    style: boldTextStyle(
+                                      color: Colors.black,
+                                      size: 12,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Stack(
+                              clipBehavior: Clip.none,
+                              alignment: Alignment.center,
+                              children: [
+                                Image.asset(
+                                  ic_notification,
+                                  height: 30,
+                                  width: 30,
+                                  fit: BoxFit.cover,
+                                  color: Colors.black,
+                                ).paddingSymmetric(vertical: 11),
+                                Positioned(
+                                  right: -8,
+                                  top: 3,
+                                  child: Container(
+                                    padding: EdgeInsets.all(6),
+                                    decoration: BoxDecoration(
+                                        color: appColorPrimary,
+                                        shape: BoxShape.circle),
+                                    child: Text(
+                                      '10',
+                                      style: boldTextStyle(
+                                          color: Colors.white,
+                                          size: 10,
+                                          weight: FontWeight.w700,
+                                          letterSpacing: 0.7),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  bottom: -10, // Adjust the position as needed
+                                  child: Text(
+                                    'Rejected',
+                                    style: boldTextStyle(
+                                      color: Colors.black,
+                                      size: 12,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Stack(
+                              clipBehavior: Clip.none,
+                              alignment: Alignment.center,
+                              children: [
+                                Image.asset(
+                                  ic_notification,
+                                  height: 30,
+                                  width: 30,
+                                  fit: BoxFit.cover,
+                                  color: Colors.black,
+                                ).paddingSymmetric(vertical: 11),
+                                Positioned(
+                                  right: -8,
+                                  top: 3,
+                                  child: Container(
+                                    padding: EdgeInsets.all(6),
+                                    decoration: BoxDecoration(
+                                        color: appColorPrimary,
+                                        shape: BoxShape.circle),
+                                    child: Text(
+                                      '10',
+                                      style: boldTextStyle(
+                                          color: Colors.white,
+                                          size: 10,
+                                          weight: FontWeight.w700,
+                                          letterSpacing: 0.7),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  bottom: -10, // Adjust the position as needed
+                                  child: Text(
+                                    'Expired',
+                                    style: boldTextStyle(
+                                      color: Colors.black,
+                                      size: 12,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        10.height,
+                        Divider(
+                          thickness: 1,
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              )
+            else
+              Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(language.posts,
+                          style: boldTextStyle(
+                              color: context.primaryColor, size: 20)),
+                      // TextIcon(
+                      //   onTap: () {
+                      //     isFavorites = !isFavorites;
+                      //     mPage = 1;
+                      //     setState(() {});
+                      //     getUserPostList();
+                      //   },
+                      //   prefix: Icon(
+                      //       isFavorites ? Icons.check_circle : Icons.circle_outlined,
+                      //       color: appColorPrimary,
+                      //       size: 18),
+                      //   text: language.favorites,
+                      //   textStyle: secondaryTextStyle(
+                      //       color: isFavorites ? context.primaryColor : null),
+                      // ),
+                    ],
+                  ).paddingSymmetric(horizontal: 8),
+                  FutureBuilder<List<Post>>(
+                    future: future,
+                    builder: (ctx, snap) {
+                      if (snap.hasError) {
+                        return NoDataWidget(
+                          imageWidget: NoDataLottieWidget(),
+                          title: isError
+                              ? language.somethingWentWrong
+                              : language.noDataFound,
+                          onRetry: () {
+                            isError = false;
+                            LiveStream().emit(OnAddPostProfile);
+                          },
+                          retryText: '   ${language.clickToRefresh}   ',
+                        ).center().paddingBottom(20);
+                      }
+
+                      if (snap.hasData) {
+                        if (snap.data.validate().isEmpty) {
+                          return appStore.isLoading
+                              ? Offstage()
+                              : NoDataWidget(
+                                  imageWidget: NoDataLottieWidget(),
+                                  title: language.noDataFound,
+                                  retryText: '   ${language.clickToRefresh}   ',
+                                ).center().paddingBottom(20);
+                        } else {
+                          return Stack(
+                            children: [
+                              AnimatedListView(
+                                padding: EdgeInsets.only(
+                                    left: 8, right: 8, bottom: 50, top: 8),
+                                itemCount: _userPostList.length,
+                                slideConfiguration: SlideConfiguration(
+                                    delay: Duration(milliseconds: 80),
+                                    verticalOffset: 300),
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  return PostComponent(
+                                    post: _userPostList[index],
+                                    callback: () {
+                                      isLoading = true;
+                                      mPage = 1;
+                                      getMemberDetails();
+                                      future = getUserPostList();
+                                    },
+                                  );
+                                },
+                              ),
+                              if (mPage != 1 && isLoading)
+                                Positioned(
+                                  bottom: 0,
+                                  right: 0,
+                                  left: 0,
+                                  child: ThreeBounceLoadingWidget(),
+                                )
+                            ],
+                          );
+                        }
+                      }
+                      return ThreeBounceLoadingWidget().paddingTop(16);
+                    },
+                  ),
+                ],
+              )
           ],
         ),
         Observer(

@@ -19,6 +19,11 @@ import 'package:socialv/screens/profile/screens/personal_info_screen.dart';
 import 'package:socialv/screens/settings/screens/settings_screen.dart';
 import 'package:socialv/screens/stories/component/story_highlights_component.dart';
 
+import '../../../models/common_models/post_mdeia_model.dart';
+import '../../../models/posts/comment_model.dart';
+import '../../../models/posts/get_post_likes_model.dart';
+import '../../../models/posts/post.dart';
+import '../../../models/reactions/reactions_count_model.dart';
 import '../../../utils/app_constants.dart';
 import '../../gallery/screens/gallery_screen.dart';
 
@@ -60,8 +65,8 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
   bool isCallback = false;
   bool showDetails = false;
 
-  List<PostModel> postList = [];
-  late Future<List<PostModel>> future;
+  List<Post> postList = [];
+  late Future<List<Post>> future;
 
   List<HighlightCategoryListModel> categoryList = [];
 
@@ -94,7 +99,7 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
     });
 
     afterBuildCreated(() async {
-      appStore.setLoading(true);
+      //appStore.setLoading(true);
       getMember();
     });
   }
@@ -110,28 +115,28 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
     });
   }
 
-  Future<List<PostModel>> getPostList() async {
-    if (mPage == 1) postList.clear();
-    isLoading = true;
-    setState(() {});
+  Future<List<Post>> getPostList() async {
+    // if (mPage == 1) postList.clear();
+    // isLoading = true;
+    // setState(() {});
 
-    await getPost(
-            type: isFavorites
-                ? PostRequestType.favorites
-                : PostRequestType.timeline,
-            page: mPage,
-            userId: widget.memberId)
-        .then((value) {
-      mIsLastPage = value.length != PER_PAGE;
-      postList.addAll(value);
-      isLoading = false;
-      setState(() {});
-    }).catchError((e) {
-      isPostError = true;
-      isLoading = false;
-      setState(() {});
-      if (e.toString() != 'Private account.') toast(e.toString(), print: true);
-    });
+    // await getPost(
+    //         type: isFavorites
+    //             ? PostRequestType.favorites
+    //             : PostRequestType.timeline,
+    //         page: mPage,
+    //         userId: widget.memberId)
+    //     .then((value) {
+    //   mIsLastPage = value.length != PER_PAGE;
+    //   postList.addAll(value);
+    //   isLoading = false;
+    //   setState(() {});
+    // }).catchError((e) {
+    //   isPostError = true;
+    //   isLoading = false;
+    //   setState(() {});
+    //   if (e.toString() != 'Private account.') toast(e.toString(), print: true);
+    // });
 
     return postList;
   }
@@ -180,12 +185,13 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
     //   appStore.setLoading(false);
     //   toast(e.toString(), print: true);
     // });
+    member = member;
   }
 
   Future<void> onRefresh() async {
     isPostError = false;
     showNoData = false;
-    appStore.setLoading(true);
+    //appStore.setLoading(true);
     mPage = 1;
     future = getPostList();
     getMember();
@@ -413,18 +419,18 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
                             },
                             isBlockedByMe: member.blockedByMe.validate(),
                           ),
-                        16.height,
-                        if (appStore.showStoryHighlight == 1 && showDetails)
-                          StoryHighlightsComponent(
-                            categoryList: categoryList,
-                            showAddOption:
-                                member.id.validate() == appStore.loginUserId,
-                            avatarImage: member.memberAvatarImage.validate(),
-                            highlightsList: member.highlightStory.validate(),
-                            callback: () {
-                              onRefresh();
-                            },
-                          ),
+                        // 16.height,
+                        // if (appStore.showStoryHighlight == 1 && showDetails)
+                        //   StoryHighlightsComponent(
+                        //     categoryList: categoryList,
+                        //     showAddOption:
+                        //         member.id.validate() == appStore.loginUserId,
+                        //     avatarImage: member.memberAvatarImage.validate(),
+                        //     highlightsList: member.highlightStory.validate(),
+                        //     callback: () {
+                        //       onRefresh();
+                        //     },
+                        //   ),
                         8.height,
                         Row(
                           children: [
@@ -491,9 +497,7 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
                         if (showDetails)
                           TextIcon(
                             onTap: () {
-                              GalleryScreen(
-                                      userId: member.id.toInt(), canEdit: false)
-                                  .launch(context);
+                              GalleryScreen(canEdit: false).launch(context);
                             },
                             text: language.viewGallery,
                             textStyle: primaryTextStyle(color: appColorPrimary),
@@ -502,7 +506,7 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
                           ),
                         8.height,
                         if (!appStore.isLoading && showDetails)
-                          FutureBuilder<List<PostModel>>(
+                          FutureBuilder<List<Post>>(
                             future: future,
                             builder: (ctx, snap) {
                               if (snap.hasError) {

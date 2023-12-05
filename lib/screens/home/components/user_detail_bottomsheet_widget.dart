@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/components/loading_widget.dart';
@@ -65,7 +64,7 @@ class _UserDetailBottomSheetWidgetState
                         ? Row(
                             children: [
                               userController.user.value.avatarUrl.isEmptyOrNull
-                                  ? Image.asset("assets/images/profile.gif",
+                                  ? Image.asset("assets/images/profile.png",
                                           height: 62,
                                           width: 62,
                                           fit: BoxFit.cover)
@@ -108,7 +107,7 @@ class _UserDetailBottomSheetWidgetState
                         : InkWell(
                             child: Row(
                               children: [
-                                Image.asset("assets/images/profile.gif",
+                                Image.asset("assets/images/profile.png",
                                         height: 62,
                                         width: 62,
                                         fit: BoxFit.cover)
@@ -189,14 +188,6 @@ class _UserDetailBottomSheetWidgetState
               Column(
                 children: [
                   VersionInfoWidget(prefixText: 'v'),
-                  GestureDetector(
-                    child: Text('Tap me'),
-                    onTap: () async {
-                      FlutterSecureStorage prefs = FlutterSecureStorage();
-                      print(await prefs.read(key: 'jwt'));
-                      print(await prefs.read(key: 'user'));
-                    },
-                  ),
                   16.height,
                   userController.isLoggedIn.value
                       ? TextButton(
@@ -206,7 +197,7 @@ class _UserDetailBottomSheetWidgetState
                               primaryColor: appColorPrimary,
                               title: language.logoutConfirmation,
                               onAccept: (s) {
-                                userController.Logout();
+                                userController.logout();
                               },
                             );
                           },

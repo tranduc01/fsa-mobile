@@ -16,10 +16,9 @@ import 'single_album_detail_screen.dart';
 
 class GalleryScreen extends StatefulWidget {
   final int? groupId;
-  final int? userId;
   final bool canEdit;
 
-  GalleryScreen({Key? key, this.groupId, this.userId, this.canEdit = false})
+  GalleryScreen({Key? key, this.groupId, this.canEdit = false})
       : super(key: key);
 
   @override
@@ -33,7 +32,6 @@ List<MediaModel> mediaTypeList = [
 
 class _GalleryScreenState extends State<GalleryScreen> {
   int selectedIndex = 0;
-  bool isError = false;
   ScrollController scrollCont = ScrollController();
   int mPage = 1;
   bool mIsLastPage = false;
@@ -106,14 +104,12 @@ class _GalleryScreenState extends State<GalleryScreen> {
                 if (galleryController.isLoading.value) {
                   return LoadingWidget();
                 } else {
-                  if (snap.hasError || isError) {
+                  if (galleryController.isError.value) {
                     return SizedBox(
                       height: MediaQuery.of(context).size.height * 0.8,
                       child: NoDataWidget(
                         imageWidget: NoDataLottieWidget(),
-                        title: isError
-                            ? language.somethingWentWrong
-                            : language.noDataFound,
+                        title: language.somethingWentWrong,
                         onRetry: () {
                           galleryController.fetchAlbums();
                         },
@@ -129,8 +125,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                           if (galleryController.albums.isEmpty)
                             SizedBox(
                               height: MediaQuery.of(context).size.height * 0.74,
-                              child: !widget.canEdit.validate() &&
-                                      !appStore.isLoading
+                              child: galleryController.isError.value
                                   ? NoDataWidget(
                                       imageWidget: NoDataLottieWidget(),
                                       title: language.noDataFound,

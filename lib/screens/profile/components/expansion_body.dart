@@ -22,7 +22,12 @@ class ExpansionBody extends StatefulWidget {
 
 class _ExpansionBodyState extends State<ExpansionBody> {
   final profileFieldFormKey = GlobalKey<FormState>();
-  List<ProfileFieldModel> fieldList = [];
+  List<ProfileFieldModel> fieldList = [
+    ProfileFieldModel(
+        fields: [Field(id: 1, isRequired: true, label: 'Email', type: 'text')],
+        groupId: 1,
+        groupName: 'Personal Information'),
+  ];
 
   @override
   void initState() {
@@ -53,7 +58,8 @@ class _ExpansionBodyState extends State<ExpansionBody> {
             itemBuilder: (ctx, i) {
               Field element = widget.group.fields![i];
 
-              return ProfileFieldComponent(field: element, count: 0).paddingSymmetric(horizontal: 16, vertical: 8);
+              return ProfileFieldComponent(field: element, count: 0)
+                  .paddingSymmetric(horizontal: 16, vertical: 8);
             },
           ),
         ),
@@ -66,11 +72,15 @@ class _ExpansionBodyState extends State<ExpansionBody> {
                 profileFieldFormKey.currentState!.save();
                 hideKeyboard(context);
 
-                if (group.fields.validate().any((element) => element.value.validate().isNotEmpty)) {
+                if (group.fields
+                    .validate()
+                    .any((element) => element.value.validate().isNotEmpty)) {
                   if (isDetailChange) {
                     appStore.setLoading(true);
-                    await updateProfileFields(request: group.toJson()).then((value) {
-                      toast('${group.groupName} ${language.updatedSuccessfully}');
+                    await updateProfileFields(request: group.toJson())
+                        .then((value) {
+                      toast(
+                          '${group.groupName} ${language.updatedSuccessfully}');
                       appStore.setLoginFullName(name);
                       widget.callback?.call();
                     }).catchError((e) {

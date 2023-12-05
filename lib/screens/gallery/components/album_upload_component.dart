@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/controllers/gallery_controller.dart';
 import 'package:socialv/models/posts/media_model.dart';
+import 'package:socialv/screens/common/fail_dialog.dart';
+import 'package:socialv/screens/common/loading_dialog.dart';
 import 'package:socialv/screens/gallery/screens/create_album_screen.dart';
 import 'package:video_player/video_player.dart';
 
@@ -36,15 +38,6 @@ class _AlbumUploadScreenState extends State<AlbumUploadScreen> {
   void initState() {
     super.initState();
     mediaList.clear();
-    if (widget.fileType != null) {
-      // MediaModel media = mediaTypeList
-      //     .firstWhere((element) => element.type == widget.fileType);
-
-      selectedAlbumMedia = MediaModel(
-        type: widget.fileType,
-        isActive: true,
-      );
-    }
   }
 
   Future<void> onSelectMedia() async {
@@ -60,10 +53,7 @@ class _AlbumUploadScreenState extends State<AlbumUploadScreen> {
     if (file != null) {
       if (file == FileTypes.CAMERA) {
         appStore.setLoading(true);
-        await getImageSource(
-                isCamera: true,
-                isVideo: selectedAlbumMedia!.type == MediaTypes.video)
-            .then((value) {
+        await getImageSource(isCamera: true, isVideo: false).then((value) {
           appStore.setLoading(false);
           mediaList.add(PostMedia(file: value));
           setState(() {});
@@ -73,18 +63,14 @@ class _AlbumUploadScreenState extends State<AlbumUploadScreen> {
         });
       } else {
         appStore.setLoading(true);
-        getMultipleFiles(mediaType: MediaModel(type: 'photo', isActive: true))
-            .then((value) {
-          value.forEach((element) {
-            mediaList.add(PostMedia(file: element));
-          });
+        await getImageSource(isCamera: false, isVideo: false).then((value) {
+          appStore.setLoading(false);
+          mediaList.add(PostMedia(file: value));
+          setState(() {});
         }).catchError((e) {
           log('Error: ${e.toString()}');
-        }).whenComplete(() {
-          setState(() {});
           appStore.setLoading(false);
         });
-        log('MediaList: ${mediaList.length}');
       }
     }
   }
@@ -171,7 +157,8 @@ class _AlbumUploadScreenState extends State<AlbumUploadScreen> {
                 if (mediaList.isNotEmpty)
                   ShowSelectedMediaComponent(
                     mediaList: mediaList,
-                    mediaType: selectedAlbumMedia!,
+                    mediaType: MediaModel(
+                        type: 'photo', title: 'Photo', isActive: true),
                     videoController: List.generate(mediaList.length, (index) {
                       return VideoPlayerController.networkUrl(
                           Uri.parse(mediaList[index].file!.path.validate()));
@@ -182,109 +169,31 @@ class _AlbumUploadScreenState extends State<AlbumUploadScreen> {
                   alignment: Alignment.center,
                   child: appButton(
                     text: language.upload,
-                    onTap: () {
+                    onTap: () async {
                       showDialog(
                           context: context,
                           barrierDismissible: false,
                           builder: (context) {
-                            return Dialog(
-                              shadowColor: Colors.transparent,
-                              backgroundColor: Colors.transparent,
-                              child: Image.asset(
-                                'assets/icons/loading.gif',
-                                height: 180,
-                                width: 180,
-                              ),
-                            );
+                            return LoadingDialog();
                           });
-                      galleryController.updateAlbum(
+                      await galleryController.updateAlbum(
                           widget.album!, mediaList, null);
-                      Future.delayed(Duration(seconds: 3), () {
-                        if (galleryController.isUpdateSuccess.value) {
-                          galleryController.fetchAlbum(widget.album!.id!);
-                          Navigator.pop(context);
-                          toast('Medias Added Successfully');
-                          Navigator.pop(context);
-                        } else {
-                          Navigator.pop(context);
-                          showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (context) {
-                              return Dialog(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Container(
-                                  width: 200,
-                                  padding: EdgeInsets.all(16),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Image.asset('assets/images/fail.gif'),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      Text(
-                                        'Create Failed',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20),
-                                      ),
-                                      SizedBox(height: 20),
-                                      Text(
-                                        'Please try again!',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          color: const Color.fromARGB(
-                                              106, 0, 0, 0),
-                                        ),
-                                      ),
-                                      SizedBox(height: 20),
-                                      Center(
-                                        child: ElevatedButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: Text(
-                                            'Try Again',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black),
-                                          ),
-                                          style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStateColor.resolveWith(
-                                                    (states) {
-                                              if (states.contains(
-                                                  MaterialState.pressed)) {
-                                                return const Color.fromARGB(
-                                                    137, 244, 67, 54);
-                                              }
-                                              return Colors.white;
-                                            }),
-                                            shape: MaterialStateProperty.all<
-                                                RoundedRectangleBorder>(
-                                              RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  side: BorderSide(
-                                                      color: Colors.red,
-                                                      width: 2)),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          );
-                        }
-                      });
+
+                      if (galleryController.isUpdateSuccess.value) {
+                        galleryController.fetchAlbum(widget.album!.id!);
+                        Navigator.pop(context);
+                        toast('Medias Added Successfully');
+                        Navigator.pop(context);
+                      } else {
+                        Navigator.pop(context);
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (context) {
+                            return FailDialog(text: 'Create Failed');
+                          },
+                        );
+                      }
                     },
                     context: context,
                   ),

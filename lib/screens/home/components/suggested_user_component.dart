@@ -28,9 +28,9 @@ class _SuggestedUserComponentState extends State<SuggestedUserComponent> {
     await getDashboardDetails().then((value) {
       appStore.setNotificationCount(value.notificationCount.validate());
       appStore.setVerificationStatus(value.verificationStatus.validate());
-      visibilities = value.visibilities.validate();
-      accountPrivacyVisibility = value.accountPrivacyVisibility.validate();
-      reportTypes = value.reportTypes.validate();
+      // visibilities = value.visibilities.validate();
+      // accountPrivacyVisibility = value.accountPrivacyVisibility.validate();
+      // reportTypes = value.reportTypes.validate();
 
       appStore.setShowStoryHighlight(value.isHighlightStoryEnable.validate());
       appStore.suggestedUserList = value.suggestedUser.validate();
@@ -80,11 +80,14 @@ class _SuggestedUserComponentState extends State<SuggestedUserComponent> {
 
                   return InkWell(
                     onTap: () {
-                      MemberProfileScreen(memberId: member.userId.validate()).launch(context);
+                      MemberProfileScreen(memberId: member.userId.validate())
+                          .launch(context);
                     },
                     radius: commonRadius,
                     child: Container(
-                      decoration: BoxDecoration(color: context.cardColor, borderRadius: radius(commonRadius)),
+                      decoration: BoxDecoration(
+                          color: context.cardColor,
+                          borderRadius: radius(commonRadius)),
                       height: 250,
                       width: 200,
                       padding: EdgeInsets.all(16),
@@ -94,39 +97,64 @@ class _SuggestedUserComponentState extends State<SuggestedUserComponent> {
                           Column(
                             children: [
                               6.height,
-                              cachedImage(member.userImage.validate(), height: 100, width: 100).cornerRadiusWithClipRRect(50),
+                              cachedImage(member.userImage.validate(),
+                                      height: 100, width: 100)
+                                  .cornerRadiusWithClipRRect(50),
                               8.height,
-                              Text(member.userName.validate(), style: primaryTextStyle()),
-                              Text('@' + member.userMentionName.validate(), style: secondaryTextStyle()).expand(),
+                              Text(member.userName.validate(),
+                                  style: primaryTextStyle()),
+                              Text('@' + member.userMentionName.validate(),
+                                      style: secondaryTextStyle())
+                                  .expand(),
                               AppButton(
                                 onTap: () {
                                   ifNotTester(() async {
-                                    member.isRequested = !member.isRequested.validate();
+                                    member.isRequested =
+                                        !member.isRequested.validate();
                                     setState(() {});
 
                                     if (member.isRequested!) {
-                                      Map request = {"initiator_id": appStore.loginUserId, "friend_id": member.userId.validate()};
-                                      await requestNewFriend(request).then((value) async {
+                                      Map request = {
+                                        "initiator_id": appStore.loginUserId,
+                                        "friend_id": member.userId.validate()
+                                      };
+                                      await requestNewFriend(request)
+                                          .then((value) async {
                                         getDetails();
                                       }).catchError((e) {
-                                        member.isRequested = !member.isRequested.validate();
+                                        member.isRequested =
+                                            !member.isRequested.validate();
                                         setState(() {});
                                       });
                                     } else {
-                                      await removeExistingFriendConnection(friendId: member.userId.validate().toString(), passRequest: true).then((value) {
+                                      await removeExistingFriendConnection(
+                                              friendId: member.userId
+                                                  .validate()
+                                                  .toString(),
+                                              passRequest: true)
+                                          .then((value) {
                                         getDetails();
                                       }).catchError((e) {
-                                        member.isRequested = !member.isRequested.validate();
+                                        member.isRequested =
+                                            !member.isRequested.validate();
                                         setState(() {});
                                       });
                                     }
                                   });
                                 },
-                                text: member.isRequested.validate() ? language.requested : language.addFriends,
-                                textStyle: secondaryTextStyle(color: member.isRequested.validate() ? context.iconColor : Colors.white),
-                                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                text: member.isRequested.validate()
+                                    ? language.requested
+                                    : language.addFriends,
+                                textStyle: secondaryTextStyle(
+                                    color: member.isRequested.validate()
+                                        ? context.iconColor
+                                        : Colors.white),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 8),
                                 elevation: 0,
-                                color: member.isRequested.validate() ? context.scaffoldBackgroundColor : context.primaryColor,
+                                color: member.isRequested.validate()
+                                    ? context.scaffoldBackgroundColor
+                                    : context.primaryColor,
                               )
                             ],
                           ),
@@ -138,12 +166,15 @@ class _SuggestedUserComponentState extends State<SuggestedUserComponent> {
                                   setState(() {});
 
                                   log('member.userId.validate(): ${member.userId.validate()}');
-                                  await removeSuggestedUser(userId: member.userId.validate()).then((value) {
+                                  await removeSuggestedUser(
+                                          userId: member.userId.validate())
+                                      .then((value) {
                                     getDetails();
                                   }).catchError(onError);
                                 });
                               },
-                              child: Icon(Icons.cancel_outlined, color: context.primaryColor),
+                              child: Icon(Icons.cancel_outlined,
+                                  color: context.primaryColor),
                             ),
                             right: 0,
                             top: 0,

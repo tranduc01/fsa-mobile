@@ -14,7 +14,8 @@ class GroupSuggestionsComponent extends StatefulWidget {
   const GroupSuggestionsComponent({Key? key}) : super(key: key);
 
   @override
-  State<GroupSuggestionsComponent> createState() => _GroupSuggestionsComponentState();
+  State<GroupSuggestionsComponent> createState() =>
+      _GroupSuggestionsComponentState();
 }
 
 class _GroupSuggestionsComponentState extends State<GroupSuggestionsComponent> {
@@ -27,9 +28,9 @@ class _GroupSuggestionsComponentState extends State<GroupSuggestionsComponent> {
     await getDashboardDetails().then((value) {
       appStore.setNotificationCount(value.notificationCount.validate());
       appStore.setVerificationStatus(value.verificationStatus.validate());
-      visibilities = value.visibilities.validate();
-      accountPrivacyVisibility = value.accountPrivacyVisibility.validate();
-      reportTypes = value.reportTypes.validate();
+      // visibilities = value.visibilities.validate();
+      // accountPrivacyVisibility = value.accountPrivacyVisibility.validate();
+      // reportTypes = value.reportTypes.validate();
 
       appStore.setShowStoryHighlight(value.isHighlightStoryEnable.validate());
       appStore.suggestedUserList = value.suggestedUser.validate();
@@ -79,11 +80,13 @@ class _GroupSuggestionsComponentState extends State<GroupSuggestionsComponent> {
 
                   return InkWell(
                     onTap: () {
-                      GroupDetailScreen(groupId: group.id.validate()).launch(context);
+                      //GroupDetailScreen(groupId: group.id.validate()).launch(context);
                     },
                     radius: commonRadius,
                     child: Container(
-                      decoration: BoxDecoration(color: context.cardColor, borderRadius: radius(commonRadius)),
+                      decoration: BoxDecoration(
+                          color: context.cardColor,
+                          borderRadius: radius(commonRadius)),
                       padding: EdgeInsets.all(8),
                       width: 120,
                       child: Stack(
@@ -92,10 +95,13 @@ class _GroupSuggestionsComponentState extends State<GroupSuggestionsComponent> {
                           Column(
                             children: [
                               10.height,
-                              cachedImage(group.groupAvtarImage.validate(), height: 70, width: 70).cornerRadiusWithClipRRect(50),
+                              cachedImage(group.groupAvtarImage.validate(),
+                                      height: 70, width: 70)
+                                  .cornerRadiusWithClipRRect(50),
                               16.height,
                               Marquee(
-                                child: Text(group.name.validate(), style: primaryTextStyle()),
+                                child: Text(group.name.validate(),
+                                    style: primaryTextStyle()),
                               ),
                               8.height,
                             ],
@@ -106,12 +112,15 @@ class _GroupSuggestionsComponentState extends State<GroupSuggestionsComponent> {
                                 ifNotTester(() async {
                                   appStore.suggestedGroupsList.removeAt(index);
                                   setState(() {});
-                                  await removeSuggestedGroup(groupId: group.id.validate()).then((value) {
+                                  await removeSuggestedGroup(
+                                          groupId: group.id.validate())
+                                      .then((value) {
                                     getDetails();
                                   }).catchError(onError);
                                 });
                               },
-                              child: Icon(Icons.cancel_outlined, color: context.primaryColor),
+                              child: Icon(Icons.cancel_outlined,
+                                  color: context.primaryColor),
                             ),
                             right: 0,
                             top: 0,

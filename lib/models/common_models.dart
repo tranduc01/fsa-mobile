@@ -13,7 +13,6 @@ import 'package:socialv/screens/shop/screens/cart_screen.dart';
 import 'package:socialv/screens/shop/screens/orders_screen.dart';
 import 'package:socialv/screens/shop/screens/shop_screen.dart';
 import 'package:socialv/screens/shop/screens/wishlist_screen.dart';
-import 'package:socialv/screens/stories/screen/user_story_screen.dart';
 
 import '../screens/auction/screen/auction_screen.dart';
 import '../screens/lms/screens/cource_orders_screen.dart';
@@ -33,10 +32,6 @@ class DrawerModel {
 List<DrawerModel> getDrawerOptions() {
   List<DrawerModel> list = [];
 
-  list.add(DrawerModel(
-      image: ic_story,
-      title: language.myStories,
-      attachedScreen: UserStoryScreen()));
   list.add(DrawerModel(
       image: ic_two_user,
       title: language.friends,

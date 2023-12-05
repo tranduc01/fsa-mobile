@@ -1,50 +1,38 @@
 class User {
-  bool? embeddable;
-  String? href;
-  String? taxonomy;
-  int? count;
   String? id;
-  bool? templated;
   String? name;
   String? userName;
   String? avatarUrl;
+  bool? isVerified;
+  List<dynamic> role;
 
   User(
-      {this.embeddable,
-      this.href,
-      this.taxonomy,
-      this.count,
-      this.id,
-      this.templated,
+      {this.id,
+      required this.role,
       this.name,
       this.userName,
-      this.avatarUrl});
+      this.avatarUrl,
+      this.isVerified});
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      embeddable: json['embeddable'],
-      href: json['href'],
-      taxonomy: json['taxonomy'],
-      count: json['count'],
       id: json['id'],
-      templated: json['templated'],
+      role: json['roles'] ?? [],
       name: json['name'],
       userName: json['userName'],
       avatarUrl: json['avatarUrl'],
+      isVerified: json['isVerified'] ?? false,
     );
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['embeddable'] = this.embeddable;
-    data['href'] = this.href;
-    data['taxonomy'] = this.taxonomy;
-    data['count'] = this.count;
     data['id'] = this.id;
-    data['templated'] = this.templated;
+    data['roles'] = this.role;
     data['name'] = this.name;
     data['userName'] = this.userName;
     data['avatarUrl'] = this.avatarUrl;
+    data['isVerified'] = this.isVerified;
     return data;
   }
 }
