@@ -8,6 +8,7 @@ import '../models/response_model.dart';
 
 class OrchidController extends GetxController {
   var orchids = <Orchid>[].obs;
+  var orchid = Orchid().obs;
   var isLoading = true.obs;
   var isError = false.obs;
 
@@ -44,6 +45,34 @@ class OrchidController extends GetxController {
       isError(true);
       print('Request failed with status: ${response.statusCode}');
       throw Exception('Failed to load orchids');
+    }
+  }
+
+  Future<Orchid> fetchOrchid(int orchidId) async {
+    isLoading(true);
+    var url = '$BASE_URL/Orchid/$orchidId';
+    var response = await GetConnect().get(url);
+
+    if (response.bodyString != null) {
+      ResponseModel responseModel =
+          ResponseModel.fromJson(jsonDecode(response.bodyString!));
+      if (response.statusCode == 200) {
+        isLoading(false);
+        isError(false);
+
+        return orchid.value = Orchid.fromJson(responseModel.data);
+      } else {
+        isLoading(false);
+        isError(true);
+        print('Request failed with status: ${response.statusCode}');
+        print('Request failed with status: ${responseModel.message}');
+        throw Exception('Failed to load orchid');
+      }
+    } else {
+      isLoading(false);
+      isError(true);
+      print('Request failed with status: ${response.statusCode}');
+      throw Exception('Failed to load orchid');
     }
   }
 }

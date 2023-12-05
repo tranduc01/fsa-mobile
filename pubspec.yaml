@@ -19,8 +19,6 @@ dependencies:
   flutter_mentions: ^2.0.1
   flutter_portal: ^0.4.0
   tap_to_expand:
-  animated_bottom_navigation_bar:
-  alphabet_scroll_view:
 
   # Media
   image_picker: ^1.0.4
