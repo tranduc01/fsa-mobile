@@ -6,12 +6,12 @@ import 'package:socialv/screens/post/screens/image_screen.dart';
 
 import '../../../utils/images.dart';
 
-class AcutionDetailSceen extends StatefulWidget {
+class AuctionDetailSceen extends StatefulWidget {
   @override
-  _AcutionDetailSceenState createState() => _AcutionDetailSceenState();
+  _AuctionDetailSceenState createState() => _AuctionDetailSceenState();
 }
 
-class _AcutionDetailSceenState extends State<AcutionDetailSceen> {
+class _AuctionDetailSceenState extends State<AuctionDetailSceen> {
   bool isShowOrchidInfo = false;
   bool isShowAuctionInfo = false;
   @override

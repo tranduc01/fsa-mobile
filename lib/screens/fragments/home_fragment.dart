@@ -199,7 +199,7 @@ class _HomeFragmentState extends State<HomeFragment>
             ),
           Positioned(
             bottom: postList.isNotEmpty || mPage != 1 ? 8 : null,
-            child: LoadingWidget(isBlurBackground: true)
+            child: LoadingWidget()
                 .center()
                 .visible(postController.isLoading.value),
           ),

@@ -98,6 +98,8 @@ const ic_pending = 'assets/icons/ic_pending.png';
 const ic_approved = 'assets/icons/ic_approved.png';
 const ic_rejected = 'assets/icons/ic_rejected.png';
 const ic_expired = 'assets/icons/ic_expired.png';
+const ic_auction = 'assets/icons/ic_auction.png';
+const ic_auction_filled = 'assets/icons/ic_auction_filled.png';
 
 /// Lottie Files
 const no_data = "assets/lottie/no_data.json";
