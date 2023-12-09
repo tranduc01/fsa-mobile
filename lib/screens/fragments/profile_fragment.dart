@@ -9,7 +9,7 @@ import 'package:socialv/main.dart';
 import 'package:socialv/models/members/member_detail_model.dart';
 import 'package:socialv/network/rest_apis.dart';
 import 'package:socialv/screens/dashboard_screen.dart';
-import 'package:socialv/screens/fragments/expertise_request_fragment.dart';
+import 'package:socialv/screens/expertise_request/expertise_request/screens/expertise_request_screen.dart';
 import 'package:socialv/screens/post/components/post_component.dart';
 import 'package:socialv/screens/profile/components/profile_header_component.dart';
 
@@ -317,9 +317,8 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                   ),
                   10.height,
                   InkWell(
-                    onTap: () =>
-                        ExpertiseRequestFragment(controller: _controller)
-                            .launch(context),
+                    onTap: () => ExpertiseRequestScreen(controller: _controller)
+                        .launch(context),
                     child: Column(
                       children: [
                         Divider(thickness: 1),
