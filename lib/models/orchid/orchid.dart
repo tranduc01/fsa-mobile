@@ -1,3 +1,5 @@
+import '../gallery/albums.dart';
+
 class Orchid {
   int? id;
   String? name;
@@ -8,7 +10,8 @@ class Orchid {
   String? nativeArea;
   String? height;
   String? sunExposure;
-  String? imageUrl;
+  String? thumbnail;
+  List<Media>? medias;
   bool? status;
 
   Orchid({
@@ -21,7 +24,8 @@ class Orchid {
     this.nativeArea,
     this.height,
     this.sunExposure,
-    this.imageUrl,
+    this.thumbnail,
+    this.medias,
     this.status,
   });
 
@@ -35,7 +39,8 @@ class Orchid {
         nativeArea: json["nativeArea"],
         height: json["height"],
         sunExposure: json["sunExposure"],
-        imageUrl: json["imageUrl"],
+        thumbnail: json["thumbnail"],
+        medias: List<Media>.from(json["medias"].map((x) => Media.fromJson(x))),
         status: json["status"],
       );
 }

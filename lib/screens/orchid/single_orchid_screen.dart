@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -5,6 +6,7 @@ import 'package:socialv/components/loading_widget.dart';
 import 'package:socialv/utils/app_constants.dart';
 
 import '../../controllers/orchid_controller.dart';
+import '../post/screens/image_screen.dart';
 
 class SingleOrchidScreen extends StatefulWidget {
   final int orchidId;
@@ -18,6 +20,9 @@ class SingleOrchidScreen extends StatefulWidget {
 class _SingleOrchidScreenState extends State<SingleOrchidScreen> {
   PageController pageController = PageController();
   late OrchidController orchidController = Get.put(OrchidController());
+  int _current = 0;
+  final CarouselController _controller = CarouselController();
+
   @override
   void initState() {
     Future.delayed(Duration.zero, () async {
@@ -48,15 +53,6 @@ class _SingleOrchidScreenState extends State<SingleOrchidScreen> {
                 headerSliverBuilder: (context, innerBoxIsScrolled) {
                   return [
                     SliverAppBar(
-                      actions: [
-                        IconButton(
-                          icon: Icon(Icons.ios_share_outlined,
-                              color: Colors.white),
-                          onPressed: () {
-                            // Add your share functionality here
-                          },
-                        ),
-                      ],
                       title: Text(
                         'Orchid Detail',
                         style: TextStyle(fontWeight: FontWeight.bold),
@@ -72,23 +68,130 @@ class _SingleOrchidScreenState extends State<SingleOrchidScreen> {
                       expandedHeight: MediaQuery.of(context).size.height * 0.5,
                       pinned: true,
                       flexibleSpace: FlexibleSpaceBar(
-                        background: Stack(
-                          children: [
-                            Positioned.fill(
-                              child: orchidController.orchid.value.imageUrl !=
-                                      null
-                                  ? Image.network(
-                                      orchidController.orchid.value.imageUrl!,
-                                      fit: BoxFit.cover,
-                                    )
-                                  : Image.asset(
-                                      'assets/images/images.png',
-                                      fit: BoxFit.cover,
-                                    ),
-                            ),
-                          ],
-                        ),
-                      ),
+                          background: Stack(
+                        children: [
+                          Positioned.fill(
+                            child:
+                                orchidController.orchid.value.medias!.length > 1
+                                    ? Column(
+                                        children: [
+                                          Expanded(
+                                            child: CarouselSlider(
+                                              items:
+                                                  orchidController
+                                                      .orchid.value.medias!
+                                                      .map(
+                                                          (item) =>
+                                                              GestureDetector(
+                                                                onTap: () => ImageScreen(
+                                                                        imageURl: item
+                                                                            .url
+                                                                            .validate())
+                                                                    .launch(
+                                                                        context),
+                                                                child:
+                                                                    Container(
+                                                                  child: Stack(
+                                                                    children: [
+                                                                      item.url !=
+                                                                              null
+                                                                          ? Image
+                                                                              .network(
+                                                                              item.url!,
+                                                                              fit: BoxFit.cover,
+                                                                              errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                                                                                return Image.asset(
+                                                                                  'assets/images/images.png',
+                                                                                  fit: BoxFit.cover,
+                                                                                );
+                                                                              },
+                                                                            )
+                                                                          : Image.asset(
+                                                                              'assets/images/images.png',
+                                                                              fit: BoxFit.cover),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ))
+                                                      .toList(),
+                                              carouselController: _controller,
+                                              options: CarouselOptions(
+                                                  autoPlay: true,
+                                                  enlargeCenterPage: false,
+                                                  aspectRatio: 1,
+                                                  onPageChanged:
+                                                      (index, reason) {
+                                                    setState(() {
+                                                      _current = index;
+                                                    });
+                                                  }),
+                                            ),
+                                          ),
+                                          if (orchidController
+                                                  .orchid.value.medias!.length >
+                                              1)
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: orchidController
+                                                  .orchid.value.medias!
+                                                  .asMap()
+                                                  .entries
+                                                  .map((entry) {
+                                                return GestureDetector(
+                                                  onTap: () => _controller
+                                                      .animateToPage(entry.key),
+                                                  child: Container(
+                                                    width: 12.0,
+                                                    height: 12.0,
+                                                    margin:
+                                                        EdgeInsets.symmetric(
+                                                            vertical: 8.0,
+                                                            horizontal: 4.0),
+                                                    decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: (Theme.of(context)
+                                                                        .brightness ==
+                                                                    Brightness
+                                                                        .dark
+                                                                ? Colors.white
+                                                                : Colors.black)
+                                                            .withOpacity(
+                                                                _current ==
+                                                                        entry
+                                                                            .key
+                                                                    ? 0.9
+                                                                    : 0.4)),
+                                                  ),
+                                                );
+                                              }).toList(),
+                                            ),
+                                        ],
+                                      )
+                                    : orchidController
+                                            .orchid.value.medias!.isNotEmpty
+                                        ? GestureDetector(
+                                            onTap: () => ImageScreen(
+                                                    imageURl: orchidController
+                                                        .orchid
+                                                        .value
+                                                        .medias![0]
+                                                        .url
+                                                        .validate())
+                                                .launch(context),
+                                            child: Image.network(
+                                              orchidController
+                                                  .orchid.value.medias![0].url!,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          )
+                                        : Image.asset(
+                                            'assets/images/images.png',
+                                            fit: BoxFit.cover,
+                                          ),
+                          ),
+                        ],
+                      )),
                     ),
                   ];
                 },

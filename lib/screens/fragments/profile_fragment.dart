@@ -9,7 +9,7 @@ import 'package:socialv/main.dart';
 import 'package:socialv/models/members/member_detail_model.dart';
 import 'package:socialv/network/rest_apis.dart';
 import 'package:socialv/screens/dashboard_screen.dart';
-import 'package:socialv/screens/fragments/expertise_request_fragment.dart';
+import 'package:socialv/screens/expertise_request/expertise_request/screens/expertise_request_screen.dart';
 import 'package:socialv/screens/post/components/post_component.dart';
 import 'package:socialv/screens/profile/components/profile_header_component.dart';
 
@@ -317,9 +317,8 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                   ),
                   10.height,
                   InkWell(
-                    onTap: () =>
-                        ExpertiseRequestFragment(controller: _controller)
-                            .launch(context),
+                    onTap: () => ExpertiseRequestScreen(controller: _controller)
+                        .launch(context),
                     child: Column(
                       children: [
                         Divider(thickness: 1),
@@ -331,15 +330,14 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                               alignment: Alignment.center,
                               children: [
                                 Image.asset(
-                                  ic_notification,
-                                  height: 30,
-                                  width: 30,
+                                  ic_pending,
+                                  height: 40,
+                                  width: 40,
                                   fit: BoxFit.cover,
-                                  color: Colors.black,
                                 ).paddingSymmetric(vertical: 11),
                                 Positioned(
                                   right: -8,
-                                  top: 3,
+                                  top: -4,
                                   child: Container(
                                     padding: EdgeInsets.all(6),
                                     decoration: BoxDecoration(
@@ -373,15 +371,14 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                               alignment: Alignment.center,
                               children: [
                                 Image.asset(
-                                  ic_notification,
-                                  height: 30,
-                                  width: 30,
+                                  ic_approved,
+                                  height: 40,
+                                  width: 40,
                                   fit: BoxFit.cover,
-                                  color: Colors.black,
                                 ).paddingSymmetric(vertical: 11),
                                 Positioned(
                                   right: -8,
-                                  top: 3,
+                                  top: -4,
                                   child: Container(
                                     padding: EdgeInsets.all(6),
                                     decoration: BoxDecoration(
@@ -415,15 +412,14 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                               alignment: Alignment.center,
                               children: [
                                 Image.asset(
-                                  ic_notification,
-                                  height: 30,
-                                  width: 30,
+                                  ic_rejected,
+                                  height: 40,
+                                  width: 40,
                                   fit: BoxFit.cover,
-                                  color: Colors.black,
                                 ).paddingSymmetric(vertical: 11),
                                 Positioned(
                                   right: -8,
-                                  top: 3,
+                                  top: -4,
                                   child: Container(
                                     padding: EdgeInsets.all(6),
                                     decoration: BoxDecoration(
@@ -457,15 +453,14 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                               alignment: Alignment.center,
                               children: [
                                 Image.asset(
-                                  ic_notification,
-                                  height: 30,
-                                  width: 30,
+                                  ic_expired,
+                                  height: 40,
+                                  width: 40,
                                   fit: BoxFit.cover,
-                                  color: Colors.black,
                                 ).paddingSymmetric(vertical: 11),
                                 Positioned(
                                   right: -8,
-                                  top: 3,
+                                  top: -4,
                                   child: Container(
                                     padding: EdgeInsets.all(6),
                                     decoration: BoxDecoration(

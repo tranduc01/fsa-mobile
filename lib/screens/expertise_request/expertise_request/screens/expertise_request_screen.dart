@@ -7,24 +7,26 @@ import 'package:socialv/controllers/expertise_request_controller.dart';
 import 'package:socialv/models/expertise_request/expertise_request.dart';
 import 'package:socialv/screens/expertise_request/expertise_request/screens/expertise_request_detail_screen.dart';
 
-import '../../components/no_data_lottie_widget.dart';
+import '../../../../components/no_data_lottie_widget.dart';
+import '../../../../controllers/user_controller.dart';
+import 'create_expertise_request_screen.dart';
 
-class ExpertiseRequestFragment extends StatefulWidget {
+class ExpertiseRequestScreen extends StatefulWidget {
   final ScrollController controller;
 
-  const ExpertiseRequestFragment({required this.controller});
+  const ExpertiseRequestScreen({required this.controller});
 
   @override
-  State<ExpertiseRequestFragment> createState() =>
-      _ExpertiseRequestFragmentState();
+  State<ExpertiseRequestScreen> createState() => _ExpertiseRequestScreenState();
 }
 
-class _ExpertiseRequestFragmentState extends State<ExpertiseRequestFragment>
+class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
     with SingleTickerProviderStateMixin {
   DateTime? startDate;
   DateTime? endDate;
   late ExpertiseRequestController expertiseRequestController =
       Get.put(ExpertiseRequestController());
+  late UserController userController = Get.find();
   int mPage = 1;
   bool mIsLastPage = false;
   int selectedIndex = 0;
@@ -394,7 +396,7 @@ class _ExpertiseRequestFragmentState extends State<ExpertiseRequestFragment>
                                                         DateFormat('dd/MM/yyyy')
                                                             .format(
                                                                 expertiseRequest
-                                                                    .createAt!),
+                                                                    .createdAt!),
                                                         style: boldTextStyle(
                                                             size: 15,
                                                             fontFamily:
@@ -408,9 +410,9 @@ class _ExpertiseRequestFragmentState extends State<ExpertiseRequestFragment>
                                                     Container(
                                                       decoration: BoxDecoration(
                                                           color: colorList[
-                                                              choicesList.indexOf(
-                                                                  expertiseRequest
-                                                                      .adminApprovalStatus!)],
+                                                              expertiseRequest
+                                                                      .adminApprovalStatus! +
+                                                                  1],
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(20),
@@ -424,8 +426,9 @@ class _ExpertiseRequestFragmentState extends State<ExpertiseRequestFragment>
                                                       padding:
                                                           EdgeInsets.all(6),
                                                       child: Text(
-                                                        expertiseRequest
-                                                            .adminApprovalStatus!,
+                                                        choicesList[expertiseRequest
+                                                                .adminApprovalStatus! +
+                                                            1],
                                                         style: boldTextStyle(
                                                             size: 15,
                                                             fontFamily:
@@ -473,6 +476,14 @@ class _ExpertiseRequestFragmentState extends State<ExpertiseRequestFragment>
           ),
         ],
       ),
+      floatingActionButton: userController.user.value.role.contains('Member')
+          ? FloatingActionButton(
+              child: Icon(Icons.add),
+              onPressed: () {
+                CreateExpertiseRequestScreen().launch(context);
+              },
+            )
+          : Offstage(),
     );
   }
 }
