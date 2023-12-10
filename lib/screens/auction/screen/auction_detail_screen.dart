@@ -16,16 +16,6 @@ class AuctionDetailSceen extends StatefulWidget {
   _AuctionDetailSceenState createState() => _AuctionDetailSceenState();
 }
 
-var listImage = [
-  "https://hoatuoithanhthao.com/media/ftp/hoa-lan-5.jpg",
-  "https://hoatuoithanhthao.com/media/ftp/hoa-lan.jpg",
-  "https://cdn.tgdd.vn/Files/2021/07/24/1370576/hoa-lan-tim-dac-diem-y-nghia-va-cach-trong-hoa-no-dep-202107242028075526.jpg",
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7UvPqpugxu0O-yewdWjwrOncoZEjIVaPPbG_JQdqI9w&s",
-  "https://lanhodiep.vn/wp-content/uploads/2022/10/hinh-nen-hoa-lan-ho-diep-1.jpg",
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7UvPqpugxu0O-yewdWjwrOncoZEjIVaPPbG_JQdqI9w&s",
-  "https://lanhodiep.vn/wp-content/uploads/2022/10/hinh-nen-hoa-lan-ho-diep-1.jpg"
-];
-
 class _AuctionDetailSceenState extends State<AuctionDetailSceen> {
   bool isShowOrchidInfo = false;
   bool isShowAuctionInfo = false;
@@ -48,7 +38,10 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen> {
         floatingActionButton: Align(
           alignment: Alignment.bottomCenter,
           child: FloatingActionButton.extended(
-            label: Text('0',
+            label: Text(
+                auctionController.auction.value.currentPrice!
+                    .toStringAsFixed(0)
+                    .formatNumberWithComma(),
                 style: TextStyle(
                     color: Colors.black, fontWeight: FontWeight.bold)),
             icon: Icon(
@@ -878,14 +871,13 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen> {
                       children: [
                         TimerCountdown(
                           format: CountDownTimerFormat.daysHoursMinutesSeconds,
-                          endTime: DateTime.now().add(
-                            Duration(
-                              days: 5,
-                              hours: 14,
-                              minutes: 27,
-                              seconds: 34,
-                            ),
-                          ),
+                          endTime: DateTime.parse(auctionController
+                                  .auction.value.startDate!
+                                  .isBefore(DateTime.now())
+                              ? auctionController.auction.value.endDate
+                                  .toString()
+                              : auctionController.auction.value.startDate
+                                  .toString()),
                           timeTextStyle: TextStyle(
                             color: Colors.black,
                             fontSize: 20.0,
@@ -1031,8 +1023,7 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   Text(
-                                    auctionController
-                                        .auction.value.currentPrice!
+                                    auctionController.auction.value.stepPrice!
                                         .toStringAsFixed(0)
                                         .formatNumberWithComma(),
                                     style: TextStyle(
@@ -1049,7 +1040,7 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   Text(
-                                    " Giá trị hiện tại",
+                                    "Bước nhảy",
                                     style: secondaryTextStyle(
                                       color: const Color.fromARGB(194, 0, 0, 0),
                                       fontFamily: 'Roboto',
