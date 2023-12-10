@@ -2,6 +2,24 @@ import 'package:socialv/language/languages.dart';
 
 class LanguageVi extends BaseLanguage {
   @override
+  String get pendingRequest => "Đang chờ";
+
+  @override
+  String get approvedRequest => "Chấp thuận";
+
+  @override
+  String get rejectRequest => "Từ chối";
+
+  @override
+  String get experiedRequest => "Hết hạn";
+
+  @override
+  String get yourRequest => "Yêu cầu đánh giá";
+
+  @override
+  String get purchasePackage => "Mua gói";
+
+  @override
   String get courseOrders => "Đơn hàng khóa học";
 
   @override

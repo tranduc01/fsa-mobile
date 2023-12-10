@@ -1,9 +1,24 @@
 import 'package:flutter/material.dart';
 
 abstract class BaseLanguage {
-  static BaseLanguage? of(BuildContext context) => Localizations.of<BaseLanguage>(context, BaseLanguage);
-   String get courseOrders;
+  static BaseLanguage? of(BuildContext context) =>
+      Localizations.of<BaseLanguage>(context, BaseLanguage);
+
+  String get pendingRequest;
+
+  String get approvedRequest;
+
+  String get rejectRequest;
+
+  String get expiredRequest;
+
+  String get yourRequest;
+
+  String get courseOrders;
+
   String get invitations;
+
+  String get purchasePackage;
 
   String get apply;
 
