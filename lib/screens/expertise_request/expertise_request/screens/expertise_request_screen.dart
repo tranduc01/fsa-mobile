@@ -396,7 +396,7 @@ class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
                                                         DateFormat('dd/MM/yyyy')
                                                             .format(
                                                                 expertiseRequest
-                                                                    .createAt!),
+                                                                    .createdAt!),
                                                         style: boldTextStyle(
                                                             size: 15,
                                                             fontFamily:
@@ -410,9 +410,9 @@ class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
                                                     Container(
                                                       decoration: BoxDecoration(
                                                           color: colorList[
-                                                              choicesList.indexOf(
-                                                                  expertiseRequest
-                                                                      .adminApprovalStatus!)],
+                                                              expertiseRequest
+                                                                      .adminApprovalStatus! +
+                                                                  1],
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(20),
@@ -426,8 +426,9 @@ class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
                                                       padding:
                                                           EdgeInsets.all(6),
                                                       child: Text(
-                                                        expertiseRequest
-                                                            .adminApprovalStatus!,
+                                                        choicesList[expertiseRequest
+                                                                .adminApprovalStatus! +
+                                                            1],
                                                         style: boldTextStyle(
                                                             size: 15,
                                                             fontFamily:

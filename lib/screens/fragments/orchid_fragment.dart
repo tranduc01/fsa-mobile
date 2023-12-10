@@ -90,7 +90,7 @@ class _OrchidFragment extends State<OrchidFragment> {
                                 .map((e) => AlphaModel(e.name!,
                                     id: e.id,
                                     secondaryKey: e.botanicalName,
-                                    tertiaryKey: e.imageUrl))
+                                    tertiaryKey: e.thumbnail))
                                 .toList(),
                             alignment: LetterAlignment.right,
                             itemExtent: 130,

@@ -4,55 +4,63 @@ import '../gallery/albums.dart';
 
 class ExpertiseRequest {
   int? id;
-  User? createdBy;
+  User? user;
   String? noteRequestMessage;
   String? rejectMessage;
   String? feedbackMessage;
   String? feedbackRating;
   DateTime? feedbackCreatedAt;
-  DateTime? createAt;
-  String? adminApprovalStatus;
+  DateTime? createdAt;
+  int? adminApprovalStatus;
   String? isSystemReject;
   User? expert;
+  int? expertApprovalStatus;
+  DateTime? assignAt;
   List<Media>? medias;
 
   ExpertiseRequest({
     this.id,
-    this.createdBy,
+    this.user,
     this.noteRequestMessage,
     this.rejectMessage,
     this.feedbackMessage,
     this.feedbackRating,
     this.feedbackCreatedAt,
-    this.createAt,
+    this.createdAt,
     this.adminApprovalStatus,
     this.isSystemReject,
     this.expert,
+    this.expertApprovalStatus,
+    this.assignAt,
     this.medias,
   });
 
   factory ExpertiseRequest.fromJson(Map<String, dynamic> json) =>
       ExpertiseRequest(
         id: json['id'] as int?,
-        createdBy: json['createdBy'] != null
-            ? User.fromJson(json['createdBy'] as Map<String, dynamic>)
+        user: json['user'] != null
+            ? User.fromJson(json['user'] as Map<String, dynamic>)
             : null,
         noteRequestMessage: json['noteRequestMessage'] as String?,
-        rejectMessage: json['rejectMessage'] as String?,
-        feedbackMessage: json['feedbackMessage'] as String?,
-        feedbackRating: json['feedbackRating'] as String?,
-        feedbackCreatedAt: json['feedbackCreatedAt'] != null
-            ? DateTime.parse(json['feedbackCreatedAt'] as String)
+        //rejectMessage: json['rejectMessage'] as String?,
+        //feedbackMessage: json['feedbackMessage'] as String?,
+        //feedbackRating: json['feedbackRating'] as String?,
+        // feedbackCreatedAt: json['feedbackCreatedAt'] != null
+        //     ? DateTime.parse(json['feedbackCreatedAt'] as String)
+        //     : null,
+        createdAt: json['createdAt'] != null
+            ? DateTime.parse(json['createdAt'] as String)
             : null,
-        createAt: json['createAt'] != null
-            ? DateTime.parse(json['createAt'] as String)
-            : null,
-        adminApprovalStatus: json['adminApprovalStatus'] ?? 'Pending',
-        isSystemReject: json['isSystemReject'] as String?,
+        adminApprovalStatus: json['adminApprovalStatus'] as int? ?? 0,
+        isSystemReject: json['isSystemReject'] as String? ?? '',
         expert: json['expertAssign'] != null &&
                 json['expertAssign']['expert'] != null
             ? User.fromJson(
                 json['expertAssign']['expert'] as Map<String, dynamic>)
+            : null,
+        expertApprovalStatus: json['expertApprovalStatus'],
+        assignAt: json['assignAt'] != null
+            ? DateTime.parse(json['assignAt'] as String)
             : null,
         medias: json['medias'] != null
             ? (json['medias'] as List<dynamic>?)

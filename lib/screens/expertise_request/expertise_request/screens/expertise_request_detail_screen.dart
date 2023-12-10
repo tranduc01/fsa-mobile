@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:socialv/controllers/post_controller.dart';
 import 'package:socialv/models/expertise_request/expertise_request.dart';
 
 import '../../../../controllers/user_controller.dart';
@@ -23,7 +22,6 @@ class ExpertiseRequestDetailScreen extends StatefulWidget {
 class _ExpertiseRequestDetailScreenState
     extends State<ExpertiseRequestDetailScreen> with TickerProviderStateMixin {
   PageController pageController = PageController();
-  late PostController postController = Get.put(PostController());
   int _current = 0;
   final CarouselController _controller = CarouselController();
   late AnimationController _animationController;
@@ -46,9 +44,9 @@ class _ExpertiseRequestDetailScreenState
 
   @override
   void initState() {
-    Future.delayed(Duration.zero, () async {
-      await postController.fetchPost(widget.request.id!);
-    });
+    // Future.delayed(Duration.zero, () async {
+    //   await postController.fetchPost(widget.request.id!);
+    // });
     _animationController = BottomSheet.createAnimationController(this);
     _animationController.duration = const Duration(milliseconds: 500);
     _animationController.drive(CurveTween(curve: Curves.easeOutQuad));
@@ -218,7 +216,7 @@ class _ExpertiseRequestDetailScreenState
                         ),
                         Text(
                           DateFormat('dd/MM/yyyy')
-                              .format(widget.request.createAt!),
+                              .format(widget.request.createdAt!),
                           style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -240,14 +238,15 @@ class _ExpertiseRequestDetailScreenState
                         ),
                         Container(
                           decoration: BoxDecoration(
-                              color: colorList[choicesList.indexOf(
-                                  widget.request.adminApprovalStatus!)],
+                              color: colorList[
+                                  widget.request.adminApprovalStatus! + 1],
                               borderRadius: BorderRadius.circular(20),
                               border: Border.all(
                                   color: Color.fromARGB(24, 0, 0, 0))),
                           padding: EdgeInsets.all(6),
                           child: Text(
-                            widget.request.adminApprovalStatus!,
+                            choicesList[
+                                widget.request.adminApprovalStatus! + 1],
                             style: boldTextStyle(
                                 size: 15,
                                 fontFamily: 'Roboto',

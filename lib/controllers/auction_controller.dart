@@ -50,4 +50,31 @@ class AuctionController extends GetxController {
       throw Exception('Failed to load auctions');
     }
   }
+
+  Future<Auction> fetchAuction(int id) async {
+    isLoading(true);
+    var response = await GetConnect().get('$BASE_URL/Auction/$id');
+
+    if (response.bodyString != null) {
+      ResponseModel responseModel =
+          ResponseModel.fromJson(jsonDecode(response.bodyString!));
+      if (response.statusCode == 200) {
+        isLoading(false);
+        isError(false);
+
+        return auction.value = Auction.fromJson(responseModel.data);
+      } else {
+        isLoading(false);
+        isError(true);
+        print('Request failed with status: ${response.statusCode}');
+        print('Request failed with status: ${responseModel.message}');
+        throw Exception('Failed to load auction');
+      }
+    } else {
+      isLoading(false);
+      isError(true);
+      print('Request failed with status: ${response.statusCode}');
+      throw Exception('Failed to load auction');
+    }
+  }
 }

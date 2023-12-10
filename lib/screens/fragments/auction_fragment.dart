@@ -127,8 +127,9 @@ class _AutionFragmentState extends State<AuctionFragment> {
             var auction = auctionController.auctions[index];
             return InkWell(
               onTap: () {
-                AuctionDetailSceen().launch(context,
-                    pageRouteAnimation: PageRouteAnimation.Fade);
+                AuctionDetailSceen(
+                  id: auction.id!,
+                ).launch(context, pageRouteAnimation: PageRouteAnimation.Fade);
               },
               child: Stack(
                 children: [
