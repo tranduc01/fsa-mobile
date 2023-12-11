@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:socialv/main.dart';
 
 import '../components/create_expertise_request_component.dart';
 
@@ -54,7 +55,7 @@ class _CreateExpertiseRequestScreenState
     return Scaffold(
       appBar: AppBar(
         backgroundColor: context.scaffoldBackgroundColor,
-        title: Text('Expertise Request', style: boldTextStyle(size: 20)),
+        title: Text(language.expertiseRequest, style: boldTextStyle(size: 20)),
         elevation: 0,
         centerTitle: true,
         leading: IconButton(

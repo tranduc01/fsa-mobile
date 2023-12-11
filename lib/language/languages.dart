@@ -3,6 +3,23 @@ import 'package:flutter/material.dart';
 abstract class BaseLanguage {
   static BaseLanguage? of(BuildContext context) =>
       Localizations.of<BaseLanguage>(context, BaseLanguage);
+  String get viewResult;
+  String get expertiseBy;
+  String get expertiseRequestStatus;
+  String get expertiseRequestCreatedDate;
+  String get expertiseRequestDetail;
+  String get selectFileExpertiseRequest;
+  String get msgExpertiseRequest;
+  String get createExpertiseRequest;
+  String get expiredExpertiseRequest;
+  String get rejectedExpertiseRequest;
+  String get approvedExpertiseRequest;
+  String get pendingExpertiseRequest;
+  String get allExpertiseRequest;
+
+  String get expertiseRequest;
+
+  String get emptyAlbum;
 
   String get pendingRequest;
 

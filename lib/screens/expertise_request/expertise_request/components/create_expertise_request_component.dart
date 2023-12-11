@@ -77,7 +77,7 @@ class _CreateExpertiseRequestComponentState
                 children: [
                   24.height,
                   Text(
-                    "Create Expertise Request",
+                    language.createExpertiseRequest,
                     style: primaryTextStyle(
                         color: appStore.isDarkMode ? bodyDark : bodyWhite,
                         size: 18),
@@ -96,7 +96,7 @@ class _CreateExpertiseRequestComponentState
                           decoration: inputDecorationFilled(
                             context,
                             fillColor: context.scaffoldBackgroundColor,
-                            label: 'Message',
+                            label: language.msgExpertiseRequest,
                           ),
                           validator: (value) {
                             if (value!.isEmpty) {
@@ -129,14 +129,9 @@ class _CreateExpertiseRequestComponentState
                                 onSelectMedia();
                               },
                             ),
-                            16.height,
-                            Text(
-                              '${language.add} files',
-                              style: secondaryTextStyle(size: 16),
-                            ).center(),
                             8.height,
                             Text(
-                              'Please select files',
+                              language.selectFileExpertiseRequest,
                               style: secondaryTextStyle(),
                             ).center(),
                             16.height,

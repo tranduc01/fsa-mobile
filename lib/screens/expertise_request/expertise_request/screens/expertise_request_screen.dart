@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/components/loading_widget.dart';
 import 'package:socialv/controllers/expertise_request_controller.dart';
+import 'package:socialv/main.dart';
 import 'package:socialv/models/expertise_request/expertise_request.dart';
 import 'package:socialv/screens/expertise_request/expertise_request/screens/expertise_request_detail_screen.dart';
 
@@ -31,11 +32,11 @@ class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
   bool mIsLastPage = false;
   int selectedIndex = 0;
   final List<String> choicesList = [
-    'ALL',
-    'PENDING',
-    'APPROVED',
-    'REJECTED',
-    'EXPIRED',
+    language.allExpertiseRequest,
+    language.pendingExpertiseRequest,
+    language.approvedExpertiseRequest,
+    language.rejectedExpertiseRequest,
+    language.expiredExpertiseRequest,
     'ADVANCE'
   ];
   final List<Color> colorList = [
@@ -78,7 +79,7 @@ class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
     return Scaffold(
       appBar: AppBar(
         backgroundColor: context.scaffoldBackgroundColor,
-        title: Text('Expertise Request', style: boldTextStyle(size: 20)),
+        title: Text(language.expertiseRequest, style: boldTextStyle(size: 20)),
         elevation: 0,
         centerTitle: true,
         leading: IconButton(

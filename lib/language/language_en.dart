@@ -2,6 +2,39 @@ import 'package:socialv/language/languages.dart';
 
 class LanguageEn extends BaseLanguage {
   @override
+  String get viewResult => "View Result";
+  @override
+  String get expertiseBy => "Expertise By";
+  @override
+  String get expertiseRequestStatus => "Status";
+  @override
+  String get expertiseRequestCreatedDate => "Created Date";
+  @override
+  String get expertiseRequestDetail => "Expertise Request Detail";
+  @override
+  String get selectFileExpertiseRequest => "Please select file";
+  @override
+  String get msgExpertiseRequest => "Message";
+  @override
+  String get createExpertiseRequest => "Create Expertise Request";
+  @override
+  String get expiredExpertiseRequest => "EXPIRED";
+  @override
+  String get rejectedExpertiseRequest => "REJECTED";
+  @override
+  String get approvedExpertiseRequest => "APPROVED";
+  @override
+  String get pendingExpertiseRequest => "PENDING";
+  @override
+  String get allExpertiseRequest => "ALL";
+
+  @override
+  String get expertiseRequest => "Expertise Request";
+
+  @override
+  String get emptyAlbum => "This album is empty";
+
+  @override
   String get pendingRequest => "Pending";
 
   @override
@@ -11,7 +44,7 @@ class LanguageEn extends BaseLanguage {
   String get rejectRequest => "Rejected";
 
   @override
-  String get experiedRequest => "Experied";
+  String get expiredRequest => "Experied";
   @override
   String get yourRequest => "Your Request";
 

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:socialv/main.dart';
 import 'package:socialv/models/expertise_request/expertise_request.dart';
 
 import '../../../../controllers/user_controller.dart';
@@ -29,10 +30,10 @@ class _ExpertiseRequestDetailScreenState
 
   final List<String> choicesList = [
     'ALL',
-    'PENDING',
-    'APPROVED',
-    'REJECTED',
-    'EXPIRED'
+    language.pendingExpertiseRequest,
+    language.approvedExpertiseRequest,
+    language.rejectedExpertiseRequest,
+    language.expiredExpertiseRequest
   ];
   final List<Color> colorList = [
     const Color.fromARGB(127, 33, 149, 243),
@@ -73,7 +74,7 @@ class _ExpertiseRequestDetailScreenState
           return [
             SliverAppBar(
               title: Text(
-                'Expertise Request Detail',
+                language.expertiseRequestDetail,
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               leading: IconButton(
@@ -207,7 +208,7 @@ class _ExpertiseRequestDetailScreenState
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Created Date',
+                          language.expertiseRequestCreatedDate,
                           style: TextStyle(
                               fontSize: 16,
                               color: Color.fromARGB(130, 0, 0, 0),
@@ -229,7 +230,7 @@ class _ExpertiseRequestDetailScreenState
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          'Status',
+                          language.expertiseRequestStatus,
                           style: TextStyle(
                               fontSize: 16,
                               color: Color.fromARGB(130, 0, 0, 0),
@@ -265,7 +266,7 @@ class _ExpertiseRequestDetailScreenState
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Expertise By',
+                          language.expertiseBy,
                           style: TextStyle(
                               fontSize: 16,
                               color: Color.fromARGB(130, 0, 0, 0),
@@ -458,8 +459,8 @@ class _ExpertiseRequestDetailScreenState
                   },
                 );
               },
-              label: const Text(
-                'View Result',
+              label: Text(
+                language.viewResult,
                 style: TextStyle(
                     fontWeight: FontWeight.bold, fontFamily: 'Roboto'),
               ),

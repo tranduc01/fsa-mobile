@@ -2,6 +2,39 @@ import 'package:socialv/language/languages.dart';
 
 class LanguageVi extends BaseLanguage {
   @override
+  String get viewResult => "Xem kết quả";
+  @override
+  String get expertiseBy => "Đánh giá bởi";
+  @override
+  String get expertiseRequestStatus => "Trạng thái";
+  @override
+  String get expertiseRequestCreatedDate => "Ngày tạo";
+  @override
+  String get expertiseRequestDetail => "Chi tiết đánh giá";
+  @override
+  String get selectFileExpertiseRequest => "Bạn hãy chọn tệp";
+  @override
+  String get msgExpertiseRequest => "Ghi chú";
+  @override
+  String get createExpertiseRequest => "Tạo yêu cầu đánh giá";
+  @override
+  String get expiredExpertiseRequest => "Quá hạn";
+  @override
+  String get rejectedExpertiseRequest => "Từ chối";
+  @override
+  String get approvedExpertiseRequest => "Đã duyệt";
+  @override
+  String get pendingExpertiseRequest => "Đang chờ";
+  @override
+  String get allExpertiseRequest => "Tất cả";
+
+  @override
+  String get expertiseRequest => "Yêu cầu đánh giá";
+
+  @override
+  String get emptyAlbum => "Bộ sưu tập trống";
+
+  @override
   String get pendingRequest => "Đang chờ";
 
   @override
@@ -11,7 +44,7 @@ class LanguageVi extends BaseLanguage {
   String get rejectRequest => "Từ chối";
 
   @override
-  String get experiedRequest => "Hết hạn";
+  String get expiredRequest => "Hết hạn";
 
   @override
   String get yourRequest => "Yêu cầu đánh giá";
