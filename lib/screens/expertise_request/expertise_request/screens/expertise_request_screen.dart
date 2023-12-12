@@ -36,8 +36,7 @@ class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
     language.pendingExpertiseRequest,
     language.approvedExpertiseRequest,
     language.rejectedExpertiseRequest,
-    language.expiredExpertiseRequest,
-    'ADVANCE'
+    language.expiredExpertiseRequest
   ];
   final List<Color> colorList = [
     const Color.fromARGB(127, 33, 149, 243),
@@ -97,208 +96,212 @@ class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
       body: Stack(
         alignment: Alignment.topCenter,
         children: [
-          Column(
-            children: [
-              Wrap(
-                spacing: 5,
-                children: List<Widget>.generate(
-                  choicesList.length,
-                  (index) => ChoiceChip(
-                    label: Text(
-                      choicesList[index],
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontFamily: 'Roboto'),
-                    ),
-                    selected: selectedIndex == index,
-                    selectedColor: colorList[index],
-                    onSelected: (selected) {
-                      setState(() {
-                        selectedIndex = selected ? index : 0;
-                      });
-                    },
-                  ),
-                ).toList(),
-              ),
-              Obx(() {
-                if (expertiseRequestController.isError.value ||
-                    expertiseRequestController.expertiseRequests.isEmpty) {
-                  return SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.6,
-                    child: NoDataWidget(
-                      imageWidget: NoDataLottieWidget(),
-                      title: expertiseRequestController.isError.value
-                          ? 'Something Went Wrong'
-                          : 'No data found',
-                      onRetry: () {
-                        expertiseRequestController.fetchExpetiseRequests();
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                Wrap(
+                  spacing: 5,
+                  children: List<Widget>.generate(
+                    choicesList.length,
+                    (index) => ChoiceChip(
+                      label: Text(
+                        choicesList[index],
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontFamily: 'Roboto'),
+                      ),
+                      selected: selectedIndex == index,
+                      selectedColor: colorList[index],
+                      onSelected: (selected) {
+                        setState(() {
+                          selectedIndex = selected ? index : 0;
+                        });
                       },
-                      retryText: '   Click to Refresh   ',
-                    ).center(),
-                  );
-                } else {
-                  return AnimatedListView(
-                    padding: EdgeInsets.only(bottom: mIsLastPage ? 16 : 60),
-                    itemCount:
-                        expertiseRequestController.expertiseRequests.length,
-                    slideConfiguration: SlideConfiguration(
-                        delay: Duration(milliseconds: 80), verticalOffset: 300),
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      ExpertiseRequest expertiseRequest =
-                          expertiseRequestController.expertiseRequests[index];
+                    ),
+                  ).toList(),
+                ),
+                Obx(() {
+                  if (expertiseRequestController.isError.value ||
+                      expertiseRequestController.expertiseRequests.isEmpty) {
+                    return SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.6,
+                      child: NoDataWidget(
+                        imageWidget: NoDataLottieWidget(),
+                        title: expertiseRequestController.isError.value
+                            ? 'Something Went Wrong'
+                            : 'No data found',
+                        onRetry: () {
+                          expertiseRequestController.fetchExpetiseRequests();
+                        },
+                        retryText: '   Click to Refresh   ',
+                      ).center(),
+                    );
+                  } else {
+                    return AnimatedListView(
+                      padding: EdgeInsets.only(bottom: mIsLastPage ? 16 : 60),
+                      itemCount:
+                          expertiseRequestController.expertiseRequests.length,
+                      slideConfiguration: SlideConfiguration(
+                          delay: Duration(milliseconds: 80),
+                          verticalOffset: 300),
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        ExpertiseRequest expertiseRequest =
+                            expertiseRequestController.expertiseRequests[index];
 
-                      return GestureDetector(
-                        onTap: () => ExpertiseRequestDetailScreen(
-                                requestId: expertiseRequest.id!)
-                            .launch(context),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Container(
-                              margin: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                borderRadius: radius(10),
-                                color: Color.fromARGB(33, 200, 198, 198),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Color(0xffDDDDDD),
-                                    blurRadius: 6.0,
-                                    spreadRadius: 2.0,
-                                    offset: Offset(0.0, 0.0),
-                                  )
-                                ],
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.all(10),
-                                    child: Row(
-                                      children: [
-                                        expertiseRequest.medias!.isNotEmpty
-                                            ? Image.network(
-                                                expertiseRequest
-                                                    .medias![0].url!,
-                                                height: 100,
-                                                width: 100,
-                                                fit: BoxFit.cover,
-                                                errorBuilder: (BuildContext
-                                                        context,
-                                                    Object exception,
-                                                    StackTrace? stackTrace) {
-                                                  return Image.asset(
-                                                    'assets/images/images.png',
-                                                    height: 100,
-                                                    width: 100,
-                                                    fit: BoxFit.cover,
-                                                  ).cornerRadiusWithClipRRect(
-                                                      15);
-                                                },
-                                              ).cornerRadiusWithClipRRect(15)
-                                            : Image.asset(
-                                                'assets/images/images.png',
-                                                fit: BoxFit.cover,
-                                                height: 100,
-                                                width: 100,
-                                              ).cornerRadiusWithClipRRect(15),
-                                        12.width,
-                                        Expanded(
-                                          child: Container(
-                                            height: 90,
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    Text(
-                                                      'ER231123110512',
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      maxLines: 3,
-                                                      textAlign:
-                                                          TextAlign.start,
-                                                      style: boldTextStyle(
-                                                          fontFamily: 'Roboto',
-                                                          size: 18),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Spacer(),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Text(
-                                                        DateFormat('dd/MM/yyyy')
-                                                            .format(
-                                                                expertiseRequest
-                                                                    .createdAt!),
+                        return GestureDetector(
+                          onTap: () => ExpertiseRequestDetailScreen(
+                                  requestId: expertiseRequest.id!)
+                              .launch(context),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                margin: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  borderRadius: radius(10),
+                                  color: Color.fromARGB(33, 200, 198, 198),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Color(0xffDDDDDD),
+                                      blurRadius: 6.0,
+                                      spreadRadius: 2.0,
+                                      offset: Offset(0.0, 0.0),
+                                    )
+                                  ],
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.all(10),
+                                      child: Row(
+                                        children: [
+                                          expertiseRequest.medias!.isNotEmpty
+                                              ? Image.network(
+                                                  expertiseRequest
+                                                      .medias![0].url!,
+                                                  height: 100,
+                                                  width: 100,
+                                                  fit: BoxFit.cover,
+                                                  errorBuilder: (BuildContext
+                                                          context,
+                                                      Object exception,
+                                                      StackTrace? stackTrace) {
+                                                    return Image.asset(
+                                                      'assets/images/images.png',
+                                                      height: 100,
+                                                      width: 100,
+                                                      fit: BoxFit.cover,
+                                                    ).cornerRadiusWithClipRRect(
+                                                        15);
+                                                  },
+                                                ).cornerRadiusWithClipRRect(15)
+                                              : Image.asset(
+                                                  'assets/images/images.png',
+                                                  fit: BoxFit.cover,
+                                                  height: 100,
+                                                  width: 100,
+                                                ).cornerRadiusWithClipRRect(15),
+                                          12.width,
+                                          Expanded(
+                                            child: Container(
+                                              height: 90,
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        'ER231123110512',
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        maxLines: 3,
+                                                        textAlign:
+                                                            TextAlign.start,
                                                         style: boldTextStyle(
-                                                            size: 15,
                                                             fontFamily:
                                                                 'Roboto',
-                                                            color:
-                                                                Color.fromARGB(
-                                                                    118,
-                                                                    0,
-                                                                    0,
-                                                                    0))),
-                                                    Container(
-                                                      decoration: BoxDecoration(
-                                                          color: colorList[
-                                                              expertiseRequest
-                                                                      .adminApprovalStatus! +
-                                                                  1],
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(20),
-                                                          border: Border.all(
+                                                            size: 18),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Spacer(),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Text(
+                                                          DateFormat(
+                                                                  'dd/MM/yyyy')
+                                                              .format(
+                                                                  expertiseRequest
+                                                                      .createdAt!),
+                                                          style: boldTextStyle(
+                                                              size: 15,
+                                                              fontFamily:
+                                                                  'Roboto',
                                                               color: Color
                                                                   .fromARGB(
-                                                                      24,
+                                                                      118,
                                                                       0,
                                                                       0,
                                                                       0))),
-                                                      padding:
-                                                          EdgeInsets.all(6),
-                                                      child: Text(
-                                                        choicesList[expertiseRequest
-                                                                .adminApprovalStatus! +
-                                                            1],
-                                                        style: boldTextStyle(
-                                                            size: 15,
-                                                            fontFamily:
-                                                                'Roboto',
-                                                            color:
-                                                                Color.fromARGB(
-                                                                    255,
-                                                                    0,
-                                                                    0,
-                                                                    0)),
+                                                      Container(
+                                                        decoration: BoxDecoration(
+                                                            color: colorList[
+                                                                expertiseRequest
+                                                                        .adminApprovalStatus! +
+                                                                    1],
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        20),
+                                                            border: Border.all(
+                                                                color: Color
+                                                                    .fromARGB(
+                                                                        24,
+                                                                        0,
+                                                                        0,
+                                                                        0))),
+                                                        padding:
+                                                            EdgeInsets.all(6),
+                                                        child: Text(
+                                                          choicesList[
+                                                              expertiseRequest
+                                                                      .adminApprovalStatus! +
+                                                                  1],
+                                                          style: boldTextStyle(
+                                                              size: 15,
+                                                              fontFamily:
+                                                                  'Roboto',
+                                                              color: Color
+                                                                  .fromARGB(255,
+                                                                      0, 0, 0)),
+                                                        ),
                                                       ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                ],
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  );
-                }
-              }),
-            ],
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  }
+                }),
+              ],
+            ),
           ),
           Positioned(
             bottom: mPage != 1 ? 10 : null,
