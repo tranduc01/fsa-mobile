@@ -309,7 +309,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                     padding: EdgeInsets.only(left: 8, right: 8, top: 8),
                     child: Row(
                       children: [
-                        Text('Your Request',
+                        Text(language.yourRequest,
                             style: boldTextStyle(
                                 color: context.primaryColor, size: 20)),
                       ],
@@ -357,7 +357,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                 Positioned(
                                   bottom: -10, // Adjust the position as needed
                                   child: Text(
-                                    'Pending',
+                                    language.pendingRequest,
                                     style: boldTextStyle(
                                       color: Colors.black,
                                       size: 12,
@@ -398,7 +398,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                 Positioned(
                                   bottom: -10, // Adjust the position as needed
                                   child: Text(
-                                    'Approved',
+                                    language.approvedRequest,
                                     style: boldTextStyle(
                                       color: Colors.black,
                                       size: 12,
@@ -439,7 +439,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                 Positioned(
                                   bottom: -10, // Adjust the position as needed
                                   child: Text(
-                                    'Rejected',
+                                    language.rejectRequest,
                                     style: boldTextStyle(
                                       color: Colors.black,
                                       size: 12,
@@ -480,7 +480,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                 Positioned(
                                   bottom: -10, // Adjust the position as needed
                                   child: Text(
-                                    'Expired',
+                                    language.expiredRequest,
                                     style: boldTextStyle(
                                       color: Colors.black,
                                       size: 12,

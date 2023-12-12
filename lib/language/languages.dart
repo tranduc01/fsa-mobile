@@ -1,9 +1,51 @@
 import 'package:flutter/material.dart';
 
 abstract class BaseLanguage {
-  static BaseLanguage? of(BuildContext context) => Localizations.of<BaseLanguage>(context, BaseLanguage);
-   String get courseOrders;
+  static BaseLanguage? of(BuildContext context) =>
+      Localizations.of<BaseLanguage>(context, BaseLanguage);
+  String get verifyWarningFace;
+  String get verifyWarning;
+  String get verifySuccess;
+  String get lblVerify;
+  String get takePhotoPortrait;
+  String get takePhotoWarningFrame;
+  String get takePhotoWarning;
+  String get takePhotoFront;
+  String get takePhotoBack;
+  String get verifyIdCard;
+  String get viewResult;
+  String get expertiseBy;
+  String get expertiseRequestStatus;
+  String get expertiseRequestCreatedDate;
+  String get expertiseRequestDetail;
+  String get selectFileExpertiseRequest;
+  String get msgExpertiseRequest;
+  String get createExpertiseRequest;
+  String get expiredExpertiseRequest;
+  String get rejectedExpertiseRequest;
+  String get approvedExpertiseRequest;
+  String get pendingExpertiseRequest;
+  String get allExpertiseRequest;
+
+  String get expertiseRequest;
+
+  String get emptyAlbum;
+
+  String get pendingRequest;
+
+  String get approvedRequest;
+
+  String get rejectRequest;
+
+  String get expiredRequest;
+
+  String get yourRequest;
+
+  String get courseOrders;
+
   String get invitations;
+
+  String get purchasePackage;
 
   String get apply;
 

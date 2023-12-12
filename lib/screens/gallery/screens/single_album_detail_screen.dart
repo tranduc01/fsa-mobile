@@ -117,7 +117,7 @@ class _SingleAlbumDetailScreenState extends State<SingleAlbumDetailScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             50.height,
-                            Text('This album is empty', style: boldTextStyle()),
+                            Text(language.emptyAlbum, style: boldTextStyle()),
                             8.height,
                             IconButton(
                               onPressed: () {

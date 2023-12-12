@@ -47,7 +47,7 @@ List<DrawerModel> getDrawerOptions() {
       image: ic_blog, title: language.blogs, attachedScreen: BlogListScreen()));
   list.add(DrawerModel(
       image: ic_buy,
-      title: "Supscription",
+      title: language.purchasePackage,
       attachedScreen: SubscriptionScreen3()));
 
   if (appStore.isLMSEnable == 1 && appStore.isCourseEnable == 1) {
@@ -163,6 +163,6 @@ List<LanguageDataModel> languageList() {
         subTitle: 'Tiếng Việt',
         languageCode: 'vi',
         fullLanguageCode: 'vi_vi-VI',
-        flag: 'assets/flag/ic_ar.png'),
+        flag: 'assets/flag/ic_vi.png'),
   ];
 }
