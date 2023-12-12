@@ -3,6 +3,16 @@ import 'package:flutter/material.dart';
 abstract class BaseLanguage {
   static BaseLanguage? of(BuildContext context) =>
       Localizations.of<BaseLanguage>(context, BaseLanguage);
+  String get verifyWarningFace;
+  String get verifyWarning;
+  String get verifySuccess;
+  String get lblVerify;
+  String get takePhotoPortrait;
+  String get takePhotoWarningFrame;
+  String get takePhotoWarning;
+  String get takePhotoFront;
+  String get takePhotoBack;
+  String get verifyIdCard;
   String get viewResult;
   String get expertiseBy;
   String get expertiseRequestStatus;

@@ -77,7 +77,7 @@ class _VerifyFaceComponentState extends State<VerifyFaceComponent> {
                 children: [
                   24.height,
                   Text(
-                    "Take a photo of your portrait",
+                    language.takePhotoPortrait,
                     style: primaryTextStyle(
                         color: appStore.isDarkMode ? bodyDark : bodyWhite,
                         size: 18),
@@ -137,7 +137,7 @@ class _VerifyFaceComponentState extends State<VerifyFaceComponent> {
                   Align(
                     alignment: Alignment.center,
                     child: appButton(
-                      text: 'Verify',
+                      text: language.lblVerify,
                       onTap: () async {
                         if (portraitMedia != null) {
                           showDialog(
@@ -151,7 +151,7 @@ class _VerifyFaceComponentState extends State<VerifyFaceComponent> {
                           if (userController.isVerifySuccess.value) {
                             Navigator.pop(context);
                             userController.user.value.isVerified = true;
-                            toast('User Verify Successfully!');
+                            toast(language.verifySuccess);
                             userController.saveUser(userController.user.value);
                             Navigator.pop(context);
                             Navigator.pop(context);
@@ -167,7 +167,7 @@ class _VerifyFaceComponentState extends State<VerifyFaceComponent> {
                             );
                           }
                         } else {
-                          toast('Please take a photo of your portrait!');
+                          toast(language.verifyWarning);
                         }
                       },
                       context: context,
@@ -263,7 +263,7 @@ class _VerifyFaceComponentState extends State<VerifyFaceComponent> {
                   setState(() {});
                   Navigator.pop(context);
                 } else {
-                  toast('Please keep your face on the camera!');
+                  toast(language.verifyWarningFace);
                 }
               },
             ),

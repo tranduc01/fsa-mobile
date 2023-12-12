@@ -2,6 +2,30 @@ import 'package:socialv/language/languages.dart';
 
 class LanguageVi extends BaseLanguage {
   @override
+  String get verifyWarningFace => "Hãy giữ khuôn mặt của bạn trên máy ảnh!";
+  @override
+  String get verifyWarning => "Chụp ảnh chân dung của bạn!";
+  @override
+  String get verifySuccess => "Xác thực thành công!";
+  @override
+  String get lblVerify => "Xác thực";
+  @override
+  String get takePhotoPortrait => "Chụp ảnh chân dung của bạn";
+  @override
+  String get takePhotoWarningFrame =>
+      "Vui lòng di chuyển thẻ của bạn vào đúng khung hình";
+  @override
+  String get takePhotoWarning =>
+      "Vui lòng chụp mặt trước và sau Thẻ căn cước/CMND/CCCD của bạn";
+  @override
+  String get takePhotoBack =>
+      "Vui lòng chụp mặt sau Thẻ căn cước/CMND/CCCD của bạn";
+  @override
+  String get takePhotoFront =>
+      "Vui lòng chụp mặt trước Thẻ căn cước/CMND/CCCD của bạn";
+  @override
+  String get verifyIdCard => "Xác minh chứng minh nhân dân";
+  @override
   String get viewResult => "Xem kết quả";
   @override
   String get expertiseBy => "Đánh giá bởi";

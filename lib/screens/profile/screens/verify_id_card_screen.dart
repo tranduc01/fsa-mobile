@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:socialv/main.dart';
 import 'package:socialv/screens/profile/components/verify_Id_card_component.dart';
 import '../../../models/posts/media_model.dart';
 
@@ -58,7 +59,7 @@ class _VerifyIdCardState extends State<VerifyIdCardScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: context.scaffoldBackgroundColor,
-        title: Text('Verify Your Identity', style: boldTextStyle(size: 20)),
+        title: Text(language.verifyIdCard, style: boldTextStyle(size: 20)),
         elevation: 0,
         centerTitle: true,
         leading: IconButton(

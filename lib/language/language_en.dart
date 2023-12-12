@@ -2,6 +2,27 @@ import 'package:socialv/language/languages.dart';
 
 class LanguageEn extends BaseLanguage {
   @override
+  String get verifyWarningFace => "Please keep your face on the camera!";
+  @override
+  String get verifyWarning => "Take a photo of your portrait!";
+  @override
+  String get verifySuccess => "User Verify Successfully!";
+  @override
+  String get lblVerify => "Verify";
+  @override
+  String get takePhotoPortrait => "Take a photo of your portrait";
+  @override
+  String get takePhotoWarningFrame => "Please place your ID card in the frame";
+  @override
+  String get takePhotoWarning =>
+      "Pleases take a photo of your front and back Identity Card";
+  @override
+  String get takePhotoBack => "Take a photo of the back of your ID card";
+  @override
+  String get takePhotoFront => "Take a photo of the front of your ID card";
+  @override
+  String get verifyIdCard => "Verify Your Identity";
+  @override
   String get viewResult => "View Result";
   @override
   String get expertiseBy => "Expertise By";

@@ -75,7 +75,7 @@ class _VerifyIdCardComponentState extends State<VerifyIdCardComponent> {
                 children: [
                   24.height,
                   Text(
-                    "Take a photo of the front of your ID card",
+                    language.takePhotoFront,
                     style: primaryTextStyle(
                         color: appStore.isDarkMode ? bodyDark : bodyWhite,
                         size: 18),
@@ -133,7 +133,7 @@ class _VerifyIdCardComponentState extends State<VerifyIdCardComponent> {
                   ).paddingAll(16),
                   20.height,
                   Text(
-                    "Take a photo of the back of your ID card",
+                    language.takePhotoBack,
                     style: primaryTextStyle(
                         color: appStore.isDarkMode ? bodyDark : bodyWhite,
                         size: 18),
@@ -193,7 +193,7 @@ class _VerifyIdCardComponentState extends State<VerifyIdCardComponent> {
                   Align(
                     alignment: Alignment.center,
                     child: appButton(
-                      text: 'Continue',
+                      text: language.lblContinue,
                       onTap: () async {
                         if (frontIdMedia != null && backIdMedia != null) {
                           showDialog(
@@ -221,8 +221,7 @@ class _VerifyIdCardComponentState extends State<VerifyIdCardComponent> {
                             );
                           }
                         } else {
-                          toast(
-                              'Pleases take a photo of your front and back Identity Card');
+                          toast(language.takePhotoWarning);
                         }
                       },
                       context: context,
@@ -335,7 +334,7 @@ class _VerifyIdCardComponentState extends State<VerifyIdCardComponent> {
                   setState(() {});
                   Navigator.pop(context);
                 } else {
-                  toast('Please place your ID card in the frameeee!');
+                  toast(language.takePhotoWarningFrame);
                 }
               },
             ),
