@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/components/loading_widget.dart';
 import 'package:socialv/main.dart';
 import 'package:tap_to_expand/tap_to_expand.dart';
+
+import '../../../../controllers/user_controller.dart';
 
 class ExpertiseResultBottomSheetWidget extends StatefulWidget {
   ExpertiseResultBottomSheetWidget({Key? key}) : super(key: key);
@@ -17,6 +20,7 @@ class _ExpertiseResultBottomSheetWidgetState
   int selectedIndex = -1;
   bool isLoading = false;
   bool backToHome = true;
+  late UserController userController = Get.find();
 
   @override
   void initState() {
@@ -50,12 +54,13 @@ class _ExpertiseResultBottomSheetWidgetState
                   20.height,
                   Column(
                     children: [
-                      Image.network(
-                              'https://scontent.fsgn16-1.fna.fbcdn.net/v/t39.30808-6/353017930_6153557468098795_166607921767111563_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=5f2048&_nc_ohc=W6LrcRHkvIUAX_iHmEz&_nc_ht=scontent.fsgn16-1.fna&oh=00_AfBhfixdYyCvfg2hmq1m2iA2Jfv_Zeso_Jd2WFyEUKq7ig&oe=6568B66C',
-                              height: 150,
-                              width: 150,
-                              fit: BoxFit.cover)
-                          .cornerRadiusWithClipRRect(100),
+                      userController.user.value.avatarUrl.isEmptyOrNull
+                          ? Image.asset("assets/images/profile.png",
+                                  height: 62, width: 62, fit: BoxFit.cover)
+                              .cornerRadiusWithClipRRect(100)
+                          : Image.network(userController.user.value.avatarUrl!,
+                                  height: 62, width: 62, fit: BoxFit.cover)
+                              .cornerRadiusWithClipRRect(100),
                       10.height,
                       Text(
                         'Nguyễn Văn A',

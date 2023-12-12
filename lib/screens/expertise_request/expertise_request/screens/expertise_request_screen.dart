@@ -44,8 +44,7 @@ class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
     const Color.fromARGB(127, 255, 235, 59),
     Color.fromARGB(127, 76, 175, 79),
     Color.fromARGB(127, 244, 67, 54),
-    Color.fromARGB(100, 0, 0, 0),
-    Color.fromARGB(100, 0, 0, 0),
+    Color.fromARGB(100, 0, 0, 0)
   ];
 
   @override
@@ -102,182 +101,20 @@ class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
             children: [
               Wrap(
                 spacing: 5,
-                runSpacing: 5,
                 children: List<Widget>.generate(
                   choicesList.length,
                   (index) => ChoiceChip(
-                    label: choicesList[index] == 'ADVANCE'
-                        ? Icon(Icons.more_horiz_rounded)
-                        : Text(
-                            choicesList[index],
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Roboto'),
-                          ),
+                    label: Text(
+                      choicesList[index],
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontFamily: 'Roboto'),
+                    ),
                     selected: selectedIndex == index,
                     selectedColor: colorList[index],
                     onSelected: (selected) {
                       setState(() {
                         selectedIndex = selected ? index : 0;
                       });
-                      if (selectedIndex == 5) {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              title: Text(
-                                'Filter',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              content: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  StatefulBuilder(
-                                    builder: (BuildContext context,
-                                        StateSetter setState) {
-                                      return Row(
-                                        children: [
-                                          Text(
-                                            'Start date: ',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          startDate != null
-                                              ? Text(DateFormat('dd/MM/yyyy')
-                                                  .format(startDate!))
-                                              : Text(DateFormat('dd/MM/yyyy')
-                                                  .format(DateTime.now())),
-                                          IconButton(
-                                            onPressed: () async {
-                                              final selectedDate =
-                                                  await showDatePicker(
-                                                context: context,
-                                                initialDate: DateTime.now(),
-                                                firstDate: DateTime(2000),
-                                                lastDate: DateTime(2100),
-                                              );
-                                              if (selectedDate != null) {
-                                                setState(() {
-                                                  startDate = selectedDate;
-                                                });
-                                              }
-                                            },
-                                            icon: Icon(
-                                                Icons.calendar_today_rounded),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  ),
-                                  SizedBox(height: 16),
-                                  StatefulBuilder(
-                                    builder: (BuildContext context,
-                                        StateSetter setState) {
-                                      return Row(
-                                        children: [
-                                          Text(
-                                            'End date: ',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          startDate != null
-                                              ? Text(DateFormat('dd/MM/yyyy')
-                                                  .format(endDate!))
-                                              : Text(DateFormat('dd/MM/yyyy')
-                                                  .format(DateTime.now())),
-                                          IconButton(
-                                            onPressed: () async {
-                                              final selectedDate =
-                                                  await showDatePicker(
-                                                context: context,
-                                                initialDate: DateTime.now(),
-                                                firstDate: DateTime(2000),
-                                                lastDate: DateTime(2100),
-                                              );
-                                              if (selectedDate != null) {
-                                                setState(() {
-                                                  endDate = selectedDate;
-                                                });
-                                              }
-                                            },
-                                            icon: Icon(
-                                                Icons.calendar_today_rounded),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  ),
-                                ],
-                              ),
-                              actions: [
-                                Row(
-                                  children: [
-                                    AppButton(
-                                      elevation: 0,
-                                      shapeBorder: RoundedRectangleBorder(
-                                        borderRadius:
-                                            radius(defaultAppButtonRadius),
-                                        side: BorderSide(color: viewLineColor),
-                                      ),
-                                      color: context.cardColor,
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Icon(
-                                            Icons.close,
-                                            color: textPrimaryColorGlobal,
-                                            size: 20,
-                                          ),
-                                          6.width,
-                                          Text(
-                                            'Cancel',
-                                            style: boldTextStyle(
-                                                color: Colors.black),
-                                          ),
-                                        ],
-                                      ).fit(),
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                      },
-                                    ).expand(),
-                                    16.width,
-                                    AppButton(
-                                      elevation: 0,
-                                      color: Colors.blue,
-                                      shapeBorder: RoundedRectangleBorder(
-                                        borderRadius:
-                                            radius(defaultAppButtonRadius),
-                                      ),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          getIcon(DialogType.CONFIRMATION),
-                                          6.width,
-                                          Text(
-                                            'Filter',
-                                            style: boldTextStyle(
-                                                color: Colors.white),
-                                          ),
-                                        ],
-                                      ).fit(),
-                                      onTap: () {
-                                        if (startDate != null &&
-                                            endDate != null) {
-                                          print('Start Date: $startDate');
-                                          print('End Date: $endDate');
-                                        }
-                                      },
-                                    ).expand(),
-                                  ],
-                                )
-                              ],
-                            );
-                          },
-                        );
-                      }
                     },
                   ),
                 ).toList(),
@@ -312,7 +149,7 @@ class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
 
                       return GestureDetector(
                         onTap: () => ExpertiseRequestDetailScreen(
-                                request: expertiseRequest)
+                                requestId: expertiseRequest.id!)
                             .launch(context),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,

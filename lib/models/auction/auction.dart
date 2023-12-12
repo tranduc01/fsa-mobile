@@ -1,6 +1,7 @@
 import 'package:socialv/models/orchid/orchid.dart';
 
 import '../gallery/albums.dart';
+import 'bid.dart';
 
 class Auction {
   int? id;
@@ -11,7 +12,7 @@ class Auction {
   double? reservePrice;
   double? stepPrice;
   double? soldDirectlyPrice;
-  double? currentPrice;
+  double? currentBidPrice;
   DateTime? startDate;
   DateTime? endDate;
   int? numberParticipated;
@@ -20,6 +21,7 @@ class Auction {
   bool? isSoldDirectly;
   Orchid? orchid;
   List<Media>? medias;
+  List<Bid>? auctionBids;
 
   Auction({
     this.id,
@@ -30,7 +32,7 @@ class Auction {
     this.reservePrice,
     this.stepPrice,
     this.soldDirectlyPrice,
-    this.currentPrice,
+    this.currentBidPrice,
     this.startDate,
     this.endDate,
     this.numberParticipated,
@@ -39,6 +41,7 @@ class Auction {
     this.isSoldDirectly,
     this.orchid,
     this.medias,
+    this.auctionBids,
   });
 
   factory Auction.fromJson(Map<String, dynamic> json) => Auction(
@@ -53,8 +56,9 @@ class Auction {
         soldDirectlyPrice: json["soldDirectlyPrice"] != null
             ? json["soldDirectlyPrice"].toDouble()
             : 0,
-        currentPrice:
-            json["currentPrice"] != null ? json["currentPrice"].toDouble() : 0,
+        currentBidPrice: json["currentBidPrice"] != null
+            ? json["currentBidPrice"].toDouble()
+            : 0,
         startDate: DateTime.parse(json["startDate"]),
         endDate: DateTime.parse(json["endDate"]),
         numberParticipated: json["numberParticipated"] as int? ?? 0,
@@ -64,6 +68,9 @@ class Auction {
         orchid: Orchid.fromJson(json["orchid"]),
         medias: json["medias"] != null
             ? (json["medias"] as List).map((e) => Media.fromJson(e)).toList()
+            : [],
+        auctionBids: json["auctionBids"] != null
+            ? (json["auctionBids"] as List).map((e) => Bid.fromJson(e)).toList()
             : [],
       );
 }

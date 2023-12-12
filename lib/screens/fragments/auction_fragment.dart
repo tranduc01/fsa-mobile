@@ -88,10 +88,10 @@ class _AutionFragmentState extends State<AuctionFragment> {
             Container(
               height: MediaQuery.of(context).size.height,
               child: TabBarView(children: [
-                Container(child: auctionWidget()),
-                Container(child: auctionWidget()),
-                Container(child: auctionWidget()),
-                Container(child: auctionWidget()),
+                auctionWidget(),
+                auctionWidget(),
+                auctionWidget(),
+                auctionWidget(),
               ]),
             ),
           ],
@@ -119,7 +119,7 @@ class _AutionFragmentState extends State<AuctionFragment> {
         );
       else
         return AnimatedListView(
-          padding: EdgeInsets.only(bottom: mIsLastPage ? 16 : 60),
+          padding: EdgeInsets.only(bottom: 200),
           itemCount: auctionController.auctions.length,
           slideConfiguration: SlideConfiguration(
               delay: Duration(milliseconds: 80), verticalOffset: 300),

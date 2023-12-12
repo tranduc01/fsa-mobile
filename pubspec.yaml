@@ -73,6 +73,8 @@ dependencies:
   # Remote Notification
   #onesignal_flutter: ^5.0.3
 
+  signalr_netcore:
+
   #SlideShow
   flutter_image_slideshow: any
 
