@@ -13,6 +13,7 @@ import '../models/response_model.dart';
 class ExpertiseRequestController extends GetxController {
   final storage = new FlutterSecureStorage();
   var expertiseRequests = <ExpertiseRequest>[].obs;
+  var expertiseRequest = ExpertiseRequest().obs;
   var isLoading = false.obs;
   var isCreateSuccess = false.obs;
   var isDeleteSuccess = false.obs;
@@ -57,6 +58,40 @@ class ExpertiseRequestController extends GetxController {
       isError(true);
       print('Request failed with status: ${response.statusCode}');
       throw Exception('Failed to load requests');
+    }
+  }
+
+  Future<ExpertiseRequest> fetchExpetiseRequest(int id) async {
+    isLoading(true);
+    var url = '$BASE_URL/ExpertiseRequest/$id';
+
+    String? token = await storage.read(key: 'jwt');
+    var headers = {
+      'Authorization': 'Bearer $token',
+    };
+    var response = await GetConnect().get(url, headers: headers);
+
+    if (response.bodyString != null) {
+      ResponseModel responseModel =
+          ResponseModel.fromJson(jsonDecode(response.bodyString!));
+
+      if (response.statusCode == 200) {
+        isLoading(false);
+        isError(false);
+        return expertiseRequest.value =
+            ExpertiseRequest.fromJson(responseModel.data);
+      } else {
+        isLoading(false);
+        isError(true);
+        print('Request failed with status: ${response.statusCode}');
+        print('Request failed with status: ${responseModel.message}');
+        throw Exception('Failed to load request');
+      }
+    } else {
+      isLoading(false);
+      isError(true);
+      print('Request failed with status: ${response.statusCode}');
+      throw Exception('Failed to load request');
     }
   }
 

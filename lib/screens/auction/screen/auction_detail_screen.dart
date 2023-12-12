@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:signalr_netcore/signalr_client.dart';
+import 'package:socialv/screens/auction/screen/bid_screen.dart';
 import 'package:socialv/screens/post/screens/image_screen.dart';
 
 import '../../../components/loading_widget.dart';
@@ -16,9 +19,12 @@ class AuctionDetailSceen extends StatefulWidget {
   _AuctionDetailSceenState createState() => _AuctionDetailSceenState();
 }
 
-class _AuctionDetailSceenState extends State<AuctionDetailSceen> {
+class _AuctionDetailSceenState extends State<AuctionDetailSceen>
+    with TickerProviderStateMixin {
   bool isShowOrchidInfo = false;
   bool isShowAuctionInfo = false;
+  final storage = new FlutterSecureStorage();
+  late AnimationController _animationController;
   late AuctionController auctionController = Get.put(AuctionController());
 
   @override
@@ -26,7 +32,39 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen> {
     Future.delayed(Duration.zero, () async {
       await auctionController.fetchAuction(widget.id);
     });
+
+    onHandle();
+
+    _animationController = BottomSheet.createAnimationController(this);
+    _animationController.duration = const Duration(milliseconds: 500);
+    _animationController.drive(CurveTween(curve: Curves.easeOutQuad));
     super.initState();
+  }
+
+  Future<void> onHandle() async {
+    var token = await storage.read(key: 'jwt');
+
+    final hubConnection = HubConnectionBuilder()
+        .withUrl('https://api.chiasekienthucphonglan.io.vn/hubs/auction',
+            options: HttpConnectionOptions(
+                accessTokenFactory: () => Future.value(token)))
+        .build();
+
+    hubConnection.on('BidAuction', (arguments) {
+      arguments!.forEach((element) {
+        auctionController.auction.value.currentBidPrice =
+            element['bidAmount'] != null ? element['bidAmount'].toDouble() : 0;
+        setState(() {});
+      });
+    });
+
+    await hubConnection.start();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   @override
@@ -39,20 +77,55 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen> {
           alignment: Alignment.bottomCenter,
           child: FloatingActionButton.extended(
             label: Text(
-                auctionController.auction.value.currentPrice!
+                auctionController.auction.value.currentBidPrice!
                     .toStringAsFixed(0)
                     .formatNumberWithComma(),
                 style: TextStyle(
                     color: Colors.black, fontWeight: FontWeight.bold)),
-            icon: Icon(
-              Icons.messenger_outline_rounded,
+            icon: Image.asset(
+              ic_auction,
+              height: 30,
+              width: 30,
               color: Colors.black,
             ),
             backgroundColor: Colors.white,
             onPressed: () {
-              // CommentScreen(
-              //   postId: widget.postId,
-              // ).launch(context);
+              showModalBottomSheet(
+                elevation: 0,
+                context: context,
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                transitionAnimationController: _animationController,
+                builder: (context) {
+                  return FractionallySizedBox(
+                    heightFactor: 0.7,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 45,
+                          height: 5,
+                          //clipBehavior: Clip.hardEdge,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              color: Colors.white),
+                        ),
+                        8.height,
+                        Container(
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          decoration: BoxDecoration(
+                            color: context.cardColor,
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(16),
+                                topRight: Radius.circular(16)),
+                          ),
+                          child: BidScreen(auctionId: widget.id),
+                        ).expand(),
+                      ],
+                    ),
+                  );
+                },
+              );
             },
           ),
         ),
@@ -64,10 +137,20 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen> {
                   children: [
                     Container(
                       height: screenHeight * 0.535,
-                      child: Image.asset(
-                        'assets/images/auction-cover.jpg',
-                        fit: BoxFit.cover,
-                      ),
+                      child: auctionController.auction.value.thumbnail != null
+                          ? Image.network(
+                              auctionController.auction.value.thumbnail!,
+                              fit: BoxFit.cover,
+                              errorBuilder: (BuildContext context,
+                                  Object exception, StackTrace? stackTrace) {
+                                return Image.asset(
+                                  'assets/images/images.png',
+                                  fit: BoxFit.cover,
+                                );
+                              },
+                            )
+                          : Image.asset('assets/images/images.png',
+                              fit: BoxFit.cover),
                     ),
                     Stack(
                       children: [

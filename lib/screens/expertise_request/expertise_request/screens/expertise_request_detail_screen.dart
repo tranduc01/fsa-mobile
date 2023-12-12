@@ -4,16 +4,15 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/main.dart';
-import 'package:socialv/models/expertise_request/expertise_request.dart';
-
+import 'package:socialv/controllers/expertise_request_controller.dart';
 import '../../../../controllers/user_controller.dart';
 import '../../../post/screens/image_screen.dart';
 import '../components/expertise_request_bottomsheet_widget.dart';
 
 class ExpertiseRequestDetailScreen extends StatefulWidget {
-  final ExpertiseRequest request;
+  final int requestId;
 
-  const ExpertiseRequestDetailScreen({required this.request});
+  const ExpertiseRequestDetailScreen({required this.requestId});
 
   @override
   State<ExpertiseRequestDetailScreen> createState() =>
@@ -27,6 +26,8 @@ class _ExpertiseRequestDetailScreenState
   final CarouselController _controller = CarouselController();
   late AnimationController _animationController;
   late UserController userController = Get.find();
+  late ExpertiseRequestController expertiseRequestController =
+      Get.put(ExpertiseRequestController());
 
   final List<String> choicesList = [
     'ALL',
@@ -45,9 +46,9 @@ class _ExpertiseRequestDetailScreenState
 
   @override
   void initState() {
-    // Future.delayed(Duration.zero, () async {
-    //   await postController.fetchPost(widget.request.id!);
-    // });
+    Future.delayed(Duration.zero, () async {
+      await expertiseRequestController.fetchExpetiseRequest(widget.requestId);
+    });
     _animationController = BottomSheet.createAnimationController(this);
     _animationController.duration = const Duration(milliseconds: 500);
     _animationController.drive(CurveTween(curve: Curves.easeOutQuad));
@@ -91,12 +92,15 @@ class _ExpertiseRequestDetailScreenState
                   background: Stack(
                 children: [
                   Positioned.fill(
-                    child: widget.request.medias!.length > 1
+                    child: expertiseRequestController
+                                .expertiseRequest.value.medias!.length >
+                            1
                         ? Column(
                             children: [
                               Expanded(
                                 child: CarouselSlider(
-                                  items: widget.request.medias!
+                                  items: expertiseRequestController
+                                      .expertiseRequest.value.medias!
                                       .map((item) => GestureDetector(
                                             onTap: () => ImageScreen(
                                                     imageURl:
@@ -142,10 +146,13 @@ class _ExpertiseRequestDetailScreenState
                                       }),
                                 ),
                               ),
-                              if (widget.request.medias!.length > 1)
+                              if (expertiseRequestController
+                                      .expertiseRequest.value.medias!.length >
+                                  1)
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  children: widget.request.medias!
+                                  children: expertiseRequestController
+                                      .expertiseRequest.value.medias!
                                       .asMap()
                                       .entries
                                       .map((entry) {
@@ -174,14 +181,20 @@ class _ExpertiseRequestDetailScreenState
                                 ),
                             ],
                           )
-                        : widget.request.medias!.isNotEmpty
+                        : expertiseRequestController
+                                .expertiseRequest.value.medias!.isNotEmpty
                             ? GestureDetector(
                                 onTap: () => ImageScreen(
-                                        imageURl: widget.request.medias![0].url
+                                        imageURl: expertiseRequestController
+                                            .expertiseRequest
+                                            .value
+                                            .medias![0]
+                                            .url
                                             .validate())
                                     .launch(context),
                                 child: Image.network(
-                                  widget.request.medias![0].url!,
+                                  expertiseRequestController
+                                      .expertiseRequest.value.medias![0].url!,
                                   fit: BoxFit.cover,
                                 ),
                               )
@@ -216,8 +229,9 @@ class _ExpertiseRequestDetailScreenState
                               fontFamily: 'Roboto'),
                         ),
                         Text(
-                          DateFormat('dd/MM/yyyy')
-                              .format(widget.request.createdAt!),
+                          DateFormat('dd/MM/yyyy').format(
+                              expertiseRequestController
+                                  .expertiseRequest.value.createdAt!),
                           style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -239,15 +253,21 @@ class _ExpertiseRequestDetailScreenState
                         ),
                         Container(
                           decoration: BoxDecoration(
-                              color: colorList[
-                                  widget.request.adminApprovalStatus! + 1],
+                              color: colorList[expertiseRequestController
+                                      .expertiseRequest
+                                      .value
+                                      .adminApprovalStatus! +
+                                  1],
                               borderRadius: BorderRadius.circular(20),
                               border: Border.all(
                                   color: Color.fromARGB(24, 0, 0, 0))),
                           padding: EdgeInsets.all(6),
                           child: Text(
-                            choicesList[
-                                widget.request.adminApprovalStatus! + 1],
+                            choicesList[expertiseRequestController
+                                    .expertiseRequest
+                                    .value
+                                    .adminApprovalStatus! +
+                                1],
                             style: boldTextStyle(
                                 size: 15,
                                 fontFamily: 'Roboto',
@@ -275,10 +295,15 @@ class _ExpertiseRequestDetailScreenState
                         ),
                         Row(
                           children: [
-                            (widget.request.expert != null &&
-                                    widget.request.expert!.avatarUrl != null)
+                            (expertiseRequestController
+                                            .expertiseRequest.value.expert !=
+                                        null &&
+                                    expertiseRequestController.expertiseRequest
+                                            .value.expert!.avatarUrl !=
+                                        null)
                                 ? Image.network(
-                                    widget.request.expert!.avatarUrl!,
+                                    expertiseRequestController.expertiseRequest
+                                        .value.expert!.avatarUrl!,
                                     height: 30,
                                     width: 30,
                                   )
@@ -289,8 +314,11 @@ class _ExpertiseRequestDetailScreenState
                                   ),
                             5.width,
                             Text(
-                              widget.request.expert != null
-                                  ? widget.request.expert!.name!
+                              expertiseRequestController
+                                          .expertiseRequest.value.expert !=
+                                      null
+                                  ? expertiseRequestController
+                                      .expertiseRequest.value.expert!.name!
                                   : 'No one',
                               style: TextStyle(
                                   fontSize: 20,
@@ -302,7 +330,8 @@ class _ExpertiseRequestDetailScreenState
                       ],
                     ),
                     Spacer(),
-                    if (!widget.request.feedbackRating.isEmptyOrNull)
+                    if (!expertiseRequestController
+                        .expertiseRequest.value.feedbackRating.isEmptyOrNull)
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
@@ -329,7 +358,9 @@ class _ExpertiseRequestDetailScreenState
                                 children: [
                                   Icon(Icons.star_rate_rounded, size: 15),
                                   Text(
-                                    widget.request.feedbackRating.toString(),
+                                    expertiseRequestController
+                                        .expertiseRequest.value.feedbackRating
+                                        .toString(),
                                     style: boldTextStyle(
                                       size: 15,
                                       fontFamily: 'Roboto',
@@ -369,7 +400,8 @@ class _ExpertiseRequestDetailScreenState
                             ),
                           ),
                           child: Text(
-                            widget.request.noteRequestMessage!,
+                            expertiseRequestController
+                                .expertiseRequest.value.noteRequestMessage!,
                             style: TextStyle(
                               fontSize: 20,
                               fontFamily: 'Roboto',
@@ -380,7 +412,9 @@ class _ExpertiseRequestDetailScreenState
                           ),
                         ),
                         10.height,
-                        if (widget.request.adminApprovalStatus == 'REJECTED')
+                        if (expertiseRequestController
+                                .expertiseRequest.value.adminApprovalStatus ==
+                            2)
                           Text(
                             'Reject Message',
                             style: TextStyle(
@@ -389,7 +423,9 @@ class _ExpertiseRequestDetailScreenState
                                 fontWeight: FontWeight.bold,
                                 fontFamily: 'Roboto'),
                           ),
-                        if (widget.request.adminApprovalStatus == 'REJECTED')
+                        if (expertiseRequestController
+                                .expertiseRequest.value.adminApprovalStatus ==
+                            2)
                           Container(
                             padding: EdgeInsets.all(6),
                             width: MediaQuery.of(context).size.width * 0.8,
@@ -400,7 +436,8 @@ class _ExpertiseRequestDetailScreenState
                               ),
                             ),
                             child: Text(
-                              widget.request.rejectMessage!,
+                              expertiseRequestController
+                                  .expertiseRequest.value.rejectMessage!,
                               style: TextStyle(
                                 fontSize: 20,
                                 fontFamily: 'Roboto',

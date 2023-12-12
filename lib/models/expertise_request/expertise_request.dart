@@ -1,4 +1,5 @@
 import 'package:socialv/models/common_models/user.dart';
+import 'package:socialv/models/expertise_request/expertise_result.dart';
 
 import '../gallery/albums.dart';
 
@@ -12,11 +13,12 @@ class ExpertiseRequest {
   DateTime? feedbackCreatedAt;
   DateTime? createdAt;
   int? adminApprovalStatus;
-  String? isSystemReject;
+  bool? isSystemReject;
   User? expert;
   int? expertApprovalStatus;
   DateTime? assignAt;
   List<Media>? medias;
+  List<ExpertiseResult>? expertiseResults;
 
   ExpertiseRequest({
     this.id,
@@ -33,6 +35,7 @@ class ExpertiseRequest {
     this.expertApprovalStatus,
     this.assignAt,
     this.medias,
+    this.expertiseResults,
   });
 
   factory ExpertiseRequest.fromJson(Map<String, dynamic> json) =>
@@ -52,7 +55,7 @@ class ExpertiseRequest {
             ? DateTime.parse(json['createdAt'] as String)
             : null,
         adminApprovalStatus: json['adminApprovalStatus'] as int? ?? 0,
-        isSystemReject: json['isSystemReject'] as String? ?? '',
+        isSystemReject: json['isSystemReject'] as bool? ?? false,
         expert: json['expertAssign'] != null &&
                 json['expertAssign']['expert'] != null
             ? User.fromJson(
@@ -65,6 +68,12 @@ class ExpertiseRequest {
         medias: json['medias'] != null
             ? (json['medias'] as List<dynamic>?)
                 ?.map((e) => Media.fromJson(e as Map<String, dynamic>))
+                .toList()
+            : [],
+        expertiseResults: json['results'] != null
+            ? (json['results'] as List<dynamic>?)
+                ?.map(
+                    (e) => ExpertiseResult.fromJson(e as Map<String, dynamic>))
                 .toList()
             : [],
       );
