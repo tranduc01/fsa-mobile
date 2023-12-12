@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/controllers/post_controller.dart';
+import 'package:socialv/main.dart';
 import 'package:socialv/screens/post/components/post_component.dart';
 
 import '../../components/loading_widget.dart';
@@ -189,12 +190,12 @@ class _HomeFragmentState extends State<HomeFragment>
               child: NoDataWidget(
                 imageWidget: NoDataLottieWidget(),
                 title: postController.isError.value
-                    ? 'Something Went Wrong'
-                    : 'No data found',
+                    ? language.somethingWentWrong
+                    : language.noDataFound,
                 onRetry: () {
                   postController.fetchPosts();
                 },
-                retryText: '   Click to Refresh   ',
+                retryText: '   ' + language.clickToRefresh + '   ',
               ).center(),
             ),
           Positioned(
