@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:socialv/components/loading_widget.dart';
 import 'package:socialv/main.dart';
 import 'package:socialv/controllers/expertise_request_controller.dart';
 import '../../../../controllers/user_controller.dart';
@@ -70,393 +71,421 @@ class _ExpertiseRequestDetailScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: NestedScrollView(
-        headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return [
-            SliverAppBar(
-              title: Text(
-                language.expertiseRequestDetail,
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              leading: IconButton(
-                color: Colors.white,
-                icon: Icon(Icons.arrow_back),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              backgroundColor: Colors.transparent,
-              expandedHeight: MediaQuery.of(context).size.height * 0.5,
-              pinned: true,
-              flexibleSpace: FlexibleSpaceBar(
-                  background: Stack(
-                children: [
-                  Positioned.fill(
-                    child: expertiseRequestController
-                                .expertiseRequest.value.medias!.length >
-                            1
-                        ? Column(
-                            children: [
-                              Expanded(
-                                child: CarouselSlider(
-                                  items: expertiseRequestController
-                                      .expertiseRequest.value.medias!
-                                      .map((item) => GestureDetector(
-                                            onTap: () => ImageScreen(
-                                                    imageURl:
-                                                        item.url.validate())
-                                                .launch(context),
-                                            child: Container(
-                                              child: Stack(
-                                                children: [
-                                                  item.url != null
-                                                      ? Image.network(
-                                                          item.url!,
-                                                          fit: BoxFit.cover,
-                                                          errorBuilder:
-                                                              (BuildContext
-                                                                      context,
-                                                                  Object
-                                                                      exception,
-                                                                  StackTrace?
-                                                                      stackTrace) {
-                                                            return Image.asset(
-                                                              'assets/images/images.png',
-                                                              fit: BoxFit.cover,
-                                                            );
-                                                          },
-                                                        )
-                                                      : Image.asset(
-                                                          'assets/images/images.png',
-                                                          fit: BoxFit.cover),
-                                                ],
-                                              ),
-                                            ),
-                                          ))
-                                      .toList(),
-                                  carouselController: _controller,
-                                  options: CarouselOptions(
-                                      autoPlay: true,
-                                      enlargeCenterPage: false,
-                                      aspectRatio: 1,
-                                      onPageChanged: (index, reason) {
-                                        setState(() {
-                                          _current = index;
-                                        });
-                                      }),
-                                ),
-                              ),
-                              if (expertiseRequestController
+      body: Obx(() => expertiseRequestController.isLoading.value
+          ? LoadingWidget()
+          : NestedScrollView(
+              headerSliverBuilder: (context, innerBoxIsScrolled) {
+                return [
+                  SliverAppBar(
+                    title: Text(
+                      language.expertiseRequestDetail,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    leading: IconButton(
+                      color: Colors.white,
+                      icon: Icon(Icons.arrow_back),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    backgroundColor: Colors.transparent,
+                    expandedHeight: MediaQuery.of(context).size.height * 0.5,
+                    pinned: true,
+                    flexibleSpace: FlexibleSpaceBar(
+                        background: Stack(
+                      children: [
+                        Positioned.fill(
+                          child: expertiseRequestController
                                       .expertiseRequest.value.medias!.length >
-                                  1)
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: expertiseRequestController
-                                      .expertiseRequest.value.medias!
-                                      .asMap()
-                                      .entries
-                                      .map((entry) {
-                                    return GestureDetector(
-                                      onTap: () =>
-                                          _controller.animateToPage(entry.key),
-                                      child: Container(
-                                        width: 12.0,
-                                        height: 12.0,
-                                        margin: EdgeInsets.symmetric(
-                                            vertical: 8.0, horizontal: 4.0),
-                                        decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color:
-                                                (Theme.of(context).brightness ==
-                                                            Brightness.dark
-                                                        ? Colors.white
-                                                        : Colors.black)
-                                                    .withOpacity(
-                                                        _current == entry.key
-                                                            ? 0.9
-                                                            : 0.4)),
+                                  1
+                              ? Column(
+                                  children: [
+                                    Expanded(
+                                      child: CarouselSlider(
+                                        items: expertiseRequestController
+                                            .expertiseRequest.value.medias!
+                                            .map((item) => GestureDetector(
+                                                  onTap: () => ImageScreen(
+                                                          imageURl: item.url
+                                                              .validate())
+                                                      .launch(context),
+                                                  child: Container(
+                                                    child: Stack(
+                                                      children: [
+                                                        item.url != null
+                                                            ? Image.network(
+                                                                item.url!,
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                                errorBuilder: (BuildContext
+                                                                        context,
+                                                                    Object
+                                                                        exception,
+                                                                    StackTrace?
+                                                                        stackTrace) {
+                                                                  return Image
+                                                                      .asset(
+                                                                    'assets/images/images.png',
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                  );
+                                                                },
+                                                              )
+                                                            : Image.asset(
+                                                                'assets/images/images.png',
+                                                                fit: BoxFit
+                                                                    .cover),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ))
+                                            .toList(),
+                                        carouselController: _controller,
+                                        options: CarouselOptions(
+                                            autoPlay: true,
+                                            enlargeCenterPage: false,
+                                            aspectRatio: 1,
+                                            onPageChanged: (index, reason) {
+                                              setState(() {
+                                                _current = index;
+                                              });
+                                            }),
                                       ),
-                                    );
-                                  }).toList(),
-                                ),
-                            ],
-                          )
-                        : expertiseRequestController
-                                .expertiseRequest.value.medias!.isNotEmpty
-                            ? GestureDetector(
-                                onTap: () => ImageScreen(
-                                        imageURl: expertiseRequestController
+                                    ),
+                                    if (expertiseRequestController
+                                            .expertiseRequest
+                                            .value
+                                            .medias!
+                                            .length >
+                                        1)
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: expertiseRequestController
+                                            .expertiseRequest.value.medias!
+                                            .asMap()
+                                            .entries
+                                            .map((entry) {
+                                          return GestureDetector(
+                                            onTap: () => _controller
+                                                .animateToPage(entry.key),
+                                            child: Container(
+                                              width: 12.0,
+                                              height: 12.0,
+                                              margin: EdgeInsets.symmetric(
+                                                  vertical: 8.0,
+                                                  horizontal: 4.0),
+                                              decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: (Theme.of(context)
+                                                                  .brightness ==
+                                                              Brightness.dark
+                                                          ? Colors.white
+                                                          : Colors.black)
+                                                      .withOpacity(
+                                                          _current == entry.key
+                                                              ? 0.9
+                                                              : 0.4)),
+                                            ),
+                                          );
+                                        }).toList(),
+                                      ),
+                                  ],
+                                )
+                              : expertiseRequestController
+                                      .expertiseRequest.value.medias!.isNotEmpty
+                                  ? GestureDetector(
+                                      onTap: () => ImageScreen(
+                                              imageURl:
+                                                  expertiseRequestController
+                                                      .expertiseRequest
+                                                      .value
+                                                      .medias![0]
+                                                      .url
+                                                      .validate())
+                                          .launch(context),
+                                      child: Image.network(
+                                        expertiseRequestController
                                             .expertiseRequest
                                             .value
                                             .medias![0]
-                                            .url
-                                            .validate())
-                                    .launch(context),
-                                child: Image.network(
-                                  expertiseRequestController
-                                      .expertiseRequest.value.medias![0].url!,
-                                  fit: BoxFit.cover,
-                                ),
-                              )
-                            : Image.asset(
-                                'assets/images/images.png',
-                                fit: BoxFit.cover,
-                              ),
+                                            .url!,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    )
+                                  : Image.asset(
+                                      'assets/images/images.png',
+                                      fit: BoxFit.cover,
+                                    ),
+                        ),
+                      ],
+                    )),
                   ),
-                ],
-              )),
-            ),
-          ];
-        },
-        body: Container(
-          padding: EdgeInsets.all(16),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    10.width,
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          language.expertiseRequestCreatedDate,
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Color.fromARGB(130, 0, 0, 0),
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Roboto'),
-                        ),
-                        Text(
-                          DateFormat('dd/MM/yyyy').format(
-                              expertiseRequestController
-                                  .expertiseRequest.value.createdAt!),
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Roboto'),
-                        ),
-                      ],
-                    ),
-                    Spacer(),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          language.expertiseRequestStatus,
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Color.fromARGB(130, 0, 0, 0),
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Roboto'),
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                              color: colorList[expertiseRequestController
-                                      .expertiseRequest
-                                      .value
-                                      .adminApprovalStatus! +
-                                  1],
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(
-                                  color: Color.fromARGB(24, 0, 0, 0))),
-                          padding: EdgeInsets.all(6),
-                          child: Text(
-                            choicesList[expertiseRequestController
-                                    .expertiseRequest
-                                    .value
-                                    .adminApprovalStatus! +
-                                1],
-                            style: boldTextStyle(
-                                size: 15,
-                                fontFamily: 'Roboto',
-                                color: Color.fromARGB(255, 0, 0, 0)),
-                          ),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-                10.height,
-                Row(
-                  children: [
-                    10.width,
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          language.expertiseBy,
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Color.fromARGB(130, 0, 0, 0),
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Roboto'),
-                        ),
-                        Row(
-                          children: [
-                            (expertiseRequestController
-                                            .expertiseRequest.value.expert !=
-                                        null &&
-                                    expertiseRequestController.expertiseRequest
-                                            .value.expert!.avatarUrl !=
-                                        null)
-                                ? Image.network(
-                                    expertiseRequestController.expertiseRequest
-                                        .value.expert!.avatarUrl!,
-                                    height: 30,
-                                    width: 30,
-                                  )
-                                : Image.asset(
-                                    'assets/images/profile.png',
-                                    height: 30,
-                                    width: 30,
-                                  ),
-                            5.width,
-                            Text(
-                              expertiseRequestController
-                                          .expertiseRequest.value.expert !=
-                                      null
-                                  ? expertiseRequestController
-                                      .expertiseRequest.value.expert!.name!
-                                  : 'No one',
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Roboto'),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                    Spacer(),
-                    if (!expertiseRequestController
-                        .expertiseRequest.value.feedbackRating.isEmptyOrNull)
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
+                ];
+              },
+              body: Container(
+                padding: EdgeInsets.all(16),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
                         children: [
-                          Text(
-                            'Rating',
-                            style: TextStyle(
-                                fontSize: 16,
-                                color: Color.fromARGB(130, 0, 0, 0),
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Roboto'),
-                          ),
-                          Container(
-                            width: 55,
-                            decoration: BoxDecoration(
-                              color: Colors.yellow[700],
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(
-                                  color: Color.fromARGB(24, 0, 0, 0)),
-                            ),
-                            padding: EdgeInsets.all(6),
-                            child: Center(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(Icons.star_rate_rounded, size: 15),
-                                  Text(
+                          10.width,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                language.expertiseRequestCreatedDate,
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: Color.fromARGB(130, 0, 0, 0),
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Roboto'),
+                              ),
+                              Text(
+                                DateFormat('dd/MM/yyyy').format(
                                     expertiseRequestController
-                                        .expertiseRequest.value.feedbackRating
-                                        .toString(),
-                                    style: boldTextStyle(
+                                        .expertiseRequest.value.createdAt!),
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Roboto'),
+                              ),
+                            ],
+                          ),
+                          Spacer(),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                language.expertiseRequestStatus,
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: Color.fromARGB(130, 0, 0, 0),
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Roboto'),
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                    color: colorList[expertiseRequestController
+                                            .expertiseRequest
+                                            .value
+                                            .adminApprovalStatus! +
+                                        1],
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(
+                                        color: Color.fromARGB(24, 0, 0, 0))),
+                                padding: EdgeInsets.all(6),
+                                child: Text(
+                                  choicesList[expertiseRequestController
+                                          .expertiseRequest
+                                          .value
+                                          .adminApprovalStatus! +
+                                      1],
+                                  style: boldTextStyle(
                                       size: 15,
                                       fontFamily: 'Roboto',
-                                      color: Color.fromARGB(255, 0, 0, 0),
-                                    ),
-                                  ),
-                                ],
+                                      color: Color.fromARGB(255, 0, 0, 0)),
+                                ),
                               ),
-                            ),
+                            ],
                           )
                         ],
                       ),
-                  ],
-                ),
-                10.height,
-                Row(
-                  children: [
-                    10.width,
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Message',
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Color.fromARGB(130, 0, 0, 0),
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Roboto'),
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(6),
-                          width: MediaQuery.of(context).size.width * 0.8,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10),
-                            ),
-                          ),
-                          child: Text(
-                            expertiseRequestController
-                                .expertiseRequest.value.noteRequestMessage!,
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontFamily: 'Roboto',
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 6,
-                            textAlign: TextAlign.start,
-                          ),
-                        ),
-                        10.height,
-                        if (expertiseRequestController
-                                .expertiseRequest.value.adminApprovalStatus ==
-                            2)
-                          Text(
-                            'Reject Message',
-                            style: TextStyle(
-                                fontSize: 16,
-                                color: Color.fromARGB(130, 0, 0, 0),
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Roboto'),
-                          ),
-                        if (expertiseRequestController
-                                .expertiseRequest.value.adminApprovalStatus ==
-                            2)
-                          Container(
-                            padding: EdgeInsets.all(6),
-                            width: MediaQuery.of(context).size.width * 0.8,
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(10),
+                      10.height,
+                      Row(
+                        children: [
+                          10.width,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                language.expertiseBy,
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: Color.fromARGB(130, 0, 0, 0),
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Roboto'),
                               ),
-                            ),
-                            child: Text(
-                              expertiseRequestController
-                                  .expertiseRequest.value.rejectMessage!,
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontFamily: 'Roboto',
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 6,
-                              textAlign: TextAlign.start,
-                            ),
+                              Row(
+                                children: [
+                                  (expertiseRequestController.expertiseRequest
+                                                  .value.expert !=
+                                              null &&
+                                          expertiseRequestController
+                                                  .expertiseRequest
+                                                  .value
+                                                  .expert!
+                                                  .avatarUrl !=
+                                              null)
+                                      ? Image.network(
+                                          expertiseRequestController
+                                              .expertiseRequest
+                                              .value
+                                              .expert!
+                                              .avatarUrl!,
+                                          height: 30,
+                                          width: 30,
+                                        ).cornerRadiusWithClipRRect(20)
+                                      : Image.asset(
+                                          'assets/images/profile.png',
+                                          height: 30,
+                                          width: 30,
+                                        ),
+                                  5.width,
+                                  Text(
+                                    expertiseRequestController.expertiseRequest
+                                                .value.expert !=
+                                            null
+                                        ? expertiseRequestController
+                                            .expertiseRequest
+                                            .value
+                                            .expert!
+                                            .name!
+                                        : 'No one',
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'Roboto'),
+                                  ),
+                                ],
+                              )
+                            ],
                           ),
-                      ],
-                    ),
-                  ],
+                          Spacer(),
+                          if (!expertiseRequestController.expertiseRequest.value
+                              .feedbackRating.isEmptyOrNull)
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                  'Rating',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      color: Color.fromARGB(130, 0, 0, 0),
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'Roboto'),
+                                ),
+                                Container(
+                                  width: 55,
+                                  decoration: BoxDecoration(
+                                    color: Colors.yellow[700],
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(
+                                        color: Color.fromARGB(24, 0, 0, 0)),
+                                  ),
+                                  padding: EdgeInsets.all(6),
+                                  child: Center(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.star_rate_rounded, size: 15),
+                                        Text(
+                                          expertiseRequestController
+                                              .expertiseRequest
+                                              .value
+                                              .feedbackRating
+                                              .toString(),
+                                          style: boldTextStyle(
+                                            size: 15,
+                                            fontFamily: 'Roboto',
+                                            color: Color.fromARGB(255, 0, 0, 0),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                        ],
+                      ),
+                      10.height,
+                      Row(
+                        children: [
+                          10.width,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Message',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: Color.fromARGB(130, 0, 0, 0),
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Roboto'),
+                              ),
+                              Container(
+                                padding: EdgeInsets.all(6),
+                                width: MediaQuery.of(context).size.width * 0.8,
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10),
+                                  ),
+                                ),
+                                child: Text(
+                                  expertiseRequestController.expertiseRequest
+                                      .value.noteRequestMessage!,
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontFamily: 'Roboto',
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 6,
+                                  textAlign: TextAlign.start,
+                                ),
+                              ),
+                              10.height,
+                              if (expertiseRequestController.expertiseRequest
+                                      .value.adminApprovalStatus ==
+                                  2)
+                                Text(
+                                  'Reject Message',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      color: Color.fromARGB(130, 0, 0, 0),
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'Roboto'),
+                                ),
+                              if (expertiseRequestController.expertiseRequest
+                                      .value.adminApprovalStatus ==
+                                  2)
+                                Container(
+                                  padding: EdgeInsets.all(6),
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.8,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.grey),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    expertiseRequestController
+                                        .expertiseRequest.value.rejectMessage!,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontFamily: 'Roboto',
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 6,
+                                    textAlign: TextAlign.start,
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ],
-            ),
-          ),
-        ),
-      ),
-      floatingActionButton: userController.user.value.role.contains('Member')
+              ),
+            )),
+      floatingActionButton: Obx(() => expertiseRequestController
+              .expertiseRequest.value.expertiseResults!.isNotEmpty
           ? FloatingActionButton.extended(
               onPressed: () {
                 showModalBottomSheet(
@@ -488,7 +517,10 @@ class _ExpertiseRequestDetailScreenState
                                   topLeft: Radius.circular(16),
                                   topRight: Radius.circular(16)),
                             ),
-                            child: ExpertiseResultBottomSheetWidget(),
+                            child: ExpertiseResultBottomSheetWidget(
+                              expertiseRequest: expertiseRequestController
+                                  .expertiseRequest.value,
+                            ),
                           ).expand(),
                         ],
                       ),
@@ -521,7 +553,7 @@ class _ExpertiseRequestDetailScreenState
                   backgroundColor: Colors.white,
                   onPressed: () {},
                 )
-              : Offstage(),
+              : Offstage()),
     );
   }
 }

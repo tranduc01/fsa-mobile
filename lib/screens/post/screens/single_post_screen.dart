@@ -165,7 +165,11 @@ class _SinglePostScreenState extends State<SinglePostScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  postController.post.value.createdBy!.name!,
+                                  postController.post.value.createdBy!.name ==
+                                          null
+                                      ? 'Anonymous'
+                                      : postController
+                                          .post.value.createdBy!.name!,
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontFamily: 'Roboto',
