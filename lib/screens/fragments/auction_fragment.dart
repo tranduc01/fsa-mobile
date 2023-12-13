@@ -172,13 +172,18 @@ class _AutionFragmentState extends State<AuctionFragment> {
                               10.height,
                               Row(
                                 children: [
-                                  Text(
-                                    auction.title!,
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20.0,
-                                      fontFamily: 'Roboto',
+                                  Flexible(
+                                    child: Text(
+                                      auction.title!,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20.0,
+                                        fontFamily: 'Roboto',
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      textAlign: TextAlign.start,
                                     ),
                                   ),
                                   Spacer(),
@@ -216,7 +221,9 @@ class _AutionFragmentState extends State<AuctionFragment> {
                       ],
                     ),
                   ),
-                  if (auction.startDate!.isBefore(DateTime.now()))
+                  if (auction.startDate!
+                      .add(Duration(hours: 7))
+                      .isBefore(DateTime.now()))
                     Positioned(
                       top: 35,
                       right: 35,
@@ -252,9 +259,14 @@ class _AutionFragmentState extends State<AuctionFragment> {
                                 padding: EdgeInsets.all(5.0),
                                 child: CountDownText(
                                   due: DateTime.parse(auction.startDate!
+                                          .add(Duration(hours: 7))
                                           .isBefore(DateTime.now())
-                                      ? auction.endDate.toString()
-                                      : auction.startDate.toString()),
+                                      ? auction.endDate!
+                                          .add(Duration(hours: 7))
+                                          .toString()
+                                      : auction.startDate!
+                                          .add(Duration(hours: 7))
+                                          .toString()),
                                   finishedText: "Ended",
                                   showLabel: true,
                                   daysTextShort: "d ",

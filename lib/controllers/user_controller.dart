@@ -26,7 +26,6 @@ class UserController extends GetxController {
     if (jwt != null) {
       isLoggedIn.value = !checkJWTValidity(jwt);
       if (!checkJWTValidity(jwt)) {
-        user.value = (await getUser())!;
       } else {
         logout();
       }
@@ -43,20 +42,6 @@ class UserController extends GetxController {
 
   Future<String?> getJWT() async {
     return storage.read(key: 'jwt');
-  }
-
-  Future<void> saveUser(User user) async {
-    String userJson = jsonEncode(user.toJson());
-    await storage.write(key: 'user', value: userJson);
-  }
-
-  Future<User?> getUser() async {
-    String? userJson = await storage.read(key: 'user');
-    if (userJson != null) {
-      Map<String, dynamic> userMap = jsonDecode(userJson);
-      return User.fromJson(userMap);
-    }
-    return null;
   }
 
   Future<void> register(String name, String email, String password,
@@ -102,7 +87,7 @@ class UserController extends GetxController {
     if (response.statusCode == 200) {
       isLoggedIn.value = true;
       user.value = User.fromJson((responseModel.data)['user']);
-      saveUser(user.value);
+
       saveJWT((responseModel.data)['accessToken']);
     } else {
       print('Request failed with status: ${response.statusCode}');
