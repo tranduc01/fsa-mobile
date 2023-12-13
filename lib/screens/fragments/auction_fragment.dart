@@ -171,6 +171,7 @@ class _AutionFragmentState extends State<AuctionFragment> {
                             children: [
                               10.height,
                               Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Flexible(
                                     child: Text(
@@ -182,39 +183,25 @@ class _AutionFragmentState extends State<AuctionFragment> {
                                         fontFamily: 'Roboto',
                                       ),
                                       overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
+                                      maxLines: 2,
                                       textAlign: TextAlign.start,
-                                    ),
-                                  ),
-                                  Spacer(),
-                                  Icon(
-                                    Icons.remove_red_eye,
-                                    color: Colors.black,
-                                    size: 14.0,
-                                  ),
-                                  5.width,
-                                  Text(
-                                    auction.view.toString(),
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 14.0,
-                                      fontFamily: 'Roboto',
                                     ),
                                   ),
                                 ],
                               ),
-                              Flexible(
-                                  child: Text(
-                                auction.description!,
-                                style: TextStyle(
-                                  color: const Color.fromARGB(160, 0, 0, 0),
-                                  fontSize: 14.0,
-                                  fontFamily: 'Roboto',
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 2,
-                                textAlign: TextAlign.start,
-                              )),
+                              // Flexible(
+                              //   child: Text(
+                              //     auction.description!,
+                              //     style: TextStyle(
+                              //       color: const Color.fromARGB(160, 0, 0, 0),
+                              //       fontSize: 14.0,
+                              //       fontFamily: 'Roboto',
+                              //     ),
+                              //     overflow: TextOverflow.ellipsis,
+                              //     maxLines: 2,
+                              //     textAlign: TextAlign.start,
+                              //   ),
+                              // ),
                             ],
                           ),
                         ),

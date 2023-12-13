@@ -7,6 +7,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:signalr_netcore/signalr_client.dart';
 import 'package:socialv/screens/auction/screen/bid_screen.dart';
 import 'package:socialv/screens/post/screens/image_screen.dart';
+import 'package:socialv/utils/html_widget.dart';
 
 import '../../../components/loading_widget.dart';
 import '../../../controllers/auction_controller.dart';
@@ -206,7 +207,7 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                     child: Column(
                       children: [
                         DefaultTabController(
-                          length: 2,
+                          length: 3,
                           child: Column(
                             children: [
                               TabBar(
@@ -228,7 +229,21 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                   ),
                                   Tab(
                                     child: DefaultTextStyle(
-                                      child: Text('THÔNG TIN'),
+                                      child: Text(
+                                        'THÔNG TIN',
+                                        style: TextStyle(
+                                            fontFamily: 'Roboto',
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 15,
+                                          fontFamily: 'Roboto'),
+                                    ),
+                                  ),
+                                  Tab(
+                                    child: DefaultTextStyle(
+                                      child: Text('CÂY LAN'),
                                       style: TextStyle(
                                           color: Colors.black,
                                           fontFamily: 'Roboto',
@@ -271,6 +286,18 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                           ),
                                         ),
                                       ),
+                                    ),
+                                    Container(
+                                      height: 330,
+                                      child: SingleChildScrollView(
+                                          child: Column(
+                                        children: [
+                                          HtmlWidget(
+                                            postContent: auctionController
+                                                .auction.value.description,
+                                          )
+                                        ],
+                                      )),
                                     ),
                                     Container(
                                       height: 350,
@@ -956,10 +983,13 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                           format: CountDownTimerFormat.daysHoursMinutesSeconds,
                           endTime: DateTime.parse(auctionController
                                   .auction.value.startDate!
+                                  .add(Duration(hours: 7))
                                   .isBefore(DateTime.now())
-                              ? auctionController.auction.value.endDate
+                              ? auctionController.auction.value.endDate!
+                                  .add(Duration(hours: 7))
                                   .toString()
-                              : auctionController.auction.value.startDate
+                              : auctionController.auction.value.startDate!
+                                  .add(Duration(hours: 7))
                                   .toString()),
                           timeTextStyle: TextStyle(
                             color: Colors.black,
@@ -999,22 +1029,6 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                 fontWeight: FontWeight.bold,
                                 fontSize: 20.0,
                                 fontFamily: 'Roboto'),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            textAlign: TextAlign.start,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Flexible(
-                          child: Text(
-                            auctionController.auction.value.description!,
-                            style: secondaryTextStyle(
-                              fontFamily: 'Roboto',
-                              color: Colors.black,
-                            ),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 3,
                             textAlign: TextAlign.start,
