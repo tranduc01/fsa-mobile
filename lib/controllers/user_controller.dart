@@ -26,6 +26,7 @@ class UserController extends GetxController {
     if (jwt != null) {
       isLoggedIn.value = !checkJWTValidity(jwt);
       if (!checkJWTValidity(jwt)) {
+        await getUserById(JwtDecoder.decode(jwt)!['uid']);
       } else {
         logout();
       }
@@ -180,6 +181,26 @@ class UserController extends GetxController {
       }
     } on Exception catch (e) {
       print(e);
+    }
+  }
+
+  Future<User> getUserById(String id) async {
+    var url = '$BASE_URL/User/$id';
+    var response = await GetConnect().get(url);
+
+    if (response.bodyString != null) {
+      ResponseModel responseModel =
+          ResponseModel.fromJson(jsonDecode(response.bodyString!));
+
+      if (response.statusCode == 200) {
+        return user.value = User.fromJson(responseModel.data);
+      } else {
+        print('Request failed with status: ${response.statusCode}');
+        print('Request failed with status: ${responseModel.message}');
+        throw Exception('Failed to get User');
+      }
+    } else {
+      throw Exception('Failed to get User');
     }
   }
 }
