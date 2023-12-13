@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/components/loading_widget.dart';
 import 'package:socialv/main.dart';
+import 'package:socialv/models/expertise_request/expertise_request.dart';
+import 'package:socialv/models/expertise_request/expertise_result.dart';
 import 'package:tap_to_expand/tap_to_expand.dart';
 
-import '../../../../controllers/user_controller.dart';
-
 class ExpertiseResultBottomSheetWidget extends StatefulWidget {
-  ExpertiseResultBottomSheetWidget({Key? key}) : super(key: key);
+  final ExpertiseRequest expertiseRequest;
+  ExpertiseResultBottomSheetWidget({Key? key, required this.expertiseRequest})
+      : super(key: key);
 
   @override
   State<ExpertiseResultBottomSheetWidget> createState() =>
@@ -20,7 +21,6 @@ class _ExpertiseResultBottomSheetWidgetState
   int selectedIndex = -1;
   bool isLoading = false;
   bool backToHome = true;
-  late UserController userController = Get.find();
 
   @override
   void initState() {
@@ -54,16 +54,19 @@ class _ExpertiseResultBottomSheetWidgetState
                   20.height,
                   Column(
                     children: [
-                      userController.user.value.avatarUrl.isEmptyOrNull
+                      widget.expertiseRequest.expert!.avatarUrl.isEmptyOrNull
                           ? Image.asset("assets/images/profile.png",
                                   height: 62, width: 62, fit: BoxFit.cover)
                               .cornerRadiusWithClipRRect(100)
-                          : Image.network(userController.user.value.avatarUrl!,
-                                  height: 62, width: 62, fit: BoxFit.cover)
+                          : Image.network(
+                                  widget.expertiseRequest.expert!.avatarUrl!,
+                                  height: 62,
+                                  width: 62,
+                                  fit: BoxFit.cover)
                               .cornerRadiusWithClipRRect(100),
                       10.height,
                       Text(
-                        'Nguyễn Văn A',
+                        widget.expertiseRequest.expert!.name!,
                         style: boldTextStyle(size: 20),
                       ),
                       10.height,
@@ -75,30 +78,49 @@ class _ExpertiseResultBottomSheetWidgetState
                   ),
                   20.height,
                   Text('Kết quả đánh giá', style: boldTextStyle(size: 25)),
+                  10.height,
                   Center(
-                    child: TapToExpand(
-                      content: Text(
-                        'Cái cây này có thể dùng để làm gì đó nè Cái cây này có thể dùng để làm gì đó nè Cái cây này có thể dùng để làm gì đó nè Cái cây này có thể dùng để làm gì đó nè Cái cây này có thể dùng để làm gì đó nè Cái cây này có thể dùng để làm gì đó nè Cái cây này có thể dùng để làm gì đó nè Cái cây này có thể dùng để làm gì đó nè ',
-                        style: TextStyle(
-                            fontFamily: 'Roboto',
-                            fontSize: 16,
-                            color: Colors.white,
-                            height: 1.5),
-                      ),
-                      title: const Text(
-                        'Tiêu chí 1',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontFamily: 'Roboto',
-                        ),
-                      ),
-                      color: Colors.blueGrey,
-                      onTapPadding: 10,
-                      closedHeight: 70,
-                      scrollable: true,
-                      borderRadius: 10,
-                      openedHeight: 200,
+                    child: Column(
+                      children: [
+                        AnimatedListView(
+                          padding: EdgeInsets.only(bottom: 60),
+                          itemCount:
+                              widget.expertiseRequest.expertiseResults!.length,
+                          slideConfiguration: SlideConfiguration(
+                              delay: Duration(milliseconds: 80),
+                              verticalOffset: 300),
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            ExpertiseResult expertiseResult = widget
+                                .expertiseRequest.expertiseResults![index];
+
+                            return TapToExpand(
+                              content: Text(
+                                expertiseResult.content!,
+                                style: TextStyle(
+                                    fontFamily: 'Roboto',
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                    height: 1.5),
+                              ),
+                              title: Text(
+                                expertiseResult.evaluationCriteriaName!,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontFamily: 'Roboto',
+                                ),
+                              ),
+                              color: Colors.blueGrey,
+                              onTapPadding: 10,
+                              closedHeight: 70,
+                              scrollable: true,
+                              borderRadius: 10,
+                              openedHeight: 200,
+                            );
+                          },
+                        )
+                      ],
                     ),
                   ),
                 ],

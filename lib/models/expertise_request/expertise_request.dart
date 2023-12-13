@@ -56,10 +56,8 @@ class ExpertiseRequest {
             : null,
         adminApprovalStatus: json['adminApprovalStatus'] as int? ?? 0,
         isSystemReject: json['isSystemReject'] as bool? ?? false,
-        expert: json['expertAssign'] != null &&
-                json['expertAssign']['expert'] != null
-            ? User.fromJson(
-                json['expertAssign']['expert'] as Map<String, dynamic>)
+        expert: json['expert'] != null
+            ? User.fromJson(json['expert'] as Map<String, dynamic>)
             : null,
         expertApprovalStatus: json['expertApprovalStatus'],
         assignAt: json['assignAt'] != null

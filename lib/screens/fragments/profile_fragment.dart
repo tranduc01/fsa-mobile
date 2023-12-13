@@ -13,6 +13,7 @@ import 'package:socialv/screens/expertise_request/expertise_request/screens/expe
 import 'package:socialv/screens/post/components/post_component.dart';
 import 'package:socialv/screens/profile/components/profile_header_component.dart';
 
+import '../../models/enums/enums.dart';
 import '../../models/posts/post.dart';
 import '../../utils/app_constants.dart';
 import '../gallery/screens/gallery_screen.dart';
@@ -198,7 +199,10 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                         );
                       }),
                       4.height,
-                      Text(userController.user.value.role.join(', '),
+                      Text(
+                          userController.user.value.role
+                              .map((e) => e.name)
+                              .join(', '),
                           style: secondaryTextStyle(size: 12)),
                       TextIcon(
                         edgeInsets: EdgeInsets.zero,
@@ -301,7 +305,8 @@ class _ProfileFragmentState extends State<ProfileFragment> {
               prefix: Image.asset(ic_image,
                   width: 25, height: 25, color: appColorPrimary),
             ),
-            if (userController.user.value.role.contains('Member'))
+            if (userController.user.value.role.any((element) =>
+                element.name.toLowerCase() == Role.Member.name.toLowerCase()))
               Column(
                 children: [
                   10.height,
@@ -499,8 +504,10 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                     ),
                   )
                 ],
-              )
-            else
+              ),
+            if (userController.user.value.role.any((element) =>
+                element.name.toLowerCase() ==
+                Role.Contributor.name.toLowerCase()))
               Column(
                 children: [
                   Row(
