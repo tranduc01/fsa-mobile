@@ -60,48 +60,6 @@ class _CommentScreenState extends State<CommentScreen> {
     super.dispose();
   }
 
-  Future<void> onReportPost() async {
-    await showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      isDismissible: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) {
-        return FractionallySizedBox(
-          heightFactor: 0.80,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 45,
-                height: 5,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    color: Colors.white),
-              ),
-              8.height,
-              Container(
-                padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom),
-                decoration: BoxDecoration(
-                  color: context.cardColor,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(16),
-                      topRight: Radius.circular(16)),
-                ),
-                child: ShowReportDialog(
-                  isPostReport: true,
-                  // postId: widget.post.activityId.validate(),
-                  // userId: widget.post.userId.validate(),
-                ),
-              ).expand(),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -188,7 +146,52 @@ class _CommentScreenState extends State<CommentScreen> {
                                     },
                                   );
                                 },
-                                onReport: () => onReportPost(),
+                                onReport: () {
+                                  showModalBottomSheet(
+                                    context: context,
+                                    isScrollControlled: true,
+                                    isDismissible: true,
+                                    backgroundColor: Colors.transparent,
+                                    builder: (context) {
+                                      return FractionallySizedBox(
+                                        heightFactor: 0.80,
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Container(
+                                              width: 45,
+                                              height: 5,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(16),
+                                                  color: Colors.white),
+                                            ),
+                                            8.height,
+                                            Container(
+                                              padding: EdgeInsets.only(
+                                                  bottom: MediaQuery.of(context)
+                                                      .viewInsets
+                                                      .bottom),
+                                              decoration: BoxDecoration(
+                                                color: context.cardColor,
+                                                borderRadius: BorderRadius.only(
+                                                    topLeft:
+                                                        Radius.circular(16),
+                                                    topRight:
+                                                        Radius.circular(16)),
+                                              ),
+                                              child: ShowReportDialog(
+                                                isPostReport: true,
+                                                // postId: widget.post.activityId.validate(),
+                                                // userId: widget.post.userId.validate(),
+                                              ),
+                                            ).expand(),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  );
+                                },
                                 onEdit: () {
                                   showInDialog(
                                     context,

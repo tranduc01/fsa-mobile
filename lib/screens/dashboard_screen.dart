@@ -298,10 +298,10 @@ class _DashboardScreenState extends State<DashboardScreen>
               ),
               Tooltip(
                 richMessage: TextSpan(
-                    text: 'Topics',
+                    text: 'Discover',
                     style: secondaryTextStyle(color: Colors.white)),
                 child: Image.asset(
-                  selectedIndex == 1 ? ic_three_user_filled : ic_three_user,
+                  selectedIndex == 1 ? ic_discover_filled : ic_discover,
                   height: 28,
                   width: 28,
                   fit: BoxFit.fill,

@@ -37,7 +37,6 @@ class _PopUpMenuButtonComponentState extends State<PopUpMenuButtonComponent> {
       data: Theme.of(context).copyWith(
         highlightColor: Colors.transparent,
         splashColor: Colors.transparent,
-        useMaterial3: false,
       ),
       child: PopupMenuButton(
         enabled: !appStore.isLoading,
