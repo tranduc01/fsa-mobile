@@ -27,6 +27,7 @@ class UserController extends GetxController {
       isLoggedIn.value = !checkJWTValidity(jwt);
       if (!checkJWTValidity(jwt)) {
         await getUserById(JwtDecoder.decode(jwt)!['uid']);
+        print(user.value.name);
       } else {
         logout();
       }

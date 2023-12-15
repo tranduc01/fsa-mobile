@@ -43,7 +43,9 @@ class Post {
         publishedAt: DateTime.parse(json['publishedAt']),
         status: json['status'],
         topic: Topic.fromJson(json['topic']),
-        createdBy: User.fromJson(json['createdBy']),
+        createdBy: json['createdBy'] != null
+            ? User.fromJson(json['createdBy'])
+            : User(role: []),
         tags: (json['orchidTags'] as List)
             .map((e) => OrchidTag.fromJson(e))
             .toList(),

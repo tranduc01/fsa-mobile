@@ -165,8 +165,7 @@ class _SinglePostScreenState extends State<SinglePostScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  postController.post.value.createdBy!.name ==
-                                          null
+                                  postController.post.value.createdBy == null
                                       ? 'Anonymous'
                                       : postController
                                           .post.value.createdBy!.name!,
