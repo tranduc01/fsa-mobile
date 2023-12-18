@@ -7,6 +7,9 @@ import 'package:socialv/components/loading_widget.dart';
 import 'package:socialv/main.dart';
 import 'package:socialv/controllers/expertise_request_controller.dart';
 import '../../../../controllers/user_controller.dart';
+import '../../../../models/enums/enums.dart';
+import '../../../common/fail_dialog.dart';
+import '../../../common/loading_dialog.dart';
 import '../../../post/screens/image_screen.dart';
 import '../components/expertise_request_bottomsheet_widget.dart';
 
@@ -30,13 +33,6 @@ class _ExpertiseRequestDetailScreenState
   late ExpertiseRequestController expertiseRequestController =
       Get.put(ExpertiseRequestController());
 
-  final List<String> choicesList = [
-    'ALL',
-    language.pendingExpertiseRequest,
-    language.approvedExpertiseRequest,
-    language.rejectedExpertiseRequest,
-    language.expiredExpertiseRequest
-  ];
   final List<Color> colorList = [
     const Color.fromARGB(127, 33, 149, 243),
     const Color.fromARGB(127, 255, 235, 59),
@@ -86,6 +82,7 @@ class _ExpertiseRequestDetailScreenState
                       icon: Icon(Icons.arrow_back),
                       onPressed: () {
                         Navigator.of(context).pop();
+                        expertiseRequestController.fetchExpetiseRequests();
                       },
                     ),
                     backgroundColor: Colors.transparent,
@@ -269,20 +266,16 @@ class _ExpertiseRequestDetailScreenState
                               Container(
                                 decoration: BoxDecoration(
                                     color: colorList[expertiseRequestController
-                                            .expertiseRequest
-                                            .value
-                                            .adminApprovalStatus! +
-                                        1],
+                                        .expertiseRequest.value.status!],
                                     borderRadius: BorderRadius.circular(20),
                                     border: Border.all(
                                         color: Color.fromARGB(24, 0, 0, 0))),
                                 padding: EdgeInsets.all(6),
                                 child: Text(
-                                  choicesList[expertiseRequestController
-                                          .expertiseRequest
-                                          .value
-                                          .adminApprovalStatus! +
-                                      1],
+                                  ExpertiseRequestStatus
+                                      .values[expertiseRequestController
+                                          .expertiseRequest.value.status!]
+                                      .name,
                                   style: boldTextStyle(
                                       size: 15,
                                       fontFamily: 'Roboto',
@@ -439,8 +432,8 @@ class _ExpertiseRequestDetailScreenState
                                 ),
                               ),
                               10.height,
-                              if (expertiseRequestController.expertiseRequest
-                                      .value.adminApprovalStatus ==
+                              if (expertiseRequestController
+                                      .expertiseRequest.value.status ==
                                   2)
                                 Text(
                                   'Reject Message',
@@ -450,9 +443,9 @@ class _ExpertiseRequestDetailScreenState
                                       fontWeight: FontWeight.bold,
                                       fontFamily: 'Roboto'),
                                 ),
-                              if (expertiseRequestController.expertiseRequest
-                                      .value.adminApprovalStatus ==
-                                  2)
+                              if (expertiseRequestController
+                                      .expertiseRequest.value.status ==
+                                  ExpertiseRequestStatus.Rejected.index)
                                 Container(
                                   padding: EdgeInsets.all(6),
                                   width:
@@ -541,17 +534,50 @@ class _ExpertiseRequestDetailScreenState
               ),
               backgroundColor: context.primaryColor,
             )
-          : userController.user.value.role.contains('Expert')
+          : userController.user.value.role.any((element) =>
+                  element.name.toLowerCase() == Role.Expert.name.toLowerCase())
               ? FloatingActionButton.extended(
-                  label: Text('Expertise',
+                  label: Text('Expertise This Request',
                       style: TextStyle(
                           color: Colors.black, fontWeight: FontWeight.bold)),
                   icon: Icon(
-                    Icons.messenger_outline_rounded,
-                    color: Colors.black,
+                    Icons.check,
+                    color: Colors.green,
                   ),
                   backgroundColor: Colors.white,
-                  onPressed: () {},
+                  onPressed: () {
+                    showConfirmDialogCustom(
+                      context,
+                      title: 'Are you sure you want to expertise this request',
+                      onAccept: (p0) async {
+                        showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (context) {
+                              return LoadingDialog();
+                            });
+
+                        await expertiseRequestController
+                            .receiveExpertiseRequest(widget.requestId);
+
+                        if (expertiseRequestController.isUpdateSuccess.value) {
+                          toast('Received Successfully');
+                          expertiseRequestController
+                              .fetchExpetiseRequest(widget.requestId);
+                          Navigator.pop(context);
+                        } else {
+                          Navigator.pop(context);
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (context) {
+                              return FailDialog(text: 'Failed');
+                            },
+                          );
+                        }
+                      },
+                    );
+                  },
                 )
               : Offstage()),
     );

@@ -12,7 +12,7 @@ class ExpertiseRequest {
   String? feedbackRating;
   DateTime? feedbackCreatedAt;
   DateTime? createdAt;
-  int? adminApprovalStatus;
+  int? status;
   bool? isSystemReject;
   User? expert;
   int? expertApprovalStatus;
@@ -29,7 +29,7 @@ class ExpertiseRequest {
     this.feedbackRating,
     this.feedbackCreatedAt,
     this.createdAt,
-    this.adminApprovalStatus,
+    this.status,
     this.isSystemReject,
     this.expert,
     this.expertApprovalStatus,
@@ -54,7 +54,7 @@ class ExpertiseRequest {
         createdAt: json['createdAt'] != null
             ? DateTime.parse(json['createdAt'] as String)
             : null,
-        adminApprovalStatus: json['adminApprovalStatus'] as int? ?? 0,
+        status: json['status'] as int? ?? 0,
         isSystemReject: json['isSystemReject'] as bool? ?? false,
         expert: json['expert'] != null
             ? User.fromJson(json['expert'] as Map<String, dynamic>)

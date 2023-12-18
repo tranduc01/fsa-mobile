@@ -362,7 +362,91 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                 Positioned(
                                   bottom: -10, // Adjust the position as needed
                                   child: Text(
-                                    language.pendingRequest,
+                                    ExpertiseRequestStatus
+                                        .WaitingForApproval.name,
+                                    style: boldTextStyle(
+                                      color: Colors.black,
+                                      size: 12,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Stack(
+                              clipBehavior: Clip.none,
+                              alignment: Alignment.center,
+                              children: [
+                                Image.asset(
+                                  ic_user_pending,
+                                  height: 40,
+                                  width: 40,
+                                  fit: BoxFit.cover,
+                                ).paddingSymmetric(vertical: 11),
+                                Positioned(
+                                  right: -8,
+                                  top: -4,
+                                  child: Container(
+                                    padding: EdgeInsets.all(6),
+                                    decoration: BoxDecoration(
+                                        color: appColorPrimary,
+                                        shape: BoxShape.circle),
+                                    child: Text(
+                                      '10',
+                                      style: boldTextStyle(
+                                          color: Colors.white,
+                                          size: 10,
+                                          weight: FontWeight.w700,
+                                          letterSpacing: 0.7),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  bottom: -10, // Adjust the position as needed
+                                  child: Text(
+                                    ExpertiseRequestStatus
+                                        .WaitingForExpert.name,
+                                    style: boldTextStyle(
+                                      color: Colors.black,
+                                      size: 12,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Stack(
+                              clipBehavior: Clip.none,
+                              alignment: Alignment.center,
+                              children: [
+                                Image.asset(
+                                  ic_doing,
+                                  height: 40,
+                                  width: 40,
+                                  fit: BoxFit.cover,
+                                ).paddingSymmetric(vertical: 11),
+                                Positioned(
+                                  right: -8,
+                                  top: -4,
+                                  child: Container(
+                                    padding: EdgeInsets.all(6),
+                                    decoration: BoxDecoration(
+                                        color: appColorPrimary,
+                                        shape: BoxShape.circle),
+                                    child: Text(
+                                      '10',
+                                      style: boldTextStyle(
+                                          color: Colors.white,
+                                          size: 10,
+                                          weight: FontWeight.w700,
+                                          letterSpacing: 0.7),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  bottom: -10, // Adjust the position as needed
+                                  child: Text(
+                                    ExpertiseRequestStatus.Doing.name,
                                     style: boldTextStyle(
                                       color: Colors.black,
                                       size: 12,
@@ -403,7 +487,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                 Positioned(
                                   bottom: -10, // Adjust the position as needed
                                   child: Text(
-                                    language.approvedRequest,
+                                    ExpertiseRequestStatus.Completed.name,
                                     style: boldTextStyle(
                                       color: Colors.black,
                                       size: 12,
@@ -444,7 +528,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                 Positioned(
                                   bottom: -10, // Adjust the position as needed
                                   child: Text(
-                                    language.rejectRequest,
+                                    ExpertiseRequestStatus.Rejected.name,
                                     style: boldTextStyle(
                                       color: Colors.black,
                                       size: 12,
@@ -452,48 +536,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                   ),
                                 ),
                               ],
-                            ),
-                            Stack(
-                              clipBehavior: Clip.none,
-                              alignment: Alignment.center,
-                              children: [
-                                Image.asset(
-                                  ic_expired,
-                                  height: 40,
-                                  width: 40,
-                                  fit: BoxFit.cover,
-                                ).paddingSymmetric(vertical: 11),
-                                Positioned(
-                                  right: -8,
-                                  top: -4,
-                                  child: Container(
-                                    padding: EdgeInsets.all(6),
-                                    decoration: BoxDecoration(
-                                        color: appColorPrimary,
-                                        shape: BoxShape.circle),
-                                    child: Text(
-                                      '10',
-                                      style: boldTextStyle(
-                                          color: Colors.white,
-                                          size: 10,
-                                          weight: FontWeight.w700,
-                                          letterSpacing: 0.7),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  bottom: -10, // Adjust the position as needed
-                                  child: Text(
-                                    language.expiredRequest,
-                                    style: boldTextStyle(
-                                      color: Colors.black,
-                                      size: 12,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                            )
                           ],
                         ),
                         10.height,

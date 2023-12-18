@@ -10,6 +10,7 @@ import 'package:socialv/screens/expertise_request/expertise_request/screens/expe
 
 import '../../../../components/no_data_lottie_widget.dart';
 import '../../../../controllers/user_controller.dart';
+import '../../../../models/enums/enums.dart';
 import 'create_expertise_request_screen.dart';
 
 class ExpertiseRequestScreen extends StatefulWidget {
@@ -31,13 +32,7 @@ class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
   int mPage = 1;
   bool mIsLastPage = false;
   int selectedIndex = 0;
-  final List<String> choicesList = [
-    language.allExpertiseRequest,
-    language.pendingExpertiseRequest,
-    language.approvedExpertiseRequest,
-    language.rejectedExpertiseRequest,
-    language.expiredExpertiseRequest
-  ];
+
   final List<Color> colorList = [
     const Color.fromARGB(127, 33, 149, 243),
     const Color.fromARGB(127, 255, 235, 59),
@@ -50,7 +45,11 @@ class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
   void initState() {
     super.initState();
     selectedIndex = 0;
-    expertiseRequestController.fetchExpetiseRequests();
+
+    userController.user.value.role.any((element) =>
+            element.name.toLowerCase() == Role.Expert.name.toLowerCase())
+        ? expertiseRequestController.fetchExpetiseRequestsReceive()
+        : expertiseRequestController.fetchExpetiseRequests();
     widget.controller.addListener(() {
       if (widget.controller.position.pixels ==
           widget.controller.position.maxScrollExtent) {
@@ -102,10 +101,10 @@ class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
                 Wrap(
                   spacing: 5,
                   children: List<Widget>.generate(
-                    choicesList.length,
+                    ExpertiseRequestStatus.values.length,
                     (index) => ChoiceChip(
                       label: Text(
-                        choicesList[index],
+                        ExpertiseRequestStatus.values[index].name,
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontFamily: 'Roboto'),
                       ),
@@ -252,8 +251,7 @@ class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
                                                         decoration: BoxDecoration(
                                                             color: colorList[
                                                                 expertiseRequest
-                                                                        .adminApprovalStatus! +
-                                                                    1],
+                                                                    .status!],
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
@@ -268,10 +266,11 @@ class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
                                                         padding:
                                                             EdgeInsets.all(6),
                                                         child: Text(
-                                                          choicesList[
-                                                              expertiseRequest
-                                                                      .adminApprovalStatus! +
-                                                                  1],
+                                                          ExpertiseRequestStatus
+                                                              .values[
+                                                                  expertiseRequest
+                                                                      .status!]
+                                                              .name,
                                                           style: boldTextStyle(
                                                               size: 15,
                                                               fontFamily:
@@ -317,14 +316,15 @@ class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
           ),
         ],
       ),
-      floatingActionButton: userController.user.value.role.contains('Member')
-          ? FloatingActionButton(
+      floatingActionButton: userController.user.value.role.any((element) =>
+              element.name.toLowerCase() == Role.Expert.name.toLowerCase())
+          ? Offstage()
+          : FloatingActionButton(
               child: Icon(Icons.add),
               onPressed: () {
                 CreateExpertiseRequestScreen().launch(context);
               },
-            )
-          : Offstage(),
+            ),
     );
   }
 }

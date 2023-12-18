@@ -60,7 +60,7 @@ class _MyAppState extends State<MyApp> {
       // } else {
       //   appStore.toggleDarkMode(value: true, isFromMain: true);
       // }
-      appStore.toggleDarkMode(value: false, isFromMain: true);
+      appStore.toggleDarkMode(value: false, isFromMain: false);
     });
   }
 
