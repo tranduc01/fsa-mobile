@@ -2,6 +2,30 @@ import 'package:socialv/language/languages.dart';
 
 class LanguageEn extends BaseLanguage {
   @override
+  String get auctionOngoing => "Ongoing";
+  @override
+  String get auctionUpcoming => "Upcoming";
+  @override
+  String get auctionDiscover => "Discover";
+  @override
+  String get sunExposure => "Sun Exposure";
+  @override
+  String get height => "Height";
+  @override
+  String get nativeArea => "Native Area";
+  @override
+  String get family => "Family";
+  @override
+  String get plantType => "Plant Type";
+  @override
+  String get botanicalName => "Botanical Name";
+  @override
+  String get orchidDetail => "Orchid Detail";
+  @override
+  String get searchOrchid => "Search Orchid";
+  @override
+  String get postDetail => "Post Detail";
+  @override
   String get verifyWarningFace => "Please keep your face on the camera!";
   @override
   String get verifyWarning => "Take a photo of your portrait!";

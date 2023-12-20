@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/controllers/orchid_controller.dart';
+import 'package:socialv/main.dart';
 import 'package:socialv/screens/orchid/single_orchid_screen.dart';
 
 import '../../components/loading_widget.dart';
@@ -72,7 +73,7 @@ class _OrchidFragment extends State<OrchidFragment> {
                 padding: const MaterialStatePropertyAll<EdgeInsets>(
                     EdgeInsets.symmetric(horizontal: 16.0)),
                 leading: const Icon(Icons.search),
-                hintText: 'Search Orchid',
+                hintText: language.searchOrchid,
               )),
           Stack(
             alignment: Alignment.topCenter,

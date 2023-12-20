@@ -2,6 +2,30 @@ import 'package:socialv/language/languages.dart';
 
 class LanguageVi extends BaseLanguage {
   @override
+  String get auctionOngoing => "Đang diễn ra";
+  @override
+  String get auctionUpcoming => "Sắp diễn ra";
+  @override
+  String get auctionDiscover => "Khám phá";
+  @override
+  String get sunExposure => "Ưa nắng";
+  @override
+  String get height => "Chiều cao";
+  @override
+  String get nativeArea => "Khu vực sinh sống chủ yếu";
+  @override
+  String get family => "Họ";
+  @override
+  String get plantType => "Loại hoa";
+  @override
+  String get botanicalName => "Tên khoa học";
+  @override
+  String get orchidDetail => "Chi tiết cây lan";
+  @override
+  String get searchOrchid => "Tìm kiếm cây lan";
+  @override
+  String get postDetail => "Chi tiết bài viết";
+  @override
   String get verifyWarningFace => "Hãy giữ khuôn mặt của bạn trên máy ảnh!";
   @override
   String get verifyWarning => "Chụp ảnh chân dung của bạn!";

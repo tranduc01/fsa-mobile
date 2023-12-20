@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/components/loading_widget.dart';
+import 'package:socialv/main.dart';
 import 'package:socialv/utils/app_constants.dart';
 
 import '../../controllers/orchid_controller.dart';
@@ -54,7 +55,7 @@ class _SingleOrchidScreenState extends State<SingleOrchidScreen> {
                   return [
                     SliverAppBar(
                       title: Text(
-                        'Orchid Detail',
+                        language.orchidDetail,
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       leading: IconButton(
@@ -256,7 +257,7 @@ class _SingleOrchidScreenState extends State<SingleOrchidScreen> {
                                               MainAxisAlignment.center,
                                           children: [
                                             Text(
-                                              'Botanical Name',
+                                              language.botanicalName,
                                               style: TextStyle(
                                                   fontSize: 18,
                                                   fontWeight: FontWeight.bold,
@@ -318,7 +319,7 @@ class _SingleOrchidScreenState extends State<SingleOrchidScreen> {
                                               MainAxisAlignment.center,
                                           children: [
                                             Text(
-                                              'Plant Type',
+                                              language.plantType,
                                               style: TextStyle(
                                                   fontSize: 18,
                                                   fontWeight: FontWeight.bold,
@@ -375,7 +376,7 @@ class _SingleOrchidScreenState extends State<SingleOrchidScreen> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               Text(
-                                                'Family',
+                                                language.family,
                                                 style: TextStyle(
                                                     fontSize: 18,
                                                     fontWeight: FontWeight.bold,
@@ -444,7 +445,7 @@ class _SingleOrchidScreenState extends State<SingleOrchidScreen> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               Text(
-                                                'Native Area',
+                                                language.nativeArea,
                                                 style: TextStyle(
                                                     fontSize: 18,
                                                     fontWeight: FontWeight.bold,
@@ -509,7 +510,7 @@ class _SingleOrchidScreenState extends State<SingleOrchidScreen> {
                                               MainAxisAlignment.center,
                                           children: [
                                             Text(
-                                              'Height',
+                                              language.height,
                                               style: TextStyle(
                                                   fontSize: 18,
                                                   fontWeight: FontWeight.bold,
@@ -570,7 +571,7 @@ class _SingleOrchidScreenState extends State<SingleOrchidScreen> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               Text(
-                                                'Sun Exposure',
+                                                language.sunExposure,
                                                 style: TextStyle(
                                                     fontSize: 18,
                                                     fontWeight: FontWeight.bold,
