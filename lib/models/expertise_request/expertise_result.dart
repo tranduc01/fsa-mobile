@@ -1,15 +1,23 @@
+import 'package:socialv/models/expertise_request/evaluation_criteria.dart';
+
 class ExpertiseResult {
-  String? evaluationCriteriaName;
-  String? content;
+  int? id;
+  int? submitType;
+  List<EvaluationCriteria>? evaluationCriterias;
 
   ExpertiseResult({
-    this.evaluationCriteriaName,
-    this.content,
+    this.id,
+    this.submitType,
+    this.evaluationCriterias,
   });
 
   factory ExpertiseResult.fromJson(Map<String, dynamic> json) =>
       ExpertiseResult(
-        evaluationCriteriaName: json['evaluationCriteriaName'] as String?,
-        content: json['content'] as String?,
+        id: json['id'] as int?,
+        submitType: json['submitType'] as int?,
+        evaluationCriterias: (json['evaluationCriteriaResult']
+                as List<dynamic>?)
+            ?.map((e) => EvaluationCriteria.fromJson(e as Map<String, dynamic>))
+            .toList(),
       );
 }

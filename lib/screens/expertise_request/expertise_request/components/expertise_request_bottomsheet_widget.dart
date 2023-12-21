@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/components/loading_widget.dart';
 import 'package:socialv/main.dart';
+import 'package:socialv/models/expertise_request/evaluation_criteria.dart';
 import 'package:socialv/models/expertise_request/expertise_request.dart';
-import 'package:socialv/models/expertise_request/expertise_result.dart';
 import 'package:tap_to_expand/tap_to_expand.dart';
 
 class ExpertiseResultBottomSheetWidget extends StatefulWidget {
@@ -84,19 +84,21 @@ class _ExpertiseResultBottomSheetWidgetState
                       children: [
                         AnimatedListView(
                           padding: EdgeInsets.only(bottom: 60),
-                          itemCount:
-                              widget.expertiseRequest.expertiseResults!.length,
+                          itemCount: widget.expertiseRequest
+                              .expertiseResults![0].evaluationCriterias!.length,
                           slideConfiguration: SlideConfiguration(
                               delay: Duration(milliseconds: 80),
                               verticalOffset: 300),
                           shrinkWrap: true,
                           itemBuilder: (context, index) {
-                            ExpertiseResult expertiseResult = widget
-                                .expertiseRequest.expertiseResults![index];
+                            EvaluationCriteria evaluationCriteria = widget
+                                .expertiseRequest
+                                .expertiseResults![0]
+                                .evaluationCriterias![index];
 
                             return TapToExpand(
                               content: Text(
-                                expertiseResult.content!,
+                                evaluationCriteria.content ?? '',
                                 style: TextStyle(
                                     fontFamily: 'Roboto',
                                     fontSize: 16,
@@ -104,7 +106,7 @@ class _ExpertiseResultBottomSheetWidgetState
                                     height: 1.5),
                               ),
                               title: Text(
-                                expertiseResult.evaluationCriteriaName!,
+                                evaluationCriteria.evaluationCriteriaName ?? '',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 20,

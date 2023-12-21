@@ -101,10 +101,6 @@ class _DashboardScreenState extends State<DashboardScreen>
             postController.fetchPosts().then((_) {
               setState(() {});
             });
-          } else if (selectedIndex == 1) {
-            expertiseRequestController.fetchExpetiseRequests().then((_) {
-              setState(() {});
-            });
           }
 
           return Future.value(true);

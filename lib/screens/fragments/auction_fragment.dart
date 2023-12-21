@@ -29,74 +29,75 @@ class _AutionFragmentState extends State<AuctionFragment> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-        length: 4,
-        child: Column(
-          children: [
-            Container(
-              child: TabBar(
-                labelColor: Colors.black,
-                unselectedLabelColor: Color.fromARGB(171, 105, 104, 104),
-                labelStyle: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Roboto',
-                ),
-                isScrollable: true,
-                physics: BouncingScrollPhysics(),
-                indicator: BoxDecoration(),
-                tabs: [
-                  Tab(
-                      child: Text(
-                    language.auctionDiscover,
-                  )),
-                  Tab(
-                    child: Text(
-                      language.auctionUpcoming,
-                    ),
-                  ),
-                  Tab(
-                      child: Text(
-                    language.auctionOngoing,
-                  )),
-                  Tab(
-                    child: Text(
-                      'My Auctions',
-                    ),
-                  ),
-                ],
-                onTap: (index) {
-                  int? status;
-                  switch (index) {
-                    case 0:
-                      status = null;
-                      break;
-                    case 1:
-                      status = 0;
-                      break;
-                    case 2:
-                      status = 1;
-                      break;
-                    case 3:
-                      status = 2;
-                      break;
-                    default:
-                      status = 0;
-                  }
-                  auctionController.fetchAuctions(status);
-                },
+      length: 4,
+      child: Column(
+        children: [
+          Container(
+            child: TabBar(
+              labelColor: Colors.black,
+              unselectedLabelColor: Color.fromARGB(171, 105, 104, 104),
+              labelStyle: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Roboto',
               ),
+              isScrollable: true,
+              physics: BouncingScrollPhysics(),
+              indicator: BoxDecoration(),
+              tabs: [
+                Tab(
+                    child: Text(
+                  'Discover',
+                )),
+                Tab(
+                  child: Text(
+                    'Upcoming',
+                  ),
+                ),
+                Tab(
+                    child: Text(
+                  'Ongoing',
+                )),
+                Tab(
+                  child: Text(
+                    'My Auctions',
+                  ),
+                ),
+              ],
+              onTap: (index) {
+                int? status;
+                switch (index) {
+                  case 0:
+                    status = null;
+                    break;
+                  case 1:
+                    status = 0;
+                    break;
+                  case 2:
+                    status = 1;
+                    break;
+                  case 3:
+                    status = 2;
+                    break;
+                  default:
+                    status = 0;
+                }
+                auctionController.fetchAuctions(status);
+              },
             ),
-            Container(
-              height: MediaQuery.of(context).size.height,
-              child: TabBarView(children: [
-                auctionWidget(),
-                auctionWidget(),
-                auctionWidget(),
-                auctionWidget(),
-              ]),
-            ),
-          ],
-        ));
+          ),
+          Container(
+            height: MediaQuery.of(context).size.height,
+            child: TabBarView(children: [
+              auctionWidget(),
+              auctionWidget(),
+              auctionWidget(),
+              auctionWidget(),
+            ]),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget auctionWidget() {

@@ -73,7 +73,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
   @override
   void initState() {
     future = getUserPostList();
-
+    userController.getUserById(userController.user.value.id ?? '');
     setStatusBarColor(Colors.transparent);
     super.initState();
     widget.controller?.addListener(() {
@@ -240,62 +240,52 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                     'Please login to view your profile!',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                   ).withHeight(30),
-            // Observer(builder: (context) {
-            //   return Row(
-            //     children: [
-            //       if (appStore.displayPostCount == 1)
-            //         Column(
-            //           mainAxisSize: MainAxisSize.min,
-            //           children: [
-            //             Text(_memberDetails.postCount.validate().toString(),
-            //                 style: boldTextStyle(size: 18)),
-            //             4.height,
-            //             Text(language.posts,
-            //                 style: secondaryTextStyle(size: 12)),
-            //           ],
-            //         ).paddingSymmetric(vertical: 8).onTap(() {
-            //           widget.controller?.animateTo(
-            //               MediaQuery.of(context).size.height * 0.35,
-            //               duration: const Duration(milliseconds: 500),
-            //               curve: Curves.linear);
-            //         },
-            //             splashColor: Colors.transparent,
-            //             highlightColor: Colors.transparent).expand(),
-            //       Column(
-            //         mainAxisSize: MainAxisSize.min,
-            //         children: [
-            //           Text(_memberDetails.friendsCount.validate().toString(),
-            //               style: boldTextStyle(size: 18)),
-            //           4.height,
-            //           Text(language.friends,
-            //               style: secondaryTextStyle(size: 12)),
-            //         ],
-            //       ).paddingSymmetric(vertical: 8).onTap(() {
-            //         ProfileFriendsScreen().launch(context).then((value) {
-            //           if (value ?? false) getMemberDetails();
-            //         });
-            //       },
-            //           splashColor: Colors.transparent,
-            //           highlightColor: Colors.transparent).expand(),
-            //       Column(
-            //         mainAxisSize: MainAxisSize.min,
-            //         children: [
-            //           Text(_memberDetails.groupsCount.validate().toString(),
-            //               style: boldTextStyle(size: 18)),
-            //           4.height,
-            //           Text(language.groups,
-            //               style: secondaryTextStyle(size: 12)),
-            //         ],
-            //       ).paddingSymmetric(vertical: 8).onTap(() {
-            //         GroupScreen().launch(context).then((value) {
-            //           if (value) getMemberDetails();
-            //         });
-            //       },
-            //           splashColor: Colors.transparent,
-            //           highlightColor: Colors.transparent).expand(),
-            //     ],
-            //   );
-            // }),
+            Obx(() {
+              return Row(
+                children: [
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                          userController.user.value.expertiseLeft
+                              .validate()
+                              .toString(),
+                          style: boldTextStyle(size: 18)),
+                      4.height,
+                      Text('Expertise Left',
+                          style: secondaryTextStyle(size: 12)),
+                    ],
+                  ).paddingSymmetric(vertical: 8).onTap(() {
+                    widget.controller?.animateTo(
+                        MediaQuery.of(context).size.height * 0.35,
+                        duration: const Duration(milliseconds: 500),
+                        curve: Curves.linear);
+                  },
+                      splashColor: Colors.transparent,
+                      highlightColor: Colors.transparent).expand(),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                          userController.user.value.totalExpertiseRequestSent
+                              .validate()
+                              .toString(),
+                          style: boldTextStyle(size: 18)),
+                      4.height,
+                      Text('Total Expertise Request Sent',
+                          style: secondaryTextStyle(size: 12)),
+                    ],
+                  ).paddingSymmetric(vertical: 8).onTap(() {
+                    widget.controller?.animateTo(
+                        MediaQuery.of(context).size.height * 0.35,
+                        duration: const Duration(milliseconds: 500),
+                        curve: Curves.linear);
+                  },
+                      splashColor: Colors.transparent,
+                      highlightColor: Colors.transparent).expand(),
+                ],
+              );
+            }),
             TextIcon(
               onTap: () {
                 GalleryScreen(canEdit: true).launch(context);
@@ -321,58 +311,70 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                     ),
                   ),
                   10.height,
-                  InkWell(
-                    onTap: () => ExpertiseRequestScreen(controller: _controller)
-                        .launch(context),
-                    child: Column(
-                      children: [
-                        Divider(thickness: 1),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Stack(
-                              clipBehavior: Clip.none,
-                              alignment: Alignment.center,
-                              children: [
-                                Image.asset(
-                                  ic_pending,
-                                  height: 40,
-                                  width: 40,
-                                  fit: BoxFit.cover,
-                                ).paddingSymmetric(vertical: 11),
-                                Positioned(
-                                  right: -8,
-                                  top: -4,
-                                  child: Container(
-                                    padding: EdgeInsets.all(6),
-                                    decoration: BoxDecoration(
-                                        color: appColorPrimary,
-                                        shape: BoxShape.circle),
+                  Column(
+                    children: [
+                      Divider(thickness: 1),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          if (!userController.user.value.role.any((element) =>
+                              element.name.toLowerCase() ==
+                              Role.Expert.name.toLowerCase()))
+                            InkWell(
+                              onTap: () => ExpertiseRequestScreen(
+                                controller: _controller,
+                                selectedIndex: 2,
+                              ).launch(context),
+                              child: Stack(
+                                clipBehavior: Clip.none,
+                                alignment: Alignment.center,
+                                children: [
+                                  Image.asset(
+                                    ic_pending,
+                                    height: 40,
+                                    width: 40,
+                                    fit: BoxFit.cover,
+                                  ).paddingSymmetric(vertical: 11),
+                                  Positioned(
+                                    right: -8,
+                                    top: -4,
+                                    child: Container(
+                                      padding: EdgeInsets.all(6),
+                                      decoration: BoxDecoration(
+                                          color: appColorPrimary,
+                                          shape: BoxShape.circle),
+                                      child: Text(
+                                        '10',
+                                        style: boldTextStyle(
+                                            color: Colors.white,
+                                            size: 10,
+                                            weight: FontWeight.w700,
+                                            letterSpacing: 0.7),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom:
+                                        -10, // Adjust the position as needed
                                     child: Text(
-                                      '10',
+                                      ExpertiseRequestStatus
+                                          .WaitingForApproval.name,
                                       style: boldTextStyle(
-                                          color: Colors.white,
-                                          size: 10,
-                                          weight: FontWeight.w700,
-                                          letterSpacing: 0.7),
-                                      textAlign: TextAlign.center,
+                                        color: Colors.black,
+                                        size: 12,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Positioned(
-                                  bottom: -10, // Adjust the position as needed
-                                  child: Text(
-                                    ExpertiseRequestStatus
-                                        .WaitingForApproval.name,
-                                    style: boldTextStyle(
-                                      color: Colors.black,
-                                      size: 12,
-                                    ),
-                                  ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                            Stack(
+                          InkWell(
+                            onTap: () => ExpertiseRequestScreen(
+                              controller: _controller,
+                              selectedIndex: 3,
+                            ).launch(context),
+                            child: Stack(
                               clipBehavior: Clip.none,
                               alignment: Alignment.center,
                               children: [
@@ -414,7 +416,13 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                 ),
                               ],
                             ),
-                            Stack(
+                          ),
+                          InkWell(
+                            onTap: () => ExpertiseRequestScreen(
+                              controller: _controller,
+                              selectedIndex: 0,
+                            ).launch(context),
+                            child: Stack(
                               clipBehavior: Clip.none,
                               alignment: Alignment.center,
                               children: [
@@ -455,7 +463,13 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                 ),
                               ],
                             ),
-                            Stack(
+                          ),
+                          InkWell(
+                            onTap: () => ExpertiseRequestScreen(
+                              controller: _controller,
+                              selectedIndex: 1,
+                            ).launch(context),
+                            child: Stack(
                               clipBehavior: Clip.none,
                               alignment: Alignment.center,
                               children: [
@@ -496,7 +510,13 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                 ),
                               ],
                             ),
-                            Stack(
+                          ),
+                          InkWell(
+                            onTap: () => ExpertiseRequestScreen(
+                              controller: _controller,
+                              selectedIndex: 4,
+                            ).launch(context),
+                            child: Stack(
                               clipBehavior: Clip.none,
                               alignment: Alignment.center,
                               children: [
@@ -536,15 +556,15 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                   ),
                                 ),
                               ],
-                            )
-                          ],
-                        ),
-                        10.height,
-                        Divider(
-                          thickness: 1,
-                        )
-                      ],
-                    ),
+                            ),
+                          )
+                        ],
+                      ),
+                      10.height,
+                      Divider(
+                        thickness: 1,
+                      )
+                    ],
                   )
                 ],
               ),
