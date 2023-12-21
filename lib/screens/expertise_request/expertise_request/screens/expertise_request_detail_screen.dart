@@ -15,6 +15,7 @@ import '../../../common/fail_dialog.dart';
 import '../../../common/loading_dialog.dart';
 import '../../../post/screens/image_screen.dart';
 import '../components/expertise_request_bottomsheet_widget.dart';
+import 'expertise_request_result_screen.dart';
 
 class ExpertiseRequestDetailScreen extends StatefulWidget {
   final int requestId;
@@ -521,16 +522,29 @@ class _ExpertiseRequestDetailScreenState
                                   element.name.toLowerCase() ==
                                   Role.Expert.name.toLowerCase()))
                             AppButton(
-                                text: 'Create Result',
                                 shapeBorder: ContinuousRectangleBorder(
                                     borderRadius: BorderRadius.circular(30)),
                                 color: Colors.white,
-                                textStyle: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                    fontFamily: 'Ronoto',
-                                    fontWeight: FontWeight.bold),
-                                onTap: () {})
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.add),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      'Result',
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                          fontFamily: 'Ronoto',
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                                onTap: () {
+                                  ExpertiseRequestResultScreen(
+                                    requestId: widget.requestId,
+                                  ).launch(context);
+                                })
                         ],
                       ),
                       10.height,
