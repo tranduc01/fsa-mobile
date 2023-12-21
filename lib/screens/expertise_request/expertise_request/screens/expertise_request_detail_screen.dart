@@ -2,7 +2,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/components/loading_widget.dart';
@@ -368,8 +367,7 @@ class _ExpertiseRequestDetailScreenState
                                       .expertiseRequest.value.feedback ==
                                   null &&
                               expertiseRequestController.expertiseRequest.value
-                                      .expertiseResults !=
-                                  null &&
+                                  .expertiseResults!.isNotEmpty &&
                               !userController.user.value.role.any((element) =>
                                   element.name.toLowerCase() ==
                                   Role.Expert.name.toLowerCase()))
@@ -513,6 +511,26 @@ class _ExpertiseRequestDetailScreenState
                                     },
                                   );
                                 }),
+                          if (expertiseRequestController
+                                      .expertiseRequest.value.status ==
+                                  ExpertAssginStatus.Doing.index &&
+                              expertiseRequestController
+                                      .expertiseRequest.value.expert !=
+                                  null &&
+                              userController.user.value.role.any((element) =>
+                                  element.name.toLowerCase() ==
+                                  Role.Expert.name.toLowerCase()))
+                            AppButton(
+                                text: 'Create Result',
+                                shapeBorder: ContinuousRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30)),
+                                color: Colors.white,
+                                textStyle: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                    fontFamily: 'Ronoto',
+                                    fontWeight: FontWeight.bold),
+                                onTap: () {})
                         ],
                       ),
                       10.height,
