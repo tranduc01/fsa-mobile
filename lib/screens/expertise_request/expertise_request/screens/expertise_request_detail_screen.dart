@@ -1,19 +1,28 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/components/loading_widget.dart';
 import 'package:socialv/main.dart';
 import 'package:socialv/controllers/expertise_request_controller.dart';
+import 'package:socialv/utils/images.dart';
 import '../../../../controllers/user_controller.dart';
+import '../../../../models/enums/enums.dart';
+import '../../../../utils/common.dart';
+import '../../../common/fail_dialog.dart';
+import '../../../common/loading_dialog.dart';
 import '../../../post/screens/image_screen.dart';
 import '../components/expertise_request_bottomsheet_widget.dart';
 
 class ExpertiseRequestDetailScreen extends StatefulWidget {
   final int requestId;
+  final int? selectedIndex;
 
-  const ExpertiseRequestDetailScreen({required this.requestId});
+  const ExpertiseRequestDetailScreen(
+      {required this.requestId, this.selectedIndex});
 
   @override
   State<ExpertiseRequestDetailScreen> createState() =>
@@ -30,13 +39,9 @@ class _ExpertiseRequestDetailScreenState
   late ExpertiseRequestController expertiseRequestController =
       Get.put(ExpertiseRequestController());
 
-  final List<String> choicesList = [
-    'ALL',
-    language.pendingExpertiseRequest,
-    language.approvedExpertiseRequest,
-    language.rejectedExpertiseRequest,
-    language.expiredExpertiseRequest
-  ];
+  TextEditingController discCont = TextEditingController();
+  FocusNode discNode = FocusNode();
+
   final List<Color> colorList = [
     const Color.fromARGB(127, 33, 149, 243),
     const Color.fromARGB(127, 255, 235, 59),
@@ -86,6 +91,15 @@ class _ExpertiseRequestDetailScreenState
                       icon: Icon(Icons.arrow_back),
                       onPressed: () {
                         Navigator.of(context).pop();
+                        userController.user.value.role.any((element) =>
+                                    element.name.toLowerCase() ==
+                                    Role.Expert.name.toLowerCase()) &&
+                                widget.selectedIndex == 3
+                            ? expertiseRequestController
+                                .fetchExpetiseRequestsReceive(
+                                    widget.selectedIndex!)
+                            : expertiseRequestController
+                                .fetchExpetiseRequests(widget.selectedIndex!);
                       },
                     ),
                     backgroundColor: Colors.transparent,
@@ -269,20 +283,16 @@ class _ExpertiseRequestDetailScreenState
                               Container(
                                 decoration: BoxDecoration(
                                     color: colorList[expertiseRequestController
-                                            .expertiseRequest
-                                            .value
-                                            .adminApprovalStatus! +
-                                        1],
+                                        .expertiseRequest.value.status!],
                                     borderRadius: BorderRadius.circular(20),
                                     border: Border.all(
                                         color: Color.fromARGB(24, 0, 0, 0))),
                                 padding: EdgeInsets.all(6),
                                 child: Text(
-                                  choicesList[expertiseRequestController
-                                          .expertiseRequest
-                                          .value
-                                          .adminApprovalStatus! +
-                                      1],
+                                  ExpertiseRequestStatus
+                                      .values[expertiseRequestController
+                                          .expertiseRequest.value.status!]
+                                      .name,
                                   style: boldTextStyle(
                                       size: 15,
                                       fontFamily: 'Roboto',
@@ -354,52 +364,155 @@ class _ExpertiseRequestDetailScreenState
                             ],
                           ),
                           Spacer(),
-                          if (!expertiseRequestController.expertiseRequest.value
-                              .feedbackRating.isEmptyOrNull)
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  'Rating',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      color: Color.fromARGB(130, 0, 0, 0),
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: 'Roboto'),
-                                ),
-                                Container(
-                                  width: 55,
-                                  decoration: BoxDecoration(
-                                    color: Colors.yellow[700],
-                                    borderRadius: BorderRadius.circular(20),
-                                    border: Border.all(
-                                        color: Color.fromARGB(24, 0, 0, 0)),
-                                  ),
-                                  padding: EdgeInsets.all(6),
-                                  child: Center(
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(Icons.star_rate_rounded, size: 15),
-                                        Text(
-                                          expertiseRequestController
-                                              .expertiseRequest
-                                              .value
-                                              .feedbackRating
-                                              .toString(),
-                                          style: boldTextStyle(
-                                            size: 15,
-                                            fontFamily: 'Roboto',
-                                            color: Color.fromARGB(255, 0, 0, 0),
-                                          ),
+                          if (expertiseRequestController
+                                      .expertiseRequest.value.feedback ==
+                                  null &&
+                              expertiseRequestController.expertiseRequest.value
+                                      .expertiseResults !=
+                                  null &&
+                              !userController.user.value.role.any((element) =>
+                                  element.name.toLowerCase() ==
+                                  Role.Expert.name.toLowerCase()))
+                            AppButton(
+                                text: 'Send Feedback',
+                                shapeBorder: ContinuousRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30)),
+                                color: Colors.white,
+                                textStyle: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                    fontFamily: 'Ronoto',
+                                    fontWeight: FontWeight.bold),
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      late double feedbackRating = 0;
+                                      return AlertDialog(
+                                        title: Text('Feedback'),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
+                                        content: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            RatingBar(
+                                              initialRating: 3,
+                                              direction: Axis.horizontal,
+                                              allowHalfRating: true,
+                                              itemCount: 5,
+                                              ratingWidget: RatingWidget(
+                                                full: Image.asset(
+                                                  heart,
+                                                  color: Colors.red,
+                                                ),
+                                                half: Image.asset(
+                                                  heart_half,
+                                                  color: Colors.red,
+                                                ),
+                                                empty: Image.asset(
+                                                  heart_border,
+                                                  color: Colors.red,
+                                                ),
+                                              ),
+                                              itemPadding: EdgeInsets.symmetric(
+                                                  horizontal: 4.0),
+                                              onRatingUpdate: (rating) {
+                                                feedbackRating = rating;
+                                              },
+                                            ),
+                                            20.height,
+                                            TextFormField(
+                                              focusNode: discNode,
+                                              controller: discCont,
+                                              autofocus: false,
+                                              maxLines: 5,
+                                              decoration: inputDecorationFilled(
+                                                context,
+                                                fillColor: context
+                                                    .scaffoldBackgroundColor,
+                                                label: 'Message',
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('Cancel',
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontFamily: 'Roboto',
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                          ),
+                                          TextButton(
+                                            style: ButtonStyle(
+                                                backgroundColor:
+                                                    MaterialStateProperty.all(
+                                                        context.primaryColor),
+                                                shape:
+                                                    MaterialStateProperty.all(
+                                                        RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        20)))),
+                                            onPressed: () async {
+                                              if (feedbackRating != 0) {
+                                                showDialog(
+                                                    context: context,
+                                                    barrierDismissible: false,
+                                                    builder: (context) {
+                                                      return LoadingDialog();
+                                                    });
+                                                await expertiseRequestController
+                                                    .sendFeedback(
+                                                        widget.requestId,
+                                                        feedbackRating,
+                                                        discCont.text);
+
+                                                if (expertiseRequestController
+                                                    .isUpdateSuccess.value) {
+                                                  expertiseRequestController
+                                                      .fetchExpetiseRequest(
+                                                          widget.requestId);
+                                                  Navigator.pop(context);
+                                                  toast(
+                                                      'Feedback Sent Successfully');
+                                                } else {
+                                                  Navigator.pop(context);
+                                                  showDialog(
+                                                    context: context,
+                                                    barrierDismissible: false,
+                                                    builder: (context) {
+                                                      return FailDialog(
+                                                          text: 'Send Failed');
+                                                    },
+                                                  );
+                                                }
+                                              } else {
+                                                toast('Please rate');
+                                              }
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('Send',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontFamily: 'Roboto',
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                }),
                         ],
                       ),
                       10.height,
@@ -439,9 +552,9 @@ class _ExpertiseRequestDetailScreenState
                                 ),
                               ),
                               10.height,
-                              if (expertiseRequestController.expertiseRequest
-                                      .value.adminApprovalStatus ==
-                                  2)
+                              if (expertiseRequestController
+                                      .expertiseRequest.value.status ==
+                                  ExpertiseRequestStatus.Rejected.index)
                                 Text(
                                   'Reject Message',
                                   style: TextStyle(
@@ -450,9 +563,9 @@ class _ExpertiseRequestDetailScreenState
                                       fontWeight: FontWeight.bold,
                                       fontFamily: 'Roboto'),
                                 ),
-                              if (expertiseRequestController.expertiseRequest
-                                      .value.adminApprovalStatus ==
-                                  2)
+                              if (expertiseRequestController
+                                      .expertiseRequest.value.status ==
+                                  ExpertiseRequestStatus.Rejected.index)
                                 Container(
                                   padding: EdgeInsets.all(6),
                                   width:
@@ -475,6 +588,108 @@ class _ExpertiseRequestDetailScreenState
                                     textAlign: TextAlign.start,
                                   ),
                                 ),
+                              10.height,
+                              if (expertiseRequestController
+                                      .expertiseRequest.value.feedback !=
+                                  null)
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Feedback',
+                                      style: TextStyle(
+                                          fontSize: 22,
+                                          color: Color.fromARGB(130, 0, 0, 0),
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Roboto'),
+                                    ),
+                                    10.height,
+                                    Text(
+                                      'Rating',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          color: Color.fromARGB(130, 0, 0, 0),
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Roboto'),
+                                    ),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.yellow[700],
+                                        borderRadius: BorderRadius.circular(20),
+                                        border: Border.all(
+                                            color: Color.fromARGB(24, 0, 0, 0)),
+                                      ),
+                                      padding: EdgeInsets.all(6),
+                                      child: Row(
+                                        children: [
+                                          RatingBar(
+                                            initialRating:
+                                                expertiseRequestController
+                                                    .expertiseRequest
+                                                    .value
+                                                    .feedback!
+                                                    .rating!,
+                                            direction: Axis.horizontal,
+                                            allowHalfRating: true,
+                                            itemCount: 5,
+                                            ratingWidget: RatingWidget(
+                                              full: Image.asset(
+                                                heart,
+                                                color: Colors.red,
+                                              ),
+                                              half: Image.asset(
+                                                heart_half,
+                                                color: Colors.red,
+                                              ),
+                                              empty: Image.asset(
+                                                heart_border,
+                                                color: Colors.red,
+                                              ),
+                                            ),
+                                            itemPadding: EdgeInsets.symmetric(
+                                                horizontal: 4.0),
+                                            ignoreGestures: true,
+                                            onRatingUpdate: (rating) {},
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    5.height,
+                                    Text(
+                                      'Feedback Message',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          color: Color.fromARGB(130, 0, 0, 0),
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Roboto'),
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.all(6),
+                                      width: MediaQuery.of(context).size.width *
+                                          0.8,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.grey),
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(10),
+                                        ),
+                                      ),
+                                      child: Text(
+                                        expertiseRequestController
+                                            .expertiseRequest
+                                            .value
+                                            .feedback!
+                                            .message!,
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontFamily: 'Roboto',
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 6,
+                                        textAlign: TextAlign.start,
+                                      ),
+                                    ),
+                                  ],
+                                )
                             ],
                           ),
                         ],
@@ -484,8 +699,10 @@ class _ExpertiseRequestDetailScreenState
                 ),
               ),
             )),
-      floatingActionButton: Obx(() => expertiseRequestController
-              .expertiseRequest.value.expertiseResults!.isNotEmpty
+      floatingActionButton: Obx(() => (expertiseRequestController
+                  .expertiseRequest.value.expertiseResults!.isNotEmpty &&
+              !userController.user.value.role.any((element) =>
+                  element.name.toLowerCase() == Role.Expert.name.toLowerCase()))
           ? FloatingActionButton.extended(
               onPressed: () {
                 showModalBottomSheet(
@@ -541,17 +758,53 @@ class _ExpertiseRequestDetailScreenState
               ),
               backgroundColor: context.primaryColor,
             )
-          : userController.user.value.role.contains('Expert')
+          : userController.user.value.role.any((element) =>
+                      element.name.toLowerCase() ==
+                      Role.Expert.name.toLowerCase()) &&
+                  expertiseRequestController.expertiseRequest.value.status ==
+                      ExpertiseRequestStatus.WaitingForExpert.index
               ? FloatingActionButton.extended(
-                  label: Text('Expertise',
+                  label: Text('Expertise This Request',
                       style: TextStyle(
                           color: Colors.black, fontWeight: FontWeight.bold)),
                   icon: Icon(
-                    Icons.messenger_outline_rounded,
-                    color: Colors.black,
+                    Icons.check,
+                    color: Colors.green,
                   ),
                   backgroundColor: Colors.white,
-                  onPressed: () {},
+                  onPressed: () {
+                    showConfirmDialogCustom(
+                      context,
+                      title: 'Are you sure you want to expertise this request',
+                      onAccept: (p0) async {
+                        showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (context) {
+                              return LoadingDialog();
+                            });
+
+                        await expertiseRequestController
+                            .receiveExpertiseRequest(widget.requestId);
+
+                        if (expertiseRequestController.isUpdateSuccess.value) {
+                          toast('Received Successfully');
+                          expertiseRequestController
+                              .fetchExpetiseRequest(widget.requestId);
+                          Navigator.pop(context);
+                        } else {
+                          Navigator.pop(context);
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (context) {
+                              return FailDialog(text: 'Failed');
+                            },
+                          );
+                        }
+                      },
+                    );
+                  },
                 )
               : Offstage()),
     );

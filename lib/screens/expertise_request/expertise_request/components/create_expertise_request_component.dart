@@ -169,7 +169,7 @@ class _CreateExpertiseRequestComponentState
 
                           if (expertiseRequestController
                               .isCreateSuccess.value) {
-                            expertiseRequestController.fetchExpetiseRequests();
+                            expertiseRequestController.fetchExpetiseRequests(2);
                             Navigator.pop(context);
                             toast('Request Created Successfully');
                             Navigator.pop(context);

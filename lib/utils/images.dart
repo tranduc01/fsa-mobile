@@ -98,10 +98,15 @@ const ic_pending = 'assets/icons/ic_pending.png';
 const ic_approved = 'assets/icons/ic_approved.png';
 const ic_rejected = 'assets/icons/ic_rejected.png';
 const ic_expired = 'assets/icons/ic_expired.png';
+const ic_user_pending = 'assets/icons/ic_user_pending.png';
+const ic_doing = 'assets/icons/ic_doing.png';
 const ic_auction = 'assets/icons/ic_auction.png';
 const ic_auction_filled = 'assets/icons/ic_auction_filled.png';
 const ic_discover = 'assets/icons/ic_discover.png';
 const ic_discover_filled = 'assets/icons/ic_discover_filled.png';
+const heart = 'assets/icons/ic_heart_rating.png';
+const heart_half = 'assets/icons/ic_heart_half_rating.png';
+const heart_border = 'assets/icons/ic_heart_border_rating.png';
 
 /// Lottie Files
 const no_data = "assets/lottie/no_data.json";

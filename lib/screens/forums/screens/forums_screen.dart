@@ -96,7 +96,9 @@ class _ForumsScreenState extends State<ForumsScreen> {
                   if (snap.hasError) {
                     return NoDataWidget(
                       imageWidget: NoDataLottieWidget(),
-                      title: isError ? language.somethingWentWrong : language.noDataFound,
+                      title: isError
+                          ? language.somethingWentWrong
+                          : language.noDataFound,
                       onRetry: () {
                         mPage = 1;
                         future = getForums();
@@ -109,7 +111,9 @@ class _ForumsScreenState extends State<ForumsScreen> {
                     if (snap.data.validate().isEmpty) {
                       return NoDataWidget(
                         imageWidget: NoDataLottieWidget(),
-                        title: isError ? language.somethingWentWrong : language.noDataFound,
+                        title: isError
+                            ? language.somethingWentWrong
+                            : language.noDataFound,
                         onRetry: () {
                           mPage = 1;
                           future = getForums();
@@ -118,8 +122,10 @@ class _ForumsScreenState extends State<ForumsScreen> {
                       ).center();
                     } else {
                       return AnimatedListView(
-                        slideConfiguration: SlideConfiguration(delay: 80.milliseconds, verticalOffset: 300),
-                        padding: EdgeInsets.only(left: 16, right: 16, bottom: 50),
+                        slideConfiguration: SlideConfiguration(
+                            delay: 80.milliseconds, verticalOffset: 300),
+                        padding:
+                            EdgeInsets.only(left: 16, right: 16, bottom: 50),
                         itemCount: forumsList.length,
                         itemBuilder: (context, index) {
                           ForumModel data = forumsList[index];
@@ -138,13 +144,7 @@ class _ForumsScreenState extends State<ForumsScreen> {
                                 }
                               });
                             },
-                            child: ForumsCardComponent(
-                              title: data.title,
-                              description: data.description,
-                              postCount: data.postCount,
-                              topicCount: data.topicCount,
-                              freshness: data.freshness,
-                            ),
+                            child: ForumsCardComponent(),
                           );
                         },
                         onNextPage: () {
@@ -164,7 +164,8 @@ class _ForumsScreenState extends State<ForumsScreen> {
                   if (appStore.isLoading) {
                     return Positioned(
                       bottom: mPage != 1 ? 10 : null,
-                      child: LoadingWidget(isBlurBackground: mPage == 1 ? true : false),
+                      child: LoadingWidget(
+                          isBlurBackground: mPage == 1 ? true : false),
                     );
                   } else {
                     return Offstage();

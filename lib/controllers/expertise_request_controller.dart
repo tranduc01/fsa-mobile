@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:socialv/controllers/user_controller.dart';
 import '../configs.dart';
 import '../models/common_models.dart';
 import 'package:http_parser/http_parser.dart';
@@ -19,16 +20,53 @@ class ExpertiseRequestController extends GetxController {
   var isDeleteSuccess = false.obs;
   var isUpdateSuccess = false.obs;
   var isError = false.obs;
+  late UserController userController = Get.find();
 
   @override
   void onInit() {
     super.onInit();
-    fetchExpetiseRequests();
   }
 
-  Future<List<ExpertiseRequest>> fetchExpetiseRequests() async {
+  Future<List<ExpertiseRequest>> fetchExpetiseRequests(int status) async {
     isLoading(true);
-    var url = '$BASE_URL/ExpertiseRequest';
+    var url = '$BASE_URL/expertise-request?Filters=status==$status';
+
+    String? token = await storage.read(key: 'jwt');
+    var headers = {
+      'Authorization': 'Bearer $token',
+    };
+    var response = await GetConnect().get(url, headers: headers);
+
+    if (response.bodyString != null) {
+      ResponseModel responseModel =
+          ResponseModel.fromJson(jsonDecode(response.bodyString!));
+
+      if (response.statusCode == 200) {
+        isLoading(false);
+        isError(false);
+        return expertiseRequests.value = (responseModel.data['items'] as List)
+            .map((e) => ExpertiseRequest.fromJson(e))
+            .toList();
+      } else {
+        isLoading(false);
+        isError(true);
+        print('Request failed with status: ${response.statusCode}');
+        print('Request failed with status: ${responseModel.message}');
+        throw Exception('Failed to load requests');
+      }
+    } else {
+      isLoading(false);
+      isError(true);
+      print('Request failed with status: ${response.statusCode}');
+      throw Exception('Failed to load requests');
+    }
+  }
+
+  Future<List<ExpertiseRequest>> fetchExpetiseRequestsReceive(
+      int status) async {
+    isLoading(true);
+    var url =
+        '$BASE_URL/expertise-request/waiting-for-receive?Filters=status==$status';
 
     String? token = await storage.read(key: 'jwt');
     var headers = {
@@ -63,7 +101,7 @@ class ExpertiseRequestController extends GetxController {
 
   Future<ExpertiseRequest> fetchExpetiseRequest(int id) async {
     isLoading(true);
-    var url = '$BASE_URL/ExpertiseRequest/$id';
+    var url = '$BASE_URL/expertise-request/$id';
 
     String? token = await storage.read(key: 'jwt');
     var headers = {
@@ -98,7 +136,7 @@ class ExpertiseRequestController extends GetxController {
   Future<void> createExpertiseRequest(
       String message, List<PostMedia> medias) async {
     try {
-      var url = Uri.parse('$BASE_URL/ExpertiseRequest');
+      var url = Uri.parse('$BASE_URL/expertise-request');
       var request = http.MultipartRequest('POST', url);
       request.headers['Authorization'] =
           'Bearer ${await storage.read(key: 'jwt')}';
@@ -118,6 +156,60 @@ class ExpertiseRequestController extends GetxController {
       if (response.statusCode == 200) {
         isCreateSuccess(true);
       } else {
+        print('Request failed with status: ${response.statusCode}');
+      }
+    } catch (e) {
+      isError(true);
+      print(e);
+    }
+  }
+
+  Future<void> receiveExpertiseRequest(int id) async {
+    try {
+      isLoading(true);
+      var url = '$BASE_URL/expertise-request/receive/$id';
+      String? token = await storage.read(key: 'jwt');
+      var headers = {
+        'Authorization': 'Bearer $token',
+      };
+
+      var response = await GetConnect().patch(url, '', headers: headers);
+      if (response.statusCode == 200) {
+        isLoading(false);
+        isUpdateSuccess(true);
+      } else {
+        isLoading(false);
+        isError(true);
+        print('Request failed with status: ${response.statusCode}');
+      }
+    } catch (e) {
+      isError(true);
+      print(e);
+    }
+  }
+
+  Future<void> sendFeedback(int id, double rating, String message) async {
+    try {
+      var url = '$BASE_URL/expertise-request/feedback/$id';
+      String? token = await storage.read(key: 'jwt');
+      var headers = {
+        'Authorization': 'Bearer $token',
+      };
+      var body = {
+        'message': message,
+        'rating': rating,
+      };
+      var response = await GetConnect().post(
+        url,
+        body,
+        headers: headers,
+      );
+      if (response.statusCode == 200) {
+        isLoading(false);
+        isUpdateSuccess(true);
+      } else {
+        isLoading(false);
+        isError(true);
         print('Request failed with status: ${response.statusCode}');
       }
     } catch (e) {

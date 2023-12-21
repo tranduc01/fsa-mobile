@@ -18,10 +18,12 @@ class ForumSubscriptionComponent extends StatefulWidget {
   const ForumSubscriptionComponent({Key? key}) : super(key: key);
 
   @override
-  State<ForumSubscriptionComponent> createState() => _ForumSubscriptionComponentState();
+  State<ForumSubscriptionComponent> createState() =>
+      _ForumSubscriptionComponentState();
 }
 
-class _ForumSubscriptionComponentState extends State<ForumSubscriptionComponent> {
+class _ForumSubscriptionComponentState
+    extends State<ForumSubscriptionComponent> {
   List<ForumModel> forumList = [];
   List<TopicModel> topicList = [];
 
@@ -66,13 +68,19 @@ class _ForumSubscriptionComponentState extends State<ForumSubscriptionComponent>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(language.forums, style: boldTextStyle()),
-                  Text(language.viewAll, style: primaryTextStyle(color: context.primaryColor)).onTap(() {
+                  Text(language.viewAll,
+                          style: primaryTextStyle(color: context.primaryColor))
+                      .onTap(() {
                     ForumsScreen().launch(context).then((value) {
                       if (value ?? false) {
                         getList();
                       }
                     });
-                  }, splashColor: Colors.transparent, highlightColor: Colors.transparent).visible(forumList.validate().length > 2),
+                  },
+                          splashColor: Colors.transparent,
+                          highlightColor:
+                              Colors.transparent).visible(
+                          forumList.validate().length > 2),
                 ],
               ).visible(forumList.isNotEmpty),
               AnimatedListView(
@@ -97,12 +105,12 @@ class _ForumSubscriptionComponentState extends State<ForumSubscriptionComponent>
                       });
                     },
                     child: ForumsCardComponent(
-                      title: forum.title,
-                      description: forum.description,
-                      postCount: forum.postCount,
-                      topicCount: forum.topicCount,
-                      freshness: forum.freshness,
-                    ),
+                        // title: forum.title,
+                        // description: forum.description,
+                        // postCount: forum.postCount,
+                        // topicCount: forum.topicCount,
+                        // freshness: forum.freshness,
+                        ),
                   );
                 },
               ).visible(forumList.isNotEmpty),
@@ -111,13 +119,19 @@ class _ForumSubscriptionComponentState extends State<ForumSubscriptionComponent>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(language.topics, style: boldTextStyle()),
-                  Text(language.viewAll, style: primaryTextStyle(color: context.primaryColor)).onTap(() {
+                  Text(language.viewAll,
+                          style: primaryTextStyle(color: context.primaryColor))
+                      .onTap(() {
                     TopicsScreen().launch(context).then((value) {
                       if (value ?? false) {
                         getList();
                       }
                     });
-                  }, splashColor: Colors.transparent, highlightColor: Colors.transparent).visible(topicList.validate().length > 2),
+                  },
+                          splashColor: Colors.transparent,
+                          highlightColor:
+                              Colors.transparent).visible(
+                          topicList.validate().length > 2),
                 ],
               ).visible(topicList.isNotEmpty),
               AnimatedListView(
@@ -131,13 +145,16 @@ class _ForumSubscriptionComponentState extends State<ForumSubscriptionComponent>
                     splashColor: Colors.transparent,
                     highlightColor: Colors.transparent,
                     onTap: () {
-                      TopicDetailScreen(topicId: topic.id.validate()).launch(context).then((value) {
+                      TopicDetailScreen(topicId: topic.id.validate())
+                          .launch(context)
+                          .then((value) {
                         if (value ?? false) {
                           getList();
                         }
                       });
                     },
-                    child: TopicCardComponent(topic: topic, isFavTab: false, showForums: false),
+                    child: TopicCardComponent(
+                        topic: topic, isFavTab: false, showForums: false),
                   );
                 },
               ).visible(topicList.isNotEmpty),
