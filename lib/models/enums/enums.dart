@@ -20,3 +20,5 @@ enum ExpertAssginStatus {
   Expired,
   Completed,
 }
+
+enum AuctionStatus { Upcoming, Ongoing, StopHalfway, Ended }
