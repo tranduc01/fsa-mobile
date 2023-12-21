@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/components/loading_widget.dart';
 import 'package:socialv/controllers/post_controller.dart';
+import 'package:socialv/main.dart';
 import 'package:socialv/screens/post/screens/comment_screen.dart';
 
 import '../../../utils/common.dart';
@@ -81,7 +82,7 @@ class _SinglePostScreenState extends State<SinglePostScreen> {
                         ),
                       ],
                       title: Text(
-                        'Post Detail',
+                        language.orchidDetail,
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       leading: IconButton(

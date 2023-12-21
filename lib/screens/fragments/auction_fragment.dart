@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/components/loading_widget.dart';
+import 'package:socialv/main.dart';
 import 'package:socialv/screens/auction/screen/auction_detail_screen.dart';
 
 import '../../components/no_data_lottie_widget.dart';
@@ -46,16 +47,16 @@ class _AutionFragmentState extends State<AuctionFragment> {
                 tabs: [
                   Tab(
                       child: Text(
-                    'Discover',
+                    language.auctionDiscover,
                   )),
                   Tab(
                     child: Text(
-                      'Upcoming',
+                      language.auctionUpcoming,
                     ),
                   ),
                   Tab(
                       child: Text(
-                    'Ongoing',
+                    language.auctionOngoing,
                   )),
                   Tab(
                     child: Text(

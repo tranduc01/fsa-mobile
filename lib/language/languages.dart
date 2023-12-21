@@ -3,6 +3,18 @@ import 'package:flutter/material.dart';
 abstract class BaseLanguage {
   static BaseLanguage? of(BuildContext context) =>
       Localizations.of<BaseLanguage>(context, BaseLanguage);
+  String get auctionOngoing;
+  String get auctionUpcoming;
+  String get auctionDiscover;
+  String get sunExposure;
+  String get height;
+  String get nativeArea;
+  String get family;
+  String get plantType;
+  String get botanicalName;
+  String get orchidDetail;
+  String get searchOrchid;
+  String get postDetail;
   String get verifyWarningFace;
   String get verifyWarning;
   String get verifySuccess;
