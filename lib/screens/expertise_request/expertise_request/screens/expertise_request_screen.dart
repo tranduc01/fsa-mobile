@@ -271,8 +271,9 @@ class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
           );
         } else {
           return AnimatedListView(
-            padding: EdgeInsets.only(bottom: mIsLastPage ? 16 : 60),
+            padding: EdgeInsets.only(bottom: 180),
             itemCount: expertiseRequestController.expertiseRequests.length,
+            physics: BouncingScrollPhysics(),
             slideConfiguration: SlideConfiguration(
                 delay: Duration(milliseconds: 80), verticalOffset: 300),
             shrinkWrap: true,

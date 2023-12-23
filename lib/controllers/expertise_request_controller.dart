@@ -217,4 +217,58 @@ class ExpertiseRequestController extends GetxController {
       print(e);
     }
   }
+
+  Future<void> sendResult(int id, List<Map<String, dynamic>> results) async {
+    try {
+      var url = '$BASE_URL/result';
+      String? token = await storage.read(key: 'jwt');
+      var headers = {
+        'Authorization': 'Bearer $token',
+      };
+      var body = {
+        'expertiseRequestId': id,
+        'evaluationCriteriaResults': results,
+      };
+      var response = await GetConnect().post(
+        url,
+        body,
+        headers: headers,
+      );
+      if (response.statusCode == 200) {
+        isLoading(false);
+        isUpdateSuccess(true);
+      } else {
+        isLoading(false);
+        isError(true);
+        print('Request failed with status: ${response.statusCode}');
+      }
+    } catch (e) {
+      isError(true);
+      print(e);
+    }
+  }
+
+  Future<void> publishExpertiseRequestResult(int id) async {
+    try {
+      isLoading(true);
+      var url = '$BASE_URL/Result/publish/$id';
+      String? token = await storage.read(key: 'jwt');
+      var headers = {
+        'Authorization': 'Bearer $token',
+      };
+
+      var response = await GetConnect().patch(url, '', headers: headers);
+      if (response.statusCode == 200) {
+        isLoading(false);
+        isUpdateSuccess(true);
+      } else {
+        isLoading(false);
+        isError(true);
+        print('Request failed with status: ${response.statusCode}');
+      }
+    } catch (e) {
+      isError(true);
+      print(e);
+    }
+  }
 }

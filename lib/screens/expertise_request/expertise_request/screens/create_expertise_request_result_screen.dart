@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:socialv/models/expertise_request/expertise_result.dart';
 
-import '../components/create_expertise_request_component.dart';
+import '../components/create_expertise_request_result_component .dart';
 
 class CreateExpertiseRequestResultScreen extends StatefulWidget {
-  const CreateExpertiseRequestResultScreen({Key? key}) : super(key: key);
+  final int requestId;
+  final bool isNew;
+  final ExpertiseResult? expertiseResult;
+  const CreateExpertiseRequestResultScreen(
+      {Key? key,
+      required this.requestId,
+      required this.isNew,
+      this.expertiseResult})
+      : super(key: key);
 
   @override
   State<CreateExpertiseRequestResultScreen> createState() =>
@@ -25,7 +34,10 @@ class _CreateExpertiseRequestResultScreenState
   Future<void> init() async {
     createAlbumWidgets.addAll(
       [
-        CreateExpertiseRequestComponent(
+        CreateExpertiseRequestResultComponent(
+          requestId: widget.requestId,
+          isNew: widget.isNew,
+          expertiseResult: widget.expertiseResult,
           onNextPage: (int nextPageIndex) {
             _pageController.animateToPage(nextPageIndex,
                 duration: const Duration(milliseconds: 250),

@@ -1,24 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:socialv/controllers/evaluation_criteria_controller.dart';
+import 'package:socialv/models/expertise_request/evaluation_criteria.dart';
+import 'package:socialv/models/expertise_request/expertise_result.dart';
 import 'package:socialv/screens/common/fail_dialog.dart';
 import 'package:socialv/screens/common/loading_dialog.dart';
-import 'package:video_player/video_player.dart';
 
-import '../../../../components/file_picker_dialog_component.dart';
 import '../../../../components/loading_widget.dart';
 import '../../../../controllers/expertise_request_controller.dart';
 import '../../../../main.dart';
-import '../../../../models/common_models.dart';
-import '../../../../models/posts/media_model.dart';
+import '../../../../models/enums/enums.dart';
 import '../../../../utils/app_constants.dart';
-import '../../../post/components/show_selected_media_component.dart';
 
 class CreateExpertiseRequestResultComponent extends StatefulWidget {
   final Function(int)? onNextPage;
-
-  CreateExpertiseRequestResultComponent({Key? key, this.onNextPage})
+  final int requestId;
+  final bool isNew;
+  final ExpertiseResult? expertiseResult;
+  CreateExpertiseRequestResultComponent(
+      {Key? key,
+      this.onNextPage,
+      required this.requestId,
+      required this.isNew,
+      this.expertiseResult})
       : super(key: key);
 
   @override
@@ -26,32 +31,32 @@ class CreateExpertiseRequestResultComponent extends StatefulWidget {
       _CreateExpertiseRequestResultComponentState();
 }
 
-int? albumId;
-
 class _CreateExpertiseRequestResultComponentState
     extends State<CreateExpertiseRequestResultComponent> {
   final albumKey = GlobalKey<FormState>();
-
-  List<PostMedia> mediaList = [];
-  TextEditingController discCont = TextEditingController();
-  FocusNode discNode = FocusNode();
-
   late ExpertiseRequestController expertiseRequestController =
       Get.put(ExpertiseRequestController());
+  late EvaluationCriteriaController evaluationCriteriaController =
+      Get.put(EvaluationCriteriaController());
+
+  Map<int, dynamic> texts = {};
+  Map<int, TextEditingController> controllers = {};
+  bool isTextModified = false;
 
   @override
   void initState() {
+    Future.delayed(Duration.zero, () async {
+      await evaluationCriteriaController.fetchEvaluationCriterias();
+    });
+
     super.initState();
   }
 
   @override
-  void setState(VoidCallback fn) {
-    if (mounted) super.setState(fn);
-  }
-
-  @override
   void dispose() {
-    discNode.dispose();
+    controllers.forEach((key, controller) {
+      controller.dispose();
+    });
     super.dispose();
   }
 
@@ -77,164 +82,259 @@ class _CreateExpertiseRequestResultComponentState
                 children: [
                   24.height,
                   Text(
-                    language.createExpertiseRequest,
+                    'Create Expertise Request Result',
                     style: primaryTextStyle(
                         color: appStore.isDarkMode ? bodyDark : bodyWhite,
                         size: 18),
                   ),
-                  16.height,
+                  10.height,
                   Form(
-                    key: albumKey,
-                    child: Column(
-                      children: [
-                        16.height,
-                        TextFormField(
-                          focusNode: discNode,
-                          controller: discCont,
-                          autofocus: false,
-                          maxLines: 5,
-                          decoration: inputDecorationFilled(
-                            context,
-                            fillColor: context.scaffoldBackgroundColor,
-                            label: language.msgExpertiseRequest,
-                          ),
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Please enter message';
-                            } else {
-                              return null;
-                            }
-                          },
-                        ),
-                      ],
-                    ).paddingSymmetric(vertical: 8),
-                  ),
-                  8.height,
-                  Stack(
-                    children: [
-                      DottedBorderWidget(
-                        padding: EdgeInsets.symmetric(vertical: 32),
-                        radius: defaultAppButtonRadius,
-                        dotsWidth: 8,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
+                      key: albumKey,
+                      child: Obx(
+                        () => Column(
                           children: [
                             16.height,
-                            AppButton(
-                              elevation: 0,
-                              color: appColorPrimary,
-                              text: language.selectFiles,
-                              textStyle: boldTextStyle(color: Colors.white),
-                              onTap: () async {
-                                onSelectMedia();
-                              },
-                            ),
-                            8.height,
-                            Text(
-                              language.selectFileExpertiseRequest,
-                              style: secondaryTextStyle(),
-                            ).center(),
-                            16.height,
-                          ],
-                        ),
-                      ),
-                    ],
-                  ).paddingAll(16),
-                  if (mediaList.isNotEmpty)
-                    ShowSelectedMediaComponent(
-                      mediaList: mediaList,
-                      mediaType: MediaModel(
-                          type: 'photo', title: 'Photo', isActive: true),
-                      videoController: List.generate(mediaList.length, (index) {
-                        return VideoPlayerController.networkUrl(
-                            Uri.parse(mediaList[index].file!.path.validate()));
-                      }),
-                    ),
-                  8.height,
-                  Align(
-                    alignment: Alignment.center,
-                    child: appButton(
-                      text: language.create,
-                      onTap: () async {
-                        hideKeyboard(context);
-                        if (albumKey.currentState!.validate()) {
-                          showDialog(
-                              context: context,
-                              barrierDismissible: false,
-                              builder: (context) {
-                                return LoadingDialog();
-                              });
-                          await expertiseRequestController
-                              .createExpertiseRequest(discCont.text, mediaList);
+                            AnimatedListView(
+                              padding: EdgeInsets.only(bottom: 16),
+                              itemCount: evaluationCriteriaController
+                                  .evaluationCriterias.length,
+                              slideConfiguration: SlideConfiguration(
+                                  delay: Duration(milliseconds: 80),
+                                  verticalOffset: 300),
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) {
+                                EvaluationCriteria evaluationCriteria =
+                                    evaluationCriteriaController
+                                        .evaluationCriterias[index];
+                                // TextEditingController discCont =
+                                //     TextEditingController();
+                                if (!controllers
+                                    .containsKey(evaluationCriteria.id!)) {
+                                  controllers[evaluationCriteria.id!] =
+                                      TextEditingController(); // Initialize the text controller if it doesn't exist
+                                }
 
-                          if (expertiseRequestController
-                              .isCreateSuccess.value) {
-                            expertiseRequestController.fetchExpetiseRequests(2);
-                            Navigator.pop(context);
-                            toast('Request Created Successfully');
-                            Navigator.pop(context);
-                          } else {
-                            Navigator.pop(context);
-                            showDialog(
-                              context: context,
-                              barrierDismissible: false,
-                              builder: (context) {
-                                return FailDialog(
-                                    text: 'Create Request Failed');
+                                TextEditingController discCont =
+                                    controllers[evaluationCriteria.id!]!;
+                                controllers[evaluationCriteria.id!] = discCont;
+                                texts.addAll(
+                                    {evaluationCriteria.id!: discCont.text});
+                                if (!widget.isNew &&
+                                    widget.expertiseResult != null) {
+                                  if (widget
+                                      .expertiseResult!.evaluationCriterias!
+                                      .any((element) =>
+                                          element.id ==
+                                          evaluationCriteria.id)) {
+                                    discCont.text = widget
+                                        .expertiseResult!.evaluationCriterias!
+                                        .firstWhere((element) =>
+                                            element.id == evaluationCriteria.id)
+                                        .content!;
+                                    texts.addAll({
+                                      evaluationCriteria.id!: discCont.text
+                                    });
+                                  }
+                                }
+
+                                return Container(
+                                  padding: EdgeInsets.symmetric(vertical: 8),
+                                  child: TextFormField(
+                                    controller: discCont,
+                                    autofocus: false,
+                                    maxLines: 5,
+                                    decoration: inputDecorationFilled(
+                                      context,
+                                      fillColor:
+                                          context.scaffoldBackgroundColor,
+                                      label: evaluationCriteria.name,
+                                    ),
+                                    onChanged: (value) {
+                                      texts.update(
+                                          evaluationCriteria.id!, (v) => value);
+
+                                      setState(() {
+                                        isTextModified = true;
+                                      });
+                                    },
+                                  ),
+                                );
                               },
-                            );
+                            )
+                          ],
+                        ).paddingSymmetric(vertical: 8),
+                      )),
+                  8.height,
+                  if (widget.isNew &&
+                      expertiseRequestController
+                              .expertiseRequest.value.status ==
+                          ExpertiseRequestStatus.Doing.index)
+                    Align(
+                      alignment: Alignment.center,
+                      child: appButton(
+                        text: language.create,
+                        onTap: () async {
+                          hideKeyboard(context);
+                          texts.removeWhere((key, value) => value == '');
+                          List<Map<String, dynamic>> requestBody =
+                              texts.entries.map((entry) {
+                            return {
+                              "evaluationCriteriaId": entry.key,
+                              "content": entry.value,
+                            };
+                          }).toList();
+
+                          if (albumKey.currentState!.validate()) {
+                            showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (context) {
+                                  return LoadingDialog();
+                                });
+                            await expertiseRequestController.sendResult(
+                                widget.requestId, requestBody);
+
+                            if (expertiseRequestController
+                                .isUpdateSuccess.value) {
+                              expertiseRequestController
+                                  .fetchExpetiseRequest(widget.requestId);
+                              Navigator.pop(context);
+                              toast('Result Created Successfully');
+                              Navigator.pop(context);
+                            } else {
+                              Navigator.pop(context);
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (context) {
+                                  return FailDialog(
+                                      text: 'Create Result Failed');
+                                },
+                              );
+                            }
                           }
-                        }
-                      },
-                      context: context,
+                        },
+                        context: context,
+                      ),
                     ),
-                  ),
+                  if (!widget.isNew &&
+                      expertiseRequestController
+                              .expertiseRequest.value.status ==
+                          ExpertiseRequestStatus.Doing.index)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Visibility(
+                          visible: isTextModified,
+                          child: appButton(
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            text: 'Save',
+                            color: Colors.white,
+                            shapeBorder: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                side: BorderSide(color: context.primaryColor)),
+                            textStyle: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold),
+                            onTap: () async {
+                              hideKeyboard(context);
+                              texts.removeWhere((key, value) => value == '');
+                              List<Map<String, dynamic>> requestBody =
+                                  texts.entries.map((entry) {
+                                return {
+                                  "evaluationCriteriaId": entry.key,
+                                  "content": entry.value,
+                                };
+                              }).toList();
+
+                              if (albumKey.currentState!.validate()) {
+                                showDialog(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (context) {
+                                      return LoadingDialog();
+                                    });
+                                await expertiseRequestController.sendResult(
+                                    widget.requestId, requestBody);
+
+                                if (expertiseRequestController
+                                    .isUpdateSuccess.value) {
+                                  expertiseRequestController
+                                      .fetchExpetiseRequest(widget.requestId);
+                                  Navigator.pop(context);
+                                  toast('Result Created Successfully');
+                                  Navigator.pop(context);
+                                } else {
+                                  Navigator.pop(context);
+                                  showDialog(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (context) {
+                                      return FailDialog(
+                                          text: 'Create Result Failed');
+                                    },
+                                  );
+                                }
+                              }
+                            },
+                            context: context,
+                          ),
+                        ),
+                        Visibility(
+                          visible: !isTextModified,
+                          child: appButton(
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            text: 'Publish',
+                            onTap: () async {
+                              hideKeyboard(context);
+                              if (albumKey.currentState!.validate()) {
+                                showDialog(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (context) {
+                                      return LoadingDialog();
+                                    });
+                                await expertiseRequestController
+                                    .publishExpertiseRequestResult(
+                                        widget.expertiseResult!.id!);
+
+                                if (expertiseRequestController
+                                    .isUpdateSuccess.value) {
+                                  expertiseRequestController
+                                      .fetchExpetiseRequest(widget.requestId);
+                                  Navigator.pop(context);
+                                  toast('Result Published Successfully');
+                                  Navigator.pop(context);
+                                } else {
+                                  Navigator.pop(context);
+                                  showDialog(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (context) {
+                                      return FailDialog(
+                                          text: 'Publish Result Failed');
+                                    },
+                                  );
+                                }
+                              }
+                            },
+                            context: context,
+                          ),
+                        )
+                      ],
+                    )
                 ],
               ),
             ),
           ),
           Positioned(
-            child: Observer(
-                builder: (_) =>
-                    LoadingWidget().center().visible(appStore.isLoading)),
+            child: Obx(() => LoadingWidget()
+                .center()
+                .visible(evaluationCriteriaController.isLoading.value)),
           ),
         ],
       ),
     );
-  }
-
-  Future<void> onSelectMedia() async {
-    FileTypes? file = await showInDialog(
-      context,
-      contentPadding: EdgeInsets.symmetric(vertical: 16),
-      title: Text(language.chooseAnAction, style: boldTextStyle()),
-      builder: (p0) {
-        return FilePickerDialog(isSelected: true);
-      },
-    );
-
-    if (file != null) {
-      if (file == FileTypes.CAMERA) {
-        appStore.setLoading(true);
-        await getImageSource(isCamera: true, isVideo: false).then((value) {
-          appStore.setLoading(false);
-          mediaList.add(PostMedia(file: value));
-          setState(() {});
-        }).catchError((e) {
-          log('Error: ${e.toString()}');
-          appStore.setLoading(false);
-        });
-      } else {
-        appStore.setLoading(true);
-        await getImageSource(isCamera: false, isVideo: false).then((value) {
-          appStore.setLoading(false);
-          mediaList.add(PostMedia(file: value));
-          setState(() {});
-        }).catchError((e) {
-          log('Error: ${e.toString()}');
-          appStore.setLoading(false);
-        });
-      }
-    }
   }
 }

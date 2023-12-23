@@ -1,15 +1,18 @@
 class EvaluationCriteria {
-  String? evaluationCriteriaName;
+  int? id;
+  String? name;
   String? content;
 
   EvaluationCriteria({
-    this.evaluationCriteriaName,
+    this.id,
+    this.name,
     this.content,
   });
 
   factory EvaluationCriteria.fromJson(Map<String, dynamic> json) =>
       EvaluationCriteria(
-        evaluationCriteriaName: json['evaluationCriteriaName'] as String?,
+        id: json['id'] as int?,
+        name: json['name'] as String?,
         content: json['content'] as String?,
       );
 }

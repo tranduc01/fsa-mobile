@@ -84,16 +84,19 @@ class _ExpertiseResultBottomSheetWidgetState
                       children: [
                         AnimatedListView(
                           padding: EdgeInsets.only(bottom: 60),
-                          itemCount: widget.expertiseRequest
-                              .expertiseResults![0].evaluationCriterias!.length,
+                          itemCount: widget.expertiseRequest.expertiseResults!
+                              .firstWhere((element) => element.submitType == 2)
+                              .evaluationCriterias!
+                              .length,
                           slideConfiguration: SlideConfiguration(
                               delay: Duration(milliseconds: 80),
                               verticalOffset: 300),
                           shrinkWrap: true,
                           itemBuilder: (context, index) {
                             EvaluationCriteria evaluationCriteria = widget
-                                .expertiseRequest
-                                .expertiseResults![0]
+                                .expertiseRequest.expertiseResults!
+                                .firstWhere(
+                                    (element) => element.submitType == 2)
                                 .evaluationCriterias![index];
 
                             return TapToExpand(
@@ -106,7 +109,7 @@ class _ExpertiseResultBottomSheetWidgetState
                                     height: 1.5),
                               ),
                               title: Text(
-                                evaluationCriteria.evaluationCriteriaName ?? '',
+                                evaluationCriteria.name ?? '',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 20,

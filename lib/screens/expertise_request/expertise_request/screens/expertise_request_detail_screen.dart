@@ -512,9 +512,12 @@ class _ExpertiseRequestDetailScreenState
                                     },
                                   );
                                 }),
-                          if (expertiseRequestController
-                                      .expertiseRequest.value.status ==
-                                  ExpertAssginStatus.Doing.index &&
+                          if ((expertiseRequestController
+                                          .expertiseRequest.value.status ==
+                                      ExpertiseRequestStatus.Doing.index ||
+                                  expertiseRequestController
+                                          .expertiseRequest.value.status ==
+                                      ExpertiseRequestStatus.Completed.index) &&
                               expertiseRequestController
                                       .expertiseRequest.value.expert !=
                                   null &&
@@ -522,29 +525,32 @@ class _ExpertiseRequestDetailScreenState
                                   element.name.toLowerCase() ==
                                   Role.Expert.name.toLowerCase()))
                             AppButton(
-                                shapeBorder: ContinuousRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30)),
-                                color: Colors.white,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(Icons.add),
-                                    SizedBox(width: 8),
-                                    Text(
-                                      'Result',
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 16,
-                                          fontFamily: 'Ronoto',
-                                          fontWeight: FontWeight.bold),
+                              shapeBorder: ContinuousRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              color: Colors.white,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.add),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    'Result',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontFamily: 'Ronoto',
+                                      fontWeight: FontWeight.bold,
                                     ),
-                                  ],
-                                ),
-                                onTap: () {
-                                  ExpertiseRequestResultScreen(
-                                    requestId: widget.requestId,
-                                  ).launch(context);
-                                })
+                                  ),
+                                ],
+                              ),
+                              onTap: () {
+                                ExpertiseRequestResultScreen(
+                                  requestId: widget.requestId,
+                                ).launch(context);
+                              },
+                            )
                         ],
                       ),
                       10.height,
@@ -733,8 +739,8 @@ class _ExpertiseRequestDetailScreenState
             )),
       floatingActionButton: Obx(() => (expertiseRequestController
                   .expertiseRequest.value.expertiseResults!.isNotEmpty &&
-              !userController.user.value.role.any((element) =>
-                  element.name.toLowerCase() == Role.Expert.name.toLowerCase()))
+              expertiseRequestController.expertiseRequest.value.status ==
+                  ExpertiseRequestStatus.Completed.index)
           ? FloatingActionButton.extended(
               onPressed: () {
                 showModalBottomSheet(
