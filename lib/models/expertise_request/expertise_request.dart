@@ -11,7 +11,6 @@ class ExpertiseRequest {
   String? rejectMessage;
   DateTime? createdAt;
   int? status;
-  bool? isSystemReject;
   User? expert;
   int? expertApprovalStatus;
   DateTime? assignAt;
@@ -26,7 +25,6 @@ class ExpertiseRequest {
     this.rejectMessage,
     this.createdAt,
     this.status,
-    this.isSystemReject,
     this.expert,
     this.expertApprovalStatus,
     this.assignAt,
@@ -46,8 +44,7 @@ class ExpertiseRequest {
         createdAt: json['createdAt'] != null
             ? DateTime.parse(json['createdAt'] as String)
             : null,
-        status: json['status'] as int? ?? 0,
-        isSystemReject: json['isSystemReject'] as bool? ?? false,
+        status: json['status'] as int?,
         expert: json['expert'] != null
             ? User.fromJson(json['expert'] as Map<String, dynamic>)
             : null,

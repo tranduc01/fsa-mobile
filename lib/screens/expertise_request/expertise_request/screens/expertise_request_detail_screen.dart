@@ -2,7 +2,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/components/loading_widget.dart';
@@ -16,6 +15,7 @@ import '../../../common/fail_dialog.dart';
 import '../../../common/loading_dialog.dart';
 import '../../../post/screens/image_screen.dart';
 import '../components/expertise_request_bottomsheet_widget.dart';
+import 'expertise_request_result_screen.dart';
 
 class ExpertiseRequestDetailScreen extends StatefulWidget {
   final int requestId;
@@ -368,8 +368,7 @@ class _ExpertiseRequestDetailScreenState
                                       .expertiseRequest.value.feedback ==
                                   null &&
                               expertiseRequestController.expertiseRequest.value
-                                      .expertiseResults !=
-                                  null &&
+                                  .expertiseResults!.isNotEmpty &&
                               !userController.user.value.role.any((element) =>
                                   element.name.toLowerCase() ==
                                   Role.Expert.name.toLowerCase()))
@@ -513,6 +512,45 @@ class _ExpertiseRequestDetailScreenState
                                     },
                                   );
                                 }),
+                          if ((expertiseRequestController
+                                          .expertiseRequest.value.status ==
+                                      ExpertiseRequestStatus.Doing.index ||
+                                  expertiseRequestController
+                                          .expertiseRequest.value.status ==
+                                      ExpertiseRequestStatus.Completed.index) &&
+                              expertiseRequestController
+                                      .expertiseRequest.value.expert !=
+                                  null &&
+                              userController.user.value.role.any((element) =>
+                                  element.name.toLowerCase() ==
+                                  Role.Expert.name.toLowerCase()))
+                            AppButton(
+                              shapeBorder: ContinuousRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              color: Colors.white,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.add),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    'Result',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontFamily: 'Ronoto',
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              onTap: () {
+                                ExpertiseRequestResultScreen(
+                                  requestId: widget.requestId,
+                                ).launch(context);
+                              },
+                            )
                         ],
                       ),
                       10.height,
@@ -701,8 +739,8 @@ class _ExpertiseRequestDetailScreenState
             )),
       floatingActionButton: Obx(() => (expertiseRequestController
                   .expertiseRequest.value.expertiseResults!.isNotEmpty &&
-              !userController.user.value.role.any((element) =>
-                  element.name.toLowerCase() == Role.Expert.name.toLowerCase()))
+              expertiseRequestController.expertiseRequest.value.status ==
+                  ExpertiseRequestStatus.Completed.index)
           ? FloatingActionButton.extended(
               onPressed: () {
                 showModalBottomSheet(

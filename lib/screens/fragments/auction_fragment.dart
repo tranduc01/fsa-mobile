@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/components/loading_widget.dart';
-import 'package:socialv/main.dart';
 import 'package:socialv/screens/auction/screen/auction_detail_screen.dart';
 
 import '../../components/no_data_lottie_widget.dart';
 import '../../controllers/auction_controller.dart';
+import '../../main.dart';
 
 class AuctionFragment extends StatefulWidget {
   final ScrollController controller;
@@ -60,7 +60,7 @@ class _AutionFragmentState extends State<AuctionFragment> {
                 )),
                 Tab(
                   child: Text(
-                    language.auctionMine,
+                    'Ended',
                   ),
                 ),
               ],
@@ -77,7 +77,7 @@ class _AutionFragmentState extends State<AuctionFragment> {
                     status = 1;
                     break;
                   case 3:
-                    status = 2;
+                    status = 3;
                     break;
                   default:
                     status = 0;
@@ -211,8 +211,11 @@ class _AutionFragmentState extends State<AuctionFragment> {
                     ),
                   ),
                   if (auction.startDate!
-                      .add(Duration(hours: 7))
-                      .isBefore(DateTime.now()))
+                          .add(Duration(hours: 7))
+                          .isBefore(DateTime.now()) &&
+                      auction.endDate!
+                          .add(Duration(hours: 7))
+                          .isAfter(DateTime.now()))
                     Positioned(
                       top: 35,
                       right: 35,

@@ -175,7 +175,7 @@ class _ForumsFragment extends State<ForumsFragment> {
               Row(
                 children: [
                   Image.network(
-                    'https://scontent.fsgn5-5.fna.fbcdn.net/v/t39.30808-6/353017930_6153557468098795_166607921767111563_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=efb6e6&_nc_ohc=DYT-cqC-mlkAX9_M9dm&_nc_ht=scontent.fsgn5-5.fna&oh=00_AfD8D48_RS43Vc0WQVl6fWO5-g0L-qI4eChiWt9CXppp_g&oe=658465EC',
+                    'https://upload.wikimedia.org/wikipedia/commons/4/48/RedCat_8727.jpg',
                     width: 50,
                     height: 50,
                   ).cornerRadiusWithClipRRect(30),
