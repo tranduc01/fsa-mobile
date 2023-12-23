@@ -9,7 +9,6 @@ import 'package:html/parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:socialv/main.dart';
 import 'package:socialv/models/groups/group_response.dart';
@@ -41,16 +40,25 @@ InputDecoration inputDecoration(
     prefixIcon: prefixIcon,
     errorMaxLines: 2,
     errorStyle: primaryTextStyle(color: Colors.red, size: 12),
-    enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: dividerColor)),
-    focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: context.primaryColor)),
-    border: UnderlineInputBorder(borderSide: BorderSide(color: context.primaryColor)),
-    focusedErrorBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.red, width: 1.0)),
-    errorBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.red, width: 1.0)),
+    enabledBorder:
+        UnderlineInputBorder(borderSide: BorderSide(color: dividerColor)),
+    focusedBorder: UnderlineInputBorder(
+        borderSide: BorderSide(color: context.primaryColor)),
+    border: UnderlineInputBorder(
+        borderSide: BorderSide(color: context.primaryColor)),
+    focusedErrorBorder: UnderlineInputBorder(
+        borderSide: BorderSide(color: Colors.red, width: 1.0)),
+    errorBorder: UnderlineInputBorder(
+        borderSide: BorderSide(color: Colors.red, width: 1.0)),
     alignLabelWithHint: true,
   );
 }
 
-InputDecoration inputDecorationFilled(BuildContext context, {String? label, EdgeInsetsGeometry? contentPadding, required Color fillColor, Widget? prefix}) {
+InputDecoration inputDecorationFilled(BuildContext context,
+    {String? label,
+    EdgeInsetsGeometry? contentPadding,
+    required Color fillColor,
+    Widget? prefix}) {
   return InputDecoration(
     fillColor: fillColor,
     filled: true,
@@ -58,12 +66,22 @@ InputDecoration inputDecorationFilled(BuildContext context, {String? label, Edge
     labelText: label,
     labelStyle: secondaryTextStyle(weight: FontWeight.w600),
     errorStyle: primaryTextStyle(color: Colors.red, size: 12),
-    enabledBorder: OutlineInputBorder(borderRadius: radius(defaultAppButtonRadius), borderSide: BorderSide(color: context.cardColor)),
-    disabledBorder: OutlineInputBorder(borderRadius: radius(defaultAppButtonRadius), borderSide: BorderSide(color: context.cardColor)),
-    focusedBorder: OutlineInputBorder(borderRadius: radius(defaultAppButtonRadius), borderSide: BorderSide(color: context.cardColor)),
-    border: OutlineInputBorder(borderRadius: radius(defaultAppButtonRadius), borderSide: BorderSide(color: context.cardColor)),
-    focusedErrorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.red, width: 1.0)),
-    errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.red, width: 1.0)),
+    enabledBorder: OutlineInputBorder(
+        borderRadius: radius(defaultAppButtonRadius),
+        borderSide: BorderSide(color: context.cardColor)),
+    disabledBorder: OutlineInputBorder(
+        borderRadius: radius(defaultAppButtonRadius),
+        borderSide: BorderSide(color: context.cardColor)),
+    focusedBorder: OutlineInputBorder(
+        borderRadius: radius(defaultAppButtonRadius),
+        borderSide: BorderSide(color: context.cardColor)),
+    border: OutlineInputBorder(
+        borderRadius: radius(defaultAppButtonRadius),
+        borderSide: BorderSide(color: context.cardColor)),
+    focusedErrorBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.red, width: 1.0)),
+    errorBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.red, width: 1.0)),
     alignLabelWithHint: true,
     prefix: prefix,
   );
@@ -75,13 +93,19 @@ Widget headerContainer({required Widget child, required BuildContext context}) {
     children: [
       Container(
         width: context.width(),
-        decoration: BoxDecoration(color: context.primaryColor, borderRadius: radiusOnly(topLeft: defaultRadius, topRight: defaultRadius)),
-        padding: EdgeInsets.all(22),
+        decoration: BoxDecoration(
+            color: context.primaryColor,
+            borderRadius:
+                radiusOnly(topLeft: defaultRadius, topRight: defaultRadius)),
+        padding: EdgeInsets.all(20),
         child: child,
       ),
       Container(
         height: 20,
-        decoration: BoxDecoration(color: context.cardColor, borderRadius: radiusOnly(topLeft: defaultRadius, topRight: defaultRadius)),
+        decoration: BoxDecoration(
+            color: context.cardColor,
+            borderRadius:
+                radiusOnly(topLeft: defaultRadius, topRight: defaultRadius)),
       )
     ],
   );
@@ -98,7 +122,8 @@ Widget appButton({
   TextStyle? textStyle,
 }) {
   return AppButton(
-    shapeBorder: shapeBorder ?? RoundedRectangleBorder(borderRadius: radius(defaultAppButtonRadius)),
+    shapeBorder: shapeBorder ??
+        RoundedRectangleBorder(borderRadius: radius(defaultAppButtonRadius)),
     text: text,
     textStyle: textStyle ?? boldTextStyle(color: Colors.white),
     onTap: onTap,
@@ -109,18 +134,22 @@ Widget appButton({
   );
 }
 
-Future<File?> getImageSource({bool isCamera = true, bool isVideo = false}) async {
+Future<File?> getImageSource(
+    {bool isCamera = true, bool isVideo = false}) async {
   final picker = ImagePicker();
 
   XFile? pickedImage;
   if (isVideo) {
-    await picker.pickVideo(source: isCamera ? ImageSource.camera : ImageSource.gallery).then((value) {
+    await picker
+        .pickVideo(source: isCamera ? ImageSource.camera : ImageSource.gallery)
+        .then((value) {
       pickedImage = value;
     }).catchError((e) {
       log('Error: ${e.toString()}');
     });
   } else {
-    pickedImage = await picker.pickImage(source: isCamera ? ImageSource.camera : ImageSource.gallery);
+    pickedImage = await picker.pickImage(
+        source: isCamera ? ImageSource.camera : ImageSource.gallery);
   }
 
   return File(pickedImage!.path);
@@ -132,29 +161,40 @@ String parseHtmlString(String? htmlString) {
 
 void onShareTap(BuildContext context) async {
   if (isAndroid) {
-    Share.share('Share $APP_NAME app $playStoreBaseURL${await getPackageName()}');
+    Share.share(
+        'Share $APP_NAME app $playStoreBaseURL${await getPackageName()}');
   } else {
     Share.share('Share $APP_NAME app $IOS_APP_LINK');
   }
 }
 
-String getFormattedDate(String date) => DateFormat.yMMMMd('en_US').format(DateTime.parse(date));
+String getFormattedDate(String date) =>
+    DateFormat.yMMMMd('en_US').format(DateTime.parse(date));
 
 List<MemberResponse> getMemberListPref() {
   if (getStringAsync(SharePreferencesKey.RECENT_SEARCH_MEMBERS).isNotEmpty)
-    return (json.decode(getStringAsync(SharePreferencesKey.RECENT_SEARCH_MEMBERS)) as List).map((i) => MemberResponse.fromJson(i)).toList();
+    return (json.decode(
+            getStringAsync(SharePreferencesKey.RECENT_SEARCH_MEMBERS)) as List)
+        .map((i) => MemberResponse.fromJson(i))
+        .toList();
   return [];
 }
 
 List<GroupResponse> getGroupListPref() {
   if (getStringAsync(SharePreferencesKey.RECENT_SEARCH_GROUPS).isNotEmpty)
-    return (json.decode(getStringAsync(SharePreferencesKey.RECENT_SEARCH_GROUPS)) as List).map((i) => GroupResponse.fromJson(i)).toList();
+    return (json.decode(
+            getStringAsync(SharePreferencesKey.RECENT_SEARCH_GROUPS)) as List)
+        .map((i) => GroupResponse.fromJson(i))
+        .toList();
   return [];
 }
 
 List<QuizAnswers> getLmsQuizListPref() {
   if (getStringAsync(SharePreferencesKey.LMS_QUIZ_LIST).isNotEmpty) {
-    return (json.decode(getStringAsync(SharePreferencesKey.LMS_QUIZ_LIST)) as List).map((i) => QuizAnswers.fromJson(i)).toList();
+    return (json.decode(getStringAsync(SharePreferencesKey.LMS_QUIZ_LIST))
+            as List)
+        .map((i) => QuizAnswers.fromJson(i))
+        .toList();
   } else {
     return [];
   }
@@ -195,31 +235,31 @@ Future<List<File>> getMultipleFiles({required MediaModel mediaType}) async {
   FilePickerResult? filePickerResult;
   List<File> imgList = [];
 
-  FileType type = FileType.custom;
+  // if (isIOS) {
+  //   log('${mediaType.type}');
+  //   if (mediaType.type == MediaTypes.photo)
+  //     type = FileType.image;
+  //   else if (mediaType.type == MediaTypes.video)
+  //     type = FileType.video;
+  //   else
+  //     type = FileType.custom;
+  // } else {
+  //   type = FileType.custom;
+  // }
 
-  if (isIOS) {
-    log('${mediaType.type}');
-    if (mediaType.type == MediaTypes.photo)
-      type = FileType.image;
-    else if (mediaType.type == MediaTypes.video)
-      type = FileType.video;
-    else
-      type = FileType.custom;
-  } else {
-    type = FileType.custom;
-  }
-
-  filePickerResult = await FilePicker.platform.pickFiles(allowMultiple: true, type: type, allowedExtensions: type == FileType.custom ? mediaType.allowedType.validate() : null);
+  filePickerResult = await FilePicker.platform.pickFiles(
+      allowMultiple: true, allowedExtensions: mediaType.allowedType.validate());
 
   if (filePickerResult != null) {
     filePickerResult.files.forEach((element) {
       log('element: ${element.path.validate().split("/").last.split(".").last}');
-
-      if (element.path.validate().split("/").last.split(".").last.isNotEmpty && mediaType.allowedType!.any((e) => e == element.path.validate().split("/").last.split(".").last)) {
-        imgList.add(File(element.path!));
-      } else {
-        toast(language.cannotAddThisFile);
-      }
+      // if (element.path.validate().split("/").last.split(".").last.isNotEmpty &&
+      //     mediaType.allowedType!.any((e) =>
+      //         e == element.path.validate().split("/").last.split(".").last)) {
+      imgList.add(File(element.path!));
+      // } else {
+      //   toast(language.cannotAddThisFile);
+      // }
     });
   }
   return imgList;
@@ -235,7 +275,9 @@ String getFileExtension(String fileName) {
 
 String convertToAgo(String dateTime) {
   if (dateTime.isNotEmpty) {
-    DateTime input = DateFormat(dateTime.contains('T') ? DATE_FORMAT_2 : DATE_FORMAT_1).parse(dateTime, true);
+    DateTime input =
+        DateFormat(dateTime.contains('T') ? DATE_FORMAT_2 : DATE_FORMAT_1)
+            .parse(dateTime, true);
 
     return socialvFormatTime(input.millisecondsSinceEpoch);
   } else {
@@ -260,7 +302,10 @@ Future<void> openWebPage(BuildContext context, {required String url}) async {
         enableUrlBarHiding: true,
         showPageTitle: true,
         animation: CustomTabsSystemAnimation.slideIn(),
-        extraCustomTabs: const <String>['org.mozilla.firefox', 'com.microsoft.emmx'],
+        extraCustomTabs: const <String>[
+          'org.mozilla.firefox',
+          'com.microsoft.emmx'
+        ],
       ),
       safariVCOption: SafariViewControllerOption(
         preferredBarTintColor: theme.primaryColor,
@@ -287,14 +332,16 @@ void ifNotTester(VoidCallback callback) {
 Future<List<MediaSourceModel>> getMultipleImages() async {
   FilePickerResult? filePickerResult;
   List<MediaSourceModel> imgList = [];
-  filePickerResult = await FilePicker.platform.pickFiles(allowMultiple: true, type: FileType.media);
+  filePickerResult = await FilePicker.platform
+      .pickFiles(allowMultiple: true, type: FileType.media);
   String mediaType = MediaTypes.photo;
 
   if (filePickerResult != null) {
     filePickerResult.files.forEach((element) {
       log('element: ${element.path.validate().split("/").last.split(".").last}');
 
-      if (allowedVideoExtensions.any((e) => e == element.path.validate().split("/").last.split(".").last)) {
+      if (allowedVideoExtensions.any((e) =>
+          e == element.path.validate().split("/").last.split(".").last)) {
         mediaType = MediaTypes.video;
       }
 
@@ -327,10 +374,12 @@ String getPrice(String price) {
 }
 
 void setStatusBarColorBasedOnTheme() {
-  setStatusBarColor(appStore.isDarkMode ? appBackgroundColorDark : appLayoutBackground);
+  setStatusBarColor(
+      appStore.isDarkMode ? appBackgroundColorDark : appLayoutBackground);
 }
 
-Future<bool> get isIqonicProduct async => await getPackageName() == APP_PACKAGE_NAME;
+Future<bool> get isIqonicProduct async =>
+    await getPackageName() == APP_PACKAGE_NAME;
 
 Future<GiphyGif?> selectGif({required BuildContext context}) async {
   GiphyGif? gif;
@@ -370,27 +419,34 @@ String socialvFormatTime(int timestamp) {
   } else
     result = countYears(difference);
 
-  return result != language.justNow.capitalizeFirstLetter() ? result + ' ${language.ago.toLowerCase()}' : result;
+  return result != language.justNow.capitalizeFirstLetter()
+      ? result + ' ${language.ago.toLowerCase()}'
+      : result;
 }
 
 String countSeconds(int difference) {
   int count = (difference / 1000).truncate();
-  return count > 1 ? count.toString() + ' ${language.second}' : '${language.justNow.capitalizeFirstLetter()}';
+  return count > 1
+      ? count.toString() + ' ${language.second}'
+      : '${language.justNow.capitalizeFirstLetter()}';
 }
 
 String countMinutes(int difference) {
   int count = (difference / 60000).truncate();
-  return count.toString() + (count > 1 ? ' ${language.minutes}' : ' ${language.minute}');
+  return count.toString() +
+      (count > 1 ? ' ${language.minutes}' : ' ${language.minute}');
 }
 
 String countHours(int difference) {
   int count = (difference / 3600000).truncate();
-  return count.toString() + (count > 1 ? ' ${language.hours}' : ' ${language.hour}');
+  return count.toString() +
+      (count > 1 ? ' ${language.hours}' : ' ${language.hour}');
 }
 
 String countDays(int difference) {
   int count = (difference / 86400000).truncate();
-  return count.toString() + (count > 1 ? ' ${language.days}' : ' ${language.day}');
+  return count.toString() +
+      (count > 1 ? ' ${language.days}' : ' ${language.day}');
 }
 
 String countWeeks(int difference) {
@@ -398,7 +454,8 @@ String countWeeks(int difference) {
   if (count > 3) {
     return '${language.oneMonth}';
   }
-  return count.toString() + (count > 1 ? ' ${language.weeks}' : ' ${language.week}');
+  return count.toString() +
+      (count > 1 ? ' ${language.weeks}' : ' ${language.week}');
 }
 
 String countMonths(int difference) {
@@ -407,34 +464,42 @@ String countMonths(int difference) {
   if (count > 12) {
     return '${language.oneYear}';
   }
-  return count.toString() + (count > 1 ? ' ${language.months}' : ' ${language.month}');
+  return count.toString() +
+      (count > 1 ? ' ${language.months}' : ' ${language.month}');
 }
 
 String countYears(int difference) {
   int count = (difference / 31536000000).truncate();
-  return count.toString() + (count > 1 ? ' ${language.years}' : ' ${language.year}');
+  return count.toString() +
+      (count > 1 ? ' ${language.years}' : ' ${language.year}');
 }
 
-void initializeOneSignal() async {
-  OneSignal.shared.setAppId(getStringAsync(ONESIGNAL_APP_ID, defaultValue: ONESIGNAL_APP_ID)).then((value) async {
-    OneSignal.shared.setNotificationOpenedHandler((openedResult) {
-      //
-    });
+// void initializeOneSignal() async {
+//   OneSignal.shared
+//       .setAppId(
+//           getStringAsync(ONESIGNAL_APP_ID, defaultValue: ONESIGNAL_APP_ID))
+//       .then((value) async {
+//     OneSignal.shared.setNotificationOpenedHandler((openedResult) {
+//       //
+//     });
 
-    OneSignal.shared.setNotificationWillShowInForegroundHandler((OSNotificationReceivedEvent event) {
-      event.complete(event.notification);
-    });
+//     OneSignal.shared.setNotificationWillShowInForegroundHandler(
+//         (OSNotificationReceivedEvent event) {
+//       event.complete(event.notification);
+//     });
 
-    OneSignal.shared.consentGranted(true);
-    OneSignal.shared.promptUserForPushNotificationPermission();
+//     OneSignal.shared.consentGranted(true);
+//     OneSignal.shared.promptUserForPushNotificationPermission();
 
-    final status = await OneSignal.shared.getDeviceState();
+//     final status = await OneSignal.shared.getDeviceState();
 
-    log('--------------------------------');
-    log(status?.userId.validate());
-    if (status!.userId.validate().isNotEmpty) setValue(SharePreferencesKey.ONE_SIGNAL_PLAYER_ID, status.userId.validate());
-  });
-}
+//     log('--------------------------------');
+//     log(status?.userId.validate());
+//     if (status!.userId.validate().isNotEmpty)
+//       setValue(
+//           SharePreferencesKey.ONE_SIGNAL_PLAYER_ID, status.userId.validate());
+//   });
+// }
 
 String getPostContent(String? postContent) {
   String content = '';

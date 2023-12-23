@@ -3,7 +3,7 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/main.dart';
 
 /// DO NOT CHANGE THIS PACKAGE NAME
-const APP_PACKAGE_NAME = "com.iconic.socialv";
+const APP_PACKAGE_NAME = "com.capstone.orchid";
 
 /// Radius
 
@@ -95,46 +95,69 @@ class APIEndPoint {
   static const posts = 'socialv-api/api/v1/socialv/get-post';
   static const singlePosts = 'socialv-api/api/v1/socialv/get-post-details';
   static const createPosts = 'socialv-api/api/v1/socialv/create-post';
-  static const getAllPostLike = 'socialv-api/api/v1/socialv/get-all-user-who-liked-post';
+  static const getAllPostLike =
+      'socialv-api/api/v1/socialv/get-all-user-who-liked-post';
   static const likePost = 'socialv-api/api/v1/socialv/like-activity';
   static const deletePost = 'socialv-api/api/v1/socialv/delete-post';
-  static const deletePostComment = 'socialv-api/api/v1/socialv/delete-post-comment';
+  static const deletePostComment =
+      'socialv-api/api/v1/socialv/delete-post-comment';
   static const savePostComment = 'socialv-api/api/v1/socialv/save-post-comment';
-  static const getPostComment = 'socialv-api/api/v1/socialv/get-posts-all-comment';
-  static const supportedMediaList = 'socialv-api/api/v1/socialv/get-supported-media-list';
+  static const getPostComment =
+      'socialv-api/api/v1/socialv/get-posts-all-comment';
+  static const supportedMediaList =
+      'socialv-api/api/v1/socialv/get-supported-media-list';
   static const getPostInList = 'socialv-api/api/v1/socialv/get-post-in-list';
   static const getGroupList = 'socialv-api/api/v1/socialv/get-group-list';
   static const getGroupDetail = 'socialv-api/api/v1/socialv/get-group-details';
-  static const getGroupMembersList = 'socialv-api/api/v1/socialv/get-group-members-list';
-  static const getGroupRequests = 'socialv-api/api/v1/socialv/get-membership-request';
-  static const getGroupInvites = 'socialv-api/api/v1/socialv/get-invite-user-list';
-  static const getMemberDetail = 'socialv-api/api/v1/socialv/get-member-details';
-  static const getFriendList = 'socialv-api/api/v1/socialv/get-member-friends-list';
-  static const getFriendRequestList = 'socialv-api/api/v1/socialv/get-friendship-request-list';
-  static const getFriendRequestSent = 'socialv-api/api/v1/socialv/get-friend-request-sent-list';
-  static const manageInvitation = 'socialv-api/api/v1/socialv/group-manage-invitation';
+  static const getGroupMembersList =
+      'socialv-api/api/v1/socialv/get-group-members-list';
+  static const getGroupRequests =
+      'socialv-api/api/v1/socialv/get-membership-request';
+  static const getGroupInvites =
+      'socialv-api/api/v1/socialv/get-invite-user-list';
+  static const getMemberDetail =
+      'socialv-api/api/v1/socialv/get-member-details';
+  static const getFriendList =
+      'socialv-api/api/v1/socialv/get-member-friends-list';
+  static const getFriendRequestList =
+      'socialv-api/api/v1/socialv/get-friendship-request-list';
+  static const getFriendRequestSent =
+      'socialv-api/api/v1/socialv/get-friend-request-sent-list';
+  static const manageInvitation =
+      'socialv-api/api/v1/socialv/group-manage-invitation';
   static const getDashboard = 'socialv-api/api/v1/socialv/get-dashboard';
-  static const getProfileFields = 'socialv-api/api/v1/socialv/get-profile-fields';
-  static const saveProfileFields = 'socialv-api/api/v1/socialv/update-profile-settings';
-  static const getProfileVisibility = 'socialv-api/api/v1/socialv/get-profile-visibility-settings';
-  static const saveProfileVisibility = 'socialv-api/api/v1/socialv/save-profile-visibility-settings';
+  static const getProfileFields =
+      'socialv-api/api/v1/socialv/get-profile-fields';
+  static const saveProfileFields =
+      'socialv-api/api/v1/socialv/update-profile-settings';
+  static const getProfileVisibility =
+      'socialv-api/api/v1/socialv/get-profile-visibility-settings';
+  static const saveProfileVisibility =
+      'socialv-api/api/v1/socialv/save-profile-visibility-settings';
   static const changePassword = 'socialv-api/api/v1/socialv/change-password';
   static const forgetPassword = 'socialv-api/api/v1/socialv/forgot-password';
-  static const notifications = 'socialv-api/api/v1/socialv/get-notifications-list';
-  static const setPlayerId = 'socialv-api/api/v1/socialv/manage-user-player-ids';
-  static const getNotificationSettings = 'socialv-api/api/v1/socialv/get-notification-settings';
-  static const saveNotificationSettings = 'socialv-api/api/v1/socialv/save-notification-settings';
+  static const notifications =
+      'socialv-api/api/v1/socialv/get-notifications-list';
+  static const setPlayerId =
+      'socialv-api/api/v1/socialv/manage-user-player-ids';
+  static const getNotificationSettings =
+      'socialv-api/api/v1/socialv/get-notification-settings';
+  static const saveNotificationSettings =
+      'socialv-api/api/v1/socialv/save-notification-settings';
   static const deleteAccount = 'socialv-api/api/v1/socialv/delete-account';
   static const addStory = 'socialv-api/api/v1/socialv/add-story';
   static const getUserStories = 'socialv-api/api/v1/socialv/get-stories';
   static const viewStory = 'socialv-api/api/v1/socialv/view-story';
   static const getStoryViews = 'socialv-api/api/v1/socialv/get-story-views';
   static const deleteStory = 'socialv-api/api/v1/socialv/delete-story';
-  static const blockMemberAccount = 'socialv-api/api/v1/socialv/block-member-account';
+  static const blockMemberAccount =
+      'socialv-api/api/v1/socialv/block-member-account';
   static const reportPost = 'socialv-api/api/v1/socialv/report-post';
-  static const reportUserAccount = 'socialv-api/api/v1/socialv/report-user-account';
+  static const reportUserAccount =
+      'socialv-api/api/v1/socialv/report-user-account';
   static const reportGroup = 'socialv-api/api/v1/socialv/report-group';
-  static const getBlockedMembers = 'socialv-api/api/v1/socialv/get-blocked-members';
+  static const getBlockedMembers =
+      'socialv-api/api/v1/socialv/get-blocked-members';
   static const productsList = 'wc/v3/products';
   static const productReviews = 'wc/v3/products/reviews';
   static const cartItems = 'wc/store/cart/items';
@@ -151,31 +174,42 @@ class APIEndPoint {
   static const customers = 'wc/v3/customers';
   static const storeNonce = 'socialv-api/api/v1/socialv/get-store-api-nonce';
   static const wishlist = 'socialv-api/api/v1/socialv/get-wishlist-product';
-  static const removeFromWishlist = 'socialv-api/api/v1/socialv/remove-from-wishlist';
+  static const removeFromWishlist =
+      'socialv-api/api/v1/socialv/remove-from-wishlist';
   static const addToWishlist = 'socialv-api/api/v1/socialv/add-to-wishlist';
-  static const productDetails = 'socialv-api/api/v1/socialv/get-product-details';
+  static const productDetails =
+      'socialv-api/api/v1/socialv/get-product-details';
   static const countries = 'wc/v3/data/countries';
   static const forums = 'socialv-api/api/v1/socialv/get-all-forums';
   static const forumDetails = 'socialv-api/api/v1/socialv/get-forum-details';
   static const subscribeForum = 'socialv-api/api/v1/socialv/subscribe';
-  static const createForumsTopic = 'socialv-api/api/v1/socialv/create-forums-topic';
+  static const createForumsTopic =
+      'socialv-api/api/v1/socialv/create-forums-topic';
   static const topicDetails = 'socialv-api/api/v1/socialv/get-topic-details';
   static const favoriteTopic = 'socialv-api/api/v1/socialv/favorite-topic';
   static const replyTopic = 'socialv-api/api/v1/socialv/reply-forums-topic';
   static const editTopicReply = 'socialv-api/api/v1/socialv/edit-topic-reply';
-  static const subscriptionList = 'socialv-api/api/v1/socialv/subscription-list';
-  static const forumRepliesList = 'socialv-api/api/v1/socialv/get-topic-reply-list';
+  static const subscriptionList =
+      'socialv-api/api/v1/socialv/subscription-list';
+  static const forumRepliesList =
+      'socialv-api/api/v1/socialv/get-topic-reply-list';
   static const topicList = 'socialv-api/api/v1/socialv/get-topic-list';
-  static const verificationRequest = 'socialv-api/api/v1/socialv/member-request-verification';
-  static const deleteAlbumMedia = 'socialv-api/api/v1/socialv/delete-album-media';
+  static const verificationRequest =
+      'socialv-api/api/v1/socialv/member-request-verification';
+  static const deleteAlbumMedia =
+      'socialv-api/api/v1/socialv/delete-album-media';
   static const hidePost = 'socialv-api/api/v1/socialv/hide-post';
-  static const updateActiveStatus = 'socialv-api/api/v1/socialv/update-active-status';
+  static const updateActiveStatus =
+      'socialv-api/api/v1/socialv/update-active-status';
   static const getUserList = 'socialv-api/api/v1/socialv/get-user-list';
-  static const refuseUserSuggestion = 'socialv-api/api/v1/socialv/refuse-user-suggestion';
-  static const getHighlightCategory = 'socialv-api/api/v1/socialv/get-highlight-category';
+  static const refuseUserSuggestion =
+      'socialv-api/api/v1/socialv/refuse-user-suggestion';
+  static const getHighlightCategory =
+      'socialv-api/api/v1/socialv/get-highlight-category';
   static const wpPost = 'wp/v2/posts';
   static const activity = 'buddypress/v1/activity';
-  static const getHighlightStories = 'socialv-api/api/v1/socialv/get-highlight-stories';
+  static const getHighlightStories =
+      'socialv-api/api/v1/socialv/get-highlight-stories';
   static const courses = 'learnpress/v1/courses';
   static const enrollCourse = 'learnpress/v1/courses/enroll';
   static const retakeCourse = 'learnpress/v1/courses/retake';
@@ -193,29 +227,37 @@ class APIEndPoint {
   static const getDefaultReaction = 'iqonic/api/v1/reaction/default-reaction';
   static const activityReaction = 'iqonic/api/v1/reaction/activity';
   static const commentsReaction = 'iqonic/api/v1/reaction/comment';
-  static const clearNotification = 'socialv-api/api/v1/socialv/clear-notification';
-  static const favoriteActivity = 'socialv-api/api/v1/socialv/favorite-activity';
+  static const clearNotification =
+      'socialv-api/api/v1/socialv/clear-notification';
+  static const favoriteActivity =
+      'socialv-api/api/v1/socialv/favorite-activity';
   static const pinActivity = 'socialv-api/api/v1/socialv/pin-activity';
-  static const refuseGroupSuggestion = 'socialv-api/api/v1/socialv/refuse-group-suggestion';
-  static const notificationCount = 'socialv-api/api/v1/socialv/notification-count';
-  static const mediaActiveStatus = 'socialv-api/api/v1/socialv/media-active-statuses';
+  static const refuseGroupSuggestion =
+      'socialv-api/api/v1/socialv/refuse-group-suggestion';
+  static const notificationCount =
+      'socialv-api/api/v1/socialv/notification-count';
+  static const mediaActiveStatus =
+      'socialv-api/api/v1/socialv/media-active-statuses';
   static const createAlbum = 'socialv-api/api/v1/socialv/create-album';
   static const getAlbums = 'socialv-api/api/v1/socialv/albums';
   static const uploadMedia = 'socialv-api/api/v1/socialv/upload-media';
   static const albumMediaList = 'socialv-api/api/v1/socialv/album-media-list';
-  static const groupManageSettings = 'socialv-api/api/v1/socialv/group-manage-settings';
+  static const groupManageSettings =
+      'socialv-api/api/v1/socialv/group-manage-settings';
   static const inviteList = 'socialv-api/api/v1/socialv/invite-list';
   static const sendInvite = 'socialv-api/api/v1/socialv/send-invite';
   static const wpComments = 'wp/v2/comments';
   static const getCourseCategory = 'wp/v2/course_category';
   static const courseOrders = 'socialv-api/api/v1/socialv/lms-orders';
-  static const courseOrderDetails = 'socialv-api/api/v1/socialv/lms-order-details';
+  static const courseOrderDetails =
+      'socialv-api/api/v1/socialv/lms-order-details';
 }
 
 class AppImages {
   static String placeHolderImage = "assets/images/empty_image_placeholder.jpg";
   static String profileBackgroundImage = "assets/images/background_image.png";
-  static String defaultAvatarUrl = "https://wordpress.iqonic.design/product/wp/socialv-app/wp-content/themes/socialv-theme/assets/images/redux/default-avatar.jpg";
+  static String defaultAvatarUrl =
+      "https://wordpress.iqonic.design/product/wp/socialv-app/wp-content/themes/socialv-theme/assets/images/redux/default-avatar.jpg";
 }
 
 class Users {
@@ -250,7 +292,8 @@ class NotificationAction {
   static String bbpNewReply = 'bbp_new_reply';
   static String socialVSharePost = 'socialv_share_post';
   static String actionActivityReacted = 'action_activity_reacted';
-  static String actionCommentActivityReacted = 'action_comment_activity_reacted';
+  static String actionCommentActivityReacted =
+      'action_comment_activity_reacted';
 }
 
 class MemberType {

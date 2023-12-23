@@ -1,73 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/main.dart';
-import 'package:socialv/models/forums/common_models.dart';
-import 'package:socialv/utils/cached_network_image.dart';
-
+import 'package:socialv/models/posts/topic.dart';
 import '../../../utils/app_constants.dart';
 
 class ForumsCardComponent extends StatelessWidget {
-  final String? title;
-  final String? description;
-  final String? topicCount;
-  final String? postCount;
-  final List<FreshnessModel>? freshness;
+  final Topic? topic;
 
-  const ForumsCardComponent({this.title, this.description, this.topicCount, this.postCount, this.freshness});
+  const ForumsCardComponent({this.topic});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 8),
+      margin: EdgeInsets.only(bottom: 10, right: 20, left: 20),
       padding: EdgeInsets.all(16),
-      width: context.width(),
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: context.cardColor),
+      width: context.width() * 0.5,
+      height: context.height() * 0.2,
+      decoration: BoxDecoration(
+          border: Border.all(color: Color.fromARGB(24, 0, 0, 0)),
+          borderRadius: BorderRadius.circular(20),
+          color: Color.fromARGB(33, 200, 198, 198)),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(title.validate(), style: boldTextStyle(size: 18)),
+          Flexible(
+              child: Text(
+            topic!.name.validate(),
+            style: boldTextStyle(size: 18),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 3,
+            textAlign: TextAlign.start,
+          )),
           8.height,
-          Text(description.validate(), style: secondaryTextStyle()),
-          Divider(),
+          Flexible(
+              child: Text(
+            topic!.description.validate(),
+            style: secondaryTextStyle(),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 3,
+            textAlign: TextAlign.start,
+          )),
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            mainAxisSize: MainAxisSize.max,
             children: [
-              Column(
-                children: [
-                  Text(language.topics, style: boldTextStyle(color: appStore.isDarkMode ? bodyDark : bodyWhite)),
-                  8.height,
-                  Text(topicCount.validate(), style: primaryTextStyle()),
-                ],
-              ),
-              Column(
-                children: [
-                  Text(language.posts, style: boldTextStyle(color: appStore.isDarkMode ? bodyDark : bodyWhite)),
-                  8.height,
-                  Text(postCount.validate(), style: primaryTextStyle()),
-                ],
-              ),
-              Column(
-                children: [
-                  Text(language.freshness, style: boldTextStyle(color: appStore.isDarkMode ? bodyDark : bodyWhite)),
-                  8.height,
-                  Stack(
-                    children: freshness.validate().take(3).map((e) {
-                      return Container(
-                        width: 28,
-                        height: 28,
-                        margin: EdgeInsets.only(left: 18 * freshness.validate().indexOf(e).toDouble()),
-                        child: cachedImage(
-                          freshness.validate()[freshness.validate().indexOf(e)].userProfileImage.validate(),
-                          fit: BoxFit.cover,
-                        ).cornerRadiusWithClipRRect(100),
-                      );
-                    }).toList(),
-                  ),
-                ],
-              ),
+              Text(language.posts + ':',
+                  style: boldTextStyle(
+                      color: appStore.isDarkMode ? bodyDark : bodyWhite)),
+              8.width,
+              Text('10', style: primaryTextStyle()),
             ],
           ),
         ],

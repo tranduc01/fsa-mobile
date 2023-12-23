@@ -13,7 +13,6 @@ import 'package:socialv/screens/shop/screens/cart_screen.dart';
 import 'package:socialv/screens/shop/screens/orders_screen.dart';
 import 'package:socialv/screens/shop/screens/shop_screen.dart';
 import 'package:socialv/screens/shop/screens/wishlist_screen.dart';
-import 'package:socialv/screens/stories/screen/user_story_screen.dart';
 
 import '../screens/lms/screens/cource_orders_screen.dart';
 import '../screens/subscription/screens/subscription_screen3.dart';
@@ -33,10 +32,6 @@ List<DrawerModel> getDrawerOptions() {
   List<DrawerModel> list = [];
 
   list.add(DrawerModel(
-      image: ic_story,
-      title: language.myStories,
-      attachedScreen: UserStoryScreen()));
-  list.add(DrawerModel(
       image: ic_two_user,
       title: language.friends,
       attachedScreen: ProfileFriendsScreen()));
@@ -52,8 +47,9 @@ List<DrawerModel> getDrawerOptions() {
       image: ic_blog, title: language.blogs, attachedScreen: BlogListScreen()));
   list.add(DrawerModel(
       image: ic_buy,
-      title: "Supscription",
+      title: language.purchasePackage,
       attachedScreen: SubscriptionScreen3()));
+
   if (appStore.isLMSEnable == 1 && appStore.isCourseEnable == 1) {
     list.add(DrawerModel(
         image: ic_book,
@@ -163,45 +159,10 @@ List<LanguageDataModel> languageList() {
         flag: 'assets/flag/ic_us.png'),
     LanguageDataModel(
         id: 2,
-        name: 'Hindi',
-        subTitle: 'हिंदी',
-        languageCode: 'hi',
-        fullLanguageCode: 'hi_hi-IN',
-        flag: 'assets/flag/ic_hi.png'),
-    LanguageDataModel(
-        id: 3,
-        name: 'Arabic',
-        subTitle: 'عربي',
-        languageCode: 'ar',
-        fullLanguageCode: 'ar_ar-AR',
-        flag: 'assets/flag/ic_ar.png'),
-    LanguageDataModel(
-        id: 4,
-        name: 'French',
-        subTitle: 'français',
-        languageCode: 'fr',
-        fullLanguageCode: 'fr_fr-FR',
-        flag: 'assets/flag/ic_fr.png'),
-    LanguageDataModel(
-        id: 5,
-        name: 'Spanish',
-        subTitle: 'español',
-        languageCode: 'es',
-        fullLanguageCode: 'es_es-ES',
-        flag: 'assets/flag/ic_es.png'),
-    LanguageDataModel(
-        id: 6,
-        name: 'German',
-        subTitle: 'Deutsch',
-        languageCode: 'de',
-        fullLanguageCode: 'de_de-De',
-        flag: 'assets/flag/ic_de.png'),
-    LanguageDataModel(
-        id: 6,
-        name: 'Portuguese',
-        subTitle: 'Português',
-        languageCode: 'pt',
-        fullLanguageCode: 'pt_pt-PT',
-        flag: 'assets/flag/ic_pt.jpg'),
+        name: 'Vietnamese',
+        subTitle: 'Tiếng Việt',
+        languageCode: 'vi',
+        fullLanguageCode: 'vi_vi-VI',
+        flag: 'assets/flag/ic_vi.png'),
   ];
 }

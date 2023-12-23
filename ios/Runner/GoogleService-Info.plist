@@ -2,22 +2,18 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CLIENT_ID</key>
-	<string>203176417957-1kri6qh2edloe0ffvt1mfb8tv0vjhnsr.apps.googleusercontent.com</string>
-	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.203176417957-1kri6qh2edloe0ffvt1mfb8tv0vjhnsr</string>
 	<key>API_KEY</key>
-	<string>AIzaSyAWCRMufFtzingnw9XX67BQM_OB9v09Wq0</string>
+	<string>AIzaSyB6qf1qNZBtbe8YxAyCLGUm7ovOYgbXeGM</string>
 	<key>GCM_SENDER_ID</key>
-	<string>203176417957</string>
+	<string>488242939291</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.iconic.socialv</string>
+	<string>com.capstone.orchid</string>
 	<key>PROJECT_ID</key>
-	<string>socialv-flutter</string>
+	<string>orchid-sharing</string>
 	<key>STORAGE_BUCKET</key>
-	<string>socialv-flutter.appspot.com</string>
+	<string>orchid-sharing.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:203176417957:ios:20f853fd078dd42d49cb4c</string>
+	<string>1:488242939291:ios:2030543f028a4fdb440d3e</string>
 </dict>
 </plist>

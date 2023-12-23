@@ -4,18 +4,18 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/components/loading_widget.dart';
 import 'package:socialv/main.dart';
 import 'package:socialv/models/dashboard_api_response.dart';
-import 'package:socialv/network/rest_apis.dart';
-import 'package:socialv/screens/dashboard_screen.dart';
 import 'package:socialv/utils/app_constants.dart';
 
 class ShowReportDialog extends StatefulWidget {
   final bool isPostReport;
-  final bool isGroupReport;
   final int? postId;
   final int? userId;
-  final int? groupId;
 
-  const ShowReportDialog({required this.isPostReport, this.postId, this.userId, this.isGroupReport = false, this.groupId});
+  const ShowReportDialog({
+    required this.isPostReport,
+    this.postId,
+    this.userId,
+  });
 
   @override
   State<ShowReportDialog> createState() => _ShowReportDialogState();
@@ -68,9 +68,9 @@ class _ShowReportDialogState extends State<ShowReportDialog> {
                   shrinkWrap: true,
                   primary: false,
                   physics: NeverScrollableScrollPhysics(),
-                  itemCount: reportTypes.validate().length,
+                  //itemCount: reportTypes.validate().length,
                   itemBuilder: (context, index) {
-                    ReportType data = reportTypes![index];
+                    ReportType data = ReportType();
 
                     return GestureDetector(
                       onTap: () {
@@ -80,9 +80,13 @@ class _ShowReportDialogState extends State<ShowReportDialog> {
                         }
                       },
                       child: Container(
-                        color: selectedIndex == index ? context.primaryColor.withAlpha(40) : context.cardColor,
-                        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                        child: Text(data.label.validate(), style: boldTextStyle(size: 14)),
+                        color: selectedIndex == index
+                            ? context.primaryColor.withAlpha(40)
+                            : context.cardColor,
+                        padding:
+                            EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                        child: Text(data.label.validate(),
+                            style: boldTextStyle(size: 14)),
                       ),
                     );
                   },
@@ -99,7 +103,8 @@ class _ShowReportDialogState extends State<ShowReportDialog> {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.close, color: textPrimaryColorGlobal, size: 20),
+                          Icon(Icons.close,
+                              color: textPrimaryColorGlobal, size: 20),
                           6.width,
                           Text(language.cancel, style: boldTextStyle()),
                         ],
@@ -115,62 +120,64 @@ class _ShowReportDialogState extends State<ShowReportDialog> {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.report_gmailerrorred, color: Colors.white, size: 20),
+                          Icon(Icons.report_gmailerrorred,
+                              color: Colors.white, size: 20),
                           6.width,
-                          Text(language.report, style: boldTextStyle(color: Colors.white)),
+                          Text(language.report,
+                              style: boldTextStyle(color: Colors.white)),
                         ],
                       ).fit(),
                       onTap: () {
-                        if (!appStore.isLoading)
-                          ifNotTester(() async {
-                            if (reportFormKey.currentState!.validate()) {
-                              reportFormKey.currentState!.save();
+                        // if (!appStore.isLoading)
+                        //   ifNotTester(() async {
+                        //     if (reportFormKey.currentState!.validate()) {
+                        //       reportFormKey.currentState!.save();
 
-                              appStore.setLoading(true);
+                        //       appStore.setLoading(true);
 
-                              if (widget.isPostReport) {
-                                await reportPost(
-                                  report: report.text,
-                                  postId: widget.postId.validate(),
-                                  reportType: reportTypes![selectedIndex].key.validate(),
-                                  userId: widget.userId.validate(),
-                                ).then((value) {
-                                  toast(value.message);
-                                  appStore.setLoading(false);
-                                  finish(context);
-                                }).catchError((e) {
-                                  toast(e.toString());
-                                  appStore.setLoading(false);
-                                });
-                              } else if (widget.isGroupReport) {
-                                await reportGroup(
-                                  report: report.text,
-                                  groupId: widget.groupId.validate(),
-                                  reportType: reportTypes![selectedIndex].key.validate(),
-                                ).then((value) {
-                                  toast(value.message);
-                                  appStore.setLoading(false);
-                                  finish(context);
-                                }).catchError((e) {
-                                  toast(e.toString());
-                                  appStore.setLoading(false);
-                                });
-                              } else {
-                                await reportUser(
-                                  report: report.text,
-                                  userId: widget.userId.validate(),
-                                  reportType: reportTypes![selectedIndex].key.validate(),
-                                ).then((value) {
-                                  toast(value.message);
-                                  appStore.setLoading(false);
-                                  finish(context);
-                                }).catchError((e) {
-                                  toast(e.toString());
-                                  appStore.setLoading(false);
-                                });
-                              }
-                            }
-                          });
+                        //       if (widget.isPostReport) {
+                        //         await reportPost(
+                        //           report: report.text,
+                        //           postId: widget.postId.validate(),
+                        //           reportType: '',
+                        //           userId: widget.userId.validate(),
+                        //         ).then((value) {
+                        //           toast(value.message);
+                        //           appStore.setLoading(false);
+                        //           finish(context);
+                        //         }).catchError((e) {
+                        //           toast(e.toString());
+                        //           appStore.setLoading(false);
+                        //         });
+                        //       } else if (widget.isGroupReport) {
+                        //         await reportGroup(
+                        //           report: report.text,
+                        //           groupId: widget.groupId.validate(),
+                        //           reportType: '',
+                        //         ).then((value) {
+                        //           toast(value.message);
+                        //           appStore.setLoading(false);
+                        //           finish(context);
+                        //         }).catchError((e) {
+                        //           toast(e.toString());
+                        //           appStore.setLoading(false);
+                        //         });
+                        //       } else {
+                        //         await reportUser(
+                        //           report: report.text,
+                        //           userId: widget.userId.validate(),
+                        //           reportType: '',
+                        //         ).then((value) {
+                        //           toast(value.message);
+                        //           appStore.setLoading(false);
+                        //           finish(context);
+                        //         }).catchError((e) {
+                        //           toast(e.toString());
+                        //           appStore.setLoading(false);
+                        //         });
+                        //       }
+                        //     }
+                        //   });
                       },
                     ).expand(),
                   ],

@@ -1,19 +1,16 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:socialv/components/loading_widget.dart';
-import 'package:socialv/components/no_data_lottie_widget.dart';
+import 'package:socialv/controllers/post_controller.dart';
 import 'package:socialv/main.dart';
-import 'package:socialv/models/posts/post_model.dart';
-import 'package:socialv/network/rest_apis.dart';
-import 'package:socialv/screens/dashboard_screen.dart';
-import 'package:socialv/screens/home/components/ad_component.dart';
-import 'package:socialv/screens/home/components/initial_home_component.dart';
-import 'package:socialv/screens/home/components/suggested_user_component.dart';
 import 'package:socialv/screens/post/components/post_component.dart';
-import 'package:socialv/screens/stories/component/home_story_component.dart';
 
+import '../../components/loading_widget.dart';
+import '../../components/no_data_lottie_widget.dart';
+import '../../models/posts/post.dart';
 import '../../utils/app_constants.dart';
+import '../post/screens/single_post_screen.dart';
 
 class HomeFragment extends StatefulWidget {
   final ScrollController controller;
@@ -24,20 +21,24 @@ class HomeFragment extends StatefulWidget {
   State<HomeFragment> createState() => _HomeFragmentState();
 }
 
-class _HomeFragmentState extends State<HomeFragment> with SingleTickerProviderStateMixin {
+class _HomeFragmentState extends State<HomeFragment>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
-
-  List<PostModel> postList = [];
-  late Future<List<PostModel>> future;
-
+  late PostController postController = Get.put(PostController());
+  List<Post> postList = [];
+  late Future<List<Post>> future;
   int mPage = 1;
   bool mIsLastPage = false;
-  bool isError = false;
 
   @override
   void initState() {
-    future = getPostList();
-
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      postController.fetchPosts().then((_) {
+        setState(() {
+          postList = postController.posts;
+        });
+      });
+    });
     _animationController = BottomSheet.createAnimationController(this);
     _animationController.duration = const Duration(milliseconds: 500);
     _animationController.drive(CurveTween(curve: Curves.easeOutQuad));
@@ -48,41 +49,16 @@ class _HomeFragmentState extends State<HomeFragment> with SingleTickerProviderSt
 
     widget.controller.addListener(() {
       /// pagination
-      if (selectedIndex == 0) {
-        if (widget.controller.position.pixels == widget.controller.position.maxScrollExtent) {
-          if (!mIsLastPage) {
-            mPage++;
-            future = getPostList();
-          }
-        }
-      }
+      // if (selectedIndex == 0) {
+      //   if (widget.controller.position.pixels ==
+      //       widget.controller.position.maxScrollExtent) {
+      //     if (!mIsLastPage) {
+      //       mPage++;
+      //       future = postController.fetchPosts();
+      //     }
+      //   }
+      // }
     });
-
-    LiveStream().on(OnAddPost, (p0) {
-      postList.clear();
-      mPage = 1;
-      future = getPostList();
-    });
-  }
-
-  Future<List<PostModel>> getPostList() async {
-    appStore.setLoading(true);
-    await getPost(page: mPage, type: PostRequestType.all).then((value) {
-      if (mPage == 1) postList.clear();
-
-      mIsLastPage = value.length != PER_PAGE;
-      postList.addAll(value);
-      setState(() {});
-
-      appStore.setLoading(false);
-    }).catchError((e) {
-      isError = true;
-      appStore.setLoading(false);
-      toast(e.toString(), print: true);
-      setState(() {});
-    });
-
-    return postList;
   }
 
   @override
@@ -92,73 +68,144 @@ class _HomeFragmentState extends State<HomeFragment> with SingleTickerProviderSt
 
   @override
   void dispose() {
-    LiveStream().dispose(OnAddPost);
     _animationController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.topCenter,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            20.height,
-            if (!isError)
-              HomeStoryComponent(callback: () {
-                LiveStream().emit(GetUserStories);
-              }),
-            AnimatedListView(
-              padding: EdgeInsets.only(bottom: mIsLastPage ? 16 : 60),
-              itemCount: postList.length,
-              slideConfiguration: SlideConfiguration(delay: 80.milliseconds, verticalOffset: 300),
-              itemBuilder: (context, index) {
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    PostComponent(
-                      post: postList[index],
-                      count: 0,
-                      callback: () {
-                        mPage = 1;
-                        future = getPostList();
-                      },
-                      showHidePostOption: true,
-                    ).paddingSymmetric(horizontal: 8),
-                    if ((index + 1) % 5 == 0) AdComponent(),
-                    if ((index + 1) == 3) SuggestedUserComponent(),
-                  ],
-                );
-              },
-              shrinkWrap: true,
+    return Obx(
+      () => Stack(
+        alignment: Alignment.topCenter,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              15.height,
+              Container(
+                child: CarouselSlider(
+                  options: CarouselOptions(
+                    height: 200,
+                    autoPlay: true,
+                    aspectRatio: 1.5,
+                    enlargeCenterPage: true,
+                    enlargeStrategy: CenterPageEnlargeStrategy.height,
+                  ),
+                  items: postList
+                      .map(
+                        (item) => Container(
+                          child: GestureDetector(
+                            onTap: () =>
+                                SinglePostScreen(postId: item.id.validate())
+                                    .launch(context),
+                            child: Container(
+                              margin: EdgeInsets.all(5.0),
+                              child: ClipRRect(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(16)),
+                                  child: Stack(
+                                    children: [
+                                      item.thumbnail != null
+                                          ? Image.network(
+                                              item.thumbnail!,
+                                              fit: BoxFit.cover,
+                                              errorBuilder:
+                                                  (BuildContext context,
+                                                      Object exception,
+                                                      StackTrace? stackTrace) {
+                                                return Image.asset(
+                                                  'assets/images/images.png',
+                                                  fit: BoxFit.cover,
+                                                );
+                                              },
+                                            )
+                                          : Image.asset(
+                                              'assets/images/images.png',
+                                              fit: BoxFit.cover),
+                                      Positioned(
+                                        bottom: 0.0,
+                                        left: 0.0,
+                                        right: 0.0,
+                                        child: Container(
+                                            decoration: BoxDecoration(
+                                              gradient: LinearGradient(
+                                                colors: [
+                                                  Color.fromARGB(213, 0, 0, 0),
+                                                  Color.fromARGB(0, 0, 0, 0)
+                                                ],
+                                                begin: Alignment.bottomCenter,
+                                                end: Alignment.topCenter,
+                                              ),
+                                            ),
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 10.0,
+                                                horizontal: 20.0),
+                                            child: Center(
+                                              child: Text(
+                                                item.title!,
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 17.0,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontFamily: 'Roboto'),
+                                              ),
+                                            )),
+                                      ),
+                                    ],
+                                  )),
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
+              10.height,
+              AnimatedListView(
+                padding: EdgeInsets.only(bottom: mIsLastPage ? 16 : 60),
+                itemCount: postList.length,
+                slideConfiguration: SlideConfiguration(
+                    delay: Duration(milliseconds: 80), verticalOffset: 300),
+                itemBuilder: (context, index) {
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      PostComponent(
+                        post: postList[index],
+                        callback: () {
+                          mPage = 1;
+                          postController.fetchPosts();
+                        },
+                      ).paddingSymmetric(horizontal: 8),
+                    ],
+                  );
+                },
+                shrinkWrap: true,
+              ),
+            ],
+          ),
+          if (postController.isError.value || postList.isEmpty)
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.8,
+              child: NoDataWidget(
+                imageWidget: NoDataLottieWidget(),
+                title: postController.isError.value
+                    ? language.somethingWentWrong
+                    : language.noDataFound,
+                onRetry: () {
+                  postController.fetchPosts();
+                },
+                retryText: '   ' + language.clickToRefresh + '   ',
+              ).center(),
             ),
-          ],
-        ),
-        if (!appStore.isLoading && isError && postList.isEmpty)
-          SizedBox(
-            height: context.height() * 0.8,
-            child: NoDataWidget(
-              imageWidget: NoDataLottieWidget(),
-              title: isError ? language.somethingWentWrong : language.noDataFound,
-              onRetry: () {
-                isError = false;
-                LiveStream().emit(OnAddPost);
-              },
-              retryText: '   ${language.clickToRefresh}   ',
-            ).center(),
+          Positioned(
+            bottom: postList.isNotEmpty || mPage != 1 ? 8 : null,
+            child: LoadingWidget()
+                .center()
+                .visible(postController.isLoading.value),
           ),
-        if (postList.isEmpty && !appStore.isLoading && !isError)
-          SizedBox(
-            height: context.height() * 0.8,
-            child: InitialHomeComponent().center(),
-          ),
-        Positioned(
-          bottom: postList.isNotEmpty||mPage != 1 ? 8 : null,
-          child: Observer(builder: (_) => LoadingWidget(isBlurBackground: mPage == 1 ? true : false).center().visible(appStore.isLoading)),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

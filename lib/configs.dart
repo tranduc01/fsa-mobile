@@ -1,11 +1,11 @@
 /// App Name
-const APP_NAME = "FSA";
+const APP_NAME = "OKA";
 
 /// App Icon src
 const APP_ICON = "assets/app_icon.png";
 
 /// Splash screen image src
-const SPLASH_SCREEN_IMAGE = 'assets/images/splash_image.png';
+const SPLASH_SCREEN_IMAGE = 'assets/images/splash_image.jpg';
 
 /// OneSignal Notification App Id
 const ONESIGNAL_APP_ID = '';
@@ -13,7 +13,7 @@ const ONESIGNAL_APP_ID = '';
 /// Todo: Remove Base URL
 /// NOTE: Do not add slash (/) at the end of your domain.
 const DOMAIN_URL = '';
-const BASE_URL = '$DOMAIN_URL/wp-json/';
+const BASE_URL = 'https://api.chiasekienthucphonglan.io.vn/api';
 
 /// AppStore Url
 const IOS_APP_LINK = 'https://apps.apple.com/us/app/socialv/id1641646237';

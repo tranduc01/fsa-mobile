@@ -112,7 +112,9 @@ class _GroupListScreenState extends State<GroupListScreen> {
                 if (snap.hasError) {
                   return NoDataWidget(
                     imageWidget: NoDataLottieWidget(),
-                    title: isError ? language.somethingWentWrong : language.noDataFound,
+                    title: isError
+                        ? language.somethingWentWrong
+                        : language.noDataFound,
                     onRetry: () {
                       futureSuggestedList = getSuggestedList();
                     },
@@ -123,7 +125,9 @@ class _GroupListScreenState extends State<GroupListScreen> {
                   if (snap.data.validate().isEmpty) {
                     return NoDataWidget(
                       imageWidget: NoDataLottieWidget(),
-                      title: isError ? language.somethingWentWrong : language.noDataFound,
+                      title: isError
+                          ? language.somethingWentWrong
+                          : language.noDataFound,
                       onRetry: () {
                         futureSuggestedList = getSuggestedList();
                       },
@@ -135,14 +139,15 @@ class _GroupListScreenState extends State<GroupListScreen> {
                       controller: _controller,
                       disposeScrollController: false,
                       physics: AlwaysScrollableScrollPhysics(),
-                      slideConfiguration: SlideConfiguration(delay: 120.milliseconds),
+                      slideConfiguration:
+                          SlideConfiguration(delay: 120.milliseconds),
                       padding: EdgeInsets.only(left: 16, right: 16, bottom: 50),
                       itemCount: suggestedGroups.length,
                       itemBuilder: (context, index) {
                         SuggestedGroup group = suggestedGroups[index];
                         return GestureDetector(
                           onTap: () {
-                            GroupDetailScreen(groupId: group.id.validate()).launch(context);
+                            //GroupDetailScreen(groupId: group.id.validate()).launch(context);
                           },
                           child: Row(
                             children: [
@@ -160,12 +165,18 @@ class _GroupListScreenState extends State<GroupListScreen> {
                                 overflow: TextOverflow.ellipsis,
                               ).expand(),
                               InkWell(
-                                child: cachedImage(ic_close_square, height: 22, width: 22, color: Colors.red, fit: BoxFit.cover),
+                                child: cachedImage(ic_close_square,
+                                    height: 22,
+                                    width: 22,
+                                    color: Colors.red,
+                                    fit: BoxFit.cover),
                                 onTap: () {
                                   ifNotTester(() async {
                                     suggestedGroups.removeAt(index);
                                     setState(() {});
-                                    await removeSuggestedGroup(groupId: group.id.validate()).then((value) {
+                                    await removeSuggestedGroup(
+                                            groupId: group.id.validate())
+                                        .then((value) {
                                       //
                                     }).catchError(onError);
                                   });
@@ -196,7 +207,9 @@ class _GroupListScreenState extends State<GroupListScreen> {
                 if (snap.hasError) {
                   return NoDataWidget(
                     imageWidget: NoDataLottieWidget(),
-                    title: isError ? language.somethingWentWrong : language.noDataFound,
+                    title: isError
+                        ? language.somethingWentWrong
+                        : language.noDataFound,
                     onRetry: () {
                       future = getGroupsList();
                     },
@@ -207,7 +220,9 @@ class _GroupListScreenState extends State<GroupListScreen> {
                   if (snap.data.validate().isEmpty) {
                     return NoDataWidget(
                       imageWidget: NoDataLottieWidget(),
-                      title: isError ? language.somethingWentWrong : language.noDataFound,
+                      title: isError
+                          ? language.somethingWentWrong
+                          : language.noDataFound,
                       onRetry: () {
                         future = getGroupsList();
                       },
@@ -225,7 +240,7 @@ class _GroupListScreenState extends State<GroupListScreen> {
                       itemBuilder: (context, index) {
                         return GestureDetector(
                           onTap: () {
-                            GroupDetailScreen(groupId: groupList[index].id.validate()).launch(context);
+                            //GroupDetailScreen(groupId: groupList[index].id.validate()).launch(context);
                           },
                           child: Row(
                             children: [
@@ -238,10 +253,14 @@ class _GroupListScreenState extends State<GroupListScreen> {
                               20.width,
                               Column(
                                 children: [
-                                  Text(groupList[index].name.validate(), style: boldTextStyle()),
+                                  Text(groupList[index].name.validate(),
+                                      style: boldTextStyle()),
                                   6.height,
                                   Text(
-                                    groupList[index].description!.raw.validate(),
+                                    groupList[index]
+                                        .description!
+                                        .raw
+                                        .validate(),
                                     style: secondaryTextStyle(),
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,

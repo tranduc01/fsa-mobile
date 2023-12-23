@@ -4,8 +4,7 @@ class ReactionsModel {
   String? name;
   String? defaultImageUrl;
 
-
-  ReactionsModel({this.id, this.imageUrl, this.name,this.defaultImageUrl});
+  ReactionsModel({this.id, this.imageUrl, this.name, this.defaultImageUrl});
 
   factory ReactionsModel.fromJson(Map<String, dynamic> json) {
     return ReactionsModel(

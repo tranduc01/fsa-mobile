@@ -1,36 +1,65 @@
-class User {
-  bool? embeddable;
-  String? href;
-  String? taxonomy;
-  int? count;
-  int? id;
-  bool? templated;
-  String? name;
+import '../enums/enums.dart';
 
-  User({this.embeddable, this.href, this.taxonomy, this.count, this.id, this.templated, this.name});
+class User {
+  String? id;
+  String? email;
+  String? name;
+  String? userName;
+  String? avatarUrl;
+  bool? isVerified;
+  double? totalPoint;
+  int? totalPostContributed;
+  int? totalExpertiseRequestSent;
+  int? totalParticipatedAuction;
+  int? totalCompleteExpertiseRequest;
+  int? expertiseLeft;
+  List<Role> role;
+
+  User({
+    this.id,
+    required this.role,
+    this.email,
+    this.name,
+    this.userName,
+    this.avatarUrl,
+    this.isVerified,
+    this.totalPoint,
+    this.totalPostContributed,
+    this.totalExpertiseRequestSent,
+    this.totalParticipatedAuction,
+    this.totalCompleteExpertiseRequest,
+    this.expertiseLeft,
+  });
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      embeddable: json['embeddable'],
-      href: json['href'],
-      taxonomy: json['taxonomy'],
-      count: json['count'],
       id: json['id'],
-      templated: json['templated'],
+      role: json['roles'] != null
+          ? (json['roles'].map<Role>((e) => Role.values[e]).toList())
+          : [],
       name: json['name'],
+      userName: json['userName'],
+      email: json['email'] ?? '',
+      avatarUrl: json['avatarUrl'],
+      isVerified: json['isVerified'] ?? false,
+      totalPoint:
+          json["totalPoint"] != null ? json["totalPoint"].toDouble() : 0,
+      totalPostContributed: json["totalPostContributed"] ?? 0,
+      totalExpertiseRequestSent: json["totalExpertiseRequestSent"] ?? 0,
+      totalParticipatedAuction: json["totalParticipatedAuction"] ?? 0,
+      totalCompleteExpertiseRequest: json["totalCompleteExpertiseRequest"] ?? 0,
+      expertiseLeft: json["expertiseLeft"] ?? 0,
     );
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['embeddable'] = this.embeddable;
-    data['href'] = this.href;
-    data['taxonomy'] = this.taxonomy;
-    data['count'] = this.count;
     data['id'] = this.id;
-    data['templated'] = this.templated;
+    data['roles'] = this.role.map((r) => r.name).toList();
     data['name'] = this.name;
-
+    data['userName'] = this.userName;
+    data['avatarUrl'] = this.avatarUrl;
+    data['isVerified'] = this.isVerified;
     return data;
   }
 }

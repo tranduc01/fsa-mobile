@@ -1,5 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:nb_utils/nb_utils.dart';
+import 'package:socialv/main.dart';
 
 class SubscriptionScreen3 extends StatefulWidget {
   @override
@@ -7,544 +8,354 @@ class SubscriptionScreen3 extends StatefulWidget {
 }
 
 class _SubscriptionScreen3 extends State<SubscriptionScreen3> {
-  String _image =
-      "https://scontent.fsgn5-14.fna.fbcdn.net/v/t1.15752-9/368880605_308510311698750_1411479145021421749_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=ae9488&_nc_ohc=km19GMKqkR0AX_qWzd-&_nc_ht=scontent.fsgn5-14.fna&oh=03_AdQntgZRqpL_W9TL3DtgoweirTR1z7mtU3CnCTRLKKsKwg&oe=650C55E3";
   Color _backgroundColor = Color.fromRGBO(0, 61, 70, 1);
   Color _color = Color.fromRGBO(98, 121, 193, 1);
+  bool tap = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          Positioned(
-            top: 24.0,
-            left: 16.0,
-            right: 16.0,
-            bottom: 0,
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8.0),
-                color: Colors.deepPurple,
-              ),
+      appBar: AppBar(
+          title: Text(
+        language.purchasePackage,
+        style: TextStyle(
+          color: Colors.black,
+          fontFamily: "Roboto",
+        ),
+      )),
+      body: Column(
+        children: [
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height * 0.3,
+            decoration: BoxDecoration(
+              color: _color,
             ),
+            child: Image.asset("assets/images/sale.png", fit: BoxFit.cover),
           ),
-          Positioned(
-            top: 32.0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8.0),
-                image: DecorationImage(
-                  image: NetworkImage(_image),
-                  fit: BoxFit.fill,
+          SizedBox(
+            height: 8,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(padding: EdgeInsets.only(left: 15)),
+              Text(
+                language.packages,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Roboto',
                 ),
               ),
-              child: Column(
-                children: <Widget>[
-                  SafeArea(
-                    top: true,
-                    left: true,
-                    right: true,
-                    child: Container(
-                      margin: EdgeInsets.symmetric(horizontal: 16.0),
-                      height: 40.0,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Spacer(),
-                          Container(
-                            height: 40.0,
-                            width: 200.0,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Row(
+            ],
+          ),
+          Container(
+            padding: EdgeInsets.all(10),
+            height: MediaQuery.of(context).size.height * 0.6 - 51,
+            child: AnimatedListView(
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              physics: BouncingScrollPhysics(),
+              slideConfiguration: SlideConfiguration(
+                  delay: Duration(milliseconds: 100), verticalOffset: 300),
+              itemCount: 10,
+              itemBuilder: (context, index) {
+                return InkWell(
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        late double feedbackRating = 0;
+                        return Stack(
+                          children: [
+                            AlertDialog(
+                              title: Container(
+                                child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text(
-                                      "Student Assistant ",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/packaging.png',
+                                      height: 70,
+                                      width: 70,
+                                      fit: BoxFit.cover,
+                                    ),
+                                    SizedBox(
+                                      height: 20,
                                     ),
                                     Container(
-                                      height: 24.0,
-                                      width: 40.0,
+                                      padding: EdgeInsets.all(10),
                                       decoration: BoxDecoration(
-                                        color: Color.fromRGBO(242, 197, 145, 1),
-                                        borderRadius:
-                                            BorderRadius.circular(2.0),
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Color.fromARGB(98, 250, 2, 2),
                                       ),
-                                      child: Center(
-                                        child: Text(
-                                          "Plus",
-                                          style: TextStyle(
-                                            color: _backgroundColor,
-                                            fontSize: 16.0,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
+                                      child: Text(
+                                        'Combo 1',
+                                        style: TextStyle(fontFamily: "Roboto"),
                                       ),
-                                    )
+                                    ),
                                   ],
                                 ),
-                                Text(
-                                  "open full access to space",
-                                  style: TextStyle(
-                                    color: Colors.white.withOpacity(0.5),
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 12.0,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Spacer(),
-                          Container(
-                            height: 32.0,
-                            width: 32.0,
-                            decoration: BoxDecoration(
-                                shape: BoxShape.circle, color: Colors.black),
-                            child: Center(
-                                child: Icon(
-                              Icons.close,
-                              size: 20.0,
-                              color: Colors.white,
-                            )),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  Spacer(),
-                  Container(
-                    height: 250.0,
-                    child: Row(
-                      children: <Widget>[
-                        Flexible(
-                          flex: 1,
-                          child: Container(
-                            margin: EdgeInsets.only(
-                                left: 16.0, right: 8.0, top: 64.0),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8.0),
-                              color: Colors.white,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Flexible(
-                                  flex: 6,
-                                  child: Column(
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: <Widget>[
+                                    children: [
                                       Text(
-                                        "3",
+                                        "100.000 VNĐ",
                                         style: TextStyle(
-                                          color: _color,
-                                          fontSize: 40.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                            fontFamily: 'Roboto',
+                                            fontSize: 15,
+                                            decoration:
+                                                TextDecoration.lineThrough),
                                       ),
+                                      Icon(Icons.arrow_right_alt_outlined),
                                       Text(
-                                        "months",
-                                        style: TextStyle(
-                                          color: _color,
-                                          fontSize: 20.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 8.0,
-                                      ),
-                                      Text(
-                                        "\$26.99",
-                                        style: TextStyle(
-                                          color: _color,
-                                          fontSize: 20.0,
-                                          fontWeight: FontWeight.bold,
+                                        '50.000 VNĐ',
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 3,
+                                        textAlign: TextAlign.start,
+                                        style: boldTextStyle(
+                                          fontFamily: 'Roboto',
+                                          size: 18,
                                         ),
                                       ),
                                     ],
                                   ),
-                                ),
-                                Container(
-                                  color: _color,
-                                  height: 2.0,
-                                ),
-                                Flexible(
-                                  flex: 3,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: <Widget>[
-                                      Text(
-                                        "\$8.99",
-                                        style: TextStyle(
-                                          color: _color,
-                                          fontSize: 20.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Text(
-                                        "per month",
-                                        style: TextStyle(
-                                          color: _color.withOpacity(0.5),
-                                          fontSize: 12.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Flexible(
-                          flex: 1,
-                          child: Stack(
-                            children: <Widget>[
-                              Positioned(
-                                top: 8.0,
-                                right: 8.0,
-                                left: 8.0,
-                                bottom: 12.0,
-                                child: Container(
-                                  height: 250.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    color: _color,
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: Column(
-                                      children: <Widget>[
-                                        SizedBox(
-                                          height: 16.0,
-                                          child: Center(
-                                            child: Text(
-                                              "POPULAR".toUpperCase(),
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 12.0,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 4.0,
-                                        ),
-                                        Flexible(
-                                          flex: 6,
-                                          child: Container(
-                                            color: Colors.white,
-                                            child: Center(
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: <Widget>[
-                                                  Text(
-                                                    "12",
-                                                    style: TextStyle(
-                                                      color: _color,
-                                                      fontSize: 40.0,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    "months",
-                                                    style: TextStyle(
-                                                      color: _color,
-                                                      fontSize: 20.0,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 8.0,
-                                                  ),
-                                                  Text(
-                                                    "\$119. 88",
-                                                    style: TextStyle(
-                                                      color: _color
-                                                          .withOpacity(0.5),
-                                                      fontSize: 12.0,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      decoration: TextDecoration
-                                                          .lineThrough,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    "\$79.99",
-                                                    style: TextStyle(
-                                                      color: _color,
-                                                      fontSize: 20.0,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          height: 2.0,
-                                          color: _color,
-                                        ),
-                                        Flexible(
-                                          flex: 3,
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius: BorderRadius.only(
-                                                bottomLeft:
-                                                    Radius.circular(8.0),
-                                                bottomRight:
-                                                    Radius.circular(8.0),
-                                              ),
-                                            ),
-                                            child: Center(
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: <Widget>[
-                                                  Text(
-                                                    "\$6.67",
-                                                    style: TextStyle(
-                                                      color: _color,
-                                                      fontSize: 20.0,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    "per month",
-                                                    style: TextStyle(
-                                                      color: _color
-                                                          .withOpacity(0.5),
-                                                      fontSize: 12.0,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                top: 0,
-                                right: 0,
-                                child: Icon(
-                                  Icons.check_circle,
-                                  size: 28.0,
-                                  color: Colors.white,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        Flexible(
-                          flex: 1,
-                          child: Container(
-                              margin: EdgeInsets.only(
-                                  left: 8.0, right: 16.0, top: 64.0),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8.0),
-                                color: Colors.white,
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  Flexible(
-                                    flex: 6,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: <Widget>[
-                                        Text(
-                                          "6",
-                                          style: TextStyle(
-                                            color: _color,
-                                            fontSize: 40.0,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        Text(
-                                          "months",
-                                          style: TextStyle(
-                                            color: _color,
-                                            fontSize: 20.0,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 8.0,
-                                        ),
-                                        Text(
-                                          "\$46.99",
-                                          style: TextStyle(
-                                            color: _color,
-                                            fontSize: 20.0,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                  SizedBox(
+                                    height: 10,
                                   ),
                                   Container(
-                                    color: _color,
-                                    height: 2.0,
+                                    padding: EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      color: Color.fromARGB(97, 2, 250, 19),
+                                    ),
+                                    child: Text(
+                                      "+ 5 lần yêu cầu đánh giá",
+                                      style: TextStyle(
+                                          fontFamily: 'Roboto',
+                                          fontWeight: FontWeight.w600),
+                                    ),
                                   ),
-                                  Flexible(
-                                    flex: 3,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: <Widget>[
-                                        Text(
-                                          "\$7.99",
-                                          style: TextStyle(
-                                            color: _color,
-                                            fontSize: 20.0,
-                                            fontWeight: FontWeight.bold,
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Container(
+                                    child: Column(children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(Icons.check),
+                                          SizedBox(
+                                            width: 20,
                                           ),
-                                        ),
-                                        Text(
-                                          "per month",
-                                          style: TextStyle(
-                                            color: _color.withOpacity(0.5),
-                                            fontSize: 12.0,
-                                            fontWeight: FontWeight.bold,
+                                          Text(
+                                            "Lợi ích 1",
+                                            style:
+                                                TextStyle(fontFamily: 'Roboto'),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(Icons.check),
+                                          SizedBox(
+                                            width: 20,
+                                          ),
+                                          Text(
+                                            "Lợi ích 2",
+                                            style:
+                                                TextStyle(fontFamily: 'Roboto'),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(Icons.check),
+                                          SizedBox(
+                                            width: 20,
+                                          ),
+                                          Text(
+                                            "Lợi ích 3",
+                                            style:
+                                                TextStyle(fontFamily: 'Roboto'),
+                                          ),
+                                        ],
+                                      ),
+                                    ]),
+                                  )
+                                ],
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('Cancel',
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontFamily: 'Roboto',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold)),
+                                ),
+                                TextButton(
+                                  style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                              context.primaryColor),
+                                      shape: MaterialStateProperty.all(
+                                          RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20)))),
+                                  onPressed: () {},
+                                  child: Text('Confirm',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: 'Roboto',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold)),
+                                ),
+                              ],
+                            ),
+                            Positioned(
+                              top: MediaQuery.of(context).size.height * 0.5 -
+                                  (280 / 2) -
+                                  156.5, // Half of screen height minus half of image height
+                              left: MediaQuery.of(context).size.width * 0.5 -
+                                  (280 / 2) -
+                                  97.2, // Half of screen width minus half of image width
+                              child: Image.asset(
+                                "assets/images/2.png",
+                                height: 280,
+                                width: 280,
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  child: Container(
+                    margin: EdgeInsets.symmetric(vertical: 8),
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Color.fromARGB(24, 0, 0, 0)),
+                        borderRadius: radius(10),
+                        color: Color.fromARGB(33, 200, 198, 198)),
+                    child: Stack(
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Row(
+                                children: [
+                                  Image.asset(
+                                    'assets/images/packaging.png',
+                                    height: 100,
+                                    width: 100,
+                                    fit: BoxFit.cover,
+                                  ).cornerRadiusWithClipRRect(15),
+                                  12.width,
+                                  Expanded(
+                                    child: Container(
+                                      height: 100,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Combo 1',
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 3,
+                                            textAlign: TextAlign.start,
+                                            style: boldTextStyle(
+                                                fontFamily: 'Roboto', size: 18),
+                                          ),
+                                          Spacer(),
+                                          Text(
+                                            'Combo 1 bao gồm 5 lần yêu cầu đánh giá',
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                            textAlign: TextAlign.start,
+                                            style: boldTextStyle(
+                                              size: 15,
+                                              fontFamily: 'Roboto',
+                                              color:
+                                                  Color.fromARGB(118, 0, 0, 0),
+                                            ),
+                                          ),
+                                          Spacer(),
+                                          Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                '100.000 VNĐ',
+                                                textAlign: TextAlign.start,
+                                                style: boldTextStyle(
+                                                  fontFamily: 'Roboto',
+                                                  size: 15,
+                                                  decoration: TextDecoration
+                                                      .lineThrough,
+                                                ),
+                                              ),
+                                              Icon(Icons
+                                                  .arrow_right_alt_outlined),
+                                              Text(
+                                                '50.000 VNĐ',
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 3,
+                                                textAlign: TextAlign.start,
+                                                style: boldTextStyle(
+                                                  fontFamily: 'Roboto',
+                                                  size: 15,
+                                                ),
+                                              ),
+                                              Spacer(),
+                                              Icon(
+                                                Icons.shopping_cart_checkout,
+                                                color: Colors.black,
+                                                size: 25.0,
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ],
-                              )),
+                              ),
+                            )
+                          ],
+                        ),
+                        Positioned(
+                          top: 0,
+                          right: 0,
+                          child: Image.asset(
+                            "assets/images/saleicon.png",
+                            height: 30,
+                            width: 30,
+                          ), // Replace this with your widget
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(
-                    height: 8.0,
-                  ),
-                  Text(
-                    "Select your plan after 7 days",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    "Trial period",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(
-                      horizontal: 16.0,
-                      vertical: 16.0,
-                    ),
-                    height: 40.0,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(4.0),
-                    ),
-                    child: Center(
-                      child: Text(
-                        "Try for free",
-                        style: TextStyle(
-                          color: _color,
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Text(
-                    "By clicking subscribe, you agree to the rules",
-                    style: TextStyle(
-                      color: Colors.grey[500],
-                      fontWeight: FontWeight.w600,
-                      fontSize: 10.0,
-                    ),
-                  ),
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: "for ",
-                          style: TextStyle(
-                            color: Colors.grey[500],
-                            fontWeight: FontWeight.w600,
-                            fontSize: 10.0,
-                          ),
-                        ),
-                        TextSpan(
-                          text: "using the services ",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 10.0,
-                          ),
-                        ),
-                        TextSpan(
-                          text: "and ",
-                          style: TextStyle(
-                            color: Colors.grey[500],
-                            fontWeight: FontWeight.w600,
-                            fontSize: 10.0,
-                          ),
-                        ),
-                        TextSpan(
-                          text: "processing personal data",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 10.0,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 32.0,
-                  )
-                ],
-              ),
+                );
+              },
             ),
-          )
+          ),
         ],
       ),
     );

@@ -1,9 +1,137 @@
 import 'package:flutter/material.dart';
 
 abstract class BaseLanguage {
-  static BaseLanguage? of(BuildContext context) => Localizations.of<BaseLanguage>(context, BaseLanguage);
-   String get courseOrders;
+  static BaseLanguage? of(BuildContext context) =>
+      Localizations.of<BaseLanguage>(context, BaseLanguage);
+  String get packages;
+
+  String get collections;
+
+  String get auctionStart;
+
+  String get auctionMine;
+
+  String get auctionEnded;
+
+  String get auctionOnGoing;
+
+  String get auctionSeconds;
+
+  String get auctionMinutes;
+
+  String get auctionHours;
+
+  String get auctionDays;
+
+  String get auctionDetail;
+
+  String get auctionStepPrice;
+
+  String get auctionSoldDirectlyPrices;
+
+  String get auctionStartPrice;
+
+  String get auctionOrchid;
+
+  String get auctionInfomation;
+
+  String get auctionImage;
+
+  String get expertiseRequestSent;
+
+  String get expertiseLeft;
+
+  String get auctionOngoing;
+
+  String get auctionUpcoming;
+
+  String get auctionDiscover;
+
+  String get sunExposure;
+
+  String get height;
+
+  String get nativeArea;
+
+  String get family;
+
+  String get plantType;
+
+  String get botanicalName;
+
+  String get orchidDetail;
+
+  String get searchOrchid;
+
+  String get postDetail;
+
+  String get verifyWarningFace;
+
+  String get verifyWarning;
+
+  String get verifySuccess;
+
+  String get lblVerify;
+
+  String get takePhotoPortrait;
+
+  String get takePhotoWarningFrame;
+
+  String get takePhotoWarning;
+
+  String get takePhotoFront;
+
+  String get takePhotoBack;
+
+  String get verifyIdCard;
+
+  String get viewResult;
+
+  String get expertiseBy;
+
+  String get expertiseRequestStatus;
+
+  String get expertiseRequestCreatedDate;
+
+  String get expertiseRequestDetail;
+
+  String get selectFileExpertiseRequest;
+
+  String get msgExpertiseRequest;
+
+  String get createExpertiseRequest;
+
+  String get completedExpertiseRequest;
+
+  String get rejectedExpertiseRequest;
+
+  String get doingExpertiseRequest;
+
+  String get waitingForExpertExpertiseRequest;
+
+  String get waitingForApprovalExpertiseRequest;
+
+  String get allExpertiseRequest;
+
+  String get expertiseRequest;
+
+  String get emptyAlbum;
+
+  String get pendingRequest;
+
+  String get approvedRequest;
+
+  String get rejectRequest;
+
+  String get expiredRequest;
+
+  String get yourRequest;
+
+  String get courseOrders;
+
   String get invitations;
+
+  String get purchasePackage;
 
   String get apply;
 
