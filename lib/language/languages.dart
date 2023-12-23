@@ -4,6 +4,10 @@ abstract class BaseLanguage {
   static BaseLanguage? of(BuildContext context) =>
       Localizations.of<BaseLanguage>(context, BaseLanguage);
 
+  String get expertiseRequestSent;
+
+  String get expertiseLeft;
+
   String get auctionOngoing;
 
   String get auctionUpcoming;
@@ -64,13 +68,15 @@ abstract class BaseLanguage {
 
   String get createExpertiseRequest;
 
-  String get expiredExpertiseRequest;
+  String get completedExpertiseRequest;
 
   String get rejectedExpertiseRequest;
 
-  String get approvedExpertiseRequest;
+  String get doingExpertiseRequest;
 
-  String get pendingExpertiseRequest;
+  String get waitingForExpertExpertiseRequest;
+
+  String get waitingForApprovalExpertiseRequest;
 
   String get allExpertiseRequest;
 

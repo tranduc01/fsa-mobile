@@ -252,7 +252,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                               .toString(),
                           style: boldTextStyle(size: 18)),
                       4.height,
-                      Text('Expertise Left',
+                      Text(language.expertiseLeft,
                           style: secondaryTextStyle(size: 12)),
                     ],
                   ).paddingSymmetric(vertical: 8).onTap(() {
@@ -272,7 +272,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                               .toString(),
                           style: boldTextStyle(size: 18)),
                       4.height,
-                      Text('Total Expertise Request Sent',
+                      Text(language.expertiseRequestSent,
                           style: secondaryTextStyle(size: 12)),
                     ],
                   ).paddingSymmetric(vertical: 8).onTap(() {
@@ -356,13 +356,17 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                   ),
                                   Positioned(
                                     bottom:
-                                        -10, // Adjust the position as needed
-                                    child: Text(
-                                      ExpertiseRequestStatus
-                                          .WaitingForApproval.name,
-                                      style: boldTextStyle(
-                                        color: Colors.black,
-                                        size: 12,
+                                        -17, // Adjust the position as needed
+                                    child: Container(
+                                      width: 60,
+                                      child: Text(
+                                        language
+                                            .waitingForApprovalExpertiseRequest,
+                                        style: boldTextStyle(
+                                          color: Colors.black,
+                                          size: 10,
+                                        ),
+                                        textAlign: TextAlign.center,
                                       ),
                                     ),
                                   ),
@@ -404,13 +408,16 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                   ),
                                 ),
                                 Positioned(
-                                  bottom: -10, // Adjust the position as needed
-                                  child: Text(
-                                    ExpertiseRequestStatus
-                                        .WaitingForExpert.name,
-                                    style: boldTextStyle(
-                                      color: Colors.black,
-                                      size: 12,
+                                  bottom: -17, // Adjust the position as needed
+                                  child: Container(
+                                    width: 60,
+                                    child: Text(
+                                      language.waitingForExpertExpertiseRequest,
+                                      style: boldTextStyle(
+                                        color: Colors.black,
+                                        size: 10,
+                                      ),
+                                      textAlign: TextAlign.center,
                                     ),
                                   ),
                                 ),
@@ -454,10 +461,10 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                 Positioned(
                                   bottom: -10, // Adjust the position as needed
                                   child: Text(
-                                    ExpertiseRequestStatus.Doing.name,
+                                    language.doingExpertiseRequest,
                                     style: boldTextStyle(
                                       color: Colors.black,
-                                      size: 12,
+                                      size: 10,
                                     ),
                                   ),
                                 ),
@@ -501,10 +508,10 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                 Positioned(
                                   bottom: -10, // Adjust the position as needed
                                   child: Text(
-                                    ExpertiseRequestStatus.Completed.name,
+                                    language.completedExpertiseRequest,
                                     style: boldTextStyle(
                                       color: Colors.black,
-                                      size: 12,
+                                      size: 10,
                                     ),
                                   ),
                                 ),
@@ -548,10 +555,10 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                 Positioned(
                                   bottom: -10, // Adjust the position as needed
                                   child: Text(
-                                    ExpertiseRequestStatus.Rejected.name,
+                                    language.rejectedExpertiseRequest,
                                     style: boldTextStyle(
                                       color: Colors.black,
-                                      size: 12,
+                                      size: 10,
                                     ),
                                   ),
                                 ),

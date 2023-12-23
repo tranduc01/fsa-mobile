@@ -2,6 +2,10 @@ import 'package:socialv/language/languages.dart';
 
 class LanguageVi extends BaseLanguage {
   @override
+  String get expertiseRequestSent => "Số yêu cầu đã gửi";
+  @override
+  String get expertiseLeft => "Số yêu cầu còn lại";
+  @override
   String get auctionOngoing => "Đang diễn ra";
   @override
   String get auctionUpcoming => "Sắp diễn ra";
@@ -66,13 +70,15 @@ class LanguageVi extends BaseLanguage {
   @override
   String get createExpertiseRequest => "Tạo yêu cầu đánh giá";
   @override
-  String get expiredExpertiseRequest => "Quá hạn";
+  String get completedExpertiseRequest => "Hoàn thành";
   @override
   String get rejectedExpertiseRequest => "Từ chối";
   @override
-  String get approvedExpertiseRequest => "Đã duyệt";
+  String get doingExpertiseRequest => "Đang đánh giá";
   @override
-  String get pendingExpertiseRequest => "Đang chờ";
+  String get waitingForExpertExpertiseRequest => "Chờ chuyên gia";
+  @override
+  String get waitingForApprovalExpertiseRequest => "Chờ đánh giá";
   @override
   String get allExpertiseRequest => "Tất cả";
 
