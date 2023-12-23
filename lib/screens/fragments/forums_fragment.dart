@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/components/loading_widget.dart';
 import 'package:socialv/controllers/topic_controller.dart';
+import 'package:socialv/main.dart';
 import 'package:socialv/screens/forums/components/forums_card_component.dart';
 import 'package:socialv/screens/forums/screens/forum_detail_screen.dart';
 
@@ -62,7 +63,7 @@ class _ForumsFragment extends State<ForumsFragment> {
         Container(
           padding: EdgeInsets.only(left: 16),
           child: Text(
-            'Topics',
+            language.topics,
             style: TextStyle(
                 fontFamily: 'Roboto',
                 fontWeight: FontWeight.bold,
@@ -159,7 +160,7 @@ class _ForumsFragment extends State<ForumsFragment> {
         Container(
           padding: EdgeInsets.only(left: 16),
           child: Text(
-            'Collections',
+            language.collections,
             style: TextStyle(
                 fontFamily: 'Roboto',
                 fontWeight: FontWeight.bold,

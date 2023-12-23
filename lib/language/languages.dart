@@ -3,6 +3,39 @@ import 'package:flutter/material.dart';
 abstract class BaseLanguage {
   static BaseLanguage? of(BuildContext context) =>
       Localizations.of<BaseLanguage>(context, BaseLanguage);
+  String get packages;
+
+  String get collections;
+
+  String get auctionStart;
+
+  String get auctionMine;
+
+  String get auctionEnded;
+
+  String get auctionOnGoing;
+
+  String get auctionSeconds;
+
+  String get auctionMinutes;
+
+  String get auctionHours;
+
+  String get auctionDays;
+
+  String get auctionDetail;
+
+  String get auctionStepPrice;
+
+  String get auctionSoldDirectlyPrices;
+
+  String get auctionStartPrice;
+
+  String get auctionOrchid;
+
+  String get auctionInfomation;
+
+  String get auctionImage;
 
   String get expertiseRequestSent;
 

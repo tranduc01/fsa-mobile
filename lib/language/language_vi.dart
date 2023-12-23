@@ -2,83 +2,171 @@ import 'package:socialv/language/languages.dart';
 
 class LanguageVi extends BaseLanguage {
   @override
+  String get packages => "Gói yêu cầu";
+
+  @override
+  String get collections => "Bộ sưu tập";
+
+  @override
+  String get auctionStart => "Khởi điểm: ";
+
+  @override
+  String get auctionMine => "Của tôi";
+
+  @override
+  String get auctionEnded => "Đã kết thúc";
+
+  @override
+  String get auctionOnGoing => "Đang diễn ra";
+
+  @override
+  String get auctionSeconds => "Giây";
+
+  @override
+  String get auctionMinutes => "Phút";
+
+  @override
+  String get auctionHours => "Giờ";
+
+  @override
+  String get auctionDays => "Ngày";
+
+  @override
+  String get auctionDetail => "Chi tiết đấu giá";
+
+  @override
+  String get auctionStepPrice => "Bước nhảy";
+
+  @override
+  String get auctionSoldDirectlyPrices => "Giá mua ngay";
+
+  @override
+  String get auctionStartPrice => "Giá khởi điểm";
+
+  @override
+  String get auctionOrchid => "CÂY LAN";
+
+  @override
+  String get auctionInfomation => "THÔNG TIN";
+
+  @override
+  String get auctionImage => "ẢNH ";
+
+  @override
   String get expertiseRequestSent => "Số yêu cầu đã gửi";
+
   @override
   String get expertiseLeft => "Số yêu cầu còn lại";
+
   @override
   String get auctionOngoing => "Đang diễn ra";
+
   @override
   String get auctionUpcoming => "Sắp diễn ra";
+
   @override
   String get auctionDiscover => "Khám phá";
+
   @override
   String get sunExposure => "Ưa nắng";
+
   @override
   String get height => "Chiều cao";
+
   @override
   String get nativeArea => "Khu vực sinh sống chủ yếu";
+
   @override
   String get family => "Họ";
+
   @override
   String get plantType => "Loại hoa";
+
   @override
   String get botanicalName => "Tên khoa học";
+
   @override
   String get orchidDetail => "Chi tiết cây lan";
+
   @override
   String get searchOrchid => "Tìm kiếm cây lan";
+
   @override
   String get postDetail => "Chi tiết bài viết";
+
   @override
   String get verifyWarningFace => "Hãy giữ khuôn mặt của bạn trên máy ảnh!";
+
   @override
   String get verifyWarning => "Chụp ảnh chân dung của bạn!";
+
   @override
   String get verifySuccess => "Xác thực thành công!";
+
   @override
   String get lblVerify => "Xác thực";
+
   @override
   String get takePhotoPortrait => "Chụp ảnh chân dung của bạn";
+
   @override
   String get takePhotoWarningFrame =>
       "Vui lòng di chuyển thẻ của bạn vào đúng khung hình";
+
   @override
   String get takePhotoWarning =>
       "Vui lòng chụp mặt trước và sau Thẻ căn cước/CMND/CCCD của bạn";
+
   @override
   String get takePhotoBack =>
       "Vui lòng chụp mặt sau Thẻ căn cước/CMND/CCCD của bạn";
+
   @override
   String get takePhotoFront =>
       "Vui lòng chụp mặt trước Thẻ căn cước/CMND/CCCD của bạn";
+
   @override
   String get verifyIdCard => "Xác minh chứng minh nhân dân";
+
   @override
   String get viewResult => "Xem kết quả";
+
   @override
   String get expertiseBy => "Đánh giá bởi";
+
   @override
   String get expertiseRequestStatus => "Trạng thái";
+
   @override
   String get expertiseRequestCreatedDate => "Ngày tạo";
+
   @override
   String get expertiseRequestDetail => "Chi tiết đánh giá";
+
   @override
   String get selectFileExpertiseRequest => "Bạn hãy chọn tệp";
+
   @override
   String get msgExpertiseRequest => "Ghi chú";
+
   @override
   String get createExpertiseRequest => "Tạo yêu cầu đánh giá";
+
   @override
   String get completedExpertiseRequest => "Hoàn thành";
+
   @override
   String get rejectedExpertiseRequest => "Từ chối";
+
   @override
   String get doingExpertiseRequest => "Đang đánh giá";
+
   @override
   String get waitingForExpertExpertiseRequest => "Chờ chuyên gia";
+
   @override
   String get waitingForApprovalExpertiseRequest => "Chờ đánh giá";
+
   @override
   String get allExpertiseRequest => "Tất cả";
 
