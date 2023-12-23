@@ -2,6 +2,10 @@ import 'package:socialv/language/languages.dart';
 
 class LanguageEn extends BaseLanguage {
   @override
+  String get expertiseRequestSent => "Total Expertise Request Sent";
+  @override
+  String get expertiseLeft => "Expertise Left";
+  @override
   String get auctionOngoing => "Ongoing";
   @override
   String get auctionUpcoming => "Upcoming";
@@ -63,13 +67,15 @@ class LanguageEn extends BaseLanguage {
   @override
   String get createExpertiseRequest => "Create Expertise Request";
   @override
-  String get expiredExpertiseRequest => "EXPIRED";
+  String get completedExpertiseRequest => "Completed";
   @override
-  String get rejectedExpertiseRequest => "REJECTED";
+  String get rejectedExpertiseRequest => "Rejected";
   @override
-  String get approvedExpertiseRequest => "APPROVED";
+  String get doingExpertiseRequest => "Doing";
   @override
-  String get pendingExpertiseRequest => "PENDING";
+  String get waitingForExpertExpertiseRequest => "Waiting For Expert";
+  @override
+  String get waitingForApprovalExpertiseRequest => "Waiting for approval";
   @override
   String get allExpertiseRequest => "ALL";
 
