@@ -47,20 +47,20 @@ class _AutionFragmentState extends State<AuctionFragment> {
               tabs: [
                 Tab(
                     child: Text(
-                  'Discover',
+                  language.auctionDiscover,
                 )),
                 Tab(
                   child: Text(
-                    'Upcoming',
+                    language.auctionUpcoming,
                   ),
                 ),
                 Tab(
                     child: Text(
-                  'Ongoing',
+                  language.auctionOngoing,
                 )),
                 Tab(
                   child: Text(
-                    'My Auctions',
+                    language.auctionMine,
                   ),
                 ),
               ],
@@ -111,12 +111,12 @@ class _AutionFragmentState extends State<AuctionFragment> {
           child: NoDataWidget(
             imageWidget: NoDataLottieWidget(),
             title: auctionController.isError.value
-                ? 'Something Went Wrong'
-                : 'No data found',
+                ? language.somethingWentWrong
+                : language.noDataFound,
             onRetry: () {
               auctionController.fetchAuctions(0);
             },
-            retryText: '   Click to Refresh   ',
+            retryText: '   ' + language.clickToRefresh + '   ',
           ).center(),
         );
       else
@@ -223,7 +223,7 @@ class _AutionFragmentState extends State<AuctionFragment> {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         child: Text(
-                          "Đang diễn ra",
+                          language.auctionOnGoing,
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -256,7 +256,7 @@ class _AutionFragmentState extends State<AuctionFragment> {
                                       : auction.startDate!
                                           .add(Duration(hours: 7))
                                           .toString()),
-                                  finishedText: "Ended",
+                                  finishedText: language.auctionEnded,
                                   showLabel: true,
                                   daysTextShort: "d ",
                                   hoursTextShort: "h ",
@@ -272,7 +272,7 @@ class _AutionFragmentState extends State<AuctionFragment> {
                               padding: EdgeInsets.all(5.0),
                               decoration: BoxDecoration(color: Colors.black),
                               child: Text(
-                                'Start: ' +
+                                language.auctionStart +
                                     auction.reservePrice!
                                         .toStringAsFixed(0)
                                         .formatNumberWithComma(),

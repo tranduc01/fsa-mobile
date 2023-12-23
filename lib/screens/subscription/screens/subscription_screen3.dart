@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:socialv/main.dart';
 
 class SubscriptionScreen3 extends StatefulWidget {
   @override
@@ -15,7 +16,7 @@ class _SubscriptionScreen3 extends State<SubscriptionScreen3> {
     return Scaffold(
       appBar: AppBar(
           title: Text(
-        "Subscription",
+        language.purchasePackage,
         style: TextStyle(
           color: Colors.black,
           fontFamily: "Roboto",
@@ -40,7 +41,7 @@ class _SubscriptionScreen3 extends State<SubscriptionScreen3> {
             children: [
               Padding(padding: EdgeInsets.only(left: 15)),
               Text(
-                "Package",
+                language.packages,
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,

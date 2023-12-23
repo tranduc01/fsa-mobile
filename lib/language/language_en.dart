@@ -2,80 +2,168 @@ import 'package:socialv/language/languages.dart';
 
 class LanguageEn extends BaseLanguage {
   @override
+  String get packages => "Packages";
+
+  @override
+  String get collections => "Collections";
+
+  @override
+  String get auctionStart => "Start:";
+
+  @override
+  String get auctionMine => "My Auction";
+
+  @override
+  String get auctionEnded => "Ended";
+
+  @override
+  String get auctionOnGoing => "On Going";
+
+  @override
+  String get auctionSeconds => "Seconds";
+
+  @override
+  String get auctionMinutes => "Minutes";
+
+  @override
+  String get auctionHours => "Hours";
+
+  @override
+  String get auctionDays => "Days";
+
+  @override
+  String get auctionDetail => "Auction Detail";
+
+  @override
+  String get auctionStepPrice => "Step Price";
+
+  @override
+  String get auctionSoldDirectlyPrices => "Sold Directly Price";
+
+  @override
+  String get auctionStartPrice => "Start price";
+
+  @override
+  String get auctionOrchid => "ORCHID";
+
+  @override
+  String get auctionInfomation => "INFORMATION";
+
+  @override
+  String get auctionImage => "IMAGE ";
+
+  @override
   String get expertiseRequestSent => "Total Expertise Request Sent";
+
   @override
   String get expertiseLeft => "Expertise Left";
+
   @override
   String get auctionOngoing => "Ongoing";
+
   @override
   String get auctionUpcoming => "Upcoming";
+
   @override
   String get auctionDiscover => "Discover";
+
   @override
   String get sunExposure => "Sun Exposure";
+
   @override
   String get height => "Height";
+
   @override
   String get nativeArea => "Native Area";
+
   @override
   String get family => "Family";
+
   @override
   String get plantType => "Plant Type";
+
   @override
   String get botanicalName => "Botanical Name";
+
   @override
   String get orchidDetail => "Orchid Detail";
+
   @override
   String get searchOrchid => "Search Orchid";
+
   @override
   String get postDetail => "Post Detail";
+
   @override
   String get verifyWarningFace => "Please keep your face on the camera!";
+
   @override
   String get verifyWarning => "Take a photo of your portrait!";
+
   @override
   String get verifySuccess => "User Verify Successfully!";
+
   @override
   String get lblVerify => "Verify";
+
   @override
   String get takePhotoPortrait => "Take a photo of your portrait";
+
   @override
   String get takePhotoWarningFrame => "Please place your ID card in the frame";
+
   @override
   String get takePhotoWarning =>
       "Pleases take a photo of your front and back Identity Card";
+
   @override
   String get takePhotoBack => "Take a photo of the back of your ID card";
+
   @override
   String get takePhotoFront => "Take a photo of the front of your ID card";
+
   @override
   String get verifyIdCard => "Verify Your Identity";
+
   @override
   String get viewResult => "View Result";
+
   @override
   String get expertiseBy => "Expertise By";
+
   @override
   String get expertiseRequestStatus => "Status";
+
   @override
   String get expertiseRequestCreatedDate => "Created Date";
+
   @override
   String get expertiseRequestDetail => "Expertise Request Detail";
+
   @override
   String get selectFileExpertiseRequest => "Please select file";
+
   @override
   String get msgExpertiseRequest => "Message";
+
   @override
   String get createExpertiseRequest => "Create Expertise Request";
+
   @override
   String get completedExpertiseRequest => "Completed";
+
   @override
   String get rejectedExpertiseRequest => "Rejected";
+
   @override
   String get doingExpertiseRequest => "Doing";
+
   @override
   String get waitingForExpertExpertiseRequest => "Waiting For Expert";
+
   @override
   String get waitingForApprovalExpertiseRequest => "Waiting for approval";
+
   @override
   String get allExpertiseRequest => "ALL";
 
@@ -96,6 +184,7 @@ class LanguageEn extends BaseLanguage {
 
   @override
   String get expiredRequest => "Experied";
+
   @override
   String get yourRequest => "Your Request";
 

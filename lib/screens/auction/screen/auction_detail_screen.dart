@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:signalr_netcore/signalr_client.dart';
+import 'package:socialv/main.dart';
 import 'package:socialv/screens/auction/screen/bid_screen.dart';
 import 'package:socialv/screens/post/screens/image_screen.dart';
 import 'package:socialv/utils/html_widget.dart';
@@ -175,7 +176,7 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                 onPressed: () => Navigator.of(context).pop(),
                               ),
                               Text(
-                                "Chi tiết đấu giá",
+                                language.auctionDetail,
                                 style: TextStyle(
                                   fontSize: 20,
                                   color: Colors.black,
@@ -215,7 +216,7 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                   Tab(
                                     child: DefaultTextStyle(
                                       child: Text(
-                                        'ẢNH ' +
+                                        language.auctionImage +
                                             '(${auctionController.auction.value.orchid!.medias!.length})',
                                         style: TextStyle(
                                             fontFamily: 'Roboto',
@@ -223,30 +224,31 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                       ),
                                       style: TextStyle(
                                           color: Colors.black,
-                                          fontSize: 15,
+                                          fontSize: 14,
                                           fontFamily: 'Roboto'),
                                     ),
                                   ),
                                   Tab(
                                     child: DefaultTextStyle(
                                       child: Text(
-                                        'THÔNG TIN',
+                                        language.auctionInfomation,
                                         style: TextStyle(
                                             fontFamily: 'Roboto',
                                             fontWeight: FontWeight.bold),
                                       ),
                                       style: TextStyle(
                                           color: Colors.black,
-                                          fontSize: 15,
+                                          fontSize: 14,
                                           fontFamily: 'Roboto'),
                                     ),
                                   ),
                                   Tab(
                                     child: DefaultTextStyle(
-                                      child: Text('CÂY LAN'),
+                                      child: Text(language.auctionOrchid),
                                       style: TextStyle(
                                           color: Colors.black,
                                           fontFamily: 'Roboto',
+                                          fontSize: 14,
                                           fontWeight: FontWeight.bold),
                                     ),
                                   ),
@@ -386,7 +388,8 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                                                         .center,
                                                                 children: [
                                                                   Text(
-                                                                    'Botanical Name',
+                                                                    language
+                                                                        .botanicalName,
                                                                     style: TextStyle(
                                                                         fontSize:
                                                                             18,
@@ -486,7 +489,8 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                                                         .center,
                                                                 children: [
                                                                   Text(
-                                                                    'Plant Type',
+                                                                    language
+                                                                        .plantType,
                                                                     style: TextStyle(
                                                                         fontSize:
                                                                             18,
@@ -579,7 +583,8 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                                                           .center,
                                                                   children: [
                                                                     Text(
-                                                                      'Family',
+                                                                      language
+                                                                          .family,
                                                                       style: TextStyle(
                                                                           fontSize:
                                                                               18,
@@ -681,7 +686,8 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                                                           .center,
                                                                   children: [
                                                                     Text(
-                                                                      'Native Area',
+                                                                      language
+                                                                          .nativeArea,
                                                                       style: TextStyle(
                                                                           fontSize:
                                                                               18,
@@ -780,7 +786,8 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                                                         .center,
                                                                 children: [
                                                                   Text(
-                                                                    'Height',
+                                                                    language
+                                                                        .height,
                                                                     style: TextStyle(
                                                                         fontSize:
                                                                             18,
@@ -876,7 +883,8 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                                                           .center,
                                                                   children: [
                                                                     Text(
-                                                                      'Sun Exposure',
+                                                                      language
+                                                                          .sunExposure,
                                                                       style: TextStyle(
                                                                           fontSize:
                                                                               18,
@@ -1008,6 +1016,10 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                             fontSize: 15.0,
                             fontFamily: 'Roboto',
                           ),
+                          daysDescription: language.auctionDays,
+                          hoursDescription: language.auctionHours,
+                          minutesDescription: language.auctionMinutes,
+                          secondsDescription: language.auctionSeconds,
                           spacerWidth: 5,
                           onEnd: () {
                             print("Timer finished");
@@ -1064,7 +1076,7 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   Text(
-                                    " Giá khởi điểm",
+                                    language.auctionStartPrice,
                                     style: secondaryTextStyle(
                                       color: const Color.fromARGB(194, 0, 0, 0),
                                       fontFamily: 'Roboto',
@@ -1101,7 +1113,7 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   Text(
-                                    " Giá mua ngay",
+                                    language.auctionSoldDirectlyPrices,
                                     style: secondaryTextStyle(
                                       color: const Color.fromARGB(194, 0, 0, 0),
                                       fontFamily: 'Roboto',
@@ -1113,6 +1125,7 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                             ],
                           ),
                         ),
+                        SizedBox(width: 10.0),
                         Expanded(
                           child: Column(
                             children: [
@@ -1137,7 +1150,7 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "Bước nhảy",
+                                    language.auctionStepPrice,
                                     style: secondaryTextStyle(
                                       color: const Color.fromARGB(194, 0, 0, 0),
                                       fontFamily: 'Roboto',
