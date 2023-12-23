@@ -3,40 +3,75 @@ import 'package:flutter/material.dart';
 abstract class BaseLanguage {
   static BaseLanguage? of(BuildContext context) =>
       Localizations.of<BaseLanguage>(context, BaseLanguage);
+
   String get auctionOngoing;
+
   String get auctionUpcoming;
+
   String get auctionDiscover;
+
   String get sunExposure;
+
   String get height;
+
   String get nativeArea;
+
   String get family;
+
   String get plantType;
+
   String get botanicalName;
+
   String get orchidDetail;
+
   String get searchOrchid;
+
   String get postDetail;
+
   String get verifyWarningFace;
+
   String get verifyWarning;
+
   String get verifySuccess;
+
   String get lblVerify;
+
   String get takePhotoPortrait;
+
   String get takePhotoWarningFrame;
+
   String get takePhotoWarning;
+
   String get takePhotoFront;
+
   String get takePhotoBack;
+
   String get verifyIdCard;
+
   String get viewResult;
+
   String get expertiseBy;
+
   String get expertiseRequestStatus;
+
   String get expertiseRequestCreatedDate;
+
   String get expertiseRequestDetail;
+
   String get selectFileExpertiseRequest;
+
   String get msgExpertiseRequest;
+
   String get createExpertiseRequest;
+
   String get expiredExpertiseRequest;
+
   String get rejectedExpertiseRequest;
+
   String get approvedExpertiseRequest;
+
   String get pendingExpertiseRequest;
+
   String get allExpertiseRequest;
 
   String get expertiseRequest;
