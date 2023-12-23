@@ -7,6 +7,7 @@ import 'package:socialv/screens/auction/screen/auction_detail_screen.dart';
 
 import '../../components/no_data_lottie_widget.dart';
 import '../../controllers/auction_controller.dart';
+import '../../main.dart';
 
 class AuctionFragment extends StatefulWidget {
   final ScrollController controller;
