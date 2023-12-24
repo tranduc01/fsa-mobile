@@ -202,7 +202,7 @@ class _SubscriptionScreen3 extends State<SubscriptionScreen3> {
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
-                                  child: Text('Cancel',
+                                  child: Text(language.cancel,
                                       style: TextStyle(
                                           color: Colors.black,
                                           fontFamily: 'Roboto',
@@ -219,7 +219,7 @@ class _SubscriptionScreen3 extends State<SubscriptionScreen3> {
                                               borderRadius:
                                                   BorderRadius.circular(20)))),
                                   onPressed: () {},
-                                  child: Text('Confirm',
+                                  child: Text(language.confirm,
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontFamily: 'Roboto',

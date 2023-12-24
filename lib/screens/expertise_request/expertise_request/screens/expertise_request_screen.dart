@@ -124,25 +124,25 @@ class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
                             Role.Expert.name.toLowerCase()))
                           Tab(
                               child: Text(
-                            'Pending',
+                            language.waitingForApprovalExpertiseRequest,
                           )),
                         Tab(
                           child: Text(
-                            'Waiting For Expert ',
+                            language.waitingForExpertExpertiseRequest,
                           ),
                         ),
                         Tab(
                             child: Text(
-                          'Doing',
+                          language.doingExpertiseRequest,
                         )),
                         Tab(
                           child: Text(
-                            'Completed',
+                            language.completedExpertiseRequest,
                           ),
                         ),
                         Tab(
                           child: Text(
-                            'Rejected',
+                            language.rejectedExpertiseRequest,
                           ),
                         ),
                       ],
@@ -255,8 +255,8 @@ class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
             child: NoDataWidget(
               imageWidget: NoDataLottieWidget(),
               title: expertiseRequestController.isError.value
-                  ? 'Something Went Wrong'
-                  : 'No data found',
+                  ? language.somethingWentWrong
+                  : language.noDataFound,
               onRetry: () {
                 userController.user.value.role.any((element) =>
                         element.name.toLowerCase() ==
@@ -266,7 +266,7 @@ class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
                     : expertiseRequestController
                         .fetchExpetiseRequests(selectIndex);
               },
-              retryText: '   Click to Refresh   ',
+              retryText: '   ' + language.clickToRefresh + '   ',
             ).center(),
           );
         } else {
@@ -379,10 +379,38 @@ class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
                                                           24, 0, 0, 0))),
                                               padding: EdgeInsets.all(6),
                                               child: Text(
-                                                ExpertiseRequestStatus
-                                                    .values[expertiseRequest
-                                                        .status!]
-                                                    .name,
+                                                // ExpertiseRequestStatus
+                                                //     .values[expertiseRequest
+                                                //         .status!]
+                                                //     .name,
+                                                () {
+                                                  switch (ExpertiseRequestStatus
+                                                      .values[expertiseRequest
+                                                          .status!]
+                                                      .name) {
+                                                    case 'WaitingForApproval':
+                                                      return language
+                                                          .waitingForApprovalExpertiseRequest;
+                                                    case 'WaitingForExpert':
+                                                      return language
+                                                          .waitingForExpertExpertiseRequest;
+                                                    case 'Doing':
+                                                      return language
+                                                          .doingExpertiseRequest;
+                                                    case 'Completed':
+                                                      return language
+                                                          .completedExpertiseRequest;
+                                                    case 'Rejected':
+                                                      return language
+                                                          .rejectedExpertiseRequest;
+                                                    default:
+                                                      return ExpertiseRequestStatus
+                                                          .values[
+                                                              expertiseRequest
+                                                                  .status!]
+                                                          .name;
+                                                  }
+                                                }(),
                                                 style: boldTextStyle(
                                                     size: 15,
                                                     fontFamily: 'Roboto',

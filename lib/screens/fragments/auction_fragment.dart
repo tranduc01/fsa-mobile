@@ -60,7 +60,7 @@ class _AutionFragmentState extends State<AuctionFragment> {
                 )),
                 Tab(
                   child: Text(
-                    'Ended',
+                    language.auctionEnded,
                   ),
                 ),
               ],

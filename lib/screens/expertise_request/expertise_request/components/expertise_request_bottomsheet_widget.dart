@@ -71,13 +71,14 @@ class _ExpertiseResultBottomSheetWidgetState
                       ),
                       10.height,
                       Text(
-                        'Chuyên gia tư vấn',
+                        language.expert,
                         style: secondaryTextStyle(size: 16),
                       ),
                     ],
                   ),
                   20.height,
-                  Text('Kết quả đánh giá', style: boldTextStyle(size: 25)),
+                  Text(language.expertiseRequestResult,
+                      style: boldTextStyle(size: 25)),
                   10.height,
                   Center(
                     child: Column(
@@ -109,7 +110,29 @@ class _ExpertiseResultBottomSheetWidgetState
                                     height: 1.5),
                               ),
                               title: Text(
-                                evaluationCriteria.name ?? '',
+                                // evaluationCriteria.name ?? ''
+                                () {
+                                  switch (evaluationCriteria.name) {
+                                    case 'BotanicalName':
+                                      return language.botanicalName;
+                                    case 'Family':
+                                      return language.family;
+                                    case 'PlantType':
+                                      return language.plantType;
+                                    case 'NativeArea':
+                                      return language.nativeArea;
+                                    case 'Height':
+                                      return language.height;
+                                    case 'SunExposure':
+                                      return language.sunExposure;
+                                    case 'CommonName':
+                                      return language.commonName;
+                                    default:
+                                      return evaluationCriteria.name
+                                              .toString() ??
+                                          '';
+                                  }
+                                }(),
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 20,

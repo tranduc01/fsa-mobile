@@ -2,6 +2,55 @@ import 'package:socialv/language/languages.dart';
 
 class LanguageEn extends BaseLanguage {
   @override
+  String get receivedSuccessfully => "Received Successfully";
+
+  @override
+  String get expertiseThisRequestConfirmMsg =>
+      "Are you sure you want to expertise this request ?";
+
+  @override
+  String get expertiseThisRequest => "Expertise This Request";
+
+  @override
+  String get rejectMessage => "Reject Message";
+
+  @override
+  String get feedbackRating => "Please rate";
+
+  @override
+  String get feedbackSentFailed => "Send failed";
+
+  @override
+  String get feedbackSentSuccessfully => "Feedback Sent Successfully";
+
+  @override
+  String get noOne => "No one";
+
+  @override
+  String get sendFeedbackExpertiseRequest => "Sent Feedback";
+
+  @override
+  String get feedbackMessageExpertiseRequest => "Feedback Message";
+
+  @override
+  String get ratingExpertiseRequest => "Rating";
+
+  @override
+  String get feedback => "Feedback";
+
+  @override
+  String get messageExpertiseRequest => "Message";
+
+  @override
+  String get commonName => "Orchid Name";
+
+  @override
+  String get expertiseRequestResult => "Expertise Request Result";
+
+  @override
+  String get expert => "Expert";
+
+  @override
   String get packages => "Packages";
 
   @override
