@@ -219,7 +219,7 @@ class _SubscriptionScreen3 extends State<SubscriptionScreen3> {
                                               borderRadius:
                                                   BorderRadius.circular(20)))),
                                   onPressed: () {},
-                                  child: Text(language.confirm,
+                                  child: Text(language.purchase,
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontFamily: 'Roboto',

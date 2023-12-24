@@ -4,6 +4,8 @@ abstract class BaseLanguage {
   static BaseLanguage? of(BuildContext context) =>
       Localizations.of<BaseLanguage>(context, BaseLanguage);
 
+  String get purchase;
+
   String get receivedSuccessfully;
 
   String get expertiseThisRequestConfirmMsg;
