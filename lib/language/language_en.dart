@@ -2,6 +2,9 @@ import 'package:socialv/language/languages.dart';
 
 class LanguageEn extends BaseLanguage {
   @override
+  String get purchase => "Purchase";
+
+  @override
   String get receivedSuccessfully => "Received Successfully";
 
   @override
