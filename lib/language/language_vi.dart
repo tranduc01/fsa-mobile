@@ -2,6 +2,55 @@ import 'package:socialv/language/languages.dart';
 
 class LanguageVi extends BaseLanguage {
   @override
+  String get receivedSuccessfully => "Nhận thành công";
+
+  @override
+  String get expertiseThisRequestConfirmMsg =>
+      "Bạn có muốn đánh giá yêu cầu này ?";
+
+  @override
+  String get expertiseThisRequest => "Đánh giá yêu cầu này";
+
+  @override
+  String get rejectMessage => "Lời nhắn từ chối";
+
+  @override
+  String get feedbackRating => "Hãy xếp hạng cho phiếu đánh giá";
+
+  @override
+  String get feedbackSentFailed => "Gửi nhận xét thất bại";
+
+  @override
+  String get feedbackSentSuccessfully => "Gửi nhận xét thành công";
+
+  @override
+  String get noOne => "Chưa có";
+
+  @override
+  String get sendFeedbackExpertiseRequest => "Gửi nhận xét";
+
+  @override
+  String get feedbackMessageExpertiseRequest => "Lời nhận xét";
+
+  @override
+  String get ratingExpertiseRequest => "Xếp hạng phiếu đánh giá";
+
+  @override
+  String get feedback => "Nhận xét phiếu đánh giá";
+
+  @override
+  String get messageExpertiseRequest => "Ghi chú";
+
+  @override
+  String get commonName => "Tên hoa";
+
+  @override
+  String get expertiseRequestResult => "Kết quả đánh giá";
+
+  @override
+  String get expert => "Chuyên gia tư vấn";
+
+  @override
   String get packages => "Gói yêu cầu";
 
   @override

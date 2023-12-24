@@ -289,10 +289,32 @@ class _ExpertiseRequestDetailScreenState
                                         color: Color.fromARGB(24, 0, 0, 0))),
                                 padding: EdgeInsets.all(6),
                                 child: Text(
-                                  ExpertiseRequestStatus
-                                      .values[expertiseRequestController
-                                          .expertiseRequest.value.status!]
-                                      .name,
+                                  () {
+                                    switch (ExpertiseRequestStatus
+                                        .values[expertiseRequestController
+                                            .expertiseRequest.value.status!]
+                                        .name) {
+                                      case 'WaitingForApproval':
+                                        return language
+                                            .waitingForApprovalExpertiseRequest;
+                                      case 'WaitingForExpert':
+                                        return language
+                                            .waitingForExpertExpertiseRequest;
+                                      case 'Doing':
+                                        return language.doingExpertiseRequest;
+                                      case 'Completed':
+                                        return language
+                                            .completedExpertiseRequest;
+                                      case 'Rejected':
+                                        return language
+                                            .rejectedExpertiseRequest;
+                                      default:
+                                        return ExpertiseRequestStatus
+                                            .values[expertiseRequestController
+                                                .expertiseRequest.value.status!]
+                                            .name;
+                                    }
+                                  }(),
                                   style: boldTextStyle(
                                       size: 15,
                                       fontFamily: 'Roboto',
@@ -353,7 +375,7 @@ class _ExpertiseRequestDetailScreenState
                                             .value
                                             .expert!
                                             .name!
-                                        : 'No one',
+                                        : language.noOne,
                                     style: TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold,
@@ -373,7 +395,7 @@ class _ExpertiseRequestDetailScreenState
                                   element.name.toLowerCase() ==
                                   Role.Expert.name.toLowerCase()))
                             AppButton(
-                                text: 'Send Feedback',
+                                text: language.sendFeedbackExpertiseRequest,
                                 shapeBorder: ContinuousRectangleBorder(
                                     borderRadius: BorderRadius.circular(30)),
                                 color: Colors.white,
@@ -388,7 +410,7 @@ class _ExpertiseRequestDetailScreenState
                                     builder: (BuildContext context) {
                                       late double feedbackRating = 0;
                                       return AlertDialog(
-                                        title: Text('Feedback'),
+                                        title: Text(language.feedback),
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(20),
@@ -431,7 +453,8 @@ class _ExpertiseRequestDetailScreenState
                                                 context,
                                                 fillColor: context
                                                     .scaffoldBackgroundColor,
-                                                label: 'Message',
+                                                label: language
+                                                    .feedbackMessageExpertiseRequest,
                                               ),
                                             ),
                                           ],
@@ -441,7 +464,7 @@ class _ExpertiseRequestDetailScreenState
                                             onPressed: () {
                                               Navigator.of(context).pop();
                                             },
-                                            child: Text('Cancel',
+                                            child: Text(language.cancel,
                                                 style: TextStyle(
                                                     color: Colors.black,
                                                     fontFamily: 'Roboto',
@@ -481,8 +504,8 @@ class _ExpertiseRequestDetailScreenState
                                                       .fetchExpetiseRequest(
                                                           widget.requestId);
                                                   Navigator.pop(context);
-                                                  toast(
-                                                      'Feedback Sent Successfully');
+                                                  toast(language
+                                                      .feedbackSentSuccessfully);
                                                 } else {
                                                   Navigator.pop(context);
                                                   showDialog(
@@ -490,16 +513,17 @@ class _ExpertiseRequestDetailScreenState
                                                     barrierDismissible: false,
                                                     builder: (context) {
                                                       return FailDialog(
-                                                          text: 'Send Failed');
+                                                          text: language
+                                                              .feedbackSentFailed);
                                                     },
                                                   );
                                                 }
                                               } else {
-                                                toast('Please rate');
+                                                toast(language.feedbackRating);
                                               }
                                               Navigator.of(context).pop();
                                             },
-                                            child: Text('Send',
+                                            child: Text(language.send,
                                                 style: TextStyle(
                                                     color: Colors.white,
                                                     fontFamily: 'Roboto',
@@ -561,7 +585,7 @@ class _ExpertiseRequestDetailScreenState
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Message',
+                                language.messageExpertiseRequest,
                                 style: TextStyle(
                                     fontSize: 16,
                                     color: Color.fromARGB(130, 0, 0, 0),
@@ -594,7 +618,7 @@ class _ExpertiseRequestDetailScreenState
                                       .expertiseRequest.value.status ==
                                   ExpertiseRequestStatus.Rejected.index)
                                 Text(
-                                  'Reject Message',
+                                  language.rejectMessage,
                                   style: TextStyle(
                                       fontSize: 16,
                                       color: Color.fromARGB(130, 0, 0, 0),
@@ -634,7 +658,7 @@ class _ExpertiseRequestDetailScreenState
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Feedback',
+                                      language.feedback,
                                       style: TextStyle(
                                           fontSize: 22,
                                           color: Color.fromARGB(130, 0, 0, 0),
@@ -643,7 +667,7 @@ class _ExpertiseRequestDetailScreenState
                                     ),
                                     10.height,
                                     Text(
-                                      'Rating',
+                                      language.ratingExpertiseRequest,
                                       style: TextStyle(
                                           fontSize: 16,
                                           color: Color.fromARGB(130, 0, 0, 0),
@@ -694,7 +718,7 @@ class _ExpertiseRequestDetailScreenState
                                     ),
                                     5.height,
                                     Text(
-                                      'Feedback Message',
+                                      language.feedbackMessageExpertiseRequest,
                                       style: TextStyle(
                                           fontSize: 16,
                                           color: Color.fromARGB(130, 0, 0, 0),
@@ -802,7 +826,7 @@ class _ExpertiseRequestDetailScreenState
                   expertiseRequestController.expertiseRequest.value.status ==
                       ExpertiseRequestStatus.WaitingForExpert.index
               ? FloatingActionButton.extended(
-                  label: Text('Expertise This Request',
+                  label: Text(language.expertiseThisRequest,
                       style: TextStyle(
                           color: Colors.black, fontWeight: FontWeight.bold)),
                   icon: Icon(
@@ -813,7 +837,7 @@ class _ExpertiseRequestDetailScreenState
                   onPressed: () {
                     showConfirmDialogCustom(
                       context,
-                      title: 'Are you sure you want to expertise this request',
+                      title: language.expertiseThisRequestConfirmMsg,
                       onAccept: (p0) async {
                         showDialog(
                             context: context,
@@ -826,7 +850,7 @@ class _ExpertiseRequestDetailScreenState
                             .receiveExpertiseRequest(widget.requestId);
 
                         if (expertiseRequestController.isUpdateSuccess.value) {
-                          toast('Received Successfully');
+                          toast(language.receivedSuccessfully);
                           expertiseRequestController
                               .fetchExpetiseRequest(widget.requestId);
                           Navigator.pop(context);
@@ -836,7 +860,7 @@ class _ExpertiseRequestDetailScreenState
                             context: context,
                             barrierDismissible: false,
                             builder: (context) {
-                              return FailDialog(text: 'Failed');
+                              return FailDialog(text: language.failed);
                             },
                           );
                         }
