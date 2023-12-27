@@ -128,9 +128,7 @@ class _ExpertiseResultBottomSheetWidgetState
                                     case 'CommonName':
                                       return language.commonName;
                                     default:
-                                      return evaluationCriteria.name
-                                              .toString() ??
-                                          '';
+                                      return evaluationCriteria.name.toString();
                                   }
                                 }(),
                                 style: TextStyle(

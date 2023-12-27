@@ -12,6 +12,7 @@ import 'package:socialv/screens/dashboard_screen.dart';
 import 'package:socialv/screens/expertise_request/expertise_request/screens/expertise_request_screen.dart';
 import 'package:socialv/screens/post/components/post_component.dart';
 import 'package:socialv/screens/profile/components/profile_header_component.dart';
+import 'package:socialv/screens/wallet/wallet_screen.dart';
 
 import '../../models/enums/enums.dart';
 import '../../models/posts/post.dart';
@@ -280,6 +281,23 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                         MediaQuery.of(context).size.height * 0.35,
                         duration: const Duration(milliseconds: 500),
                         curve: Curves.linear);
+                  },
+                      splashColor: Colors.transparent,
+                      highlightColor: Colors.transparent).expand(),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                          userController.user.value.totalPoint
+                              .validate()
+                              .toStringAsFixed(0)
+                              .formatNumberWithComma(),
+                          style: boldTextStyle(size: 18)),
+                      4.height,
+                      Text('Total Points', style: secondaryTextStyle(size: 12)),
+                    ],
+                  ).paddingSymmetric(vertical: 8).onTap(() {
+                    WalletScreen().launch(context);
                   },
                       splashColor: Colors.transparent,
                       highlightColor: Colors.transparent).expand(),
