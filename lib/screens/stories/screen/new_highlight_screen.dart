@@ -75,7 +75,11 @@ class _NewHighlightScreenState extends State<NewHighlightScreen> {
                     showNewCategory = !showNewCategory;
                     setState(() {});
                   },
-                  child: Text(showNewCategory ? language.selectHighlight : language.createNew, style: primaryTextStyle(color: context.primaryColor)),
+                  child: Text(
+                      showNewCategory
+                          ? language.selectHighlight
+                          : language.createNew,
+                      style: primaryTextStyle(color: context.primaryColor)),
                 ),
               ),
             if (highlightList.isEmpty) 16.height,
@@ -95,32 +99,34 @@ class _NewHighlightScreenState extends State<NewHighlightScreen> {
                             onTap: () async {
                               FileTypes? file = await showInDialog(
                                 context,
-                                contentPadding: EdgeInsets.symmetric(vertical: 16),
-                                title: Text(language.chooseAnAction, style: boldTextStyle()),
+                                contentPadding:
+                                    EdgeInsets.symmetric(vertical: 16),
+                                title: Text(language.chooseAnAction,
+                                    style: boldTextStyle()),
                                 builder: (p0) {
                                   return FilePickerDialog(isSelected: true);
                                 },
                               );
 
-                              if (file != null) {
-                                if (file == FileTypes.CAMERA) {
-                                  await getImageSource().then((value) {
-                                    appStore.setLoading(false);
-                                    categoryImage = value;
-                                    setState(() {});
-                                  }).catchError((e) {
-                                    appStore.setLoading(false);
-                                  });
-                                } else {
-                                  await getImageSource(isCamera: false).then((value) {
-                                    appStore.setLoading(false);
-                                    categoryImage = value;
-                                    setState(() {});
-                                  }).catchError((e) {
-                                    appStore.setLoading(false);
-                                  });
-                                }
-                              }
+                              // if (file != null) {
+                              //   if (file == FileTypes.CAMERA) {
+                              //     await getImageSource().then((value) {
+                              //       appStore.setLoading(false);
+                              //       categoryImage = value;
+                              //       setState(() {});
+                              //     }).catchError((e) {
+                              //       appStore.setLoading(false);
+                              //     });
+                              //   } else {
+                              //     await getImageSource(isCamera: false).then((value) {
+                              //       appStore.setLoading(false);
+                              //       categoryImage = value;
+                              //       setState(() {});
+                              //     }).catchError((e) {
+                              //       appStore.setLoading(false);
+                              //     });
+                              //   }
+                              // }
                             },
                             child: Container(
                               decoration: BoxDecoration(
@@ -129,7 +135,9 @@ class _NewHighlightScreenState extends State<NewHighlightScreen> {
                               ),
                               height: 120,
                               width: 120,
-                              child: Text(language.selectImage, style: secondaryTextStyle()).center(),
+                              child: Text(language.selectImage,
+                                      style: secondaryTextStyle())
+                                  .center(),
                             ),
                           )
                         : Stack(
@@ -150,8 +158,14 @@ class _NewHighlightScreenState extends State<NewHighlightScreen> {
                                   },
                                   child: Container(
                                     padding: EdgeInsets.all(6),
-                                    decoration: BoxDecoration(color: Colors.grey.withOpacity(0.7), shape: BoxShape.circle),
-                                    child: cachedImage(ic_close, color: context.primaryColor, width: 18, height: 18, fit: BoxFit.cover),
+                                    decoration: BoxDecoration(
+                                        color: Colors.grey.withOpacity(0.7),
+                                        shape: BoxShape.circle),
+                                    child: cachedImage(ic_close,
+                                        color: context.primaryColor,
+                                        width: 18,
+                                        height: 18,
+                                        fit: BoxFit.cover),
                                   ),
                                 ),
                               ),
@@ -159,7 +173,9 @@ class _NewHighlightScreenState extends State<NewHighlightScreen> {
                           ),
                   ).center(),
                   8.height,
-                  Text(language.recommendedSize, style: secondaryTextStyle(size: 12)).center(),
+                  Text(language.recommendedSize,
+                          style: secondaryTextStyle(size: 12))
+                      .center(),
                   16.height,
                   AppTextField(
                     controller: categoryName,
@@ -168,7 +184,9 @@ class _NewHighlightScreenState extends State<NewHighlightScreen> {
                     textFieldType: TextFieldType.NAME,
                     textStyle: primaryTextStyle(),
                     maxLines: 1,
-                    decoration: inputDecorationFilled(context, label: language.highlightName, fillColor: context.scaffoldBackgroundColor),
+                    decoration: inputDecorationFilled(context,
+                        label: language.highlightName,
+                        fillColor: context.scaffoldBackgroundColor),
                   ),
                 ],
               )
@@ -177,21 +195,27 @@ class _NewHighlightScreenState extends State<NewHighlightScreen> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(language.selectCategory, style: boldTextStyle()).paddingSymmetric(vertical: 16),
+                  Text(language.selectCategory, style: boldTextStyle())
+                      .paddingSymmetric(vertical: 16),
                   if (dropdownValue.id != null)
                     Container(
                       width: context.width(),
-                      decoration: BoxDecoration(color: context.scaffoldBackgroundColor, borderRadius: radius(commonRadius)),
+                      decoration: BoxDecoration(
+                          color: context.scaffoldBackgroundColor,
+                          borderRadius: radius(commonRadius)),
                       child: DropdownButtonHideUnderline(
                         child: ButtonTheme(
                           alignedDropdown: true,
                           child: DropdownButton<HighlightCategoryListModel>(
                             borderRadius: BorderRadius.circular(commonRadius),
                             value: dropdownValue,
-                            icon: Icon(Icons.arrow_drop_down, color: appStore.isDarkMode ? bodyDark : bodyWhite),
+                            icon: Icon(Icons.arrow_drop_down,
+                                color:
+                                    appStore.isDarkMode ? bodyDark : bodyWhite),
                             elevation: 8,
                             style: primaryTextStyle(),
-                            underline: Container(height: 2, color: appColorPrimary),
+                            underline:
+                                Container(height: 2, color: appColorPrimary),
                             alignment: Alignment.bottomCenter,
                             isExpanded: true,
                             onChanged: (HighlightCategoryListModel? newValue) {
@@ -199,10 +223,18 @@ class _NewHighlightScreenState extends State<NewHighlightScreen> {
                                 dropdownValue = newValue!;
                               });
                             },
-                            items: highlightList.map<DropdownMenuItem<HighlightCategoryListModel>>((e) {
-                              return DropdownMenuItem<HighlightCategoryListModel>(
+                            items: highlightList.map<
+                                DropdownMenuItem<
+                                    HighlightCategoryListModel>>((e) {
+                              return DropdownMenuItem<
+                                  HighlightCategoryListModel>(
                                 value: e,
-                                child: Text(e.name.validate().isNotEmpty ? e.name.validate() : language.untitled, overflow: TextOverflow.ellipsis, maxLines: 1),
+                                child: Text(
+                                    e.name.validate().isNotEmpty
+                                        ? e.name.validate()
+                                        : language.untitled,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1),
                               );
                             }).toList(),
                           ),
@@ -249,7 +281,8 @@ class _NewHighlightScreenState extends State<NewHighlightScreen> {
                   //onAddStory();
                 }
               },
-              child: Text(language.addStory, style: primaryTextStyle(color: Colors.white)),
+              child: Text(language.addStory,
+                  style: primaryTextStyle(color: Colors.white)),
               color: context.primaryColor,
               elevation: 0,
             ),

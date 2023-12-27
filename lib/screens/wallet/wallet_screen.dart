@@ -188,11 +188,12 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
                                               topLeft: Radius.circular(16),
                                               topRight: Radius.circular(16)),
                                         ),
-                                        child: WillPopScope(
-                                          onWillPop: () async {
-                                            amountController.clear();
-                                            moneyController.clear();
-                                            return true;
+                                        child: PopScope(
+                                          onPopInvoked: (didPop) {
+                                            if (didPop) {
+                                              amountController.clear();
+                                              moneyController.clear();
+                                            }
                                           },
                                           child: SingleChildScrollView(
                                             child: Column(
@@ -257,7 +258,7 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
                                                       moneyController
                                                           .text = (int.parse(
                                                                   value) *
-                                                              100)
+                                                              1000)
                                                           .toString()
                                                           .formatNumberWithComma();
                                                       setState(() {});

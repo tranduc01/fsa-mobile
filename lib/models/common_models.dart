@@ -5,7 +5,6 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/main.dart';
 import 'package:socialv/screens/blog/screens/blog_list_screen.dart';
 import 'package:socialv/screens/forums/screens/my_forums_screen.dart';
-import 'package:socialv/screens/groups/screens/group_screen.dart';
 import 'package:socialv/screens/lms/screens/course_list_screen.dart';
 import 'package:socialv/screens/profile/screens/profile_friends_screen.dart';
 import 'package:socialv/screens/settings/screens/settings_screen.dart';
@@ -35,10 +34,6 @@ List<DrawerModel> getDrawerOptions() {
       image: ic_two_user,
       title: language.friends,
       attachedScreen: ProfileFriendsScreen()));
-  list.add(DrawerModel(
-      image: ic_three_user,
-      title: language.groups,
-      attachedScreen: GroupScreen()));
   list.add(DrawerModel(
       image: ic_document,
       title: language.forums,
