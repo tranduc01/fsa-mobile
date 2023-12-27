@@ -20,7 +20,7 @@ dependencies:
   flutter_portal: ^0.4.0
   tap_to_expand:
   flutter_rating_bar:
-
+  ionicons:
   # Media
   image_picker: ^1.0.4
   file_picker: ^6.0.0
@@ -34,7 +34,8 @@ dependencies:
   visibility_detector: ^0.4.0+2
   camera:
   extended_image: ^8.1.1
-
+  animated_bottom_navigation_bar:
+  fl_chart: ^0.66.0
   #Date CountDown
   date_count_down:
   flutter_timer_countdown:

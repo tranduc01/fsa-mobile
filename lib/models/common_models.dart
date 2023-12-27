@@ -13,6 +13,7 @@ import 'package:socialv/screens/shop/screens/cart_screen.dart';
 import 'package:socialv/screens/shop/screens/orders_screen.dart';
 import 'package:socialv/screens/shop/screens/shop_screen.dart';
 import 'package:socialv/screens/shop/screens/wishlist_screen.dart';
+import 'package:socialv/screens/stats/screens/stats_screen.dart';
 
 import '../screens/lms/screens/cource_orders_screen.dart';
 import '../screens/subscription/screens/subscription_screen3.dart';
@@ -49,7 +50,8 @@ List<DrawerModel> getDrawerOptions() {
       image: ic_buy,
       title: language.purchasePackage,
       attachedScreen: SubscriptionScreen3()));
-
+  list.add(DrawerModel(
+      image: stats, title: 'Thống kê', attachedScreen: StatsScreen()));
   if (appStore.isLMSEnable == 1 && appStore.isCourseEnable == 1) {
     list.add(DrawerModel(
         image: ic_book,

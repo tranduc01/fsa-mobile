@@ -2,6 +2,9 @@ import 'package:socialv/language/languages.dart';
 
 class LanguageVi extends BaseLanguage {
   @override
+  String get requestPackageCount => " lần đánh giá";
+
+  @override
   String get purchase => "Mua";
 
   @override

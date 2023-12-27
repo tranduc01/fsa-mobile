@@ -4,7 +4,6 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/main.dart';
 import 'package:socialv/models/members/friend_request_model.dart';
 import 'package:socialv/network/rest_apis.dart';
-import 'package:socialv/screens/dashboard_screen.dart';
 import 'package:socialv/screens/home/screens/members_list_screen.dart';
 import 'package:socialv/screens/profile/screens/member_profile_screen.dart';
 import 'package:socialv/utils/cached_network_image.dart';
