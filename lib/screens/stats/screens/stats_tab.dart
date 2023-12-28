@@ -203,8 +203,10 @@ class _StatsPageState extends State<StatsPage> {
             height: 20,
           ),
           Wrap(
-              spacing: 20,
-              children: List.generate(expenses.length, (index) {
+            spacing: 20,
+            children: List.generate(
+              expenses.length,
+              (index) {
                 return Container(
                   width: (size.width - 60) / 2,
                   height: 170,
@@ -264,7 +266,9 @@ class _StatsPageState extends State<StatsPage> {
                     ),
                   ),
                 );
-              }))
+              },
+            ),
+          ),
         ],
       ),
     );

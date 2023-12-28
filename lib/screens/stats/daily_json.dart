@@ -1,32 +1,32 @@
 const List daily = [
   {
-    "icon": "assets/images/bank.png",
-    "name": "Bank",
-    "date": "Fri 10AM",
-    "price": "\$340.00"
+    "icon": "assets/images/money1.png",
+    "name": "Gói 20.000",
+    "date": "Tương đương 20 points",
+    "price": "20.000 VNĐ"
   },
   {
-    "icon": "assets/images/auto.png",
-    "name": "Automobile",
-    "date": "Mon 8AM",
-    "price": "\$70.00"
+    "icon": "assets/images/money2.png",
+    "name": "Gói 50.000",
+    "date": "Tương đương 50 points",
+    "price": "50.000 VNĐ"
   },
   {
-    "icon": "assets/images/gift.png",
-    "name": "Gift",
-    "date": "Sat 6PM",
-    "price": "\$110.00"
+    "icon": "assets/images/money3.png",
+    "name": "Gói 100.000",
+    "date": "Tương đương 100 points",
+    "price": "100.000 VNĐ"
   },
   {
-    "icon": "assets/images/eating.png",
-    "name": "Eating",
-    "date": "Sun 5PM",
-    "price": "\$60.00"
+    "icon": "assets/images/money4.png",
+    "name": "Gói 200.000",
+    "date": "Tương đương 200 points",
+    "price": "200.000 VNĐ"
   },
   {
-    "icon": "assets/images/charity.png",
-    "name": "Charity",
-    "date": "Wed 12PM",
-    "price": "\$1200.00"
+    "icon": "assets/images/money5.png",
+    "name": "Gói 500.000",
+    "date": "Tương đương 500 points",
+    "price": "500.000 VNĐ"
   }
 ];
