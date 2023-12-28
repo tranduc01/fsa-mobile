@@ -5,25 +5,18 @@ import 'package:socialv/components/loading_widget.dart';
 import 'package:socialv/components/no_data_lottie_widget.dart';
 import 'package:socialv/main.dart';
 import 'package:socialv/models/members/member_detail_model.dart';
-import 'package:socialv/models/posts/post_model.dart';
 import 'package:socialv/models/story/highlight_category_list_model.dart';
 import 'package:socialv/network/rest_apis.dart';
 import 'package:socialv/screens/blockReport/components/block_member_dialog.dart';
 import 'package:socialv/screens/blockReport/components/show_report_dialog.dart';
-import 'package:socialv/screens/groups/screens/group_screen.dart';
 import 'package:socialv/screens/post/components/post_component.dart';
 import 'package:socialv/screens/profile/components/profile_header_component.dart';
 import 'package:socialv/screens/profile/components/request_follow_widget.dart';
 import 'package:socialv/screens/profile/screens/member_friends_screen.dart';
 import 'package:socialv/screens/profile/screens/personal_info_screen.dart';
 import 'package:socialv/screens/settings/screens/settings_screen.dart';
-import 'package:socialv/screens/stories/component/story_highlights_component.dart';
 
-import '../../../models/common_models/post_mdeia_model.dart';
-import '../../../models/posts/comment_model.dart';
-import '../../../models/posts/get_post_likes_model.dart';
 import '../../../models/posts/post.dart';
-import '../../../models/reactions/reactions_count_model.dart';
 import '../../../utils/app_constants.dart';
 import '../../gallery/screens/gallery_screen.dart';
 
@@ -467,26 +460,6 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
                                     .launch(context);
                               } else {
                                 toast(language.canNotViewFriends);
-                              }
-                            },
-                                splashColor: Colors.transparent,
-                                highlightColor: Colors.transparent).expand(),
-                            Column(
-                              children: [
-                                Text(member.groupsCount.validate().toString(),
-                                    style: boldTextStyle(size: 18)),
-                                4.height,
-                                Text(language.groups,
-                                    style: secondaryTextStyle(size: 12)),
-                              ],
-                            ).onTap(() {
-                              if (member.groupsCount.validate() != 0 &&
-                                  showDetails) {
-                                GroupScreen(
-                                        userId: member.id.validate().toInt())
-                                    .launch(context);
-                              } else {
-                                toast(language.canNotViewGroups);
                               }
                             },
                                 splashColor: Colors.transparent,

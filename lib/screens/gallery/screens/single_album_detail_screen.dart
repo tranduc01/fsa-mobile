@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -48,6 +49,19 @@ class _SingleAlbumDetailScreenState extends State<SingleAlbumDetailScreen> {
     });
   }
 
+  updatePublic(bool isPublic) async {
+    String action = isPublic ? 'public' : 'private';
+    showConfirmDialogCustom(
+      context,
+      title: 'Are you sure you want to ' + action + ' this collection?',
+      onAccept: (p0) async {
+        await galleryController.updateAlbum(widget.album, null, null, isPublic);
+        await galleryController.fetchAlbum(widget.album.id!);
+        galleryController.update();
+      },
+    );
+  }
+
   @override
   void setState(fn) {
     if (mounted) super.setState(fn);
@@ -73,6 +87,24 @@ class _SingleAlbumDetailScreenState extends State<SingleAlbumDetailScreen> {
             finish(context);
           },
         ),
+        actions: [
+          Obx(
+            () => Row(
+              children: [
+                Text('Public', style: boldTextStyle()),
+                5.width,
+                CupertinoSwitch(
+                  thumbColor: Colors.white,
+                  trackColor: Colors.black12,
+                  value: galleryController.album.value.isPublic.validate(),
+                  onChanged: (value) => {
+                    updatePublic(value),
+                  },
+                ),
+              ],
+            ),
+          )
+        ],
       ),
       body: Stack(
         fit: StackFit.expand,
@@ -178,7 +210,7 @@ class _SingleAlbumDetailScreenState extends State<SingleAlbumDetailScreen> {
                                 var ids = <int>[];
                                 ids.add(mediaId);
                                 await galleryController.updateAlbum(
-                                    widget.album, null, ids);
+                                    widget.album, null, ids, null);
 
                                 await galleryController
                                     .fetchAlbum(widget.album.id!);

@@ -107,6 +107,10 @@ const ic_discover_filled = 'assets/icons/ic_discover_filled.png';
 const heart = 'assets/icons/ic_heart_rating.png';
 const heart_half = 'assets/icons/ic_heart_half_rating.png';
 const heart_border = 'assets/icons/ic_heart_border_rating.png';
+const ic_wallet_out = 'assets/icons/ic_wallet_out.png';
+const ic_wallet_in = 'assets/icons/ic_wallet_in.png';
+const ic_receive_money = 'assets/icons/ic_receive_money.png';
+const ic_send_money = 'assets/icons/ic_send_money.png';
 
 /// Lottie Files
 const no_data = "assets/lottie/no_data.json";

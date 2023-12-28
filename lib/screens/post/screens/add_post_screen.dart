@@ -135,34 +135,34 @@ class _AddPostScreenState extends State<AddPostScreen> {
     );
 
     if (file != null) {
-      if (file == FileTypes.CAMERA) {
-        appStore.setLoading(true);
-        await getImageSource(
-                isCamera: true,
-                isVideo: selectedMedia!.type == MediaTypes.video)
-            .then((value) {
-          appStore.setLoading(false);
-          mediaList.add(PostMedia(file: value));
-          setState(() {});
-        }).catchError((e) {
-          log('Error: ${e.toString()}');
-          appStore.setLoading(false);
-        });
-      } else {
-        appStore.setLoading(true);
+      // if (file == FileTypes.CAMERA) {
+      //   appStore.setLoading(true);
+      //   await getImageSource(
+      //           isCamera: true,
+      //           isVideo: selectedMedia!.type == MediaTypes.video)
+      //       .then((value) {
+      //     appStore.setLoading(false);
+      //     mediaList.add(PostMedia(file: value));
+      //     setState(() {});
+      //   }).catchError((e) {
+      //     log('Error: ${e.toString()}');
+      //     appStore.setLoading(false);
+      //   });
+      // } else {
+      //   appStore.setLoading(true);
 
-        getMultipleFiles(mediaType: selectedMedia!).then((value) {
-          value.forEach((element) {
-            mediaList.add(PostMedia(file: element));
-          });
-        }).catchError((e) {
-          log('Error: ${e.toString()}');
-        }).whenComplete(() {
-          setState(() {});
-          appStore.setLoading(false);
-        });
-        log('MediaList: ${mediaList.length}');
-      }
+      //   getMultipleFiles(mediaType: selectedMedia!).then((value) {
+      //     value.forEach((element) {
+      //       mediaList.add(PostMedia(file: element));
+      //     });
+      //   }).catchError((e) {
+      //     log('Error: ${e.toString()}');
+      //   }).whenComplete(() {
+      //     setState(() {});
+      //     appStore.setLoading(false);
+      //   });
+      //   log('MediaList: ${mediaList.length}');
+      // }
     }
   }
 

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as path;
 import 'package:http_parser/http_parser.dart';
 import 'package:get/get.dart';
 import 'package:socialv/models/common_models.dart';
@@ -83,11 +84,13 @@ class GalleryController extends GetxController {
       request.headers['Authorization'] =
           'Bearer ${await storage.read(key: 'jwt')}';
       for (var media in medias) {
+        String type =
+            path.extension(media.file!.path) == '.mp4' ? 'video' : 'image';
         var multipartFile = await http.MultipartFile.fromPath(
           'medias',
           media.file!.path,
           filename: media.file!.path.split('/').last,
-          contentType: MediaType('image', 'jpeg'),
+          contentType: MediaType(type, 'mp4'),
         );
         request.files.add(multipartFile);
       }
@@ -106,8 +109,8 @@ class GalleryController extends GetxController {
     }
   }
 
-  Future<void> updateAlbum(
-      Album album, List<PostMedia>? medias, List<int>? deleteId) async {
+  Future<void> updateAlbum(Album album, List<PostMedia>? medias,
+      List<int>? deleteId, bool? isPublic) async {
     try {
       var url = Uri.parse('$BASE_URL/Collection/${album.id}');
       var request = http.MultipartRequest('PATCH', url);
@@ -115,11 +118,13 @@ class GalleryController extends GetxController {
           'Bearer ${await storage.read(key: 'jwt')}';
       if (medias != null) {
         for (var media in medias) {
+          String type =
+              path.extension(media.file!.path) == '.mp4' ? 'video' : 'image';
           var multipartFile = await http.MultipartFile.fromPath(
             'mediasAdd',
             media.file!.path,
             filename: media.file!.path.split('/').last,
-            contentType: MediaType('image', 'jpeg'),
+            contentType: MediaType(type, 'jpeg'),
           );
           request.files.add(multipartFile);
         }
@@ -127,6 +132,10 @@ class GalleryController extends GetxController {
 
       if (deleteId != null) {
         request.fields['mediaDeleteIds'] = deleteId.join(",");
+      }
+
+      if (isPublic != null) {
+        request.fields['isPublic'] = isPublic.toString();
       }
 
       request.fields['title'] = album.title!;
