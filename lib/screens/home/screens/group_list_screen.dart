@@ -7,7 +7,6 @@ import 'package:socialv/main.dart';
 import 'package:socialv/models/dashboard_api_response.dart';
 import 'package:socialv/models/groups/group_response.dart';
 import 'package:socialv/network/rest_apis.dart';
-import 'package:socialv/screens/groups/screens/group_detail_screen.dart';
 import 'package:socialv/utils/app_constants.dart';
 import 'package:socialv/utils/cached_network_image.dart';
 

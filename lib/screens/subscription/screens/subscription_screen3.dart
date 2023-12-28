@@ -234,7 +234,7 @@ class _SubscriptionScreen3 extends State<SubscriptionScreen3> {
                                                 expertisePackage
                                                     .numberOfExpertise
                                                     .toString() +
-                                                " lần đánh giá",
+                                                language.requestPackageCount,
                                             style: TextStyle(
                                                 fontFamily: 'Roboto',
                                                 fontWeight: FontWeight.w600),
@@ -245,9 +245,12 @@ class _SubscriptionScreen3 extends State<SubscriptionScreen3> {
                                         ),
                                         Container(
                                           child: Column(children: [
-                                            Text(expertisePackage.description!,
-                                                style: TextStyle(
-                                                    fontFamily: 'Roboto')),
+                                            Text(
+                                              expertisePackage.description!,
+                                              style: TextStyle(
+                                                  fontFamily: 'Roboto'),
+                                              textAlign: TextAlign.center,
+                                            ),
                                             20.height,
                                             if (expertisePackage.isApplySale! &&
                                                 expertisePackage.saleStartAt!
