@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as path;
 import 'package:socialv/controllers/user_controller.dart';
 import '../configs.dart';
 import '../models/common_models.dart';
@@ -141,11 +142,13 @@ class ExpertiseRequestController extends GetxController {
       request.headers['Authorization'] =
           'Bearer ${await storage.read(key: 'jwt')}';
       for (var media in medias) {
+        String type =
+            path.extension(media.file!.path) == '.mp4' ? 'video' : 'image';
         var multipartFile = await http.MultipartFile.fromPath(
           'medias',
           media.file!.path,
           filename: media.file!.path.split('/').last,
-          contentType: MediaType('image', 'jpeg'),
+          contentType: MediaType(type, 'jpeg'),
         );
         request.files.add(multipartFile);
       }

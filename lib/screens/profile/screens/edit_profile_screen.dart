@@ -211,10 +211,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                         );
 
                                         if (file != null) {
-                                          avatarImage = await getImageSource(
-                                              isCamera: file == FileTypes.CAMERA
-                                                  ? true
-                                                  : false);
+                                          // avatarImage = await getImageSource(
+                                          //     isCamera: file == FileTypes.CAMERA
+                                          //         ? true
+                                          //         : false);
                                           setState(() {});
                                           appStore.setLoading(false);
                                         }

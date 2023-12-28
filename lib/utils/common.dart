@@ -134,25 +134,30 @@ Widget appButton({
   );
 }
 
-Future<File?> getImageSource(
+Future<List<File>> getMediasSource(
     {bool isCamera = true, bool isVideo = false}) async {
   final picker = ImagePicker();
 
-  XFile? pickedImage;
-  if (isVideo) {
-    await picker
-        .pickVideo(source: isCamera ? ImageSource.camera : ImageSource.gallery)
-        .then((value) {
-      pickedImage = value;
-    }).catchError((e) {
-      log('Error: ${e.toString()}');
-    });
-  } else {
-    pickedImage = await picker.pickImage(
-        source: isCamera ? ImageSource.camera : ImageSource.gallery);
-  }
+  List<File> files = [];
 
-  return File(pickedImage!.path);
+  // if (isVideo) {
+  //   await picker
+  //       .pickVideo(source: isCamera ? ImageSource.camera : ImageSource.gallery)
+  //       .then((value) {
+  //     pickedImage = value;
+  //   }).catchError((e) {
+  //     log('Error: ${e.toString()}');
+  //   });
+  // } else {
+  //   pickedImage = await picker.pickImage(
+  //       source: isCamera ? ImageSource.camera : ImageSource.gallery);
+  // }
+
+  await picker.pickMultipleMedia().then((value) => value.forEach((element) {
+        files.add(File(element.path));
+      }));
+
+  return files;
 }
 
 String parseHtmlString(String? htmlString) {
