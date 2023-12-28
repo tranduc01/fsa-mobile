@@ -109,8 +109,8 @@ class GalleryController extends GetxController {
     }
   }
 
-  Future<void> updateAlbum(
-      Album album, List<PostMedia>? medias, List<int>? deleteId) async {
+  Future<void> updateAlbum(Album album, List<PostMedia>? medias,
+      List<int>? deleteId, bool? isPublic) async {
     try {
       var url = Uri.parse('$BASE_URL/Collection/${album.id}');
       var request = http.MultipartRequest('PATCH', url);
@@ -132,6 +132,10 @@ class GalleryController extends GetxController {
 
       if (deleteId != null) {
         request.fields['mediaDeleteIds'] = deleteId.join(",");
+      }
+
+      if (isPublic != null) {
+        request.fields['isPublic'] = isPublic.toString();
       }
 
       request.fields['title'] = album.title!;

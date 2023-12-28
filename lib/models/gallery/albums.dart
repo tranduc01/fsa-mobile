@@ -5,6 +5,7 @@ class Album {
   String? description;
   DateTime? createdAt;
   bool? canDelete;
+  bool? isPublic;
   List<Media> media = [];
 
   Album(
@@ -14,6 +15,7 @@ class Album {
       this.coverImageUrl,
       this.createdAt,
       required this.media,
+      this.isPublic,
       this.canDelete});
 
   Album.fromJson(dynamic json) {
@@ -23,6 +25,7 @@ class Album {
     description = json['description'];
     canDelete = json['can_delete'] ?? true;
     createdAt = DateTime.parse(json['createdAt']);
+    isPublic = json['isPublic'];
     media = (json['medias'] as List).map((e) => Media.fromJson(e)).toList();
   }
 }

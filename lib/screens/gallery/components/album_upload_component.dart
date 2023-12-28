@@ -381,7 +381,7 @@ class _AlbumUploadScreenState extends State<AlbumUploadScreen> {
 
                       var mediaList = [...mediaImageList, ...mediaVideoList];
                       await galleryController.updateAlbum(
-                          widget.album!, mediaList, null);
+                          widget.album!, mediaList, null, null);
 
                       if (galleryController.isUpdateSuccess.value) {
                         galleryController.fetchAlbum(widget.album!.id!);
