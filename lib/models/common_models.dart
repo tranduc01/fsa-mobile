@@ -16,7 +16,6 @@ import 'package:socialv/screens/stats/screens/stats_screen.dart';
 import 'package:socialv/screens/subscription/screens/subscription_screen2.dart';
 
 import '../screens/lms/screens/cource_orders_screen.dart';
-import '../screens/subscription/screens/subscription_screen3.dart';
 import '../utils/app_constants.dart';
 
 class DrawerModel {

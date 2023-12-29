@@ -112,6 +112,7 @@ const ic_wallet_out = 'assets/icons/ic_wallet_out.png';
 const ic_wallet_in = 'assets/icons/ic_wallet_in.png';
 const ic_receive_money = 'assets/icons/ic_receive_money.png';
 const ic_send_money = 'assets/icons/ic_send_money.png';
+const hot_deal = 'assets/images/hot-deal.png';
 
 /// Lottie Files
 const no_data = "assets/lottie/no_data.json";

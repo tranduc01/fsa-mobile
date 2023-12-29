@@ -2,9 +2,9 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:socialv/controllers/expertise_package_controller.dart';
+import 'package:socialv/controllers/topup_package_controller.dart';
 import 'package:socialv/main.dart';
-import 'package:socialv/models/package/expertise_package.dart';
+import 'package:socialv/models/package/topup_package.dart';
 
 import '../../../components/loading_widget.dart';
 import '../../../components/no_data_lottie_widget.dart';
@@ -18,13 +18,13 @@ class _SubscriptionScreen3 extends State<SubscriptionScreen3> {
   Color _color = Color.fromRGBO(98, 121, 193, 1);
   bool tap = true;
 
-  late ExpertisePackageController expertisePackageController =
-      Get.put(ExpertisePackageController());
+  late TopupPackageController expertisePackageController =
+      Get.put(TopupPackageController());
 
   @override
   void initState() {
     super.initState();
-    expertisePackageController.fetchExpetisePackages();
+    expertisePackageController.fetchTopupPackages();
   }
 
   @override
@@ -71,7 +71,7 @@ class _SubscriptionScreen3 extends State<SubscriptionScreen3> {
               if (expertisePackageController.isLoading.value)
                 return LoadingWidget().center();
               else if (expertisePackageController.isError.value ||
-                  expertisePackageController.expetisePackages.isEmpty)
+                  expertisePackageController.topupPackages.isEmpty)
                 return SizedBox(
                   height: MediaQuery.of(context).size.height * 0.5,
                   child: NoDataWidget(
@@ -80,7 +80,7 @@ class _SubscriptionScreen3 extends State<SubscriptionScreen3> {
                         ? language.somethingWentWrong
                         : language.noDataFound,
                     onRetry: () {
-                      expertisePackageController.fetchExpetisePackages();
+                      expertisePackageController.fetchTopupPackages();
                     },
                     retryText: '   ' + language.clickToRefresh + '   ',
                   ).center(),
@@ -96,11 +96,10 @@ class _SubscriptionScreen3 extends State<SubscriptionScreen3> {
                     slideConfiguration: SlideConfiguration(
                         delay: Duration(milliseconds: 100),
                         verticalOffset: 300),
-                    itemCount:
-                        expertisePackageController.expetisePackages.length,
+                    itemCount: expertisePackageController.topupPackages.length,
                     itemBuilder: (context, index) {
-                      ExpertisePackage expertisePackage =
-                          expertisePackageController.expetisePackages[index];
+                      TopupPackage expertisePackage =
+                          expertisePackageController.topupPackages[index];
                       return InkWell(
                         onTap: () {
                           showDialog(
@@ -231,8 +230,7 @@ class _SubscriptionScreen3 extends State<SubscriptionScreen3> {
                                           ),
                                           child: Text(
                                             "+" +
-                                                expertisePackage
-                                                    .numberOfExpertise
+                                                expertisePackage.pointEarned
                                                     .toString() +
                                                 language.requestPackageCount,
                                             style: TextStyle(
