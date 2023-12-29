@@ -5,6 +5,7 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/main.dart';
 import 'package:socialv/screens/blog/screens/blog_list_screen.dart';
 import 'package:socialv/screens/forums/screens/my_forums_screen.dart';
+import 'package:socialv/screens/fragments/profile_view.dart';
 import 'package:socialv/screens/lms/screens/course_list_screen.dart';
 import 'package:socialv/screens/profile/screens/profile_friends_screen.dart';
 import 'package:socialv/screens/settings/screens/settings_screen.dart';
@@ -48,6 +49,10 @@ List<DrawerModel> getDrawerOptions() {
       attachedScreen: StudentAssistantSubscription()));
   list.add(DrawerModel(
       image: stats, title: 'Thống kê', attachedScreen: StatsScreen()));
+  list.add(DrawerModel(
+      image: stats,
+      title: 'Test view profile',
+      attachedScreen: ProfileFragmentView()));
   if (appStore.isLMSEnable == 1 && appStore.isCourseEnable == 1) {
     list.add(DrawerModel(
         image: ic_book,
