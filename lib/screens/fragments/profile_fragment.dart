@@ -60,7 +60,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
         ])
       ]);
   List<Post> _userPostList = [];
-
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   late Future<List<Post>> future;
 
   late UserController userController = Get.put(UserController());
@@ -158,7 +158,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
             Obx(() => ProfileHeaderComponent(
                   avatarUrl: userController.user.value.avatarUrl,
                 )),
-            userController.isLoggedIn.value
+            userController.user.value.id != null
                 ? Column(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,

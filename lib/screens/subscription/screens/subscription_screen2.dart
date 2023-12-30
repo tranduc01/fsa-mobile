@@ -1,6 +1,7 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/controllers/topup_package_controller.dart';
 import 'package:socialv/models/package/topup_package.dart';
@@ -767,10 +768,11 @@ class _StudentAssistantSubscription
                                                         !topupPackage
                                                                 .salePercent!
                                                                 .isZero
-                                                            ? (topupPackage.price! *
-                                                                        topupPackage
-                                                                            .salePercent! /
-                                                                        100)
+                                                            ? (topupPackage.price! -
+                                                                        (topupPackage.price! *
+                                                                            topupPackage
+                                                                                .salePercent! /
+                                                                            100))
                                                                     .toStringAsFixed(
                                                                         0)
                                                                     .formatNumberWithComma() +
@@ -899,7 +901,128 @@ class _StudentAssistantSubscription
                                                                 BorderRadius
                                                                     .circular(
                                                                         20)))),
-                                            onPressed: () {},
+                                            onPressed: () async {
+                                              showDialog(
+                                                  context: context,
+                                                  barrierDismissible: false,
+                                                  builder: (context) {
+                                                    return LoadingDialog();
+                                                  });
+                                              var url =
+                                                  await topupPackageController
+                                                      .processPayment(
+                                                          topupPackage.id!);
+
+                                              if (!topupPackageController
+                                                      .isLoading.value &&
+                                                  !topupPackageController
+                                                      .isError.value) {
+                                                Navigator.pop(context);
+                                                Navigator.pop(context);
+                                                webViewController =
+                                                    WebViewController()
+                                                      ..setJavaScriptMode(
+                                                          JavaScriptMode
+                                                              .unrestricted)
+                                                      ..loadRequest(
+                                                          Uri.parse(url));
+                                                webViewController
+                                                    .setNavigationDelegate(
+                                                        NavigationDelegate(
+                                                  onPageStarted: (String url) {
+                                                    // This callback will be called when a new page starts loading
+                                                    print(
+                                                        'Page started loading: $url');
+                                                  },
+                                                  onPageFinished: (String url) {
+                                                    // This callback will be called when a page finishes loading
+                                                    print(
+                                                        'Page finished loading: $url');
+                                                    final uri = Uri.parse(url);
+                                                    final transactionStatus = uri
+                                                            .queryParameters[
+                                                        'vnp_TransactionStatus'];
+                                                    print(transactionStatus);
+
+                                                    if (transactionStatus !=
+                                                        null) {
+                                                      bool result =
+                                                          transactionStatus ==
+                                                              '00';
+                                                      Navigator.of(navigatorKey
+                                                              .currentContext!)
+                                                          .pop(); // Close the payment dialog
+
+                                                      showDialog(
+                                                        context: navigatorKey
+                                                            .currentContext!,
+                                                        builder: (context) {
+                                                          return AlertDialog(
+                                                            shape:
+                                                                RoundedRectangleBorder(),
+                                                            title: result
+                                                                ? Text(
+                                                                    'Payment Success')
+                                                                : Text(
+                                                                    'Payment Fail'),
+                                                            content: result
+                                                                ? Lottie.asset(
+                                                                    'assets/lottie/success.json',
+                                                                    height: 250,
+                                                                    width: 250,
+                                                                  )
+                                                                : Lottie.asset(
+                                                                    'assets/lottie/fail.json',
+                                                                    height: 250,
+                                                                    width: 250,
+                                                                  ),
+                                                            actions: [
+                                                              appButton(
+                                                                  text: 'OK',
+                                                                  onTap: () {
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                  },
+                                                                  context:
+                                                                      context),
+                                                            ],
+                                                          );
+                                                        },
+                                                      );
+                                                    }
+                                                  },
+                                                  onWebResourceError:
+                                                      (WebResourceError error) {
+                                                    // This callback will be called if there's an error loading the page
+                                                    print(
+                                                        'Error loading page: ${error.description}');
+                                                  },
+                                                ));
+
+                                                showDialog(
+                                                  context: navigatorKey
+                                                      .currentContext!,
+                                                  builder: (context) {
+                                                    return Dialog(
+                                                      child: WebViewWidget(
+                                                          controller:
+                                                              webViewController),
+                                                    );
+                                                  },
+                                                );
+                                              } else {
+                                                Navigator.pop(context);
+                                                showDialog(
+                                                  context: context,
+                                                  barrierDismissible: false,
+                                                  builder: (context) {
+                                                    return FailDialog(
+                                                        text:
+                                                            'Purchase Failed');
+                                                  },
+                                                );
+                                              }
+                                            },
                                             child: Text('Purchase',
                                                 style: TextStyle(
                                                     color: Colors.white,
