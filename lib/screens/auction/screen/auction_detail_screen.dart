@@ -950,222 +950,329 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
               ],
             ),
             Positioned(
-              top: screenHeight * 0.31,
+              top: screenHeight * 0.24,
               left: 10,
               right: 10,
-              child: Container(
-                padding: EdgeInsets.only(
-                  top: 10.0,
-                  left: 20.0,
-                  right: 20.0,
-                  bottom: 9.0,
-                ),
-                width: MediaQuery.of(context).size.width,
-                height: 190,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment(0.8, 1),
-                    colors: <Color>[
-                      Color(0xFFf6d5f7),
-                      Color(0xFFfbe9d7),
-                    ],
+              child: Column(
+                children: [
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    child: IntrinsicWidth(
+                      child: RawMaterialButton(
+                        fillColor: Colors.white,
+                        onPressed: () {
+                          showModalBottomSheet(
+                            elevation: 0,
+                            context: context,
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            transitionAnimationController: _animationController,
+                            builder: (context) {
+                              return FractionallySizedBox(
+                                heightFactor: 0.7,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Container(
+                                      width: 45,
+                                      height: 5,
+                                      //clipBehavior: Clip.hardEdge,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(16),
+                                          color: Colors.white),
+                                    ),
+                                    8.height,
+                                    Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      alignment: Alignment.centerLeft,
+                                      padding: EdgeInsets.all(10),
+                                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                                      decoration: BoxDecoration(
+                                        color: context.cardColor,
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(16),
+                                            topRight: Radius.circular(16)),
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            "Số người tham gia: 0",
+                                            style: TextStyle(
+                                                fontFamily: "Roboto",
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18),
+                                          ),
+                                          Container(
+                                            child:
+                                                Column(children: [Container()]),
+                                          )
+                                        ],
+                                      ),
+                                    ).expand(),
+                                  ],
+                                ),
+                              );
+                            },
+                          );
+                        },
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(15),
+                          child: Container(
+                            alignment: Alignment.centerLeft,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.group_outlined,
+                                  color: Colors.black,
+                                  size: 20,
+                                ),
+                                SizedBox(width: 5),
+                                Text(
+                                  "Số người tham gia: 0",
+                                  style: TextStyle(
+                                    fontFamily: "Roboto",
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 0.8,
-                      blurRadius: 7,
-                      offset: Offset(0, 3), // changes position of shadow
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(
+                      top: 10.0,
+                      left: 20.0,
+                      right: 20.0,
+                      bottom: 9.0,
                     ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TimerCountdown(
-                          format: CountDownTimerFormat.daysHoursMinutesSeconds,
-                          endTime: DateTime.parse(auctionController
-                                  .auction.value.startDate!
-                                  .add(Duration(hours: 7))
-                                  .isBefore(DateTime.now())
-                              ? auctionController.auction.value.endDate!
-                                  .add(Duration(hours: 7))
-                                  .toString()
-                              : auctionController.auction.value.startDate!
-                                  .add(Duration(hours: 7))
-                                  .toString()),
-                          timeTextStyle: TextStyle(
-                            color: Colors.black,
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Roboto',
-                          ),
-                          colonsTextStyle: TextStyle(
-                            color: Colors.black,
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Roboto',
-                          ),
-                          descriptionTextStyle: TextStyle(
-                            color: Colors.black,
-                            fontSize: 15.0,
-                            fontFamily: 'Roboto',
-                          ),
-                          daysDescription: language.auctionDays,
-                          hoursDescription: language.auctionHours,
-                          minutesDescription: language.auctionMinutes,
-                          secondsDescription: language.auctionSeconds,
-                          spacerWidth: 5,
-                          onEnd: () {
-                            print("Timer finished");
-                          },
+                    width: MediaQuery.of(context).size.width,
+                    height: 190,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment(0.8, 1),
+                        colors: <Color>[
+                          Color(0xFFf6d5f7),
+                          Color(0xFFfbe9d7),
+                        ],
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 0.8,
+                          blurRadius: 7,
+                          offset: Offset(0, 3), // changes position of shadow
                         ),
                       ],
                     ),
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          child: Text(
-                            auctionController.auction.value.title!,
-                            style: TextStyle(
-                                color: const Color.fromARGB(194, 0, 0, 0),
-                                fontWeight: FontWeight.bold,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TimerCountdown(
+                              format:
+                                  CountDownTimerFormat.daysHoursMinutesSeconds,
+                              endTime: DateTime.parse(auctionController
+                                      .auction.value.startDate!
+                                      .add(Duration(hours: 7))
+                                      .isBefore(DateTime.now())
+                                  ? auctionController.auction.value.endDate!
+                                      .add(Duration(hours: 7))
+                                      .toString()
+                                  : auctionController.auction.value.startDate!
+                                      .add(Duration(hours: 7))
+                                      .toString()),
+                              timeTextStyle: TextStyle(
+                                color: Colors.black,
                                 fontSize: 20.0,
-                                fontFamily: 'Roboto'),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 3,
-                            textAlign: TextAlign.start,
-                          ),
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Roboto',
+                              ),
+                              colonsTextStyle: TextStyle(
+                                color: Colors.black,
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Roboto',
+                              ),
+                              descriptionTextStyle: TextStyle(
+                                color: Colors.black,
+                                fontSize: 15.0,
+                                fontFamily: 'Roboto',
+                              ),
+                              daysDescription: language.auctionDays,
+                              hoursDescription: language.auctionHours,
+                              minutesDescription: language.auctionMinutes,
+                              secondsDescription: language.auctionSeconds,
+                              spacerWidth: 5,
+                              onEnd: () {
+                                print("Timer finished");
+                              },
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              child: Text(
+                                auctionController.auction.value.title!,
+                                style: TextStyle(
+                                    color: const Color.fromARGB(194, 0, 0, 0),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20.0,
+                                    fontFamily: 'Roboto'),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 3,
+                                textAlign: TextAlign.start,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Spacer(),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        auctionController
+                                            .auction.value.reservePrice!
+                                            .toStringAsFixed(0)
+                                            .formatNumberWithComma(),
+                                        style: TextStyle(
+                                          color: const Color.fromARGB(
+                                              194, 0, 0, 0),
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15.0,
+                                          fontFamily: 'Roboto',
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        language.auctionStartPrice,
+                                        style: secondaryTextStyle(
+                                          color: const Color.fromARGB(
+                                              194, 0, 0, 0),
+                                          fontFamily: 'Roboto',
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        auctionController
+                                            .auction.value.soldDirectlyPrice!
+                                            .toStringAsFixed(0)
+                                            .formatNumberWithComma(),
+                                        style: TextStyle(
+                                          color: const Color.fromARGB(
+                                              194, 0, 0, 0),
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15.0,
+                                          fontFamily: 'Roboto',
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        language.auctionSoldDirectlyPrices,
+                                        style: secondaryTextStyle(
+                                          color: const Color.fromARGB(
+                                              194, 0, 0, 0),
+                                          fontFamily: 'Roboto',
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(width: 10.0),
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        auctionController
+                                            .auction.value.stepPrice!
+                                            .toStringAsFixed(0)
+                                            .formatNumberWithComma(),
+                                        style: TextStyle(
+                                          color: const Color.fromARGB(
+                                              194, 0, 0, 0),
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15.0,
+                                          fontFamily: 'Roboto',
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        language.auctionStepPrice,
+                                        style: secondaryTextStyle(
+                                          color: const Color.fromARGB(
+                                              194, 0, 0, 0),
+                                          fontFamily: 'Roboto',
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                    Spacer(),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    auctionController
-                                        .auction.value.reservePrice!
-                                        .toStringAsFixed(0)
-                                        .formatNumberWithComma(),
-                                    style: TextStyle(
-                                      color: const Color.fromARGB(194, 0, 0, 0),
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15.0,
-                                      fontFamily: 'Roboto',
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    language.auctionStartPrice,
-                                    style: secondaryTextStyle(
-                                      color: const Color.fromARGB(194, 0, 0, 0),
-                                      fontFamily: 'Roboto',
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    auctionController
-                                        .auction.value.soldDirectlyPrice!
-                                        .toStringAsFixed(0)
-                                        .formatNumberWithComma(),
-                                    style: TextStyle(
-                                      color: const Color.fromARGB(194, 0, 0, 0),
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15.0,
-                                      fontFamily: 'Roboto',
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    language.auctionSoldDirectlyPrices,
-                                    style: secondaryTextStyle(
-                                      color: const Color.fromARGB(194, 0, 0, 0),
-                                      fontFamily: 'Roboto',
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(width: 10.0),
-                        Expanded(
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    auctionController.auction.value.stepPrice!
-                                        .toStringAsFixed(0)
-                                        .formatNumberWithComma(),
-                                    style: TextStyle(
-                                      color: const Color.fromARGB(194, 0, 0, 0),
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15.0,
-                                      fontFamily: 'Roboto',
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    language.auctionStepPrice,
-                                    style: secondaryTextStyle(
-                                      color: const Color.fromARGB(194, 0, 0, 0),
-                                      fontFamily: 'Roboto',
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
             Positioned(

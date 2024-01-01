@@ -239,7 +239,7 @@ class _ProfileFragmentViewState extends State<ProfileFragmentView> {
               Container(
                 alignment: Alignment.topLeft,
                 child: Text(
-                  "Collection",
+                  "Collection" + " (${yourImageList.length})",
                   style: TextStyle(fontFamily: "Roboto", fontSize: 20),
                 ).paddingAll(16),
               ),
@@ -259,21 +259,36 @@ class _ProfileFragmentViewState extends State<ProfileFragmentView> {
                     return Stack(
                       fit: StackFit.expand,
                       children: [
-                        Image.network(
-                          yourImageList[
-                              index], // Replace with your list of images
-                          fit: BoxFit.cover,
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            image: DecorationImage(
+                              image: NetworkImage(yourImageList[index]),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          // child: Image.network(
+                          //   yourImageList[
+                          //       index], // Replace with your list of images
+                          //   fit: BoxFit.cover,
+                          // ),
                         ),
                         Positioned(
-                          right: 0,
-                          top: 0,
-                          child: Text(
-                            'Image ${index + 1}', // Replace this with your image name
-                            style: TextStyle(
-                              backgroundColor: Colors.black54,
-                              color: Colors.white,
-                              fontFamily: "Roboto",
-                              fontSize: 16,
+                          right: 10,
+                          top: 10,
+                          child: Container(
+                            padding: EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: Colors.black54,
+                            ),
+                            child: Text(
+                              'Collection ${index + 1}', // Replace this with your image name
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: "Roboto",
+                                fontSize: 16,
+                              ),
                             ),
                           ),
                         ),
