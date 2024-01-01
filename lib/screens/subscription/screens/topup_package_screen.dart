@@ -1,5 +1,6 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -10,20 +11,20 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../../components/loading_widget.dart';
 import '../../../components/no_data_lottie_widget.dart';
+import '../../../controllers/user_controller.dart';
 import '../../../main.dart';
 import '../../common/fail_dialog.dart';
 import '../../common/loading_dialog.dart';
 
-class StudentAssistantSubscription extends StatefulWidget {
+class TopupPackageScreen extends StatefulWidget {
   @override
-  _StudentAssistantSubscription createState() =>
-      _StudentAssistantSubscription();
+  _TopupPackageScreen createState() => _TopupPackageScreen();
 }
 
-class _StudentAssistantSubscription
-    extends State<StudentAssistantSubscription> {
+class _TopupPackageScreen extends State<TopupPackageScreen> {
   late TopupPackageController topupPackageController =
       Get.put(TopupPackageController());
+  late UserController userController = Get.find();
   late WebViewController webViewController;
   List images = [
     "assets/images/money1.png",
@@ -39,6 +40,7 @@ class _StudentAssistantSubscription
     "assets/images/money5.png",
     "assets/images/money5.png",
   ];
+  final storage = new FlutterSecureStorage();
 
   @override
   void initState() {
@@ -598,8 +600,90 @@ class _StudentAssistantSubscription
                                                       JavaScriptMode
                                                           .unrestricted)
                                                   ..loadRequest(Uri.parse(url));
+                                            webViewController
+                                                .setNavigationDelegate(
+                                                    NavigationDelegate(
+                                              onPageStarted: (String url) {
+                                                // This callback will be called when a new page starts loading
+                                                print(
+                                                    'Page started loading: $url');
+                                              },
+                                              onPageFinished:
+                                                  (String url) async {
+                                                // This callback will be called when a page finishes loading
+                                                print(
+                                                    'Page finished loading: $url');
+                                                final uri = Uri.parse(url);
+                                                final transactionStatus = uri
+                                                        .queryParameters[
+                                                    'vnp_TransactionStatus'];
+                                                print(transactionStatus);
+
+                                                if (transactionStatus != null) {
+                                                  bool result =
+                                                      transactionStatus == '00';
+                                                  Navigator.of(navigatorKey
+                                                          .currentContext!)
+                                                      .pop(); // Close the payment dialog
+                                                  String? jwt = await storage
+                                                      .read(key: 'jwt');
+                                                  if (result) {
+                                                    await userController
+                                                        .getUserById(
+                                                            JwtDecoder.decode(
+                                                                jwt!)!['uid']);
+                                                  }
+                                                  showDialog(
+                                                    context: navigatorKey
+                                                        .currentContext!,
+                                                    builder: (context) {
+                                                      return AlertDialog(
+                                                        shape: RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        20)),
+                                                        title: result
+                                                            ? Text(
+                                                                'Payment Success')
+                                                            : Text(
+                                                                'Payment Fail'),
+                                                        content: result
+                                                            ? Lottie.asset(
+                                                                'assets/lottie/success.json',
+                                                                height: 250,
+                                                                width: 250,
+                                                              )
+                                                            : Lottie.asset(
+                                                                'assets/lottie/fail.json',
+                                                                height: 250,
+                                                                width: 250,
+                                                              ),
+                                                        actions: [
+                                                          appButton(
+                                                              text: 'OK',
+                                                              onTap: () {
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                              context: context),
+                                                        ],
+                                                      );
+                                                    },
+                                                  );
+                                                }
+                                              },
+                                              onWebResourceError:
+                                                  (WebResourceError error) {
+                                                // This callback will be called if there's an error loading the page
+                                                print(
+                                                    'Error loading page: ${error.description}');
+                                              },
+                                            ));
+
                                             showDialog(
-                                              context: context,
+                                              context:
+                                                  navigatorKey.currentContext!,
                                               builder: (context) {
                                                 return Dialog(
                                                   child: WebViewWidget(
@@ -934,7 +1018,8 @@ class _StudentAssistantSubscription
                                                     print(
                                                         'Page started loading: $url');
                                                   },
-                                                  onPageFinished: (String url) {
+                                                  onPageFinished:
+                                                      (String url) async {
                                                     // This callback will be called when a page finishes loading
                                                     print(
                                                         'Page finished loading: $url');
@@ -952,14 +1037,26 @@ class _StudentAssistantSubscription
                                                       Navigator.of(navigatorKey
                                                               .currentContext!)
                                                           .pop(); // Close the payment dialog
-
+                                                      String? jwt =
+                                                          await storage.read(
+                                                              key: 'jwt');
+                                                      if (result) {
+                                                        await userController
+                                                            .getUserById(
+                                                                JwtDecoder.decode(
+                                                                        jwt!)![
+                                                                    'uid']);
+                                                      }
                                                       showDialog(
                                                         context: navigatorKey
                                                             .currentContext!,
                                                         builder: (context) {
                                                           return AlertDialog(
-                                                            shape:
-                                                                RoundedRectangleBorder(),
+                                                            shape: RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            20)),
                                                             title: result
                                                                 ? Text(
                                                                     'Payment Success')

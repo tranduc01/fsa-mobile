@@ -287,12 +287,23 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                          userController.user.value.totalPoint
-                              .validate()
-                              .toStringAsFixed(0)
-                              .formatNumberWithComma(),
-                          style: boldTextStyle(size: 18)),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            userController.user.value.totalPoint
+                                .validate()
+                                .toStringAsFixed(0)
+                                .formatNumberWithComma(),
+                            style: boldTextStyle(size: 18),
+                          ),
+                          10.width,
+                          Icon(
+                            Icons.info_outline_rounded,
+                            size: 20,
+                          ), // Add your icon here
+                        ],
+                      ),
                       4.height,
                       Text('Total Points', style: secondaryTextStyle(size: 12)),
                     ],
@@ -604,21 +615,6 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                       Text(language.posts,
                           style: boldTextStyle(
                               color: context.primaryColor, size: 20)),
-                      // TextIcon(
-                      //   onTap: () {
-                      //     isFavorites = !isFavorites;
-                      //     mPage = 1;
-                      //     setState(() {});
-                      //     getUserPostList();
-                      //   },
-                      //   prefix: Icon(
-                      //       isFavorites ? Icons.check_circle : Icons.circle_outlined,
-                      //       color: appColorPrimary,
-                      //       size: 18),
-                      //   text: language.favorites,
-                      //   textStyle: secondaryTextStyle(
-                      //       color: isFavorites ? context.primaryColor : null),
-                      // ),
                     ],
                   ).paddingSymmetric(horizontal: 8),
                   FutureBuilder<List<Post>>(
