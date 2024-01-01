@@ -6,17 +6,15 @@ import 'package:socialv/main.dart';
 import 'package:socialv/screens/blog/screens/blog_list_screen.dart';
 import 'package:socialv/screens/forums/screens/my_forums_screen.dart';
 import 'package:socialv/screens/lms/screens/course_list_screen.dart';
-import 'package:socialv/screens/profile/screens/profile_friends_screen.dart';
 import 'package:socialv/screens/settings/screens/settings_screen.dart';
 import 'package:socialv/screens/shop/screens/cart_screen.dart';
 import 'package:socialv/screens/shop/screens/orders_screen.dart';
 import 'package:socialv/screens/shop/screens/shop_screen.dart';
 import 'package:socialv/screens/shop/screens/wishlist_screen.dart';
 import 'package:socialv/screens/stats/screens/stats_screen.dart';
-import 'package:socialv/screens/subscription/screens/subscription_screen2.dart';
+import 'package:socialv/screens/wallet/wallet_screen.dart';
 
 import '../screens/lms/screens/cource_orders_screen.dart';
-import '../screens/subscription/screens/subscription_screen3.dart';
 import '../utils/app_constants.dart';
 
 class DrawerModel {
@@ -33,9 +31,7 @@ List<DrawerModel> getDrawerOptions() {
   List<DrawerModel> list = [];
 
   list.add(DrawerModel(
-      image: ic_two_user,
-      title: language.friends,
-      attachedScreen: ProfileFriendsScreen()));
+      image: ic_wallet, title: 'Wallet', attachedScreen: WalletScreen()));
   list.add(DrawerModel(
       image: ic_document,
       title: language.forums,
@@ -43,11 +39,8 @@ List<DrawerModel> getDrawerOptions() {
   list.add(DrawerModel(
       image: ic_blog, title: language.blogs, attachedScreen: BlogListScreen()));
   list.add(DrawerModel(
-      image: ic_buy,
-      title: language.purchasePackage,
-      attachedScreen: StudentAssistantSubscription()));
-  list.add(DrawerModel(
       image: stats, title: 'Thống kê', attachedScreen: StatsScreen()));
+
   if (appStore.isLMSEnable == 1 && appStore.isCourseEnable == 1) {
     list.add(DrawerModel(
         image: ic_book,

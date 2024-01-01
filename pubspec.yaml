@@ -21,6 +21,8 @@ dependencies:
   tap_to_expand:
   flutter_rating_bar:
   ionicons:
+  dropdown_search:
+  
   # Media
   image_picker: ^1.0.4
   file_picker: ^6.0.0
@@ -116,6 +118,7 @@ flutter:
     - assets/flag/
     - assets/icons/
     - assets/lottie/
+    - banks.json
 
 flutter_launcher_icons:
   image_path: "assets/app_icon.png"

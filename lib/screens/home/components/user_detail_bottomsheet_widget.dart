@@ -60,7 +60,7 @@ class _UserDetailBottomSheetWidgetState
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Obx(() => userController.isLoggedIn.value
+                    Obx(() => userController.user.value.id != null
                         ? Row(
                             children: [
                               userController.user.value.avatarUrl.isEmptyOrNull
@@ -189,7 +189,7 @@ class _UserDetailBottomSheetWidgetState
                 children: [
                   VersionInfoWidget(prefixText: 'v'),
                   16.height,
-                  userController.isLoggedIn.value
+                  userController.user.value.id != null
                       ? TextButton(
                           onPressed: () {
                             showConfirmDialogCustom(

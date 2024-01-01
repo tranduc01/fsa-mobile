@@ -1,8 +1,8 @@
-class ExpertisePackage {
+class TopupPackage {
   int? id;
   String? title;
   String? description;
-  int? numberOfExpertise;
+  int? pointEarned;
   double? price;
   double? salePrice;
   double? salePercent;
@@ -10,11 +10,11 @@ class ExpertisePackage {
   DateTime? saleEndAt;
   bool? isApplySale;
 
-  ExpertisePackage({
+  TopupPackage({
     this.id,
     this.title,
     this.description,
-    this.numberOfExpertise,
+    this.pointEarned,
     this.price,
     this.salePrice,
     this.salePercent,
@@ -23,11 +23,11 @@ class ExpertisePackage {
     this.isApplySale,
   });
 
-  ExpertisePackage.fromJson(Map<String, dynamic> json) {
+  TopupPackage.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];
     description = json['description'];
-    numberOfExpertise = json['numberOfExpertise'];
+    pointEarned = json['pointEarned'];
     price = json["price"] != null ? json["price"].toDouble() : 0;
     salePrice = json["salePrice"] != null ? json["salePrice"].toDouble() : 0;
     salePercent =
