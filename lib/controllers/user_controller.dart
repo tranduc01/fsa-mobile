@@ -204,4 +204,28 @@ class UserController extends GetxController {
       throw Exception('Failed to get User');
     }
   }
+
+  Future<User> getCurrentUser() async {
+    var url = '$BASE_URL/User/current-info';
+    String? token = await storage.read(key: 'jwt');
+    var headers = {
+      'Authorization': 'Bearer $token',
+    };
+    var response = await GetConnect().get(url, headers: headers);
+    print(response.bodyString);
+    if (response.bodyString != null) {
+      ResponseModel responseModel =
+          ResponseModel.fromJson(jsonDecode(response.bodyString!));
+
+      if (response.statusCode == 200) {
+        return user.value = User.fromJson(responseModel.data);
+      } else {
+        print('Request failed with status: ${response.statusCode}');
+        print('Request failed with status: ${responseModel.message}');
+        throw Exception('Failed to get User');
+      }
+    } else {
+      throw Exception('Failed to get User');
+    }
+  }
 }

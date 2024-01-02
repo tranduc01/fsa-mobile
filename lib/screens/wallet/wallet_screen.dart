@@ -20,6 +20,7 @@ import '../../models/enums/enums.dart';
 import '../../models/package/bank.dart';
 import '../common/fail_dialog.dart';
 import '../common/loading_dialog.dart';
+import 'withdraw_detail_bottomsheet_widget.dart';
 
 class WalletScreen extends StatefulWidget {
   const WalletScreen({Key? key}) : super(key: key);
@@ -1032,7 +1033,44 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
           Withdraw withdraw = withdrawController.withdraws[index];
           return InkWell(
             onTap: () {
-              print('Tapped');
+              showModalBottomSheet(
+                elevation: 0,
+                context: context,
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                transitionAnimationController: _animationController,
+                builder: (context) {
+                  return FractionallySizedBox(
+                    heightFactor: 0.9,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 45,
+                          height: 5,
+                          //clipBehavior: Clip.hardEdge,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              color: Colors.white),
+                        ),
+                        8.height,
+                        Container(
+                            clipBehavior: Clip.antiAliasWithSaveLayer,
+                            padding: EdgeInsets.all(15),
+                            decoration: BoxDecoration(
+                              color: context.cardColor,
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(20),
+                                  topRight: Radius.circular(20)),
+                            ),
+                            child: WithdrawRequestDetailBottomSheetWidget(
+                              requestId: withdraw.id!,
+                            )).expand(),
+                      ],
+                    ),
+                  );
+                },
+              );
             },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
