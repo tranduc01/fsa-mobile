@@ -346,62 +346,58 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          if (!userController.user.value.role.any((element) =>
-                              element.name.toLowerCase() ==
-                              Role.Expert.name.toLowerCase()))
-                            InkWell(
-                              onTap: () => ExpertiseRequestScreen(
-                                controller: _controller,
-                                selectedIndex: 2,
-                              ).launch(context),
-                              child: Stack(
-                                clipBehavior: Clip.none,
-                                alignment: Alignment.center,
-                                children: [
-                                  Image.asset(
-                                    ic_pending,
-                                    height: 40,
-                                    width: 40,
-                                    fit: BoxFit.cover,
-                                  ).paddingSymmetric(vertical: 11),
-                                  Positioned(
-                                    right: -8,
-                                    top: -4,
-                                    child: Container(
-                                      padding: EdgeInsets.all(6),
-                                      decoration: BoxDecoration(
-                                          color: appColorPrimary,
-                                          shape: BoxShape.circle),
-                                      child: Text(
-                                        '10',
-                                        style: boldTextStyle(
-                                            color: Colors.white,
-                                            size: 10,
-                                            weight: FontWeight.w700,
-                                            letterSpacing: 0.7),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    bottom:
-                                        -17, // Adjust the position as needed
-                                    child: Container(
-                                      width: 60,
-                                      child: Text(
-                                        language
-                                            .waitingForApprovalExpertiseRequest,
-                                        style: boldTextStyle(
-                                          color: Colors.black,
+                          InkWell(
+                            onTap: () => ExpertiseRequestScreen(
+                              controller: _controller,
+                              selectedIndex: 2,
+                            ).launch(context),
+                            child: Stack(
+                              clipBehavior: Clip.none,
+                              alignment: Alignment.center,
+                              children: [
+                                Image.asset(
+                                  ic_pending,
+                                  height: 40,
+                                  width: 40,
+                                  fit: BoxFit.cover,
+                                ).paddingSymmetric(vertical: 11),
+                                Positioned(
+                                  right: -8,
+                                  top: -4,
+                                  child: Container(
+                                    padding: EdgeInsets.all(6),
+                                    decoration: BoxDecoration(
+                                        color: appColorPrimary,
+                                        shape: BoxShape.circle),
+                                    child: Text(
+                                      '10',
+                                      style: boldTextStyle(
+                                          color: Colors.white,
                                           size: 10,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
+                                          weight: FontWeight.w700,
+                                          letterSpacing: 0.7),
+                                      textAlign: TextAlign.center,
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
+                                Positioned(
+                                  bottom: -17, // Adjust the position as needed
+                                  child: Container(
+                                    width: 60,
+                                    child: Text(
+                                      language
+                                          .waitingForApprovalExpertiseRequest,
+                                      style: boldTextStyle(
+                                        color: Colors.black,
+                                        size: 10,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
+                          ),
                           InkWell(
                             onTap: () => ExpertiseRequestScreen(
                               controller: _controller,

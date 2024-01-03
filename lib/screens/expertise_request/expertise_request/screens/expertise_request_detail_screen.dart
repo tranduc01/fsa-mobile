@@ -14,7 +14,9 @@ import '../../../../utils/common.dart';
 import '../../../common/fail_dialog.dart';
 import '../../../common/loading_dialog.dart';
 import '../../../post/screens/image_screen.dart';
+import '../../../post/screens/video_post_screen.dart';
 import '../components/expertise_request_bottomsheet_widget.dart';
+import '../components/video_media_component.dart';
 import 'expertise_request_result_screen.dart';
 
 class ExpertiseRequestDetailScreen extends StatefulWidget {
@@ -42,12 +44,16 @@ class _ExpertiseRequestDetailScreenState
   TextEditingController discCont = TextEditingController();
   FocusNode discNode = FocusNode();
 
+  TextEditingController memberCancelCont = TextEditingController();
+  FocusNode memberCancelNode = FocusNode();
+
   final List<Color> colorList = [
-    const Color.fromARGB(127, 33, 149, 243),
-    const Color.fromARGB(127, 255, 235, 59),
-    Color.fromARGB(127, 76, 175, 79),
-    Color.fromARGB(127, 244, 67, 54),
-    Color.fromARGB(100, 0, 0, 0)
+    Colors.blue.withOpacity(0.5), // Doing
+    Colors.green.withOpacity(0.5), // Completed
+    Colors.orange.withOpacity(0.5), // WaitingForApproval
+    Colors.yellow.withOpacity(0.5), // WaitingForExpert
+    Colors.red.withOpacity(0.5), // Rejected
+    Colors.grey.withOpacity(0.5), // Canceled
   ];
 
   @override
@@ -118,45 +124,45 @@ class _ExpertiseRequestDetailScreenState
                                       child: CarouselSlider(
                                         items: expertiseRequestController
                                             .expertiseRequest.value.medias!
-                                            .map((item) => GestureDetector(
-                                                  onTap: () => ImageScreen(
-                                                          imageURl: item.url
+                                            .map(
+                                              (item) => GestureDetector(
+                                                onTap: () {
+                                                  item.type == 'image'
+                                                      ? ImageScreen(
+                                                              imageURl: item.url
+                                                                  .validate())
+                                                          .launch(context)
+                                                      : VideoPostScreen(item.url
                                                               .validate())
-                                                      .launch(context),
-                                                  child: Container(
-                                                    child: Stack(
-                                                      children: [
-                                                        item.url != null
-                                                            ? Image.network(
-                                                                item.url!,
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                                errorBuilder: (BuildContext
-                                                                        context,
-                                                                    Object
-                                                                        exception,
-                                                                    StackTrace?
-                                                                        stackTrace) {
-                                                                  return Image
-                                                                      .asset(
-                                                                    'assets/images/images.png',
-                                                                    fit: BoxFit
-                                                                        .cover,
-                                                                  );
-                                                                },
-                                                              )
-                                                            : Image.asset(
-                                                                'assets/images/images.png',
-                                                                fit: BoxFit
-                                                                    .cover),
-                                                      ],
-                                                    ),
+                                                          .launch(context);
+                                                },
+                                                child: Container(
+                                                  child: Stack(
+                                                    children: [
+                                                      item.url != null
+                                                          ? item.type == 'image'
+                                                              ? Image.network(
+                                                                  item.url!,
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                )
+                                                              : VideoMediaComponent(
+                                                                  mediaUrl:
+                                                                      item.url!,
+                                                                )
+                                                          : Image.asset(
+                                                              'assets/images/images.png',
+                                                              fit:
+                                                                  BoxFit.cover),
+                                                    ],
                                                   ),
-                                                ))
+                                                ),
+                                              ),
+                                            )
                                             .toList(),
                                         carouselController: _controller,
                                         options: CarouselOptions(
-                                            autoPlay: true,
+                                            //autoPlay: true,
                                             enlargeCenterPage: false,
                                             aspectRatio: 1,
                                             onPageChanged: (index, reason) {
@@ -751,7 +757,70 @@ class _ExpertiseRequestDetailScreenState
                                       ),
                                     ),
                                   ],
-                                )
+                                ),
+                              if (expertiseRequestController
+                                          .expertiseRequest.value.canceledAt !=
+                                      null &&
+                                  expertiseRequestController.expertiseRequest
+                                          .value.cancelMessage !=
+                                      null)
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Cancel Date',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          color: Color.fromARGB(130, 0, 0, 0),
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Roboto'),
+                                    ),
+                                    Text(
+                                      DateFormat('dd/MM/yyyy').format(
+                                          expertiseRequestController
+                                              .expertiseRequest
+                                              .value
+                                              .canceledAt!),
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Roboto'),
+                                    ),
+                                    10.height,
+                                    Text(
+                                      'Cancel Message',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          color: Color.fromARGB(130, 0, 0, 0),
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Roboto'),
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.all(6),
+                                      width: MediaQuery.of(context).size.width *
+                                          0.8,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.grey),
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(10),
+                                        ),
+                                      ),
+                                      child: Text(
+                                        expertiseRequestController
+                                            .expertiseRequest
+                                            .value
+                                            .cancelMessage!,
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontFamily: 'Roboto',
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 6,
+                                        textAlign: TextAlign.start,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                             ],
                           ),
                         ],
@@ -868,7 +937,228 @@ class _ExpertiseRequestDetailScreenState
                     );
                   },
                 )
-              : Offstage()),
+              : expertiseRequestController.expertiseRequest.value.status ==
+                      ExpertiseRequestStatus.WaitingForApproval.index
+                  ? FloatingActionButton.extended(
+                      label: Text('Cancel This Request',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold)),
+                      icon: Icon(
+                        Icons.close_rounded,
+                        color: Colors.red,
+                      ),
+                      backgroundColor: Colors.white,
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Cancel Expertise Request'),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  TextFormField(
+                                    focusNode: memberCancelNode,
+                                    controller: memberCancelCont,
+                                    autofocus: false,
+                                    maxLines: 5,
+                                    decoration: inputDecorationFilled(
+                                      context,
+                                      fillColor:
+                                          context.scaffoldBackgroundColor,
+                                      label: 'Cancel Message',
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text(language.cancel,
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontFamily: 'Roboto',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold)),
+                                ),
+                                TextButton(
+                                  style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                              context.primaryColor),
+                                      shape: MaterialStateProperty.all(
+                                          RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20)))),
+                                  onPressed: () async {
+                                    showDialog(
+                                        context: context,
+                                        barrierDismissible: false,
+                                        builder: (context) {
+                                          return LoadingDialog();
+                                        });
+
+                                    await expertiseRequestController
+                                        .cancelExpertiseRequestMember(
+                                            widget.requestId,
+                                            memberCancelCont.text);
+
+                                    if (expertiseRequestController
+                                        .isUpdateSuccess.value) {
+                                      await expertiseRequestController
+                                          .fetchExpetiseRequest(
+                                              widget.requestId);
+                                      await userController.getCurrentUser();
+
+                                      Navigator.pop(context);
+                                      toast('Cancel Success');
+                                    } else {
+                                      Navigator.pop(context);
+                                      showDialog(
+                                        context: context,
+                                        barrierDismissible: false,
+                                        builder: (context) {
+                                          return FailDialog(
+                                              text:
+                                                  language.feedbackSentFailed);
+                                        },
+                                      );
+                                    }
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text(language.send,
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: 'Roboto',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold)),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                    )
+                  : userController.user.value.role.any((element) =>
+                              element.name.toLowerCase() ==
+                              Role.Expert.name.toLowerCase()) &&
+                          expertiseRequestController
+                                  .expertiseRequest.value.status ==
+                              ExpertiseRequestStatus.Doing.index
+                      ? FloatingActionButton.extended(
+                          label: Text('Cancel This Request',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold)),
+                          icon: Icon(
+                            Icons.close_rounded,
+                            color: Colors.red,
+                          ),
+                          backgroundColor: Colors.white,
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('Cancel Expertise Request'),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  content: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      TextFormField(
+                                        focusNode: memberCancelNode,
+                                        controller: memberCancelCont,
+                                        autofocus: false,
+                                        maxLines: 5,
+                                        decoration: inputDecorationFilled(
+                                          context,
+                                          fillColor:
+                                              context.scaffoldBackgroundColor,
+                                          label: 'Cancel Message',
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text(language.cancel,
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontFamily: 'Roboto',
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold)),
+                                    ),
+                                    TextButton(
+                                      style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                                  context.primaryColor),
+                                          shape: MaterialStateProperty.all(
+                                              RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          20)))),
+                                      onPressed: () async {
+                                        showDialog(
+                                            context: context,
+                                            barrierDismissible: false,
+                                            builder: (context) {
+                                              return LoadingDialog();
+                                            });
+
+                                        await expertiseRequestController
+                                            .cancelExpertiseRequestExpert(
+                                                widget.requestId,
+                                                memberCancelCont.text);
+
+                                        if (expertiseRequestController
+                                            .isUpdateSuccess.value) {
+                                          await expertiseRequestController
+                                              .fetchExpetiseRequest(
+                                                  widget.requestId);
+                                          await userController.getCurrentUser();
+                                          Navigator.pop(context);
+                                          Navigator.pop(context);
+                                          toast('Cancel Success');
+                                        } else {
+                                          Navigator.pop(context);
+                                          showDialog(
+                                            context: context,
+                                            barrierDismissible: false,
+                                            builder: (context) {
+                                              return FailDialog(
+                                                  text: language
+                                                      .feedbackSentFailed);
+                                            },
+                                          );
+                                        }
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text(language.send,
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontFamily: 'Roboto',
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold)),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                        )
+                      : Offstage()),
     );
   }
 }

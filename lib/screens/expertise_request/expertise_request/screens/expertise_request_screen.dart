@@ -35,11 +35,12 @@ class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
   int selectIndex = 0;
 
   final List<Color> colorList = [
-    const Color.fromARGB(127, 33, 149, 243),
-    const Color.fromARGB(127, 255, 235, 59),
-    Color.fromARGB(127, 76, 175, 79),
-    Color.fromARGB(127, 244, 67, 54),
-    Color.fromARGB(100, 0, 0, 0)
+    Colors.blue.withOpacity(0.5), // Doing
+    Colors.green.withOpacity(0.5), // Completed
+    Colors.orange.withOpacity(0.5), // WaitingForApproval
+    Colors.yellow.withOpacity(0.5), // WaitingForExpert
+    Colors.red.withOpacity(0.5), // Rejected
+    Colors.grey.withOpacity(0.5), // Canceled
   ];
 
   @override
@@ -98,11 +99,7 @@ class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
         alignment: Alignment.topCenter,
         children: [
           DefaultTabController(
-            length: (!userController.user.value.role.any((element) =>
-                    element.name.toLowerCase() ==
-                    Role.Expert.name.toLowerCase()))
-                ? 5
-                : 4,
+            length: 6,
             child: SingleChildScrollView(
               child: Column(
                 children: [
@@ -119,13 +116,10 @@ class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
                       physics: BouncingScrollPhysics(),
                       indicator: BoxDecoration(),
                       tabs: [
-                        if (!userController.user.value.role.any((element) =>
-                            element.name.toLowerCase() ==
-                            Role.Expert.name.toLowerCase()))
-                          Tab(
-                              child: Text(
-                            language.waitingForApprovalExpertiseRequest,
-                          )),
+                        Tab(
+                            child: Text(
+                          language.waitingForApprovalExpertiseRequest,
+                        )),
                         Tab(
                           child: Text(
                             language.waitingForExpertExpertiseRequest,
@@ -145,54 +139,42 @@ class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
                             language.rejectedExpertiseRequest,
                           ),
                         ),
+                        Tab(
+                          child: Text(
+                            'Canceled',
+                          ),
+                        ),
                       ],
                       onTap: (index) {
                         int status;
-                        if (!userController.user.value.role.any((element) =>
-                            element.name.toLowerCase() ==
-                            Role.Expert.name.toLowerCase())) {
-                          switch (index) {
-                            case 0:
-                              status = 2;
-                              break;
-                            case 1:
-                              status = 3;
-                              break;
-                            case 2:
-                              status = 0;
-                              break;
-                            case 3:
-                              status = 1;
-                              break;
-                            case 4:
-                              status = 4;
-                              break;
-                            default:
-                              status = 0;
-                          }
-                        } else {
-                          switch (index) {
-                            case 0:
-                              status = 3;
-                              break;
-                            case 1:
-                              status = 0;
-                              break;
-                            case 2:
-                              status = 1;
-                              break;
-                            case 3:
-                              status = 4;
-                              break;
-                            default:
-                              status = 0;
-                          }
+
+                        switch (index) {
+                          case 0:
+                            status = 2;
+                            break;
+                          case 1:
+                            status = 3;
+                            break;
+                          case 2:
+                            status = 0;
+                            break;
+                          case 3:
+                            status = 1;
+                            break;
+                          case 4:
+                            status = 4;
+                            break;
+                          case 5:
+                            status = 5;
+                            break;
+                          default:
+                            status = 0;
                         }
 
                         userController.user.value.role.any((element) =>
                                     element.name.toLowerCase() ==
                                     Role.Expert.name.toLowerCase()) &&
-                                index == 0
+                                index == 1
                             ? expertiseRequestController
                                 .fetchExpetiseRequestsReceive(status)
                             : expertiseRequestController
@@ -205,10 +187,8 @@ class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
                   Container(
                     height: MediaQuery.of(context).size.height,
                     child: TabBarView(children: [
-                      if (!userController.user.value.role.any((element) =>
-                          element.name.toLowerCase() ==
-                          Role.Expert.name.toLowerCase()))
-                        expertiseRequestsComponent(),
+                      expertiseRequestsComponent(),
+                      expertiseRequestsComponent(),
                       expertiseRequestsComponent(),
                       expertiseRequestsComponent(),
                       expertiseRequestsComponent(),
@@ -233,15 +213,12 @@ class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
           ),
         ],
       ),
-      floatingActionButton: userController.user.value.role.any((element) =>
-              element.name.toLowerCase() == Role.Expert.name.toLowerCase())
-          ? Offstage()
-          : FloatingActionButton(
-              child: Icon(Icons.add),
-              onPressed: () {
-                CreateExpertiseRequestScreen().launch(context);
-              },
-            ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          CreateExpertiseRequestScreen().launch(context);
+        },
+      ),
     );
   }
 

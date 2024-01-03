@@ -4,7 +4,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
-import 'package:socialv/controllers/user_controller.dart';
 import '../configs.dart';
 import '../models/common_models.dart';
 import 'package:http_parser/http_parser.dart';
@@ -21,7 +20,7 @@ class ExpertiseRequestController extends GetxController {
   var isDeleteSuccess = false.obs;
   var isUpdateSuccess = false.obs;
   var isError = false.obs;
-  late UserController userController = Get.find();
+  var errorMessage = ''.obs;
 
   @override
   void onInit() {
@@ -159,7 +158,13 @@ class ExpertiseRequestController extends GetxController {
       if (response.statusCode == 200) {
         isCreateSuccess(true);
       } else {
+        isCreateSuccess(false);
+        var responseBody = await response.stream.bytesToString();
+
+        errorMessage.value = jsonDecode(responseBody)['Message'];
         print('Request failed with status: ${response.statusCode}');
+        print(
+            'Request failed with status: ${jsonDecode(responseBody)['Message']}');
       }
     } catch (e) {
       isError(true);
@@ -184,6 +189,7 @@ class ExpertiseRequestController extends GetxController {
         isLoading(false);
         isError(true);
         print('Request failed with status: ${response.statusCode}');
+        print('Request failed with status: ${response.body['Message']}');
       }
     } catch (e) {
       isError(true);
@@ -268,6 +274,64 @@ class ExpertiseRequestController extends GetxController {
         isLoading(false);
         isError(true);
         print('Request failed with status: ${response.statusCode}');
+      }
+    } catch (e) {
+      isError(true);
+      print(e);
+    }
+  }
+
+  Future<void> cancelExpertiseRequestMember(
+      int id, String cancelMessage) async {
+    try {
+      isLoading(true);
+      var url =
+          '$BASE_URL/expertise-request/member-cancel/$id?cancelMessage=$cancelMessage';
+      String? token = await storage.read(key: 'jwt');
+      var headers = {
+        'Authorization': 'Bearer $token',
+      };
+
+      var response = await GetConnect().patch(url, {}, headers: headers);
+      if (response.statusCode == 200) {
+        isLoading(false);
+        isUpdateSuccess(true);
+      } else {
+        isLoading(false);
+        isError(true);
+        isUpdateSuccess(false);
+        errorMessage.value = response.body['Message'];
+        print('Request failed with status: ${response.statusCode}');
+        print('Request failed with status: ${response.body['Message']}');
+      }
+    } catch (e) {
+      isError(true);
+      print(e);
+    }
+  }
+
+  Future<void> cancelExpertiseRequestExpert(
+      int id, String cancelMessage) async {
+    try {
+      isLoading(true);
+      var url =
+          '$BASE_URL/expertise-request/expert-cancel/$id?cancelMessage=$cancelMessage';
+      String? token = await storage.read(key: 'jwt');
+      var headers = {
+        'Authorization': 'Bearer $token',
+      };
+
+      var response = await GetConnect().patch(url, {}, headers: headers);
+      if (response.statusCode == 200) {
+        isLoading(false);
+        isUpdateSuccess(true);
+      } else {
+        isLoading(false);
+        isError(true);
+        isUpdateSuccess(false);
+        errorMessage.value = response.body['Message'];
+        print('Request failed with status: ${response.statusCode}');
+        print('Request failed with status: ${response.body['Message']}');
       }
     } catch (e) {
       isError(true);

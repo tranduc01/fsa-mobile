@@ -53,7 +53,6 @@ class _AlbumMediaComponentState extends State<AlbumMediaComponent> {
 
   @override
   Widget build(BuildContext context) {
-    log(widget.thumbnail);
     return GestureDetector(
       onTap: () {
         if (widget.mediaType == MediaTypes.image) {

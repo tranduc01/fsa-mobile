@@ -12,6 +12,7 @@ import 'package:video_player/video_player.dart';
 import '../../../../components/file_picker_dialog_component.dart';
 import '../../../../components/loading_widget.dart';
 import '../../../../controllers/expertise_request_controller.dart';
+import '../../../../controllers/user_controller.dart';
 import '../../../../main.dart';
 import '../../../../models/common_models.dart';
 import '../../../../models/posts/media_model.dart';
@@ -30,11 +31,9 @@ class CreateExpertiseRequestComponent extends StatefulWidget {
       _CreateExpertiseRequestComponentState();
 }
 
-int? albumId;
-
 class _CreateExpertiseRequestComponentState
     extends State<CreateExpertiseRequestComponent> {
-  final albumKey = GlobalKey<FormState>();
+  GlobalKey<FormState> albumKey = GlobalKey<FormState>();
 
   List<PostMedia> mediaImageList = [];
   List<PostMedia> mediaVideoList = [];
@@ -47,6 +46,7 @@ class _CreateExpertiseRequestComponentState
 
   late ExpertiseRequestController expertiseRequestController =
       Get.put(ExpertiseRequestController());
+  late UserController userController = Get.find();
 
   @override
   void initState() {
@@ -61,7 +61,6 @@ class _CreateExpertiseRequestComponentState
   @override
   void dispose() {
     discNode.dispose();
-    _cameraController.dispose();
     super.dispose();
   }
 
@@ -181,37 +180,101 @@ class _CreateExpertiseRequestComponentState
                         hideKeyboard(context);
                         if (albumKey.currentState!.validate()) {
                           showDialog(
-                              context: context,
-                              barrierDismissible: false,
-                              builder: (context) {
-                                return LoadingDialog();
-                              });
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Create Expertise Request'),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                content: Text(
+                                  'Would you like to redeem 100 points for submitting this request?',
+                                  style: TextStyle(fontFamily: 'Roboto'),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text(language.cancel,
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontFamily: 'Roboto',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold)),
+                                  ),
+                                  TextButton(
+                                    style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all(
+                                                context.primaryColor),
+                                        shape: MaterialStateProperty.all(
+                                            RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        20)))),
+                                    onPressed: () async {
+                                      showDialog(
+                                        context: context,
+                                        barrierDismissible: false,
+                                        builder: (context) {
+                                          return LoadingDialog();
+                                        },
+                                      );
 
-                          var mediaList = [
-                            ...mediaImageList,
-                            ...mediaVideoList
-                          ];
+                                      var mediaList = [
+                                        ...mediaImageList,
+                                        ...mediaVideoList
+                                      ];
 
-                          await expertiseRequestController
-                              .createExpertiseRequest(discCont.text, mediaList);
+                                      await expertiseRequestController
+                                          .createExpertiseRequest(
+                                        discCont.text,
+                                        mediaList,
+                                      );
 
-                          if (expertiseRequestController
-                              .isCreateSuccess.value) {
-                            expertiseRequestController.fetchExpetiseRequests(2);
-                            Navigator.pop(context);
-                            toast('Request Created Successfully');
-                            Navigator.pop(context);
-                          } else {
-                            Navigator.pop(context);
-                            showDialog(
-                              context: context,
-                              barrierDismissible: false,
-                              builder: (context) {
-                                return FailDialog(
-                                    text: 'Create Request Failed');
-                              },
-                            );
-                          }
+                                      if (expertiseRequestController
+                                          .isCreateSuccess.value) {
+                                        await expertiseRequestController
+                                            .fetchExpetiseRequests(2);
+                                        await userController.getCurrentUser();
+
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                        toast('Request Created Successfully');
+                                      } else {
+                                        Navigator.pop(context);
+                                        showDialog(
+                                          context: context,
+                                          barrierDismissible: false,
+                                          builder: (context) {
+                                            return FailDialog(
+                                                text: expertiseRequestController
+                                                            .errorMessage
+                                                            .value
+                                                            .isEmptyOrNull &&
+                                                        expertiseRequestController
+                                                                .errorMessage
+                                                                .value ==
+                                                            'NOT_ENOUGH_POINT'
+                                                    ? 'Create Request Failed'
+                                                    : 'Not Enough Point! Please Top Up Your Point');
+                                          },
+                                        );
+                                      }
+                                    },
+                                    child: Text(language.send,
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontFamily: 'Roboto',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold)),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
                         }
                       },
                       context: context,

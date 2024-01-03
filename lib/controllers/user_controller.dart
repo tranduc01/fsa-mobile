@@ -26,7 +26,7 @@ class UserController extends GetxController {
     if (jwt != null) {
       isLoggedIn.value = !checkJWTValidity(jwt);
       if (!checkJWTValidity(jwt)) {
-        await getUserById(JwtDecoder.decode(jwt)!['uid']);
+        await getCurrentUser();
         print(user.value.name);
       } else {
         logout();
@@ -212,7 +212,7 @@ class UserController extends GetxController {
       'Authorization': 'Bearer $token',
     };
     var response = await GetConnect().get(url, headers: headers);
-    print(response.bodyString);
+
     if (response.bodyString != null) {
       ResponseModel responseModel =
           ResponseModel.fromJson(jsonDecode(response.bodyString!));

@@ -139,18 +139,19 @@ class _ExpertiseRequestResultScreenState
             ],
           ),
         ),
-        floatingActionButton:
-            expertiseRequestController.expertiseRequest.value.status ==
-                    ExpertiseRequestStatus.Doing.index
-                ? FloatingActionButton(
-                    child: Icon(Icons.add),
-                    onPressed: () {
-                      CreateExpertiseRequestResultScreen(
-                        isNew: true,
-                        requestId: widget.requestId!,
-                      ).launch(context);
-                    },
-                  )
-                : Offstage());
+        floatingActionButton: Obx(() {
+          return expertiseRequestController.expertiseRequest.value.status ==
+                  ExpertiseRequestStatus.Doing.index
+              ? FloatingActionButton(
+                  child: Icon(Icons.add),
+                  onPressed: () {
+                    CreateExpertiseRequestResultScreen(
+                      isNew: true,
+                      requestId: widget.requestId!,
+                    ).launch(context);
+                  },
+                )
+              : Offstage();
+        }));
   }
 }

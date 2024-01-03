@@ -106,12 +106,11 @@ class _CreateExpertiseRequestResultComponentState
                                 EvaluationCriteria evaluationCriteria =
                                     evaluationCriteriaController
                                         .evaluationCriterias[index];
-                                // TextEditingController discCont =
-                                //     TextEditingController();
+
                                 if (!controllers
                                     .containsKey(evaluationCriteria.id!)) {
                                   controllers[evaluationCriteria.id!] =
-                                      TextEditingController(); // Initialize the text controller if it doesn't exist
+                                      TextEditingController();
                                 }
 
                                 TextEditingController discCont =
@@ -142,6 +141,13 @@ class _CreateExpertiseRequestResultComponentState
                                   child: TextFormField(
                                     controller: discCont,
                                     autofocus: false,
+                                    enabled: expertiseRequestController
+                                                .expertiseRequest
+                                                .value
+                                                .status ==
+                                            ExpertiseRequestStatus.Doing.index
+                                        ? true
+                                        : false,
                                     maxLines: 5,
                                     decoration: inputDecorationFilled(
                                       context,
