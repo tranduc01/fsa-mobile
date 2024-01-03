@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/main.dart';
 import 'package:socialv/screens/blog/screens/blog_list_screen.dart';
-import 'package:socialv/screens/forums/screens/my_forums_screen.dart';
 import 'package:socialv/screens/lms/screens/course_list_screen.dart';
 import 'package:socialv/screens/settings/screens/settings_screen.dart';
 import 'package:socialv/screens/shop/screens/cart_screen.dart';
@@ -32,10 +31,6 @@ List<DrawerModel> getDrawerOptions() {
 
   list.add(DrawerModel(
       image: ic_wallet, title: 'Wallet', attachedScreen: WalletScreen()));
-  list.add(DrawerModel(
-      image: ic_document,
-      title: language.forums,
-      attachedScreen: MyForumsScreen()));
   list.add(DrawerModel(
       image: ic_blog, title: language.blogs, attachedScreen: BlogListScreen()));
   list.add(DrawerModel(

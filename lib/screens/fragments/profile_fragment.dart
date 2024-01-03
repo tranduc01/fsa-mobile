@@ -248,26 +248,6 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                          userController.user.value.expertiseLeft
-                              .validate()
-                              .toString(),
-                          style: boldTextStyle(size: 18)),
-                      4.height,
-                      Text(language.expertiseLeft,
-                          style: secondaryTextStyle(size: 12)),
-                    ],
-                  ).paddingSymmetric(vertical: 8).onTap(() {
-                    widget.controller?.animateTo(
-                        MediaQuery.of(context).size.height * 0.35,
-                        duration: const Duration(milliseconds: 500),
-                        curve: Curves.linear);
-                  },
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.transparent).expand(),
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
                           userController.user.value.totalExpertiseRequestSent
                               .validate()
                               .toString(),

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:socialv/main.dart';
 import 'package:socialv/models/posts/topic.dart';
-import '../../../utils/app_constants.dart';
 
 class ForumsCardComponent extends StatelessWidget {
   final Topic? topic;
@@ -42,15 +40,6 @@ class ForumsCardComponent extends StatelessWidget {
             maxLines: 3,
             textAlign: TextAlign.start,
           )),
-          Row(
-            children: [
-              Text(language.posts + ':',
-                  style: boldTextStyle(
-                      color: appStore.isDarkMode ? bodyDark : bodyWhite)),
-              8.width,
-              Text('10', style: primaryTextStyle()),
-            ],
-          ),
         ],
       ),
     );
