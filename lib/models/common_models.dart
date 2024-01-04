@@ -4,16 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/main.dart';
 import 'package:socialv/screens/blog/screens/blog_list_screen.dart';
-import 'package:socialv/screens/lms/screens/course_list_screen.dart';
 import 'package:socialv/screens/settings/screens/settings_screen.dart';
-import 'package:socialv/screens/shop/screens/cart_screen.dart';
-import 'package:socialv/screens/shop/screens/orders_screen.dart';
-import 'package:socialv/screens/shop/screens/shop_screen.dart';
-import 'package:socialv/screens/shop/screens/wishlist_screen.dart';
 import 'package:socialv/screens/stats/screens/stats_screen.dart';
 import 'package:socialv/screens/wallet/wallet_screen.dart';
 
-import '../screens/lms/screens/cource_orders_screen.dart';
 import '../utils/app_constants.dart';
 
 class DrawerModel {
@@ -35,36 +29,6 @@ List<DrawerModel> getDrawerOptions() {
       image: ic_blog, title: language.blogs, attachedScreen: BlogListScreen()));
   list.add(DrawerModel(
       image: stats, title: 'Thống kê', attachedScreen: StatsScreen()));
-
-  if (appStore.isLMSEnable == 1 && appStore.isCourseEnable == 1) {
-    list.add(DrawerModel(
-        image: ic_book,
-        title: language.courses,
-        attachedScreen: CourseListScreen(),
-        isNew: true));
-    list.add(DrawerModel(
-        image: ic_books,
-        title: language.courseOrders,
-        attachedScreen: CourseOrdersScreen(),
-        isNew: true));
-  }
-
-  if (appStore.showWoocommerce == 1 && appStore.isShopEnable == 1) {
-    list.add(DrawerModel(
-        image: ic_store, title: language.shop, attachedScreen: ShopScreen()));
-    list.add(DrawerModel(
-        image: ic_buy,
-        title: language.cart,
-        attachedScreen: CartScreen(isFromHome: true)));
-    list.add(DrawerModel(
-        image: ic_heart,
-        title: language.wishlist,
-        attachedScreen: WishlistScreen()));
-    list.add(DrawerModel(
-        image: ic_bag,
-        title: language.myOrders,
-        attachedScreen: OrdersScreen()));
-  }
 
   list.add(DrawerModel(
       image: ic_setting,

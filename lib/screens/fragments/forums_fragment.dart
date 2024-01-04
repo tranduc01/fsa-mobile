@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/components/loading_widget.dart';
+import 'package:socialv/controllers/gallery_controller.dart';
 import 'package:socialv/controllers/topic_controller.dart';
 import 'package:socialv/main.dart';
+import 'package:socialv/models/gallery/albums.dart';
 import 'package:socialv/screens/forums/components/forums_card_component.dart';
 import 'package:socialv/screens/forums/screens/forum_detail_screen.dart';
 
@@ -30,6 +32,7 @@ var listImage = [
 class _ForumsFragment extends State<ForumsFragment> {
   TextEditingController searchController = TextEditingController();
   late TopicController topicController = Get.put(TopicController());
+  late GalleryController galleryController = Get.put(GalleryController());
   int mPage = 1;
   bool mIsLastPage = false;
 
@@ -39,6 +42,7 @@ class _ForumsFragment extends State<ForumsFragment> {
   @override
   void initState() {
     topicController.fetchTopics();
+    galleryController.fetchAlbumsDiscovery();
     super.initState();
   }
 
@@ -119,72 +123,111 @@ class _ForumsFragment extends State<ForumsFragment> {
             ),
           ),
           Container(
-            padding: EdgeInsets.all(15),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Image.network(
-                      'https://upload.wikimedia.org/wikipedia/commons/4/48/RedCat_8727.jpg',
-                      width: 50,
-                      height: 50,
-                    ).cornerRadiusWithClipRRect(30),
-                    10.width,
-                    Text(
-                      'Tên ở đây nè',
-                      style: TextStyle(
-                          fontFamily: 'Roboto',
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18),
-                    )
-                  ],
-                ),
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.3,
-                  child: AnimatedListView(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    physics: BouncingScrollPhysics(),
-                    slideConfiguration: SlideConfiguration(
-                        delay: Duration(milliseconds: 80), verticalOffset: 300),
-                    padding: EdgeInsets.only(
-                        left: 16, right: 16, bottom: 10, top: 16),
-                    itemCount: listImage.length,
-                    itemBuilder: (context, index) {
-                      if (index == listImage.length - 1) {
-                        // Last item, display the "see more" button
-                        return InkWell(
-                          onTap: () {},
-                          child: Container(
-                            width: 150,
-                            decoration: BoxDecoration(
-                                color: Color.fromARGB(34, 0, 0, 0),
-                                borderRadius: BorderRadius.circular(20)),
-                            padding: EdgeInsets.only(right: 10),
-                            child: Icon(Icons.more_horiz_rounded,
-                                size: 30), // Replace with your desired icon
-                          ),
-                        );
-                      } else {
-                        return InkWell(
-                          splashColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                          onTap: () {
-                            ImageScreen(imageURl: listImage[index])
-                                .launch(context);
+            height: MediaQuery.of(context).size.height * 0.5,
+            child: AnimatedListView(
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              physics: BouncingScrollPhysics(),
+              slideConfiguration: SlideConfiguration(
+                  delay: Duration(milliseconds: 80), verticalOffset: 300),
+              padding:
+                  EdgeInsets.only(left: 16, right: 16, bottom: 10, top: 16),
+              itemCount: galleryController.albums.length,
+              itemBuilder: (context, index) {
+                Album data = galleryController.albums[index];
+                return Container(
+                  padding: EdgeInsets.all(15),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Image.network(
+                            data.user!.avatarUrl!,
+                            width: 50,
+                            height: 50,
+                          ).cornerRadiusWithClipRRect(30),
+                          10.width,
+                          Column(
+                            children: [
+                              TextIcon(
+                                text: data.user!.name!,
+                                textStyle: TextStyle(
+                                    fontFamily: 'Roboto',
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18),
+                                suffix: data.user!.isVerified!
+                                    ? Image.asset(ic_tick_filled,
+                                        width: 20,
+                                        height: 20,
+                                        color: blueTickColor)
+                                    : null,
+                              ),
+                              5.height,
+                              Text(
+                                convertToAgo(data.createdAt!.toString()),
+                                style: TextStyle(
+                                    fontFamily: 'Roboto',
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 14),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                      Container(
+                        height: MediaQuery.of(context).size.height * 0.3,
+                        child: AnimatedListView(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          physics: BouncingScrollPhysics(),
+                          slideConfiguration: SlideConfiguration(
+                              delay: Duration(milliseconds: 80),
+                              verticalOffset: 300),
+                          padding: EdgeInsets.only(
+                              left: 16, right: 16, bottom: 10, top: 16),
+                          itemCount:
+                              data.media.length > 3 ? 4 : data.media.length,
+                          itemBuilder: (context, index) {
+                            Media media = data.media[index];
+                            if (index == listImage.length - 1) {
+                              return InkWell(
+                                onTap: () {},
+                                child: Container(
+                                  width: 150,
+                                  decoration: BoxDecoration(
+                                      color: Color.fromARGB(34, 0, 0, 0),
+                                      borderRadius: BorderRadius.circular(20)),
+                                  padding: EdgeInsets.only(right: 10),
+                                  child: Icon(Icons.more_horiz_rounded,
+                                      size:
+                                          30), // Replace with your desired icon
+                                ),
+                              );
+                            } else {
+                              return InkWell(
+                                splashColor: Colors.transparent,
+                                highlightColor: Colors.transparent,
+                                onTap: () {
+                                  media.type == 'image'
+                                      ? ImageScreen(imageURl: media.url!)
+                                          .launch(context)
+                                      : null;
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.only(right: 10),
+                                  child: Image.network(
+                                    media.url!,
+                                  ).cornerRadiusWithClipRRect(20),
+                                ),
+                              );
+                            }
                           },
-                          child: Container(
-                            padding: EdgeInsets.only(right: 10),
-                            child: Image.network(
-                              listImage[index],
-                            ).cornerRadiusWithClipRRect(20),
-                          ),
-                        );
-                      }
-                    },
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
+                );
+              },
             ),
           )
         ],

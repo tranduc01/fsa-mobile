@@ -25,22 +25,6 @@ mixin _$AppStore on AppStoreBase, Store {
     });
   }
 
-  late final _$defaultReactionAtom =
-      Atom(name: 'AppStoreBase.defaultReaction', context: context);
-
-  @override
-  ReactionsModel get defaultReaction {
-    _$defaultReactionAtom.reportRead();
-    return super.defaultReaction;
-  }
-
-  @override
-  set defaultReaction(ReactionsModel value) {
-    _$defaultReactionAtom.reportWrite(value, super.defaultReaction, () {
-      super.defaultReaction = value;
-    });
-  }
-
   late final _$giphyKeyAtom =
       Atom(name: 'AppStoreBase.giphyKey', context: context);
 
@@ -588,16 +572,6 @@ mixin _$AppStore on AppStoreBase, Store {
     });
   }
 
-  late final _$setDefaultReactionAsyncAction =
-      AsyncAction('AppStoreBase.setDefaultReaction', context: context);
-
-  @override
-  Future<void> setDefaultReaction(ReactionsModel val,
-      {bool isInitializing = false}) {
-    return _$setDefaultReactionAsyncAction.run(
-        () => super.setDefaultReaction(val, isInitializing: isInitializing));
-  }
-
   late final _$setGiphyKeyAsyncAction =
       AsyncAction('AppStoreBase.setGiphyKey', context: context);
 
@@ -917,7 +891,6 @@ mixin _$AppStore on AppStoreBase, Store {
   String toString() {
     return '''
 isReactionEnable: ${isReactionEnable},
-defaultReaction: ${defaultReaction},
 giphyKey: ${giphyKey},
 wooCurrency: ${wooCurrency},
 nonce: ${nonce},

@@ -5,8 +5,6 @@ import 'package:socialv/components/loading_widget.dart';
 import 'package:socialv/components/no_data_lottie_widget.dart';
 import 'package:socialv/main.dart';
 import 'package:socialv/models/members/member_detail_model.dart';
-import 'package:socialv/models/story/highlight_category_list_model.dart';
-import 'package:socialv/network/rest_apis.dart';
 import 'package:socialv/screens/blockReport/components/block_member_dialog.dart';
 import 'package:socialv/screens/blockReport/components/show_report_dialog.dart';
 import 'package:socialv/screens/post/components/post_component.dart';
@@ -52,7 +50,6 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
     blockedBy: false,
     isUserVerified: true,
     accountType: 'public',
-    highlightStory: [],
   );
 
   bool isCallback = false;
@@ -60,8 +57,6 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
 
   List<Post> postList = [];
   late Future<List<Post>> future;
-
-  List<HighlightCategoryListModel> categoryList = [];
 
   ScrollController _scrollController = ScrollController();
 
@@ -94,17 +89,6 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
     afterBuildCreated(() async {
       //appStore.setLoading(true);
       getMember();
-    });
-  }
-
-  Future<void> getCategoryList() async {
-    appStore.setLoading(true);
-    await getHighlightList().then((value) {
-      categoryList = value;
-      appStore.setLoading(false);
-    }).catchError((e) {
-      log(e.toString());
-      appStore.setLoading(false);
     });
   }
 

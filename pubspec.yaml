@@ -73,10 +73,6 @@ dependencies:
   google_sign_in:
   the_apple_sign_in: ^1.1.1 
   jwt_decoder:
-  
-
-  # Remote Notification
-  #onesignal_flutter: ^5.0.3
 
   signalr_netcore:
   webview_flutter:

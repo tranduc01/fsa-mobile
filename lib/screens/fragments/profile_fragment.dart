@@ -7,7 +7,6 @@ import 'package:socialv/components/no_data_lottie_widget.dart';
 import 'package:socialv/controllers/user_controller.dart';
 import 'package:socialv/main.dart';
 import 'package:socialv/models/members/member_detail_model.dart';
-import 'package:socialv/network/rest_apis.dart';
 import 'package:socialv/screens/dashboard_screen.dart';
 import 'package:socialv/screens/expertise_request/expertise_request/screens/expertise_request_screen.dart';
 import 'package:socialv/screens/post/components/post_component.dart';
@@ -91,7 +90,6 @@ class _ProfileFragmentState extends State<ProfileFragment> {
     getMemberDetails();
     LiveStream().on(OnAddPostProfile, (p0) {
       getMemberDetails();
-      getCategoryList();
 
       _userPostList.clear();
       mPage = 1;

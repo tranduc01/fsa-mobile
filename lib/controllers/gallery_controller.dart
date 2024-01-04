@@ -54,6 +54,33 @@ class GalleryController extends GetxController {
     }
   }
 
+  Future<List<Album>> fetchAlbumsDiscovery() async {
+    isLoading(true);
+    var url = '$BASE_URL/Collection/discovery';
+
+    String? token = await storage.read(key: 'jwt');
+    var headers = {
+      'Authorization': 'Bearer $token',
+    };
+    var response = await GetConnect().get(url, headers: headers);
+
+    ResponseModel responseModel =
+        ResponseModel.fromJson(jsonDecode(response.bodyString!));
+
+    if (response.statusCode == 200) {
+      isLoading(false);
+      isError(false);
+      return albums.value =
+          (responseModel.data as List).map((e) => Album.fromJson(e)).toList();
+    } else {
+      isLoading(false);
+      isError(true);
+      print('Request failed with status: ${response.statusCode}');
+      print('Request failed with status: ${responseModel.message}');
+      throw Exception('Failed to load album');
+    }
+  }
+
   Future<Album> fetchAlbum(int albumId) async {
     isLoading(true);
     var url = '$BASE_URL/Collection/$albumId';

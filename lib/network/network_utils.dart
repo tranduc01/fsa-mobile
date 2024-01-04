@@ -11,18 +11,22 @@ import 'package:socialv/configs.dart';
 import 'package:socialv/main.dart';
 import 'package:socialv/utils/common.dart';
 import 'package:socialv/utils/constants.dart';
-import 'package:socialv/utils/woo_commerce/query_string.dart';
 
-Map<String, String> buildHeaderTokens({required bool requiredNonce, required bool requiredToken}) {
+Map<String, String> buildHeaderTokens(
+    {required bool requiredNonce, required bool requiredToken}) {
   Map<String, String> header = {
     HttpHeaders.cacheControlHeader: 'no-cache',
     'Access-Control-Allow-Headers': '*',
     'Access-Control-Allow-Origin': '*',
   };
 
-  header.putIfAbsent(HttpHeaders.contentTypeHeader, () => 'application/json; charset=utf-8');
-  if (appStore.token.isNotEmpty && requiredToken) header.putIfAbsent(HttpHeaders.authorizationHeader, () => 'Bearer ${appStore.token}');
-  header.putIfAbsent(HttpHeaders.acceptHeader, () => 'application/json; charset=utf-8');
+  header.putIfAbsent(
+      HttpHeaders.contentTypeHeader, () => 'application/json; charset=utf-8');
+  if (appStore.token.isNotEmpty && requiredToken)
+    header.putIfAbsent(
+        HttpHeaders.authorizationHeader, () => 'Bearer ${appStore.token}');
+  header.putIfAbsent(
+      HttpHeaders.acceptHeader, () => 'application/json; charset=utf-8');
   if (requiredNonce) header.putIfAbsent('Nonce', () => appStore.nonce);
 
   log(jsonEncode(header));
@@ -40,7 +44,16 @@ String _getOAuthURL(String requestMethod, String endpoint) {
   var containsQueryParams = url.contains("?");
 
   if (url.startsWith("https")) {
-    return url + (containsQueryParams == true ? "&consumer_key=" + consumerKey + "&consumer_secret=" + consumerSecret : "?consumer_key=" + consumerKey + "&consumer_secret=" + consumerSecret);
+    return url +
+        (containsQueryParams == true
+            ? "&consumer_key=" +
+                consumerKey +
+                "&consumer_secret=" +
+                consumerSecret
+            : "?consumer_key=" +
+                consumerKey +
+                "&consumer_secret=" +
+                consumerSecret);
   } else {
     var rand = new Random();
     var codeUnits = new List.generate(10, (index) {
@@ -51,7 +64,10 @@ String _getOAuthURL(String requestMethod, String endpoint) {
     int timestamp = new DateTime.now().millisecondsSinceEpoch ~/ 1000;
 
     var method = requestMethod;
-    var parameters = "oauth_consumer_key=$consumerKey" + "&oauth_nonce=$nonce" + "&oauth_signature_method=HMAC-SHA1&oauth_timestamp=$timestamp" + "&oauth_version=1.0&";
+    var parameters = "oauth_consumer_key=$consumerKey" +
+        "&oauth_nonce=$nonce" +
+        "&oauth_signature_method=HMAC-SHA1&oauth_timestamp=$timestamp" +
+        "&oauth_version=1.0&";
 
     if (containsQueryParams == true) {
       parameters = parameters + url.split("?")[1];
@@ -59,22 +75,30 @@ String _getOAuthURL(String requestMethod, String endpoint) {
       parameters = parameters.substring(0, parameters.length - 1);
     }
 
-    Map<dynamic, dynamic> params = QueryString.parse(parameters);
     Map<dynamic, dynamic> treeMap = new SplayTreeMap<dynamic, dynamic>();
-    treeMap.addAll(params);
 
     String parameterString = "";
 
     for (var key in treeMap.keys) {
-      parameterString = parameterString + Uri.encodeQueryComponent(key) + "=" + treeMap[key] + "&";
+      parameterString = parameterString +
+          Uri.encodeQueryComponent(key) +
+          "=" +
+          treeMap[key] +
+          "&";
     }
 
     parameterString = parameterString.substring(0, parameterString.length - 1);
 
-    var baseString = method + "&" + Uri.encodeQueryComponent(containsQueryParams == true ? url.split("?")[0] : url) + "&" + Uri.encodeQueryComponent(parameterString);
+    var baseString = method +
+        "&" +
+        Uri.encodeQueryComponent(
+            containsQueryParams == true ? url.split("?")[0] : url) +
+        "&" +
+        Uri.encodeQueryComponent(parameterString);
 
     var signingKey = consumerSecret + "&" + tokenSecret;
-    var hmacSha1 = new crypto.Hmac(crypto.sha1, utf8.encode(signingKey)); // HMAC-SHA1
+    var hmacSha1 =
+        new crypto.Hmac(crypto.sha1, utf8.encode(signingKey)); // HMAC-SHA1
     var signature = hmacSha1.convert(utf8.encode(baseString));
 
     var finalSignature = base64Encode(signature.bytes);
@@ -82,9 +106,17 @@ String _getOAuthURL(String requestMethod, String endpoint) {
     var requestUrl = "";
 
     if (containsQueryParams == true) {
-      requestUrl = url.split("?")[0] + "?" + parameterString + "&oauth_signature=" + Uri.encodeQueryComponent(finalSignature);
+      requestUrl = url.split("?")[0] +
+          "?" +
+          parameterString +
+          "&oauth_signature=" +
+          Uri.encodeQueryComponent(finalSignature);
     } else {
-      requestUrl = url + "?" + parameterString + "&oauth_signature=" + Uri.encodeQueryComponent(finalSignature);
+      requestUrl = url +
+          "?" +
+          parameterString +
+          "&oauth_signature=" +
+          Uri.encodeQueryComponent(finalSignature);
     }
 
     return requestUrl;
@@ -104,7 +136,8 @@ Future<Response> buildHttpResponse(
   bool passToken = true,
 }) async {
   if (await isNetworkAvailable()) {
-    var headers = buildHeaderTokens(requiredNonce: requiredNonce, requiredToken: passToken);
+    var headers = buildHeaderTokens(
+        requiredNonce: requiredNonce, requiredToken: passToken);
 
     late String url;
     if (endPoint.startsWith("http")) {
@@ -129,9 +162,11 @@ Future<Response> buildHttpResponse(
                   : jsonEncode(request),
           headers: isAuth ? null : headers);
     } else if (method == HttpMethod.DELETE) {
-      response = await delete(Uri.parse(url), headers: passHeaders ? headers : {}, body: jsonEncode(request));
+      response = await delete(Uri.parse(url),
+          headers: passHeaders ? headers : {}, body: jsonEncode(request));
     } else if (method == HttpMethod.PUT) {
-      response = await put(Uri.parse(url), body: jsonEncode(request), headers: headers);
+      response = await put(Uri.parse(url),
+          body: jsonEncode(request), headers: headers);
     } else {
       response = await get(Uri.parse(url), headers: passHeaders ? headers : {});
     }
@@ -159,7 +194,9 @@ Future handleResponse(Response response, [bool? avoidTokenError]) async {
     try {
       var body = jsonDecode(response.body);
       log('body: $body');
-      throw body['message'] is String ? parseHtmlString(body['message']) : body['message'];
+      throw body['message'] is String
+          ? parseHtmlString(body['message'])
+          : body['message'];
     } on Exception catch (e) {
       log(e);
       throw errorSomethingWentWrong;
@@ -167,7 +204,8 @@ Future handleResponse(Response response, [bool? avoidTokenError]) async {
   }
 }
 
-Future<MultipartRequest> getMultiPartRequest(String endPoint, {String? baseUrl}) async {
+Future<MultipartRequest> getMultiPartRequest(String endPoint,
+    {String? baseUrl}) async {
   late String url;
   if (endPoint.startsWith("http")) {
     url = endPoint;
@@ -180,7 +218,8 @@ Future<MultipartRequest> getMultiPartRequest(String endPoint, {String? baseUrl})
   return MultipartRequest('POST', Uri.parse(url));
 }
 
-Future<void> sendMultiPartRequest(MultipartRequest multiPartRequest, {Function(dynamic)? onSuccess, Function(dynamic)? onError}) async {
+Future<void> sendMultiPartRequest(MultipartRequest multiPartRequest,
+    {Function(dynamic)? onSuccess, Function(dynamic)? onError}) async {
   Response response = await Response.fromStream(await multiPartRequest.send());
   print("statusCode: ${response.statusCode}");
   print("body: ${response.body}");

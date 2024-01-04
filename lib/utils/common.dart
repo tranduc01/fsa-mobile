@@ -12,10 +12,8 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:socialv/main.dart';
 import 'package:socialv/models/groups/group_response.dart';
-import 'package:socialv/models/lms/quiz_answers.dart';
 import 'package:socialv/models/members/member_response.dart';
 import 'package:socialv/models/posts/media_model.dart';
-import 'package:socialv/models/story/common_story_model.dart';
 import 'package:socialv/network/rest_apis.dart';
 
 import 'app_constants.dart';
@@ -194,17 +192,6 @@ List<GroupResponse> getGroupListPref() {
   return [];
 }
 
-List<QuizAnswers> getLmsQuizListPref() {
-  if (getStringAsync(SharePreferencesKey.LMS_QUIZ_LIST).isNotEmpty) {
-    return (json.decode(getStringAsync(SharePreferencesKey.LMS_QUIZ_LIST))
-            as List)
-        .map((i) => QuizAnswers.fromJson(i))
-        .toList();
-  } else {
-    return [];
-  }
-}
-
 class TabIndicator extends Decoration {
   final BoxPainter painter = TabPainter();
 
@@ -334,36 +321,6 @@ void ifNotTester(VoidCallback callback) {
   }
 }
 
-Future<List<MediaSourceModel>> getMultipleImages() async {
-  FilePickerResult? filePickerResult;
-  List<MediaSourceModel> imgList = [];
-  filePickerResult = await FilePicker.platform
-      .pickFiles(allowMultiple: true, type: FileType.media);
-  String mediaType = MediaTypes.photo;
-
-  if (filePickerResult != null) {
-    filePickerResult.files.forEach((element) {
-      log('element: ${element.path.validate().split("/").last.split(".").last}');
-
-      if (allowedVideoExtensions.any((e) =>
-          e == element.path.validate().split("/").last.split(".").last)) {
-        mediaType = MediaTypes.video;
-      }
-
-      if (element.path.validate().split("/").last.split(".").last.isNotEmpty) {
-        imgList.add(MediaSourceModel(
-          mediaFile: File(element.path!),
-          mediaType: mediaType,
-          extension: element.path.validate().split("/").last.split(".").last,
-        ));
-      } else {
-        toast('Cannot add this file');
-      }
-    });
-  }
-  return imgList;
-}
-
 String timeStampToDate(int time) {
   final DateTime input = DateTime.fromMillisecondsSinceEpoch(time * 1000);
 
@@ -479,33 +436,6 @@ String countYears(int difference) {
       (count > 1 ? ' ${language.years}' : ' ${language.year}');
 }
 
-// void initializeOneSignal() async {
-//   OneSignal.shared
-//       .setAppId(
-//           getStringAsync(ONESIGNAL_APP_ID, defaultValue: ONESIGNAL_APP_ID))
-//       .then((value) async {
-//     OneSignal.shared.setNotificationOpenedHandler((openedResult) {
-//       //
-//     });
-
-//     OneSignal.shared.setNotificationWillShowInForegroundHandler(
-//         (OSNotificationReceivedEvent event) {
-//       event.complete(event.notification);
-//     });
-
-//     OneSignal.shared.consentGranted(true);
-//     OneSignal.shared.promptUserForPushNotificationPermission();
-
-//     final status = await OneSignal.shared.getDeviceState();
-
-//     log('--------------------------------');
-//     log(status?.userId.validate());
-//     if (status!.userId.validate().isNotEmpty)
-//       setValue(
-//           SharePreferencesKey.ONE_SIGNAL_PLAYER_ID, status.userId.validate());
-//   });
-// }
-
 String getPostContent(String? postContent) {
   String content = '';
 
@@ -535,20 +465,6 @@ Future<void> activeUser() async {
     log('Error: ${e.toString()}');
     Future.delayed(Duration(minutes: updateActiveStatusDuration), () {
       activeUser();
-    });
-  });
-}
-
-Future<void> getNotificationCount() async {
-  await notificationCount().then((value) {
-    appStore.setNotificationCount(value.notificationCount.validate());
-    Future.delayed(Duration(minutes: updateActiveStatusDuration), () {
-      getNotificationCount();
-    });
-  }).catchError((e) {
-    log('Error: ${e.toString()}');
-    Future.delayed(Duration(minutes: updateActiveStatusDuration), () {
-      getNotificationCount();
     });
   });
 }
