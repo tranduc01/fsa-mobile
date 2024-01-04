@@ -11,12 +11,10 @@ import 'package:socialv/language/languages.dart';
 import 'package:socialv/models/common_models.dart';
 import 'package:socialv/screens/splash_screen.dart';
 import 'package:socialv/store/app_store.dart';
-import 'package:socialv/store/lms_store.dart';
 import 'package:socialv/utils/app_constants.dart';
 import 'package:flutter_portal/flutter_portal.dart';
 
 AppStore appStore = AppStore();
-LmsStore lmsStore = LmsStore();
 
 late BaseLanguage language;
 
@@ -55,11 +53,6 @@ class _MyAppState extends State<MyApp> {
 
   void init() async {
     afterBuildCreated(() async {
-      // if (themeModeIndex == AppThemeMode.ThemeModeLight) {
-      //   appStore.toggleDarkMode(value: false, isFromMain: true);
-      // } else {
-      //   appStore.toggleDarkMode(value: true, isFromMain: true);
-      // }
       appStore.toggleDarkMode(value: false, isFromMain: false);
     });
   }

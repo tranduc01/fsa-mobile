@@ -11,7 +11,8 @@ enum ExpertiseRequestStatus {
   Completed,
   WaitingForApproval,
   WaitingForExpert,
-  Rejected
+  Rejected,
+  Canceled,
 }
 
 enum ExpertAssginStatus {

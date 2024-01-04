@@ -1,8 +1,5 @@
 import 'package:socialv/models/common_models/post_mdeia_model.dart';
 import 'package:socialv/models/posts/comment_model.dart';
-import 'package:socialv/models/posts/get_post_likes_model.dart';
-
-import '../reactions/reactions_count_model.dart';
 
 class PostModel {
   int? activityId;
@@ -20,7 +17,6 @@ class PostModel {
   int? userId;
   String? userImage;
   String? userName;
-  List<GetPostLikesModel>? usersWhoLiked;
   int? isUserVerified;
   List<PostMediaModel>? medias;
   int? isFriend;
@@ -30,8 +26,6 @@ class PostModel {
   int? groupId;
   String? groupName;
   int? hasMentions;
-  List<Reactions>? reactions;
-  Reactions? curUserReaction;
   int? reactionCount;
   int? isPinned;
 
@@ -51,7 +45,6 @@ class PostModel {
     this.userId,
     this.userImage,
     this.userName,
-    this.usersWhoLiked,
     this.isUserVerified,
     this.medias,
     this.isFriend,
@@ -61,8 +54,6 @@ class PostModel {
     this.groupId,
     this.groupName,
     this.hasMentions,
-    this.reactions,
-    this.curUserReaction,
     this.reactionCount,
     this.isPinned,
   });
@@ -71,13 +62,19 @@ class PostModel {
     return PostModel(
       activityId: json['activity_id'],
       commentCount: json['comment_count'],
-      comments: json['comments'] != null ? (json['comments'] as List).map((i) => CommentModel.fromJson(i)).toList() : null,
+      comments: json['comments'] != null
+          ? (json['comments'] as List)
+              .map((i) => CommentModel.fromJson(i))
+              .toList()
+          : null,
       content: json['content'],
       dateRecorded: json['date_recorded'],
       isFavorites: json['is_favorites'],
       isLiked: json['is_liked'],
       likeCount: json['like_count'],
-      mediaList: json['media_list'] != null ? new List<String>.from(json['media_list']) : null,
+      mediaList: json['media_list'] != null
+          ? new List<String>.from(json['media_list'])
+          : null,
       mediaType: json['media_type'],
       postIn: json['post_in'],
       userEmail: json['user_email'],
@@ -85,17 +82,20 @@ class PostModel {
       userImage: json['user_image'],
       userName: json['User_name'],
       isUserVerified: json['is_user_verified'],
-      usersWhoLiked: json['users_who_liked'] != null ? (json['users_who_liked'] as List).map((i) => GetPostLikesModel.fromJson(i)).toList() : null,
-      medias: json['medias'] != null ? (json['medias'] as List).map((i) => PostMediaModel.fromJson(i)).toList() : null,
+      medias: json['medias'] != null
+          ? (json['medias'] as List)
+              .map((i) => PostMediaModel.fromJson(i))
+              .toList()
+          : null,
       isFriend: json['is_friend'],
       type: json['type'],
       blogId: json['blog_id'],
-      childPost: json['child_post'] != null ? PostModel.fromJson(json['child_post']) : null,
+      childPost: json['child_post'] != null
+          ? PostModel.fromJson(json['child_post'])
+          : null,
       groupId: json['group_id'],
       groupName: json['group_name'],
       hasMentions: json['has_mentions'],
-      reactions: json['reactions'] != null ? (json['reactions'] as List).map((i) => Reactions.fromJson(i)).toList() : null,
-      curUserReaction: json['cur_user_reaction'] != null ? Reactions.fromJson(json['cur_user_reaction']) : null,
       reactionCount: json['reaction_count'],
       isPinned: json['is_pinned'],
     );
@@ -131,20 +131,12 @@ class PostModel {
     if (this.mediaList != null) {
       data['media_list'] = this.mediaList;
     }
-    if (this.usersWhoLiked != null) {
-      data['users_who_liked'] = this.usersWhoLiked!.map((v) => v.toJson()).toList();
-    }
+
     if (this.medias != null) {
       data['medias'] = this.medias!.map((v) => v.toJson()).toList();
     }
     if (this.childPost != null) {
       data['child_post'] = this.childPost!.toJson();
-    }
-    if (this.reactions != null) {
-      data['reactions'] = this.reactions!.map((v) => v.toJson()).toList();
-    }
-    if (this.curUserReaction != null) {
-      data['cur_user_reaction'] = this.curUserReaction!.toJson();
     }
 
     return data;

@@ -7,7 +7,6 @@ import 'package:socialv/models/dashboard_api_response.dart';
 import 'package:socialv/models/groups/group_response.dart';
 import 'package:socialv/models/members/friend_request_model.dart';
 import 'package:socialv/models/members/member_response.dart';
-import 'package:socialv/models/reactions/reactions_model.dart';
 import 'package:socialv/utils/colors.dart';
 import 'package:socialv/utils/constants.dart';
 
@@ -18,9 +17,6 @@ class AppStore = AppStoreBase with _$AppStore;
 abstract class AppStoreBase with Store {
   @observable
   int isReactionEnable = 0;
-
-  @observable
-  ReactionsModel defaultReaction = ReactionsModel();
 
   @observable
   String giphyKey = '\$';
@@ -132,12 +128,6 @@ abstract class AppStoreBase with Store {
   @action
   void setMultiSelect(bool val) {
     isMultiSelect = val;
-  }
-
-  @action
-  Future<void> setDefaultReaction(ReactionsModel val,
-      {bool isInitializing = false}) async {
-    defaultReaction = val;
   }
 
   @action

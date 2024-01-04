@@ -1,5 +1,3 @@
-import 'package:socialv/models/story/highlight_stories_model.dart';
-
 class MemberDetailModel {
   String? email;
   int? friendsCount;
@@ -16,25 +14,24 @@ class MemberDetailModel {
   bool? blockedBy;
   bool? isUserVerified;
   String? accountType;
-  List<HighlightStoriesModel>? highlightStory;
 
-  MemberDetailModel(
-      {this.email,
-      this.friendsCount,
-      this.friendshipStatus,
-      this.groupsCount,
-      this.id,
-      this.memberAvatarImage,
-      this.memberCoverImage,
-      this.mentionName,
-      this.name,
-      this.postCount,
-      this.profileInfo,
-      this.blockedBy,
-      this.blockedByMe,
-      this.isUserVerified,
-      this.accountType,
-      this.highlightStory});
+  MemberDetailModel({
+    this.email,
+    this.friendsCount,
+    this.friendshipStatus,
+    this.groupsCount,
+    this.id,
+    this.memberAvatarImage,
+    this.memberCoverImage,
+    this.mentionName,
+    this.name,
+    this.postCount,
+    this.profileInfo,
+    this.blockedBy,
+    this.blockedByMe,
+    this.isUserVerified,
+    this.accountType,
+  });
 
   factory MemberDetailModel.fromJson(Map<String, dynamic> json) {
     return MemberDetailModel(
@@ -48,12 +45,15 @@ class MemberDetailModel {
       mentionName: json['mention_name'],
       name: json['name'],
       postCount: json['post_count'],
-      profileInfo: json['profile_info'] != null ? (json['profile_info'] as List).map((i) => ProfileInfo.fromJson(i)).toList() : null,
+      profileInfo: json['profile_info'] != null
+          ? (json['profile_info'] as List)
+              .map((i) => ProfileInfo.fromJson(i))
+              .toList()
+          : null,
       blockedByMe: json['blocked_by_me'],
       blockedBy: json['blocked_by'],
       isUserVerified: json['is_user_verified'],
       accountType: json['account_type'],
-      highlightStory: json['highlight_story'] != null ? (json['highlight_story'] as List).map((i) => HighlightStoriesModel.fromJson(i)).toList() : null,
     );
   }
 
@@ -76,9 +76,7 @@ class MemberDetailModel {
     data['blocked_by_me'] = this.blockedByMe;
     data['blocked_by'] = this.blockedBy;
     data['account_type'] = this.accountType;
-    if (this.highlightStory != null) {
-      data['highlight_story'] = this.highlightStory!.map((v) => v.toJson()).toList();
-    }
+
     return data;
   }
 }
@@ -92,7 +90,9 @@ class ProfileInfo {
 
   factory ProfileInfo.fromJson(Map<String, dynamic> json) {
     return ProfileInfo(
-      fields: json['fields'] != null ? (json['fields'] as List).map((i) => Field.fromJson(i)).toList() : null,
+      fields: json['fields'] != null
+          ? (json['fields'] as List).map((i) => Field.fromJson(i)).toList()
+          : null,
       id: json['id'],
       name: json['name'],
     );

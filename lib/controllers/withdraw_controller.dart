@@ -9,7 +9,8 @@ import '../models/response_model.dart';
 
 class WithdrawController extends GetxController {
   final storage = new FlutterSecureStorage();
-  var withdraws = [].obs;
+  var withdraws = <Withdraw>[].obs;
+  var withdraw = Withdraw().obs;
   var isLoading = false.obs;
   var isCreateSuccess = false.obs;
   var isDeleteSuccess = false.obs;
@@ -59,7 +60,7 @@ class WithdrawController extends GetxController {
     if (response.statusCode == 200) {
       isLoading(false);
       isError(false);
-      return Withdraw.fromJson(responseModel.data);
+      return withdraw.value = Withdraw.fromJson(responseModel.data);
     } else {
       isLoading(false);
       isError(true);
@@ -102,6 +103,32 @@ class WithdrawController extends GetxController {
         print('Request failed with status: ${response.statusCode}');
         print('Request failed with status: ${response.body['Message']}');
         isCreateSuccess(false);
+      }
+    } catch (e) {
+      isError(true);
+      print(e);
+    }
+  }
+
+  Future<void> cancelWithdrawRequest(int id, String cancelMessage) async {
+    try {
+      isLoading(true);
+      var url =
+          '$BASE_URL/withdraw-request/$id/cancel?cancelMessage=$cancelMessage';
+      String? token = await storage.read(key: 'jwt');
+      var headers = {
+        'Authorization': 'Bearer $token',
+      };
+
+      var response = await GetConnect().patch(url, {}, headers: headers);
+      if (response.statusCode == 200) {
+        isLoading(false);
+        isUpdateSuccess(true);
+      } else {
+        isLoading(false);
+        isError(true);
+        print('Request failed with status: ${response.statusCode}');
+        print('Request failed with status: ${response.body['Message']}');
       }
     } catch (e) {
       isError(true);

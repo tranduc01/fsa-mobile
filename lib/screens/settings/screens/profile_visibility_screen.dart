@@ -7,7 +7,6 @@ import 'package:socialv/main.dart';
 import 'package:socialv/models/dashboard_api_response.dart';
 import 'package:socialv/models/members/profile_visibility_model.dart';
 import 'package:socialv/network/rest_apis.dart';
-import 'package:socialv/screens/dashboard_screen.dart';
 import 'package:socialv/utils/app_constants.dart';
 
 List<ProfileVisibilityModel> profileVisibility = [];

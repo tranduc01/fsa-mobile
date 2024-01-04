@@ -3,10 +3,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:http_parser/http_parser.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/main.dart';
-import 'package:socialv/models/activity_response.dart';
 import 'package:socialv/models/block_report/blocked_accounts_model.dart';
 import 'package:socialv/models/common_models.dart';
 import 'package:socialv/models/common_models/avatar_urls.dart';
@@ -26,8 +24,6 @@ import 'package:socialv/models/groups/group_membership_requests_model.dart';
 import 'package:socialv/models/groups/group_model.dart';
 import 'package:socialv/models/groups/group_request_model.dart';
 import 'package:socialv/models/groups/group_response.dart';
-import 'package:socialv/models/groups/reject_group_invite_response.dart';
-import 'package:socialv/models/groups/remove_group_member.dart';
 import 'package:socialv/models/login_response.dart';
 import 'package:socialv/models/members/friend_request_model.dart';
 import 'package:socialv/models/members/friendship_response_model.dart';
@@ -37,49 +33,17 @@ import 'package:socialv/models/members/member_response.dart';
 import 'package:socialv/models/members/profile_field_model.dart';
 import 'package:socialv/models/members/profile_visibility_model.dart';
 import 'package:socialv/models/members/remove_existing_friend.dart';
-import 'package:socialv/models/notifications/delete_notification_response_model.dart';
-import 'package:socialv/models/notifications/notification_count_model.dart';
-import 'package:socialv/models/notifications/notification_model.dart';
-import 'package:socialv/models/notifications/notification_settings_model.dart';
 import 'package:socialv/models/posts/comment_model.dart';
-import 'package:socialv/models/posts/get_post_likes_model.dart';
 import 'package:socialv/models/posts/media_model.dart';
 import 'package:socialv/models/posts/post_in_list_model.dart';
 import 'package:socialv/models/posts/post_model.dart';
-import 'package:socialv/models/posts/wp_comments_model.dart';
-import 'package:socialv/models/posts/wp_post_response.dart';
-import 'package:socialv/models/reactions/reactions_model.dart';
 import 'package:socialv/models/register_user_model.dart';
-import 'package:socialv/models/story/common_story_model.dart';
-import 'package:socialv/models/story/highlight_category_list_model.dart';
-import 'package:socialv/models/story/highlight_stories_model.dart';
-import 'package:socialv/models/story/story_response_model.dart';
-import 'package:socialv/models/story/story_views_model.dart';
-import 'package:socialv/models/woo_commerce/cart_model.dart';
-import 'package:socialv/models/woo_commerce/category_model.dart';
-import 'package:socialv/models/woo_commerce/common_models.dart';
-import 'package:socialv/models/woo_commerce/country_model.dart';
-import 'package:socialv/models/woo_commerce/coupon_model.dart';
-import 'package:socialv/models/woo_commerce/customer_model.dart';
-import 'package:socialv/models/woo_commerce/order_model.dart';
-import 'package:socialv/models/woo_commerce/order_notes_model.dart';
-import 'package:socialv/models/woo_commerce/payment_model.dart';
-import 'package:socialv/models/woo_commerce/product_detail_model.dart';
-import 'package:socialv/models/woo_commerce/product_list_model.dart';
-import 'package:socialv/models/woo_commerce/product_review_model.dart';
-import 'package:socialv/models/woo_commerce/wishlist_model.dart';
 import 'package:socialv/network/network_utils.dart';
 import 'package:socialv/utils/constants.dart';
-
-import '../models/lms/course_orders.dart';
-import '../models/lms/course_category.dart';
 import '../models/gallery/album_media_list_model.dart';
 import '../models/gallery/albums.dart';
 import '../models/gallery/media_active_statuses_model.dart';
 import '../models/invitations/invite_list_model.dart';
-import '../models/lms/lms_order_model.dart';
-import '../models/reactions/activity_reaction_model.dart';
-import '../models/reactions/reactions_count_model.dart';
 import '../screens/auth/screens/sign_in_screen.dart';
 
 bool get isTokenExpire =>
@@ -149,7 +113,6 @@ Future<void> logout(BuildContext context) async {
   if (!appStore.doRemember) appStore.setLoginName('');
   appStore.recentMemberSearchList.clear();
   appStore.recentGroupsSearchList.clear();
-  lmsStore.quizList.clear();
   setValue(SharePreferencesKey.LMS_QUIZ_LIST, '');
   await appStore.setLoggedIn(false);
   finish(context);
@@ -409,13 +372,6 @@ Future<List<GroupResponse>> updateGroup(
 
 /// Group Invites
 
-Future<RejectGroupInviteResponse> rejectGroupInvite({required int id}) async {
-  return RejectGroupInviteResponse.fromJson(await handleResponse(
-      await buildHttpResponse(
-          '${APIEndPoint.getGroups}/${APIEndPoint.groupInvites}/$id',
-          method: HttpMethod.DELETE)));
-}
-
 Future<List<GroupRequestsModel>> acceptGroupInvite({required String id}) async {
   Iterable it = await handleResponse(await buildHttpResponse(
       '${APIEndPoint.getGroups}/${APIEndPoint.groupInvites}/$id',
@@ -434,19 +390,6 @@ Future<List<GroupRequestsModel>> joinPublicGroup({required int groupId}) async {
       method: HttpMethod.POST,
       request: request));
   return it.map((e) => GroupRequestsModel.fromJson(e)).toList();
-}
-
-Future<RemoveGroupMember> leaveGroup({required int groupId}) async {
-  return RemoveGroupMember.fromJson(await handleResponse(await buildHttpResponse(
-      '${APIEndPoint.getGroups}/$groupId/${APIEndPoint.groupMembers}/${appStore.loginUserId}',
-      method: HttpMethod.DELETE)));
-}
-
-Future<RemoveGroupMember> removeGroupMember(
-    {required int groupId, required int memberId}) async {
-  return RemoveGroupMember.fromJson(await handleResponse(await buildHttpResponse(
-      '${APIEndPoint.getGroups}/$groupId/${APIEndPoint.groupMembers}/$memberId',
-      method: HttpMethod.DELETE)));
 }
 
 Future<List<GroupRequestsModel>> groupMemberRoles(
@@ -480,14 +423,6 @@ Future<List<GroupRequestsModel>> acceptGroupMembershipRequest(
   return it.map((e) => GroupRequestsModel.fromJson(e)).toList();
 }
 
-Future<RejectGroupInviteResponse> rejectGroupMembershipRequest(
-    {required int requestId}) async {
-  return RejectGroupInviteResponse.fromJson(await handleResponse(
-      await buildHttpResponse(
-          '${APIEndPoint.getGroups}/${APIEndPoint.groupMembershipRequests}/$requestId',
-          method: HttpMethod.DELETE)));
-}
-
 /// Group Settings Requests
 
 Future<CommonMessageResponse> editGroupSettings(
@@ -503,49 +438,6 @@ Future<CommonMessageResponse> editGroupSettings(
 }
 
 //endregion
-
-// region notifications
-
-Future<DeleteNotificationResponseModel> deleteNotification(
-    {required String notificationId}) async {
-  return DeleteNotificationResponseModel.fromJson(await handleResponse(
-      await buildHttpResponse('${APIEndPoint.getNotifications}/$notificationId',
-          method: HttpMethod.DELETE)));
-}
-
-Future<List<NotificationModel>> notificationsList({int page = 1}) async {
-  Map request = {"page": page, "per_page": 20};
-
-  Iterable it = await handleResponse(await buildHttpResponse(
-      '${APIEndPoint.notifications}',
-      method: HttpMethod.POST,
-      request: request));
-  return it.map((e) => NotificationModel.fromJson(e)).toList();
-}
-
-Future<List<ActivityResponse>> latestActivity({int page = 1}) async {
-  Iterable it = await handleResponse(
-      await buildHttpResponse('${APIEndPoint.activity}?page=1&per_page=5'));
-  return it.map((e) => ActivityResponse.fromJson(e)).toList();
-}
-
-Future<CommonMessageResponse> clearNotification() async {
-  return CommonMessageResponse.fromJson(
-    await handleResponse(
-        await buildHttpResponse('${APIEndPoint.clearNotification}')),
-  );
-}
-
-Future<NotificationCountModel> notificationCount() async {
-  return NotificationCountModel.fromJson(
-    await handleResponse(
-        await buildHttpResponse('${APIEndPoint.notificationCount}')),
-  );
-}
-
-//endregion
-
-/// Custom apis
 
 // region Post
 Future<List<PostModel>> getPost(
@@ -675,17 +567,6 @@ Future<void> uploadPost({
   );
 }
 
-Future<List<GetPostLikesModel>> getPostLikes(
-    {required int id, int page = 1}) async {
-  Map request = {"activity_id": id, "per_page": PER_PAGE, "page": page};
-  Iterable it = await handleResponse(await buildHttpResponse(
-      '${APIEndPoint.getAllPostLike}',
-      method: HttpMethod.POST,
-      request: request));
-
-  return it.map((e) => GetPostLikesModel.fromJson(e)).toList();
-}
-
 Future<CommonMessageResponse> likePost({required int postId}) async {
   Map request = {
     "activity_id": postId.toString(),
@@ -755,65 +636,6 @@ Future<void> hidePost({required int id}) async {
       method: HttpMethod.POST, request: request));
 }
 
-Future<WpPostResponse> wpPostById({required int postId}) async {
-  return WpPostResponse.fromJson(await handleResponse(
-      await buildHttpResponse('${APIEndPoint.wpPost}/$postId?_embed')));
-}
-
-Future<List<ReactionsModel>> getReactions() async {
-  Iterable it = await handleResponse(
-      await buildHttpResponse('${APIEndPoint.getReactionList}'));
-  return it.map((e) => ReactionsModel.fromJson(e)).toList();
-}
-
-Future<List<ReactionsModel>> getDefaultReaction() async {
-  Iterable it = await handleResponse(
-      await buildHttpResponse('${APIEndPoint.getDefaultReaction}'));
-  return it.map((e) => ReactionsModel.fromJson(e)).toList();
-}
-
-Future<ActivityReactionModel> addPostReaction(
-    {required int id,
-    required int reactionId,
-    required bool isComments}) async {
-  Map request = {
-    "reaction_id": reactionId,
-    "user_id": appStore.loginUserId,
-  };
-
-  return ActivityReactionModel.fromJson(
-    await handleResponse(await buildHttpResponse(
-        '${isComments ? APIEndPoint.commentsReaction : APIEndPoint.activityReaction}/$id',
-        method: HttpMethod.POST,
-        request: request)),
-  );
-}
-
-Future<ActivityReactionModel> deletePostReaction(
-    {required int id, required bool isComments}) async {
-  Map request = {
-    "user_id": appStore.loginUserId,
-  };
-
-  return ActivityReactionModel.fromJson(
-    await handleResponse(await buildHttpResponse(
-        '${isComments ? APIEndPoint.commentsReaction : APIEndPoint.activityReaction}/$id',
-        method: HttpMethod.DELETE,
-        request: request)),
-  );
-}
-
-Future<ReactionCountModel> getUsersReaction(
-    {required int id,
-    required bool isComments,
-    int page = 1,
-    required String reactionID}) async {
-  return ReactionCountModel.fromJson(
-    await handleResponse(await buildHttpResponse(
-        '${isComments ? APIEndPoint.commentsReaction : APIEndPoint.activityReaction}/$id?page=$page&per_page=$PER_PAGE&reaction_id=$reactionID')),
-  );
-}
-
 Future<CommonMessageResponse> favoriteActivity({required int postId}) async {
   Map request = {"post_id": postId, "is_favorite": 1};
   return CommonMessageResponse.fromJson(await handleResponse(
@@ -827,29 +649,6 @@ Future<CommonMessageResponse> pinActivity(
   return CommonMessageResponse.fromJson(await handleResponse(
       await buildHttpResponse('${APIEndPoint.pinActivity}',
           method: HttpMethod.POST, request: request)));
-}
-
-Future<List<WpPostResponse>> getBlogList({int? page}) async {
-  Iterable it = await handleResponse(await buildHttpResponse(
-      '${APIEndPoint.wpPost}?_embed&page=$page&per_page=$PER_PAGE',
-      method: HttpMethod.GET));
-  return it.map((e) => WpPostResponse.fromJson(e)).toList();
-}
-
-Future<List<WpCommentModel>> getBlogComments({int? id}) async {
-  Iterable it = await handleResponse(await buildHttpResponse(
-      '${APIEndPoint.wpComments}?post=$id&order=asc',
-      method: HttpMethod.GET));
-  return it.map((e) => WpCommentModel.fromJson(e)).toList();
-}
-
-Future<WpCommentModel> addBlogComment(
-    {required int postId, String? content, int? parentId}) async {
-  Map request = {"post": postId, "content": content, "parent": parentId};
-  return WpCommentModel.fromJson(await handleResponse(await buildHttpResponse(
-      '${APIEndPoint.wpComments}',
-      method: HttpMethod.POST,
-      request: request)));
 }
 
 //endregion
@@ -1083,13 +882,6 @@ Future<void> setPlayerId(Map req) async {
       method: HttpMethod.POST, request: req));
 }
 
-Future<List<NotificationSettingsModel>> notificationsSettings() async {
-  Iterable it = await handleResponse(
-      await buildHttpResponse('${APIEndPoint.getNotificationSettings}'));
-
-  return it.map((e) => NotificationSettingsModel.fromJson(e)).toList();
-}
-
 Future<CommonMessageResponse> saveNotificationsSettings(
     {List? requestList}) async {
   return CommonMessageResponse.fromJson(
@@ -1176,429 +968,6 @@ Future<CommonMessageResponse> reportGroup(
     await handleResponse(await buildHttpResponse('${APIEndPoint.reportGroup}',
         method: HttpMethod.POST, request: request)),
   );
-}
-
-//endregion
-
-// region story
-Future<void> uploadStory(
-  BuildContext context, {
-  required List<MediaSourceModel> fileList,
-  required List<CreateStoryModel> contentList,
-  String? highlightId,
-  String? highlightName,
-  File? highlightImage,
-  bool isHighlight = false,
-  String? status,
-}) async {
-  Future.forEach<MediaSourceModel>(fileList, (element) async {
-    int index = fileList.indexOf(element);
-
-    MultipartRequest multiPartRequest =
-        await getMultiPartRequest('${APIEndPoint.addStory}');
-
-    multiPartRequest.headers['authorization'] = 'Bearer ${appStore.token}';
-
-    multiPartRequest.fields['story_text'] =
-        contentList[index].storyText.validate();
-    multiPartRequest.fields['story_link'] =
-        contentList[index].storyLink.validate().isNotEmpty
-            ? contentList[index].storyLink.validate()
-            : "";
-    multiPartRequest.fields['parent_title'] =
-        highlightName.validate().isNotEmpty ? highlightName.validate() : "";
-    multiPartRequest.fields['parent_id'] =
-        highlightId.validate().isNotEmpty ? highlightId.validate() : "";
-    multiPartRequest.fields['type'] =
-        isHighlight ? StoryType.highlight : StoryType.global;
-    multiPartRequest.fields['status'] = status ?? StoryHighlightOptions.draft;
-    if (element.mediaType != MediaTypes.video)
-      multiPartRequest.fields['duration'] =
-          contentList[index].storyDuration.validate();
-    multiPartRequest.files.add(await MultipartFile.fromPath(
-      'media',
-      element.mediaFile.path,
-      contentType: MediaType(element.mediaType, element.extension),
-    ));
-
-    if (highlightImage != null) {
-      multiPartRequest.files.add(await MultipartFile.fromPath(
-        'parent_thumb',
-        highlightImage.path,
-        contentType: MediaType(MediaTypes.image,
-            highlightImage.path.validate().split("/").last.split(".").last),
-      ));
-    } else {
-      multiPartRequest.fields['parent_thumb'] = "";
-    }
-
-    log('fields ${multiPartRequest.fields}');
-    multiPartRequest.files.forEach((element) {
-      log('files ${element.field} :${element.filename}');
-    });
-
-    await sendMultiPartRequest(
-      multiPartRequest,
-      onSuccess: (data) async {
-        CommonMessageResponse message =
-            CommonMessageResponse.fromJson(jsonDecode(data));
-        log(message.message);
-      },
-      onError: (error) {
-        appStore.setLoading(false);
-        toast(error.toString(), print: true);
-      },
-    );
-  }).then((value) {
-    appStore.setLoading(false);
-    finish(context, true);
-
-    toast(language.storyPublishedSuccessfully);
-  });
-}
-
-Future<List<StoryResponseModel>> getUserStories({int? userId}) async {
-  Iterable it;
-
-  if (userId != null) {
-    Map request = {"user_id": appStore.loginUserId.toInt()};
-    it = await handleResponse(await buildHttpResponse(
-        '${APIEndPoint.getUserStories}',
-        method: HttpMethod.POST,
-        request: request));
-  } else {
-    it = await handleResponse(
-        await buildHttpResponse('${APIEndPoint.getUserStories}'));
-  }
-
-  return it.map((e) => StoryResponseModel.fromJson(e)).toList();
-}
-
-Future<CommonMessageResponse> viewStory({required int storyId}) async {
-  Map request = {"story_id": storyId};
-
-  return CommonMessageResponse.fromJson(
-    await handleResponse(await buildHttpResponse('${APIEndPoint.viewStory}',
-        method: HttpMethod.POST, request: request)),
-  );
-}
-
-Future<List<StoryViewsModel>> getStoryViews({required int storyId}) async {
-  Map request = {"story_id": storyId};
-  Iterable it = await handleResponse(await buildHttpResponse(
-      '${APIEndPoint.getStoryViews}',
-      method: HttpMethod.POST,
-      request: request));
-
-  return it.map((e) => StoryViewsModel.fromJson(e)).toList();
-}
-
-Future<CommonMessageResponse> deleteStory(
-    {required int storyId,
-    required String type,
-    required String status}) async {
-  Map request = {"story_id": storyId, "status": status, "type": type};
-
-  return CommonMessageResponse.fromJson(
-    await handleResponse(await buildHttpResponse('${APIEndPoint.deleteStory}',
-        method: HttpMethod.POST, request: request)),
-  );
-}
-
-Future<List<HighlightCategoryListModel>> getHighlightList() async {
-  Iterable it = await handleResponse(
-      await buildHttpResponse('${APIEndPoint.getHighlightCategory}'));
-
-  return it.map((e) => HighlightCategoryListModel.fromJson(e)).toList();
-}
-
-Future<List<HighlightStoriesModel>> getHighlightStories(
-    {required String status}) async {
-  Map request = {"status": status};
-
-  Iterable it = await handleResponse(await buildHttpResponse(
-      '${APIEndPoint.getHighlightStories}',
-      request: request,
-      method: HttpMethod.POST));
-
-  return it.map((e) => HighlightStoriesModel.fromJson(e)).toList();
-}
-
-//endregion
-
-// region woo commerce
-
-/// products
-Future<List<ProductListModel>> getProductsList(
-    {int page = 1,
-    int? categoryId,
-    String? orderBy,
-    String? searchText}) async {
-  Iterable it;
-
-  if (categoryId != null) {
-    it = await handleResponse(await buildHttpResponse(
-        '${APIEndPoint.productsList}?category=$categoryId&search=$searchText&page=$page&per_page=$PER_PAGE',
-        passParameters: true,
-        passToken: false));
-  } else {
-    it = await handleResponse(await buildHttpResponse(
-        '${APIEndPoint.productsList}?orderby=$orderBy&search=$searchText&page=$page&per_page=$PER_PAGE',
-        passParameters: true,
-        passToken: false));
-  }
-
-  return it.map((e) => ProductListModel.fromJson(e)).toList();
-}
-
-/// product reviews
-
-Future<List<ProductReviewModel>> getProductReviews(
-    {required int productId}) async {
-  Iterable it = await handleResponse(await buildHttpResponse(
-      '${APIEndPoint.productReviews}?product=$productId',
-      passParameters: true,
-      passToken: false));
-
-  return it.map((e) => ProductReviewModel.fromJson(e)).toList();
-}
-
-Future<ProductReviewModel> addProductReview({required Map request}) async {
-  return ProductReviewModel.fromJson(await handleResponse(
-      await buildHttpResponse('${APIEndPoint.productReviews}',
-          request: request,
-          method: HttpMethod.POST,
-          passParameters: true,
-          passToken: false)));
-}
-
-Future<ProductReviewModel> updateProductReview(
-    {required Map request, required int reviewId}) async {
-  return ProductReviewModel.fromJson(await handleResponse(
-      await buildHttpResponse('${APIEndPoint.productReviews}/$reviewId',
-          request: request,
-          method: HttpMethod.POST,
-          passParameters: true,
-          passToken: false)));
-}
-
-Future<ProductReviewModel> deleteProductReview({required int reviewId}) async {
-  Map request = {"force": true};
-
-  return ProductReviewModel.fromJson(await handleResponse(
-      await buildHttpResponse('${APIEndPoint.productReviews}/$reviewId',
-          request: request,
-          method: HttpMethod.DELETE,
-          passParameters: true,
-          passToken: false)));
-}
-
-/// Cart
-
-Future<CartModel> getCartDetails() async {
-  return CartModel.fromJson(await handleResponse(
-      await buildHttpResponse('${APIEndPoint.cart}', requiredNonce: true)));
-}
-
-Future<CartModel> applyCoupon({required String code}) async {
-  return CartModel.fromJson(await handleResponse(await buildHttpResponse(
-      '${APIEndPoint.applyCoupon}?code=$code',
-      method: HttpMethod.POST,
-      requiredNonce: true)));
-}
-
-Future<CartModel> removeCoupon({required String code}) async {
-  return CartModel.fromJson(await handleResponse(await buildHttpResponse(
-      '${APIEndPoint.removeCoupon}?code=$code',
-      method: HttpMethod.POST,
-      requiredNonce: true)));
-}
-
-Future<List<CouponModel>> getCouponsList() async {
-  Iterable it = await handleResponse(await buildHttpResponse(
-      '${APIEndPoint.coupons}',
-      passHeaders: false,
-      passParameters: true));
-
-  return it.map((e) => CouponModel.fromJson(e)).toList();
-}
-
-Future<CartModel> addItemToCart(
-    {required int productId, required int quantity}) async {
-  Map request = {"id": productId, "quantity": quantity};
-  return CartModel.fromJson(await handleResponse(await buildHttpResponse(
-      '${APIEndPoint.addCartItems}',
-      method: HttpMethod.POST,
-      request: request,
-      requiredNonce: true)));
-}
-
-Future<CartModel> updateCartItem(
-    {required String productKey, required int quantity}) async {
-  Map request = {"key": productKey, "quantity": quantity};
-
-  return CartModel.fromJson(await handleResponse(await buildHttpResponse(
-      '${APIEndPoint.updateCartItems}',
-      method: HttpMethod.POST,
-      request: request,
-      requiredNonce: true)));
-}
-
-Future<CartModel> removeCartItem({required String productKey}) async {
-  Map request = {"key": productKey};
-
-  return CartModel.fromJson(await handleResponse(await buildHttpResponse(
-      '${APIEndPoint.removeCartItems}',
-      method: HttpMethod.POST,
-      request: request,
-      requiredNonce: true)));
-}
-
-Future<List<PaymentModel>> getPaymentMethods() async {
-  Iterable it = await handleResponse(await buildHttpResponse(
-      '${APIEndPoint.getPaymentMethods}',
-      passHeaders: false,
-      passParameters: true));
-
-  return it.map((e) => PaymentModel.fromJson(e)).toList();
-}
-
-Future<List<CategoryModel>> getCategoryList() async {
-  Iterable it = await handleResponse(await buildHttpResponse(
-      '${APIEndPoint.categories}',
-      passParameters: true,
-      passToken: false));
-
-  return it.map((e) => CategoryModel.fromJson(e)).toList();
-}
-
-Future<List<OrderModel>> getOrderList({String? status}) async {
-  Iterable it = await handleResponse(await buildHttpResponse(
-      '${APIEndPoint.orders}?customer=${appStore.loginUserId}&status=$status',
-      passParameters: true,
-      passToken: false));
-
-  return it.map((e) => OrderModel.fromJson(e)).toList();
-}
-
-Future<OrderModel> createOrder({required Map request}) async {
-  return OrderModel.fromJson(await handleResponse(
-    await buildHttpResponse('${APIEndPoint.orders}',
-        method: HttpMethod.POST,
-        request: request,
-        requiredNonce: true,
-        passParameters: true,
-        passToken: false),
-  ));
-}
-
-Future<OrderNotesModel> createOrderNotes(
-    {required Map request, required int orderId}) async {
-  return OrderNotesModel.fromJson(await handleResponse(
-    await buildHttpResponse('${APIEndPoint.orders}/$orderId/notes',
-        method: HttpMethod.POST,
-        request: request,
-        requiredNonce: true,
-        passParameters: true,
-        passToken: false),
-  ));
-}
-
-Future<OrderModel> cancelOrder(
-    {required int orderId, required String note}) async {
-  Map request = {"status": "cancelled", "customer_note": note};
-
-  return OrderModel.fromJson(await handleResponse(await buildHttpResponse(
-    '${APIEndPoint.orders}/$orderId',
-    method: HttpMethod.POST,
-    requiredNonce: true,
-    passParameters: true,
-    passToken: false,
-    request: request,
-  )));
-}
-
-Future<OrderModel> deleteOrder({required int orderId}) async {
-  return OrderModel.fromJson(await handleResponse(await buildHttpResponse(
-      '${APIEndPoint.orders}/$orderId',
-      method: HttpMethod.DELETE,
-      requiredNonce: true,
-      passParameters: true,
-      passToken: false)));
-}
-
-Future<CustomerModel> getCustomer() async {
-  return CustomerModel.fromJson(await handleResponse(await buildHttpResponse(
-      '${APIEndPoint.customers}/${appStore.loginUserId}',
-      passParameters: true,
-      passToken: false)));
-}
-
-Future<CustomerModel> updateCustomer({required Map request}) async {
-  return CustomerModel.fromJson(await handleResponse(
-    await buildHttpResponse('${APIEndPoint.customers}/${appStore.loginUserId}',
-        method: HttpMethod.POST,
-        request: request,
-        requiredNonce: true,
-        passParameters: true,
-        passToken: false),
-  ));
-}
-
-Future<List<CountryModel>> getCountries({String? status}) async {
-  Iterable it = await handleResponse(await buildHttpResponse(
-      APIEndPoint.countries,
-      passParameters: true,
-      passToken: false));
-
-  return it.map((e) => CountryModel.fromJson(e)).toList();
-}
-
-/// custom apis
-Future<NonceModel> getNonce() async {
-  return NonceModel.fromJson(await handleResponse(await buildHttpResponse(
-      '${APIEndPoint.storeNonce}',
-      passParameters: true)));
-}
-
-Future<List<WishlistModel>> getWishList({int page = 1}) async {
-  Iterable it = await handleResponse(await buildHttpResponse(
-      '${APIEndPoint.wishlist}?page=$page&per_page=20'));
-
-  return it.map((e) => WishlistModel.fromJson(e)).toList();
-}
-
-Future<CommonMessageResponse> removeFromWishlist(
-    {required int productId}) async {
-  Map request = {"product_id": productId};
-
-  return CommonMessageResponse.fromJson(
-    await handleResponse(await buildHttpResponse(
-        '${APIEndPoint.removeFromWishlist}',
-        method: HttpMethod.DELETE,
-        request: request)),
-  );
-}
-
-Future<CommonMessageResponse> addToWishlist({required int productId}) async {
-  Map request = {"product_id": productId};
-
-  return CommonMessageResponse.fromJson(
-    await handleResponse(await buildHttpResponse('${APIEndPoint.addToWishlist}',
-        method: HttpMethod.POST, request: request)),
-  );
-}
-
-Future<List<ProductDetailModel>> getProductDetail(
-    {required int productId}) async {
-  Map request = {"product_id": productId};
-
-  Iterable it = await handleResponse(await buildHttpResponse(
-      '${APIEndPoint.productDetails}',
-      method: HttpMethod.POST,
-      request: request));
-
-  return it.map((e) => ProductDetailModel.fromJson(e)).toList();
 }
 
 //endregion
@@ -1866,27 +1235,4 @@ Future<CommonMessageResponse> deleteInvitedList({List? id}) async {
   return CommonMessageResponse.fromJson(await handleResponse(
       await buildHttpResponse('${APIEndPoint.inviteList}',
           method: HttpMethod.DELETE, request: request)));
-}
-
-// courses region
-
-Future<List<CourseCategory>> getCourseCategory() async {
-  Iterable it = await handleResponse(await buildHttpResponse(
-      '${APIEndPoint.getCourseCategory}',
-      method: HttpMethod.GET));
-  return it.map((e) => CourseCategory.fromJson(e)).toList();
-}
-
-Future<List<CourseOrders>> courseOrders({required int page}) async {
-  Iterable it = await handleResponse(await buildHttpResponse(
-      '${APIEndPoint.courseOrders}?page=$page&per_page=$PER_PAGE',
-      method: HttpMethod.GET));
-
-  return it.map((e) => CourseOrders.fromJson(e)).toList();
-}
-
-Future<LmsOrderModel> getOrderDetails({required int id}) async {
-  return LmsOrderModel.fromJson(await handleResponse(await buildHttpResponse(
-      '${APIEndPoint.courseOrderDetails}?id=$id',
-      method: HttpMethod.GET)));
 }
