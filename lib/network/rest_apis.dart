@@ -40,8 +40,6 @@ import 'package:socialv/models/posts/get_post_likes_model.dart';
 import 'package:socialv/models/posts/media_model.dart';
 import 'package:socialv/models/posts/post_in_list_model.dart';
 import 'package:socialv/models/posts/post_model.dart';
-import 'package:socialv/models/posts/wp_comments_model.dart';
-import 'package:socialv/models/posts/wp_post_response.dart';
 import 'package:socialv/models/register_user_model.dart';
 import 'package:socialv/network/network_utils.dart';
 import 'package:socialv/utils/constants.dart';
@@ -680,11 +678,6 @@ Future<void> hidePost({required int id}) async {
       method: HttpMethod.POST, request: request));
 }
 
-Future<WpPostResponse> wpPostById({required int postId}) async {
-  return WpPostResponse.fromJson(await handleResponse(
-      await buildHttpResponse('${APIEndPoint.wpPost}/$postId?_embed')));
-}
-
 Future<CommonMessageResponse> favoriteActivity({required int postId}) async {
   Map request = {"post_id": postId, "is_favorite": 1};
   return CommonMessageResponse.fromJson(await handleResponse(
@@ -698,29 +691,6 @@ Future<CommonMessageResponse> pinActivity(
   return CommonMessageResponse.fromJson(await handleResponse(
       await buildHttpResponse('${APIEndPoint.pinActivity}',
           method: HttpMethod.POST, request: request)));
-}
-
-Future<List<WpPostResponse>> getBlogList({int? page}) async {
-  Iterable it = await handleResponse(await buildHttpResponse(
-      '${APIEndPoint.wpPost}?_embed&page=$page&per_page=$PER_PAGE',
-      method: HttpMethod.GET));
-  return it.map((e) => WpPostResponse.fromJson(e)).toList();
-}
-
-Future<List<WpCommentModel>> getBlogComments({int? id}) async {
-  Iterable it = await handleResponse(await buildHttpResponse(
-      '${APIEndPoint.wpComments}?post=$id&order=asc',
-      method: HttpMethod.GET));
-  return it.map((e) => WpCommentModel.fromJson(e)).toList();
-}
-
-Future<WpCommentModel> addBlogComment(
-    {required int postId, String? content, int? parentId}) async {
-  Map request = {"post": postId, "content": content, "parent": parentId};
-  return WpCommentModel.fromJson(await handleResponse(await buildHttpResponse(
-      '${APIEndPoint.wpComments}',
-      method: HttpMethod.POST,
-      request: request)));
 }
 
 //endregion

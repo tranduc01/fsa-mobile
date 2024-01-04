@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/main.dart';
-import 'package:socialv/screens/blog/screens/blog_list_screen.dart';
 import 'package:socialv/screens/settings/screens/settings_screen.dart';
 import 'package:socialv/screens/stats/screens/stats_screen.dart';
 import 'package:socialv/screens/wallet/wallet_screen.dart';
@@ -26,27 +25,11 @@ List<DrawerModel> getDrawerOptions() {
   list.add(DrawerModel(
       image: ic_wallet, title: 'Wallet', attachedScreen: WalletScreen()));
   list.add(DrawerModel(
-      image: ic_blog, title: language.blogs, attachedScreen: BlogListScreen()));
-  list.add(DrawerModel(
       image: stats, title: 'Thống kê', attachedScreen: StatsScreen()));
-
   list.add(DrawerModel(
       image: ic_setting,
       title: language.settings,
       attachedScreen: SettingsScreen()));
-
-  return list;
-}
-
-List<DrawerModel> getCourseTabs() {
-  List<DrawerModel> list = [];
-
-  list.add(DrawerModel(title: language.theCourseIncludes));
-  list.add(DrawerModel(title: language.overview));
-  list.add(DrawerModel(title: language.curriculum));
-  list.add(DrawerModel(title: language.instructor));
-  list.add(DrawerModel(title: language.faqs));
-  list.add(DrawerModel(title: language.reviews));
 
   return list;
 }
@@ -67,25 +50,6 @@ List<FilterModel> getProductFilters() {
   list.add(FilterModel(
       value: ProductFilters.popularity, title: language.popularity));
   list.add(FilterModel(value: ProductFilters.price, title: language.price));
-
-  return list;
-}
-
-List<FilterModel> getOrderStatus() {
-  List<FilterModel> list = [];
-
-  list.add(FilterModel(value: OrderStatus.any, title: language.any));
-  list.add(FilterModel(value: OrderStatus.pending, title: language.pending));
-  list.add(
-      FilterModel(value: OrderStatus.processing, title: language.processing));
-  list.add(FilterModel(value: OrderStatus.onHold, title: language.onHold));
-  list.add(
-      FilterModel(value: OrderStatus.completed, title: language.completed));
-  list.add(
-      FilterModel(value: OrderStatus.cancelled, title: language.cancelled));
-  list.add(FilterModel(value: OrderStatus.refunded, title: language.refunded));
-  list.add(FilterModel(value: OrderStatus.failed, title: language.failed));
-  list.add(FilterModel(value: OrderStatus.trash, title: language.trash));
 
   return list;
 }
