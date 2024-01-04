@@ -1,6 +1,5 @@
 import 'package:socialv/models/common_models/post_mdeia_model.dart';
 import 'package:socialv/models/posts/comment_model.dart';
-import 'package:socialv/models/posts/get_post_likes_model.dart';
 
 class PostModel {
   int? activityId;
@@ -18,7 +17,6 @@ class PostModel {
   int? userId;
   String? userImage;
   String? userName;
-  List<GetPostLikesModel>? usersWhoLiked;
   int? isUserVerified;
   List<PostMediaModel>? medias;
   int? isFriend;
@@ -47,7 +45,6 @@ class PostModel {
     this.userId,
     this.userImage,
     this.userName,
-    this.usersWhoLiked,
     this.isUserVerified,
     this.medias,
     this.isFriend,
@@ -85,11 +82,6 @@ class PostModel {
       userImage: json['user_image'],
       userName: json['User_name'],
       isUserVerified: json['is_user_verified'],
-      usersWhoLiked: json['users_who_liked'] != null
-          ? (json['users_who_liked'] as List)
-              .map((i) => GetPostLikesModel.fromJson(i))
-              .toList()
-          : null,
       medias: json['medias'] != null
           ? (json['medias'] as List)
               .map((i) => PostMediaModel.fromJson(i))
@@ -139,10 +131,7 @@ class PostModel {
     if (this.mediaList != null) {
       data['media_list'] = this.mediaList;
     }
-    if (this.usersWhoLiked != null) {
-      data['users_who_liked'] =
-          this.usersWhoLiked!.map((v) => v.toJson()).toList();
-    }
+
     if (this.medias != null) {
       data['medias'] = this.medias!.map((v) => v.toJson()).toList();
     }

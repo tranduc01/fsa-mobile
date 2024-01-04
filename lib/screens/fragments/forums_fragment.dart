@@ -8,10 +8,13 @@ import 'package:socialv/main.dart';
 import 'package:socialv/models/gallery/albums.dart';
 import 'package:socialv/screens/forums/components/forums_card_component.dart';
 import 'package:socialv/screens/forums/screens/forum_detail_screen.dart';
+import 'package:socialv/screens/forums/screens/single_discovery_album_detail_screen.dart';
 
 import '../../../utils/app_constants.dart';
 import '../../models/posts/topic.dart';
+import '../expertise_request/expertise_request/components/video_media_component.dart';
 import '../post/screens/image_screen.dart';
+import '../post/screens/video_post_screen.dart';
 
 class ForumsFragment extends StatefulWidget {
   final ScrollController controller;
@@ -191,7 +194,11 @@ class _ForumsFragment extends State<ForumsFragment> {
                             Media media = data.media[index];
                             if (index == listImage.length - 1) {
                               return InkWell(
-                                onTap: () {},
+                                onTap: () {
+                                  SingleAlbumDiscoveryDetailScreen(
+                                    album: data,
+                                  ).launch(context);
+                                },
                                 child: Container(
                                   width: 150,
                                   decoration: BoxDecoration(
@@ -211,13 +218,18 @@ class _ForumsFragment extends State<ForumsFragment> {
                                   media.type == 'image'
                                       ? ImageScreen(imageURl: media.url!)
                                           .launch(context)
-                                      : null;
+                                      : VideoPostScreen(media.url!.validate())
+                                          .launch(context);
                                 },
                                 child: Container(
                                   padding: EdgeInsets.only(right: 10),
-                                  child: Image.network(
-                                    media.url!,
-                                  ).cornerRadiusWithClipRRect(20),
+                                  child: media.type == 'image'
+                                      ? Image.network(
+                                          media.url!,
+                                        ).cornerRadiusWithClipRRect(20)
+                                      : VideoMediaComponent(
+                                          mediaUrl: media.url!,
+                                        ).cornerRadiusWithClipRRect(20),
                                 ),
                               );
                             }

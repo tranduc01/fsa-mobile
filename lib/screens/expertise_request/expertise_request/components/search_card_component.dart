@@ -6,7 +6,6 @@ import 'package:socialv/main.dart';
 import 'package:socialv/utils/cached_network_image.dart';
 
 import '../../../../utils/app_constants.dart';
-import '../../../../utils/constants.dart';
 
 class SearchCardComponent extends StatefulWidget {
   final int id;

@@ -24,8 +24,6 @@ import 'package:socialv/models/groups/group_membership_requests_model.dart';
 import 'package:socialv/models/groups/group_model.dart';
 import 'package:socialv/models/groups/group_request_model.dart';
 import 'package:socialv/models/groups/group_response.dart';
-import 'package:socialv/models/groups/reject_group_invite_response.dart';
-import 'package:socialv/models/groups/remove_group_member.dart';
 import 'package:socialv/models/login_response.dart';
 import 'package:socialv/models/members/friend_request_model.dart';
 import 'package:socialv/models/members/friendship_response_model.dart';
@@ -36,7 +34,6 @@ import 'package:socialv/models/members/profile_field_model.dart';
 import 'package:socialv/models/members/profile_visibility_model.dart';
 import 'package:socialv/models/members/remove_existing_friend.dart';
 import 'package:socialv/models/posts/comment_model.dart';
-import 'package:socialv/models/posts/get_post_likes_model.dart';
 import 'package:socialv/models/posts/media_model.dart';
 import 'package:socialv/models/posts/post_in_list_model.dart';
 import 'package:socialv/models/posts/post_model.dart';
@@ -375,13 +372,6 @@ Future<List<GroupResponse>> updateGroup(
 
 /// Group Invites
 
-Future<RejectGroupInviteResponse> rejectGroupInvite({required int id}) async {
-  return RejectGroupInviteResponse.fromJson(await handleResponse(
-      await buildHttpResponse(
-          '${APIEndPoint.getGroups}/${APIEndPoint.groupInvites}/$id',
-          method: HttpMethod.DELETE)));
-}
-
 Future<List<GroupRequestsModel>> acceptGroupInvite({required String id}) async {
   Iterable it = await handleResponse(await buildHttpResponse(
       '${APIEndPoint.getGroups}/${APIEndPoint.groupInvites}/$id',
@@ -400,19 +390,6 @@ Future<List<GroupRequestsModel>> joinPublicGroup({required int groupId}) async {
       method: HttpMethod.POST,
       request: request));
   return it.map((e) => GroupRequestsModel.fromJson(e)).toList();
-}
-
-Future<RemoveGroupMember> leaveGroup({required int groupId}) async {
-  return RemoveGroupMember.fromJson(await handleResponse(await buildHttpResponse(
-      '${APIEndPoint.getGroups}/$groupId/${APIEndPoint.groupMembers}/${appStore.loginUserId}',
-      method: HttpMethod.DELETE)));
-}
-
-Future<RemoveGroupMember> removeGroupMember(
-    {required int groupId, required int memberId}) async {
-  return RemoveGroupMember.fromJson(await handleResponse(await buildHttpResponse(
-      '${APIEndPoint.getGroups}/$groupId/${APIEndPoint.groupMembers}/$memberId',
-      method: HttpMethod.DELETE)));
 }
 
 Future<List<GroupRequestsModel>> groupMemberRoles(
@@ -444,14 +421,6 @@ Future<List<GroupRequestsModel>> acceptGroupMembershipRequest(
       '${APIEndPoint.getGroups}/${APIEndPoint.groupMembershipRequests}/$requestId',
       method: HttpMethod.PUT));
   return it.map((e) => GroupRequestsModel.fromJson(e)).toList();
-}
-
-Future<RejectGroupInviteResponse> rejectGroupMembershipRequest(
-    {required int requestId}) async {
-  return RejectGroupInviteResponse.fromJson(await handleResponse(
-      await buildHttpResponse(
-          '${APIEndPoint.getGroups}/${APIEndPoint.groupMembershipRequests}/$requestId',
-          method: HttpMethod.DELETE)));
 }
 
 /// Group Settings Requests
@@ -596,17 +565,6 @@ Future<void> uploadPost({
       toast(error.toString(), print: true);
     },
   );
-}
-
-Future<List<GetPostLikesModel>> getPostLikes(
-    {required int id, int page = 1}) async {
-  Map request = {"activity_id": id, "per_page": PER_PAGE, "page": page};
-  Iterable it = await handleResponse(await buildHttpResponse(
-      '${APIEndPoint.getAllPostLike}',
-      method: HttpMethod.POST,
-      request: request));
-
-  return it.map((e) => GetPostLikesModel.fromJson(e)).toList();
 }
 
 Future<CommonMessageResponse> likePost({required int postId}) async {
