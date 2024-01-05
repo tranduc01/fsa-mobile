@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 
 import '../configs.dart';
@@ -7,10 +8,13 @@ import '../models/auction/auction.dart';
 import '../models/response_model.dart';
 
 class AuctionController extends GetxController {
+  final storage = new FlutterSecureStorage();
   var auctions = <Auction>[].obs;
   var auction = Auction().obs;
   var isLoading = true.obs;
   var isError = false.obs;
+  var isUpdateSuccess = false.obs;
+  var message = ''.obs;
 
   @override
   void onInit() {
@@ -75,6 +79,32 @@ class AuctionController extends GetxController {
       isError(true);
       print('Request failed with status: ${response.statusCode}');
       throw Exception('Failed to load auction');
+    }
+  }
+
+  Future<void> joinAuction(int id, int amount) async {
+    try {
+      isLoading(true);
+      var url = '$BASE_URL/Auction/registration?id=$id&amount=$amount';
+      String? token = await storage.read(key: 'jwt');
+      var headers = {
+        'Authorization': 'Bearer $token',
+      };
+
+      var response = await GetConnect().post(url, {}, headers: headers);
+      if (response.statusCode == 200) {
+        isLoading(false);
+        isUpdateSuccess(true);
+      } else {
+        isLoading(false);
+        isError(true);
+        print('Request failed with status: ${response.statusCode}');
+        print('Request failed with status: ${response.body['Message']}');
+        message.value = response.body['Message'];
+      }
+    } catch (e) {
+      isError(true);
+      print(e);
     }
   }
 }

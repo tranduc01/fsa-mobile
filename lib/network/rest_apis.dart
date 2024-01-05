@@ -43,7 +43,6 @@ import 'package:socialv/utils/constants.dart';
 import '../models/gallery/album_media_list_model.dart';
 import '../models/gallery/albums.dart';
 import '../models/gallery/media_active_statuses_model.dart';
-import '../models/invitations/invite_list_model.dart';
 import '../screens/auth/screens/sign_in_screen.dart';
 
 bool get isTokenExpire =>
@@ -1205,34 +1204,3 @@ Future<void> uploadMediaFiles({
   }
 }
 //endregion
-
-// invitation region
-
-Future<List<InviteListModel>> getInviteList({String? type}) async {
-  Iterable it = await handleResponse(await buildHttpResponse(
-      '${APIEndPoint.inviteList}',
-      method: HttpMethod.GET));
-  return it.map((e) => InviteListModel.fromJson(e)).toList();
-}
-
-Future<CommonMessageResponse> sendInvite(
-    {String? email,
-    String? message,
-    List? inviteId,
-    required bool isResend}) async {
-  Map request = isResend
-      ? {"type": "resend", "invite_id": inviteId}
-      : {"email": email, "message": message};
-  return CommonMessageResponse.fromJson(await handleResponse(
-      await buildHttpResponse('${APIEndPoint.sendInvite}',
-          method: HttpMethod.POST, request: request)));
-}
-
-Future<CommonMessageResponse> deleteInvitedList({List? id}) async {
-  Map request = {
-    "id": id,
-  };
-  return CommonMessageResponse.fromJson(await handleResponse(
-      await buildHttpResponse('${APIEndPoint.inviteList}',
-          method: HttpMethod.DELETE, request: request)));
-}

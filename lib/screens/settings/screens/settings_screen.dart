@@ -15,8 +15,6 @@ import 'package:socialv/screens/settings/screens/profile_visibility_screen.dart'
 import 'package:socialv/utils/app_constants.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'send_invitations_screen.dart';
-
 class SettingsScreen extends StatefulWidget {
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
@@ -444,9 +442,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           trailing: Icon(Icons.arrow_forward_ios,
                               color: appStore.isDarkMode ? bodyDark : bodyWhite,
                               size: 16),
-                          onTap: () {
-                            SendInvitationsScreen().launch(context);
-                          },
+                          onTap: () {},
                         ),
                         SettingItemWidget(
                           title: language.blockedAccounts,

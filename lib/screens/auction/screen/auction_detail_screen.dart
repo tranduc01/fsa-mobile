@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:signalr_netcore/signalr_client.dart';
+import 'package:socialv/controllers/user_controller.dart';
 import 'package:socialv/main.dart';
 import 'package:socialv/screens/auction/screen/bid_screen.dart';
 import 'package:socialv/screens/post/screens/image_screen.dart';
@@ -12,7 +13,10 @@ import 'package:socialv/utils/html_widget.dart';
 
 import '../../../components/loading_widget.dart';
 import '../../../controllers/auction_controller.dart';
+import '../../../utils/common.dart';
 import '../../../utils/images.dart';
+import '../../common/fail_dialog.dart';
+import '../../common/loading_dialog.dart';
 
 class AuctionDetailSceen extends StatefulWidget {
   final int id;
@@ -28,6 +32,9 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
   final storage = new FlutterSecureStorage();
   late AnimationController _animationController;
   late AuctionController auctionController = Get.put(AuctionController());
+  late UserController userController = Get.find();
+  final registerationFormKey = GlobalKey<FormState>();
+  TextEditingController feeAmountCont = TextEditingController();
 
   @override
   void initState() {
@@ -77,59 +84,320 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
       () => Scaffold(
         floatingActionButton: Align(
           alignment: Alignment.bottomCenter,
-          child: FloatingActionButton.extended(
-            label: Text(
-                auctionController.auction.value.currentBidPrice!
-                    .toStringAsFixed(0)
-                    .formatNumberWithComma(),
-                style: TextStyle(
-                    color: Colors.black, fontWeight: FontWeight.bold)),
-            icon: Image.asset(
-              ic_auction,
-              height: 30,
-              width: 30,
-              color: Colors.black,
-            ),
-            backgroundColor: Colors.white,
-            onPressed: () {
-              showModalBottomSheet(
-                elevation: 0,
-                context: context,
-                isScrollControlled: true,
-                backgroundColor: Colors.transparent,
-                transitionAnimationController: _animationController,
-                builder: (context) {
-                  return FractionallySizedBox(
-                    heightFactor: 0.7,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: 45,
-                          height: 5,
-                          //clipBehavior: Clip.hardEdge,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16),
-                              color: Colors.white),
-                        ),
-                        8.height,
-                        Container(
-                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                          decoration: BoxDecoration(
-                            color: context.cardColor,
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(16),
-                                topRight: Radius.circular(16)),
+          child: (auctionController.auction.value.startDate!
+                      .add(Duration(hours: 7))
+                      .isBefore(DateTime.now()) &&
+                  auctionController.auction.value.endDate!
+                      .add(Duration(hours: 7))
+                      .isAfter(DateTime.now()))
+              ? FloatingActionButton.extended(
+                  label: Text(
+                      auctionController.auction.value.currentBidPrice!
+                          .toStringAsFixed(0)
+                          .formatNumberWithComma(),
+                      style: TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.bold)),
+                  icon: Image.asset(
+                    ic_auction,
+                    height: 30,
+                    width: 30,
+                    color: Colors.black,
+                  ),
+                  backgroundColor: Colors.white,
+                  onPressed: () {
+                    showModalBottomSheet(
+                      elevation: 0,
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      transitionAnimationController: _animationController,
+                      builder: (context) {
+                        return FractionallySizedBox(
+                          heightFactor: 0.7,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                width: 45,
+                                height: 5,
+                                //clipBehavior: Clip.hardEdge,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(16),
+                                    color: Colors.white),
+                              ),
+                              8.height,
+                              Container(
+                                clipBehavior: Clip.antiAliasWithSaveLayer,
+                                decoration: BoxDecoration(
+                                  color: context.cardColor,
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(16),
+                                      topRight: Radius.circular(16)),
+                                ),
+                                child: BidScreen(auctionId: widget.id),
+                              ).expand(),
+                            ],
                           ),
-                          child: BidScreen(auctionId: widget.id),
-                        ).expand(),
-                      ],
-                    ),
-                  );
-                },
-              );
-            },
-          ),
+                        );
+                      },
+                    );
+                  },
+                )
+              : auctionController.auction.value.startRegisterAt!
+                          .add(Duration(hours: 7))
+                          .isBefore(DateTime.now()) &&
+                      auctionController.auction.value.endRegisterAt!
+                          .add(Duration(hours: 7))
+                          .isAfter(DateTime.now())
+                  ? FloatingActionButton.extended(
+                      label: Text('Join this auction',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold)),
+                      icon: Image.asset(
+                        ic_join,
+                        height: 30,
+                        width: 30,
+                        color: Colors.black,
+                      ),
+                      backgroundColor: Colors.white,
+                      onPressed: () {
+                        showModalBottomSheet(
+                          elevation: 0,
+                          context: context,
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          transitionAnimationController: _animationController,
+                          builder: (context) {
+                            return FractionallySizedBox(
+                              heightFactor: 0.7,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(
+                                    width: 45,
+                                    height: 5,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(16),
+                                        color: Colors.white),
+                                  ),
+                                  8.height,
+                                  Container(
+                                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                                    decoration: BoxDecoration(
+                                      color: context.cardColor,
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(16),
+                                          topRight: Radius.circular(16)),
+                                    ),
+                                    child: PopScope(
+                                      onPopInvoked: (didPop) {
+                                        if (didPop) {
+                                          feeAmountCont.clear();
+                                        }
+                                      },
+                                      child: SingleChildScrollView(
+                                        child: Container(
+                                          padding: EdgeInsets.all(20),
+                                          child: Column(
+                                            children: [
+                                              Text(
+                                                'Registration',
+                                                style: TextStyle(
+                                                    fontSize: 22,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontFamily: 'Roboto'),
+                                              ),
+                                              20.height,
+                                              Align(
+                                                alignment: Alignment.centerLeft,
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Text(
+                                                      'Fee',
+                                                      style: TextStyle(
+                                                          fontSize: 18,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontFamily: 'Roboto'),
+                                                    ),
+                                                    Text(
+                                                      auctionController
+                                                              .auction
+                                                              .value
+                                                              .registrationFee!
+                                                              .toStringAsFixed(
+                                                                  0)
+                                                              .formatNumberWithComma() +
+                                                          ' Points',
+                                                      style: TextStyle(
+                                                          fontSize: 16,
+                                                          color: Colors.black
+                                                              .withOpacity(0.5),
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontFamily: 'Roboto'),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              20.height,
+                                              Align(
+                                                alignment: Alignment.centerLeft,
+                                                child: Text(
+                                                  'Advance Points',
+                                                  style: TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontFamily: 'Roboto'),
+                                                ),
+                                              ),
+                                              10.height,
+                                              Form(
+                                                key: registerationFormKey,
+                                                child: Column(
+                                                  children: [
+                                                    TextFormField(
+                                                      controller: feeAmountCont,
+                                                      keyboardType:
+                                                          TextInputType.number,
+                                                      decoration:
+                                                          InputDecoration(
+                                                        enabledBorder:
+                                                            OutlineInputBorder(
+                                                          borderSide:
+                                                              BorderSide(
+                                                            width: 3,
+                                                            color: Color(
+                                                                0xFFB4D4FF),
+                                                          ),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      50.0),
+                                                        ),
+                                                        focusedBorder:
+                                                            OutlineInputBorder(
+                                                          borderSide:
+                                                              BorderSide(
+                                                            width: 3,
+                                                            color: Color(
+                                                                0xFFB4D4FF),
+                                                          ),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      50.0),
+                                                        ),
+                                                        suffixIcon: Icon(
+                                                          Icons.token_outlined,
+                                                          color: Colors.black,
+                                                          size: 30,
+                                                        ),
+                                                      ),
+                                                      validator: (value) {
+                                                        if (value!.isEmpty) {
+                                                          return 'Please enter amount';
+                                                        }
+                                                        return null;
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              30.height,
+                                              appButton(
+                                                  text: 'Register',
+                                                  context: context,
+                                                  onTap: () async {
+                                                    if (registerationFormKey
+                                                        .currentState!
+                                                        .validate()) {
+                                                      registerationFormKey
+                                                          .currentState!
+                                                          .save();
+                                                      hideKeyboard(context);
+                                                      showConfirmDialogCustom(
+                                                        context,
+                                                        title: 'Are you sure you want to pay ' +
+                                                            auctionController
+                                                                .auction
+                                                                .value
+                                                                .registrationFee!
+                                                                .toStringAsFixed(
+                                                                    0)
+                                                                .formatNumberWithComma() +
+                                                            ' fee to join this auction?',
+                                                        onAccept: (p0) async {
+                                                          showDialog(
+                                                              context: context,
+                                                              barrierDismissible:
+                                                                  false,
+                                                              builder:
+                                                                  (context) {
+                                                                return LoadingDialog();
+                                                              });
+                                                          await auctionController
+                                                              .joinAuction(
+                                                                  widget.id,
+                                                                  int.parse(
+                                                                      feeAmountCont
+                                                                          .text));
+                                                          if (auctionController
+                                                              .isUpdateSuccess
+                                                              .value) {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                            await auctionController
+                                                                .fetchAuction(
+                                                                    widget.id);
+                                                            await userController
+                                                                .getCurrentUser();
+                                                            toast(
+                                                                'Join auction successfully');
+                                                          } else {
+                                                            Navigator.pop(
+                                                                context);
+                                                            showDialog(
+                                                              context: context,
+                                                              barrierDismissible:
+                                                                  false,
+                                                              builder:
+                                                                  (context) {
+                                                                return FailDialog(
+                                                                    text: auctionController.message.value ==
+                                                                            'USER_POINT_NOT_ENOUGH'
+                                                                        ? 'Your points are not enough to join this auction'
+                                                                        : 'Failed to join auction');
+                                                              },
+                                                            );
+                                                          }
+                                                        },
+                                                      );
+                                                    }
+                                                  })
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ).expand(),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    )
+                  : Offstage(),
         ),
         body: Stack(
           children: [
@@ -156,7 +424,6 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                     ),
                     Stack(
                       children: [
-                        // Your existing Container widget
                         Container(
                           margin: EdgeInsets.only(
                             top: screenHeight * 0.1,
@@ -950,7 +1217,51 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
               ],
             ),
             Positioned(
-              top: screenHeight * 0.31,
+              top: screenHeight * 0.21,
+              child: Container(
+                margin: EdgeInsets.only(left: 10, right: 10),
+                padding: EdgeInsets.all(10),
+                width: MediaQuery.of(context).size.width * 0.6,
+                height: 70,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment(0.8, 1),
+                    colors: <Color>[
+                      Color.fromARGB(133, 246, 213, 247),
+                      Color.fromARGB(133, 251, 233, 215),
+                    ],
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 0.8,
+                      blurRadius: 7,
+                      offset: Offset(0, 3), // changes position of shadow
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(ic_profile),
+                    10.width,
+                    Text(
+                      userController.user.value.name!,
+                      style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20),
+                    ),
+                    10.width,
+                    Image.asset(ic_crown)
+                  ],
+                ),
+              ),
+            ),
+            Positioned(
+              top: screenHeight * 0.3,
               left: 10,
               right: 10,
               child: Container(

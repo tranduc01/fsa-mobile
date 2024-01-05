@@ -567,6 +567,53 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                 ),
                               ],
                             ),
+                          ),
+                          InkWell(
+                            onTap: () => ExpertiseRequestScreen(
+                              controller: _controller,
+                              selectedIndex: 5,
+                            ).launch(context),
+                            child: Stack(
+                              clipBehavior: Clip.none,
+                              alignment: Alignment.center,
+                              children: [
+                                Image.asset(
+                                  ic_canceled,
+                                  height: 40,
+                                  width: 40,
+                                  fit: BoxFit.cover,
+                                ).paddingSymmetric(vertical: 11),
+                                Positioned(
+                                  right: -8,
+                                  top: -4,
+                                  child: Container(
+                                    padding: EdgeInsets.all(6),
+                                    decoration: BoxDecoration(
+                                        color: appColorPrimary,
+                                        shape: BoxShape.circle),
+                                    child: Text(
+                                      '10',
+                                      style: boldTextStyle(
+                                          color: Colors.white,
+                                          size: 10,
+                                          weight: FontWeight.w700,
+                                          letterSpacing: 0.7),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  bottom: -10, // Adjust the position as needed
+                                  child: Text(
+                                    'Canceled',
+                                    style: boldTextStyle(
+                                      color: Colors.black,
+                                      size: 10,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           )
                         ],
                       ),
