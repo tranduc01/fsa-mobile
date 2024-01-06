@@ -3,13 +3,11 @@ import 'dart:convert';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/controllers/user_controller.dart';
 import 'package:socialv/models/withdraw/withdraw.dart';
-import 'package:socialv/screens/subscription/screens/topup_package_screen.dart';
 import 'package:socialv/utils/app_constants.dart';
 
 import '../../components/loading_widget.dart';
@@ -20,6 +18,7 @@ import '../../models/enums/enums.dart';
 import '../../models/package/bank.dart';
 import '../common/fail_dialog.dart';
 import '../common/loading_dialog.dart';
+import '../subscription/top-up/topup_package_screen.dart';
 import 'withdraw_detail_bottomsheet_widget.dart';
 
 class WalletScreen extends StatefulWidget {
@@ -43,7 +42,6 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
   TextEditingController bankShortName = TextEditingController();
   TextEditingController note = TextEditingController();
 
-  final storage = new FlutterSecureStorage();
   late UserController userController = Get.find();
   late WithdrawController withdrawController = Get.put(WithdrawController());
 
@@ -741,8 +739,8 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
                                                                                   Navigator.pop(context);
                                                                                   Navigator.pop(context);
                                                                                   Navigator.pop(context);
-                                                                                  String? jwt = await storage.read(key: 'jwt');
-                                                                                  await userController.getUserById(JwtDecoder.decode(jwt!)!['uid']);
+
+                                                                                  await userController.getCurrentUser();
                                                                                   await withdrawController.fetchWithdraws();
                                                                                   toast('Withdraw Request Create Successfully');
                                                                                 } else {

@@ -61,6 +61,14 @@ class _CommentComponentState extends State<CommentComponent> {
                     height: 36,
                     width: 36,
                     fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Image.asset(
+                        'assets/images/profile.png',
+                        height: 36,
+                        width: 36,
+                        fit: BoxFit.cover,
+                      ).cornerRadiusWithClipRRect(100);
+                    },
                   ).cornerRadiusWithClipRRect(100)
                 : Image.asset(
                     'assets/images/profile.png',

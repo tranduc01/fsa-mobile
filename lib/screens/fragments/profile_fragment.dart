@@ -73,7 +73,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
   @override
   void initState() {
     future = getUserPostList();
-    userController.getUserById(userController.user.value.id ?? '');
+    userController.getCurrentUser();
     setStatusBarColor(Colors.transparent);
     super.initState();
     widget.controller?.addListener(() {

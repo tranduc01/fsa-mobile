@@ -83,7 +83,8 @@ dependencies:
   carousel_slider: ^4.2.1
   # Story
   story_time: ^1.0.6
-  numberpicker: ^2.1.2
+  numberpicker: 
+  input_quantity:
 
   path_provider: ^2.0.15
   connectivity_plus:

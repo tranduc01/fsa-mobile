@@ -61,6 +61,7 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
 
     hubConnection.on('BidAuction', (arguments) {
       arguments!.forEach((element) {
+        print(element);
         auctionController.auction.value.currentBidPrice =
             element['bidAmount'] != null ? element['bidAmount'].toDouble() : 0;
         setState(() {});
@@ -148,7 +149,8 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                           .isBefore(DateTime.now()) &&
                       auctionController.auction.value.endRegisterAt!
                           .add(Duration(hours: 7))
-                          .isAfter(DateTime.now())
+                          .isAfter(DateTime.now()) &&
+                      auctionController.auction.value.isRegistered == false
                   ? FloatingActionButton.extended(
                       label: Text('Join this auction',
                           style: TextStyle(
@@ -436,22 +438,37 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                         Positioned(
                           top: screenHeight * 0.05,
                           left: 5,
-                          child: Row(
-                            children: [
-                              IconButton(
-                                icon: Icon(Icons.arrow_back),
-                                onPressed: () => Navigator.of(context).pop(),
-                              ),
-                              Text(
-                                language.auctionDetail,
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Roboto',
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            child: Row(
+                              children: [
+                                IconButton(
+                                  icon: Icon(Icons.arrow_back),
+                                  onPressed: () => Navigator.of(context).pop(),
                                 ),
-                              ),
-                            ],
+                                Text(
+                                  language.auctionDetail,
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Roboto',
+                                  ),
+                                ),
+                                Spacer(),
+                                TextIcon(
+                                  prefix: Image.asset(
+                                    ic_two_user,
+                                    height: 25,
+                                    width: 25,
+                                    color: Colors.black,
+                                  ),
+                                  text: auctionController
+                                      .auction.value.numberParticipated
+                                      .toString(),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],
@@ -1216,50 +1233,76 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                 )
               ],
             ),
-            Positioned(
-              top: screenHeight * 0.21,
-              child: Container(
-                margin: EdgeInsets.only(left: 10, right: 10),
-                padding: EdgeInsets.all(10),
-                width: MediaQuery.of(context).size.width * 0.6,
-                height: 70,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment(0.8, 1),
-                    colors: <Color>[
-                      Color.fromARGB(133, 246, 213, 247),
-                      Color.fromARGB(133, 251, 233, 215),
+            if (auctionController.auction.value.winner != null)
+              Positioned(
+                top: screenHeight * 0.21,
+                child: Container(
+                  margin: EdgeInsets.only(left: 10, right: 10),
+                  padding: EdgeInsets.all(10),
+                  width: MediaQuery.of(context).size.width * 0.6,
+                  height: 70,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment(0.8, 1),
+                      colors: <Color>[
+                        Color.fromARGB(133, 246, 213, 247),
+                        Color.fromARGB(133, 251, 233, 215),
+                      ],
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 0.8,
+                        blurRadius: 7,
+                        offset: Offset(0, 3), // changes position of shadow
+                      ),
                     ],
                   ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 0.8,
-                      blurRadius: 7,
-                      offset: Offset(0, 3), // changes position of shadow
-                    ),
-                  ],
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(ic_profile),
-                    10.width,
-                    Text(
-                      userController.user.value.name!,
-                      style: TextStyle(
-                          fontFamily: 'Roboto',
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20),
-                    ),
-                    10.width,
-                    Image.asset(ic_crown)
-                  ],
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      auctionController.auction.value.winner!.avatarUrl != null
+                          ? Image.network(
+                              auctionController.auction.value.winner!.avatarUrl
+                                  .validate(),
+                              height: 36,
+                              width: 36,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Image.asset(
+                                  'assets/images/profile.png',
+                                  height: 36,
+                                  width: 36,
+                                  fit: BoxFit.cover,
+                                ).cornerRadiusWithClipRRect(100);
+                              },
+                            ).cornerRadiusWithClipRRect(100)
+                          : Image.asset(
+                              'assets/images/profile.png',
+                              height: 36,
+                              width: 36,
+                              fit: BoxFit.cover,
+                            ).cornerRadiusWithClipRRect(100),
+                      10.width,
+                      Flexible(
+                        child: Text(
+                          auctionController.auction.value.winner!.name!,
+                          style: TextStyle(
+                              fontFamily: 'Roboto',
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20),
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      10.width,
+                      Image.asset(ic_crown)
+                    ],
+                  ),
                 ),
               ),
-            ),
             Positioned(
               top: screenHeight * 0.3,
               left: 10,

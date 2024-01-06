@@ -27,6 +27,8 @@ class Auction {
   List<Media>? medias;
   List<Bid>? auctionBids;
   User? winner;
+  double? currentPoint;
+  bool? isRegistered;
 
   Auction({
     this.id,
@@ -51,6 +53,8 @@ class Auction {
     this.medias,
     this.auctionBids,
     this.winner,
+    this.currentPoint,
+    this.isRegistered,
   });
 
   factory Auction.fromJson(Map<String, dynamic> json) => Auction(
@@ -87,5 +91,8 @@ class Auction {
             ? (json["auctionBids"] as List).map((e) => Bid.fromJson(e)).toList()
             : [],
         winner: json["winner"] != null ? User.fromJson(json["winner"]) : null,
+        currentPoint:
+            json["currentPoint"] != null ? json["currentPoint"].toDouble() : 0,
+        isRegistered: json["isRegistered"] as bool? ?? false,
       );
 }

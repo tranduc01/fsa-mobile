@@ -57,7 +57,12 @@ class AuctionController extends GetxController {
 
   Future<Auction> fetchAuction(int id) async {
     isLoading(true);
-    var response = await GetConnect().get('$BASE_URL/Auction/$id');
+    String? token = await storage.read(key: 'jwt');
+    var headers = {
+      'Authorization': 'Bearer $token',
+    };
+    var response =
+        await GetConnect().get('$BASE_URL/Auction/$id', headers: headers);
 
     if (response.bodyString != null) {
       ResponseModel responseModel =
@@ -86,6 +91,32 @@ class AuctionController extends GetxController {
     try {
       isLoading(true);
       var url = '$BASE_URL/Auction/registration?id=$id&amount=$amount';
+      String? token = await storage.read(key: 'jwt');
+      var headers = {
+        'Authorization': 'Bearer $token',
+      };
+
+      var response = await GetConnect().post(url, {}, headers: headers);
+      if (response.statusCode == 200) {
+        isLoading(false);
+        isUpdateSuccess(true);
+      } else {
+        isLoading(false);
+        isError(true);
+        print('Request failed with status: ${response.statusCode}');
+        print('Request failed with status: ${response.body['Message']}');
+        message.value = response.body['Message'];
+      }
+    } catch (e) {
+      isError(true);
+      print(e);
+    }
+  }
+
+  Future<void> placeBid(int id, int amount) async {
+    try {
+      isLoading(true);
+      var url = '$BASE_URL/Auction/bid/id=$id?amount=$amount';
       String? token = await storage.read(key: 'jwt');
       var headers = {
         'Authorization': 'Bearer $token',

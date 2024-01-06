@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:input_quantity/input_quantity.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/components/loading_widget.dart';
 import 'package:socialv/components/no_data_lottie_widget.dart';
@@ -23,12 +24,14 @@ class BidScreen extends StatefulWidget {
 class _BidScreenState extends State<BidScreen> {
   TextEditingController commentController = TextEditingController();
   FocusNode commentFocus = FocusNode();
+  TextEditingController amountController = TextEditingController();
 
   late AuctionController auctionController = Get.put(AuctionController());
   late UserController userController = Get.put(UserController());
 
   int mPage = 1;
   bool mIsLastPage = false;
+  double _currentAmount = 0;
 
   @override
   void initState() {
@@ -67,62 +70,72 @@ class _BidScreenState extends State<BidScreen> {
         children: [
           Obx(
             () {
-              if (auctionController.isError.value) {
-                return NoDataWidget(
-                  imageWidget: NoDataLottieWidget(),
-                  title: auctionController.isError.value
-                      ? language.somethingWentWrong
-                      : language.noDataFound,
-                  onRetry: () {
-                    onRefresh();
-                  },
-                  retryText: '   ${language.clickToRefresh}   ',
-                ).center();
-              }
-
-              if (auctionController.auction.value.auctionBids!.isEmpty) {
-                return NoDataWidget(
-                  imageWidget: NoDataLottieWidget(),
-                  title: language.noDataFound,
-                  onRetry: () {
-                    onRefresh();
-                  },
-                  retryText: '   ${language.clickToRefresh}   ',
-                ).center();
-              } else {
-                return AnimatedListView(
-                  shrinkWrap: true,
-                  slideConfiguration: SlideConfiguration(
-                    delay: Duration(milliseconds: 80),
-                    verticalOffset: 300,
-                  ),
-                  physics: AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsets.fromLTRB(16, 16, 16, 90),
-                  itemCount:
-                      auctionController.auction.value.auctionBids!.length,
-                  itemBuilder: (context, index) {
-                    Bid bid =
-                        auctionController.auction.value.auctionBids![index];
-
-                    return Column(
-                      children: [
-                        BidComponent(
-                          bid: bid,
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Text(
+                      'Current Points: ${auctionController.auction.value.currentPoint!.toStringAsFixed(0).formatNumberWithComma()}',
+                      style: boldTextStyle(size: 20),
+                    ).paddingOnly(top: 16),
+                    Divider(
+                      thickness: 1,
+                    ),
+                    if (auctionController.isError.value)
+                      NoDataWidget(
+                        imageWidget: NoDataLottieWidget(),
+                        title: auctionController.isError.value
+                            ? language.somethingWentWrong
+                            : language.noDataFound,
+                        onRetry: () {
+                          onRefresh();
+                        },
+                        retryText: '   ${language.clickToRefresh}   ',
+                      ).center(),
+                    if (auctionController.auction.value.auctionBids!.isEmpty)
+                      NoDataWidget(
+                        imageWidget: NoDataLottieWidget(),
+                        title: language.noDataFound,
+                        onRetry: () {
+                          onRefresh();
+                        },
+                        retryText: '   ${language.clickToRefresh}   ',
+                      ).center()
+                    else
+                      AnimatedListView(
+                        shrinkWrap: true,
+                        reverse: true,
+                        slideConfiguration: SlideConfiguration(
+                          delay: Duration(milliseconds: 80),
+                          verticalOffset: 300,
                         ),
-                        Divider(
-                          thickness: 1,
-                        ),
-                      ],
-                    );
-                  },
-                  onNextPage: () {
-                    if (!mIsLastPage) {
-                      mPage++;
-                      //future = getCommentsList();
-                    }
-                  },
-                );
-              }
+                        physics: BouncingScrollPhysics(),
+                        padding: EdgeInsets.fromLTRB(16, 16, 16, 90),
+                        itemCount:
+                            auctionController.auction.value.auctionBids!.length,
+                        itemBuilder: (context, index) {
+                          Bid bid = auctionController
+                              .auction.value.auctionBids![index];
+
+                          return Column(
+                            children: [
+                              BidComponent(
+                                bid: bid,
+                              ),
+                              Divider(
+                                thickness: 1,
+                              ),
+                            ],
+                          );
+                        },
+                        onNextPage: () {
+                          if (!mIsLastPage) {
+                            mPage++;
+                          }
+                        },
+                      )
+                  ],
+                ),
+              );
             },
           ),
           Obx(
@@ -138,6 +151,144 @@ class _BidScreenState extends State<BidScreen> {
               }
             },
           ),
+          if (auctionController.auction.value.isRegistered == true &&
+              auctionController.auction.value.winner == null)
+            Positioned(
+              bottom: 0,
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                padding: EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: context.cardColor,
+                  boxShadow: defaultBoxShadow(),
+                ),
+                child: appButton(
+                    text: 'Place Bid',
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: Text('Place Bid',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontFamily: 'Roboto',
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16)),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                InputQty(
+                                  maxVal: auctionController
+                                      .auction.value.soldDirectlyPrice!,
+                                  initVal: 0,
+                                  // minVal: auctionController
+                                  //     .auction.value.currentBidPrice!,
+                                  steps: auctionController
+                                      .auction.value.stepPrice!,
+                                  qtyFormProps:
+                                      QtyFormProps(enableTyping: false),
+                                  decoration: QtyDecorationProps(
+                                      isBordered: false,
+                                      contentPadding: EdgeInsets.all(10),
+                                      borderShape: BorderShapeBtn.circle),
+                                  decimalPlaces: 0,
+                                  onQtyChanged: (val) {
+                                    _currentAmount = auctionController
+                                            .auction.value.currentBidPrice! +
+                                        val;
+                                    amountController.text = (auctionController
+                                                .auction
+                                                .value
+                                                .currentBidPrice! +
+                                            val)
+                                        .toStringAsFixed(0)
+                                        .formatNumberWithComma();
+                                    setState(() {});
+                                  },
+                                ),
+                                20.height,
+                                TextFormField(
+                                  controller: amountController,
+                                  readOnly: true,
+                                  keyboardType: TextInputType.number,
+                                  decoration: InputDecoration(
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        width: 3,
+                                        color: Color(0xFFB4D4FF),
+                                      ),
+                                      borderRadius: BorderRadius.circular(50.0),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        width: 3,
+                                        color: Color(0xFFB4D4FF),
+                                      ),
+                                      borderRadius: BorderRadius.circular(50.0),
+                                    ),
+                                    suffixIcon: Icon(
+                                      Icons.token_outlined,
+                                      color: Colors.black,
+                                      size: 30,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('Cancel',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontFamily: 'Roboto',
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold)),
+                              ),
+                              TextButton(
+                                style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(
+                                        context.primaryColor),
+                                    shape: MaterialStateProperty.all(
+                                        RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20)))),
+                                onPressed: () {
+                                  print(_currentAmount);
+                                  if ((amountController.text.toDouble() !=
+                                          auctionController
+                                              .auction.value.currentBidPrice) &&
+                                      !amountController.text.isEmptyOrNull) {
+                                    showConfirmDialogCustom(context,
+                                        title:
+                                            'Place Bid with ${amountController.text} points?',
+                                        onAccept: (contex) {
+                                      auctionController.placeBid(
+                                          auctionController.auction.value.id!,
+                                          _currentAmount.toInt());
+                                    });
+                                  }
+                                },
+                                child: Text('Place Bid',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: 'Roboto',
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold)),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    context: context),
+              ),
+            ),
         ],
       ),
     );
