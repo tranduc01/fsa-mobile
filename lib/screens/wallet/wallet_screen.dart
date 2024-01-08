@@ -242,12 +242,11 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
                                                 topLeft: Radius.circular(16),
                                                 topRight: Radius.circular(16)),
                                           ),
-                                          child: PopScope(
-                                            onPopInvoked: (didPop) {
-                                              if (didPop) {
-                                                amountController.clear();
-                                                moneyController.clear();
-                                              }
+                                          child: WillPopScope(
+                                            onWillPop: () {
+                                              amountController.clear();
+                                              moneyController.clear();
+                                              return Future.value(true);
                                             },
                                             child: SingleChildScrollView(
                                               child: Column(
@@ -445,22 +444,22 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
                                                           showDialog(
                                                             context: context,
                                                             builder: (context) {
-                                                              return PopScope(
-                                                                onPopInvoked:
-                                                                    (didPop) {
-                                                                  if (didPop) {
-                                                                    bankNumCont
-                                                                        .clear();
-                                                                    bankAccountName
-                                                                        .clear();
-                                                                    bankName
-                                                                        .clear();
-                                                                    bankCode
-                                                                        .clear();
-                                                                    bankShortName
-                                                                        .clear();
-                                                                    note.clear();
-                                                                  }
+                                                              return WillPopScope(
+                                                                onWillPop: () {
+                                                                  bankNumCont
+                                                                      .clear();
+                                                                  bankAccountName
+                                                                      .clear();
+                                                                  bankName
+                                                                      .clear();
+                                                                  bankCode
+                                                                      .clear();
+                                                                  bankShortName
+                                                                      .clear();
+                                                                  note.clear();
+                                                                  return Future
+                                                                      .value(
+                                                                          true);
                                                                 },
                                                                 child:
                                                                     AlertDialog(

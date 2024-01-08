@@ -37,7 +37,7 @@ dependencies:
   camera:
   extended_image: ^8.1.1
   animated_bottom_navigation_bar:
-  fl_chart: ^0.66.0
+  fl_chart: 0.60.0
   #Date CountDown
   date_count_down:
   flutter_timer_countdown:

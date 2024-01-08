@@ -280,8 +280,8 @@ class _StatsPageState extends State<StatsPage> {
           tooltipBgColor: Colors.blueGrey.withOpacity(0.8),
         ),
       );
-  FlGridData get gridData => const FlGridData(
-      show: true, drawHorizontalLine: true, drawVerticalLine: true);
+  FlGridData get gridData =>
+      FlGridData(show: true, drawHorizontalLine: true, drawVerticalLine: true);
 
   FlBorderData get borderData => FlBorderData(
         show: true,
@@ -297,10 +297,10 @@ class _StatsPageState extends State<StatsPage> {
         bottomTitles: AxisTitles(
           sideTitles: bottomTitles,
         ),
-        rightTitles: const AxisTitles(
+        rightTitles: AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
-        topTitles: const AxisTitles(
+        topTitles: AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
         leftTitles: AxisTitles(
@@ -383,10 +383,10 @@ class _StatsPageState extends State<StatsPage> {
         bottomTitles: AxisTitles(
           sideTitles: bottomTitles,
         ),
-        rightTitles: const AxisTitles(
+        rightTitles: AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
-        topTitles: const AxisTitles(
+        topTitles: AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
         leftTitles: AxisTitles(
@@ -401,7 +401,7 @@ class _StatsPageState extends State<StatsPage> {
         color: Colors.green,
         barWidth: 8,
         isStrokeCapRound: true,
-        dotData: const FlDotData(show: true),
+        dotData: FlDotData(show: true),
         belowBarData: BarAreaData(show: true),
         spots: const [
           FlSpot(1, 1),

@@ -467,11 +467,10 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                         topLeft: Radius.circular(16),
                                         topRight: Radius.circular(16)),
                                   ),
-                                  child: PopScope(
-                                    onPopInvoked: (didPop) {
-                                      if (didPop) {
-                                        feeAmountCont.clear();
-                                      }
+                                  child: WillPopScope(
+                                    onWillPop: () {
+                                      feeAmountCont.clear();
+                                      return Future.value(true);
                                     },
                                     child: SingleChildScrollView(
                                       child: Container(

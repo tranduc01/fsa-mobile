@@ -163,9 +163,10 @@ class _BidScreenState extends State<BidScreen> {
                         showDialog(
                           context: context,
                           builder: (context) {
-                            return PopScope(
-                              onPopInvoked: (didPop) {
+                            return WillPopScope(
+                              onWillPop: () {
                                 amountController.clear();
+                                return Future.value(true);
                               },
                               child: AlertDialog(
                                 title: Text('Place Bid',
