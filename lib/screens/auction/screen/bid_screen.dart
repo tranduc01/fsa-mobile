@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:input_quantity/input_quantity.dart';
+import 'package:lottie/lottie.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/components/loading_widget.dart';
 import 'package:socialv/components/no_data_lottie_widget.dart';
@@ -22,6 +23,7 @@ class BidScreen extends StatefulWidget {
 }
 
 class _BidScreenState extends State<BidScreen> {
+  final bidFormKey = GlobalKey<FormState>();
   TextEditingController commentController = TextEditingController();
   FocusNode commentFocus = FocusNode();
   TextEditingController amountController = TextEditingController();
@@ -80,17 +82,6 @@ class _BidScreenState extends State<BidScreen> {
                     Divider(
                       thickness: 1,
                     ),
-                    if (auctionController.isError.value)
-                      NoDataWidget(
-                        imageWidget: NoDataLottieWidget(),
-                        title: auctionController.isError.value
-                            ? language.somethingWentWrong
-                            : language.noDataFound,
-                        onRetry: () {
-                          onRefresh();
-                        },
-                        retryText: '   ${language.clickToRefresh}   ',
-                      ).center(),
                     if (auctionController.auction.value.auctionBids!.isEmpty)
                       NoDataWidget(
                         imageWidget: NoDataLottieWidget(),
@@ -165,126 +156,322 @@ class _BidScreenState extends State<BidScreen> {
                 child: appButton(
                     text: 'Place Bid',
                     onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: Text('Place Bid',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontFamily: 'Roboto',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold)),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16)),
-                            content: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                InputQty(
-                                  maxVal: auctionController
-                                      .auction.value.soldDirectlyPrice!,
-                                  initVal: 0,
-                                  // minVal: auctionController
-                                  //     .auction.value.currentBidPrice!,
-                                  steps: auctionController
-                                      .auction.value.stepPrice!,
-                                  qtyFormProps:
-                                      QtyFormProps(enableTyping: false),
-                                  decoration: QtyDecorationProps(
-                                      isBordered: false,
-                                      contentPadding: EdgeInsets.all(10),
-                                      borderShape: BorderShapeBtn.circle),
-                                  decimalPlaces: 0,
-                                  onQtyChanged: (val) {
-                                    _currentAmount = auctionController
-                                            .auction.value.currentBidPrice! +
-                                        val;
-                                    amountController.text = (auctionController
-                                                .auction
-                                                .value
-                                                .currentBidPrice! +
-                                            val)
-                                        .toStringAsFixed(0)
-                                        .formatNumberWithComma();
-                                    setState(() {});
-                                  },
-                                ),
-                                20.height,
-                                TextFormField(
-                                  controller: amountController,
-                                  readOnly: true,
-                                  keyboardType: TextInputType.number,
-                                  decoration: InputDecoration(
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        width: 3,
-                                        color: Color(0xFFB4D4FF),
-                                      ),
-                                      borderRadius: BorderRadius.circular(50.0),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        width: 3,
-                                        color: Color(0xFFB4D4FF),
-                                      ),
-                                      borderRadius: BorderRadius.circular(50.0),
-                                    ),
-                                    suffixIcon: Icon(
-                                      Icons.token_outlined,
-                                      color: Colors.black,
-                                      size: 30,
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text('Cancel',
+                      if (userController.user.value.isVerified == false) {
+                        toast('Please verify your account to place bid');
+                        return;
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return PopScope(
+                              onPopInvoked: (didPop) {
+                                amountController.clear();
+                              },
+                              child: AlertDialog(
+                                title: Text('Place Bid',
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontFamily: 'Roboto',
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold)),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16)),
+                                content: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Form(
+                                      key: bidFormKey,
+                                      child: Column(
+                                        children: [
+                                          InputQty(
+                                            maxVal: auctionController.auction
+                                                .value.soldDirectlyPrice!,
+                                            initVal: 0,
+                                            steps: auctionController
+                                                .auction.value.stepPrice!,
+                                            qtyFormProps: QtyFormProps(
+                                                enableTyping: false),
+                                            decoration: QtyDecorationProps(
+                                                isBordered: false,
+                                                contentPadding:
+                                                    EdgeInsets.all(10),
+                                                borderShape:
+                                                    BorderShapeBtn.circle),
+                                            decimalPlaces: 0,
+                                            onQtyChanged: (val) {
+                                              _currentAmount = auctionController
+                                                      .auction
+                                                      .value
+                                                      .currentBidPrice! +
+                                                  val;
+                                              amountController
+                                                  .text = (auctionController
+                                                          .auction
+                                                          .value
+                                                          .currentBidPrice! +
+                                                      val)
+                                                  .toStringAsFixed(0)
+                                                  .formatNumberWithComma();
+                                              setState(() {});
+                                            },
+                                          ),
+                                          20.height,
+                                          TextFormField(
+                                            controller: amountController,
+                                            readOnly: true,
+                                            keyboardType: TextInputType.number,
+                                            decoration: InputDecoration(
+                                              enabledBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  width: 3,
+                                                  color: Color(0xFFB4D4FF),
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(50.0),
+                                              ),
+                                              focusedBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  width: 3,
+                                                  color: Color(0xFFB4D4FF),
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(50.0),
+                                              ),
+                                              suffixIcon: Icon(
+                                                Icons.token_outlined,
+                                                color: Colors.black,
+                                                size: 30,
+                                              ),
+                                            ),
+                                            validator: (value) {
+                                              if (value!.isEmpty) {
+                                                return 'Please enter amount';
+                                              }
+                                              if (_currentAmount ==
+                                                  auctionController.auction
+                                                      .value.currentBidPrice!) {
+                                                return 'Amount must greater than current bid price';
+                                              }
+                                              return null;
+                                            },
+                                          )
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('Cancel',
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontFamily: 'Roboto',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold)),
+                                  ),
+                                  TextButton(
+                                    style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all(
+                                                context.primaryColor),
+                                        shape: MaterialStateProperty.all(
+                                            RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        20)))),
+                                    onPressed: () {
+                                      if (bidFormKey.currentState!.validate()) {
+                                        if ((amountController.text.toDouble() !=
+                                                auctionController.auction.value
+                                                    .currentBidPrice) &&
+                                            !amountController
+                                                .text.isEmptyOrNull) {
+                                          showConfirmDialogCustom(context,
+                                              title:
+                                                  'Place Bid with ${amountController.text} points?',
+                                              onAccept: (contex) async {
+                                            await auctionController.placeBid(
+                                                auctionController
+                                                    .auction.value.id!,
+                                                _currentAmount.toInt());
+                                            Navigator.of(context).pop();
+
+                                            if (auctionController
+                                                .isUpdateSuccess.value) {
+                                              auctionController.auction.value
+                                                      .currentPoint =
+                                                  auctionController.auction
+                                                          .value.currentPoint! -
+                                                      _currentAmount;
+                                              auctionController.auction
+                                                  .refresh();
+                                            }
+                                            if (auctionController
+                                                    .message.value ==
+                                                'AUCTION_BIDDER_ALREADY_BID') {
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return AlertDialog(
+                                                    title: Text('Place Bid',
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontFamily:
+                                                                'Roboto',
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold)),
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        16)),
+                                                    content: Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        Lottie.asset(
+                                                            'assets/lottie/fail.json'),
+                                                        Text(
+                                                          'You have already placed a bid for this auction.',
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  'Roboto',
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        )
+                                                      ],
+                                                    ),
+                                                    actions: [
+                                                      TextButton(
+                                                        style: ButtonStyle(
+                                                            backgroundColor:
+                                                                MaterialStateProperty
+                                                                    .all(context
+                                                                        .primaryColor),
+                                                            shape: MaterialStateProperty.all(
+                                                                RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            20)))),
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        },
+                                                        child: Text('OK',
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontFamily:
+                                                                    'Roboto',
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              );
+                                            }
+                                            if (auctionController
+                                                    .message.value ==
+                                                'AUCTION_BID_WAIT') {
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return AlertDialog(
+                                                    title: Text('Place Bid',
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontFamily:
+                                                                'Roboto',
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold)),
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        16)),
+                                                    content: Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        Lottie.asset(
+                                                            'assets/lottie/fail.json'),
+                                                        Text(
+                                                          'You have to wait for 60s to place a new bid',
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  'Roboto',
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        )
+                                                      ],
+                                                    ),
+                                                    actions: [
+                                                      TextButton(
+                                                        style: ButtonStyle(
+                                                            backgroundColor:
+                                                                MaterialStateProperty
+                                                                    .all(context
+                                                                        .primaryColor),
+                                                            shape: MaterialStateProperty.all(
+                                                                RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            20)))),
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        },
+                                                        child: Text('OK',
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontFamily:
+                                                                    'Roboto',
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              );
+                                            }
+                                          });
+                                        }
+                                      }
+                                    },
+                                    child: Text(
+                                      'Place Bid',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: 'Roboto',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ],
                               ),
-                              TextButton(
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        context.primaryColor),
-                                    shape: MaterialStateProperty.all(
-                                        RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20)))),
-                                onPressed: () {
-                                  print(_currentAmount);
-                                  if ((amountController.text.toDouble() !=
-                                          auctionController
-                                              .auction.value.currentBidPrice) &&
-                                      !amountController.text.isEmptyOrNull) {
-                                    showConfirmDialogCustom(context,
-                                        title:
-                                            'Place Bid with ${amountController.text} points?',
-                                        onAccept: (contex) {
-                                      auctionController.placeBid(
-                                          auctionController.auction.value.id!,
-                                          _currentAmount.toInt());
-                                    });
-                                  }
-                                },
-                                child: Text('Place Bid',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: 'Roboto',
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold)),
-                              ),
-                            ],
-                          );
-                        },
-                      );
+                            );
+                          },
+                        );
+                      }
                     },
                     context: context),
               ),

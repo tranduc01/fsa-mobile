@@ -20,6 +20,7 @@ class _AutionFragmentState extends State<AuctionFragment> {
   late AuctionController auctionController = Get.put(AuctionController());
   int mPage = 1;
   bool mIsLastPage = false;
+
   @override
   void initState() {
     auctionController.fetchAuctions(null);

@@ -90,6 +90,7 @@ class AuctionController extends GetxController {
   Future<void> joinAuction(int id, int amount) async {
     try {
       isLoading(true);
+      isUpdateSuccess(false);
       var url = '$BASE_URL/Auction/registration?id=$id&amount=$amount';
       String? token = await storage.read(key: 'jwt');
       var headers = {
@@ -116,25 +117,53 @@ class AuctionController extends GetxController {
   Future<void> placeBid(int id, int amount) async {
     try {
       isLoading(true);
-      var url = '$BASE_URL/Auction/bid/id=$id?amount=$amount';
+      isUpdateSuccess(false);
+      message.value = '';
+      var url = '$BASE_URL/Auction/bid/$id?amount=$amount';
       String? token = await storage.read(key: 'jwt');
       var headers = {
         'Authorization': 'Bearer $token',
       };
 
       var response = await GetConnect().post(url, {}, headers: headers);
-      if (response.statusCode == 200) {
+      if (response.statusCode == 202) {
         isLoading(false);
         isUpdateSuccess(true);
+        message.value = '';
       } else {
         isLoading(false);
-        isError(true);
         print('Request failed with status: ${response.statusCode}');
         print('Request failed with status: ${response.body['Message']}');
         message.value = response.body['Message'];
       }
     } catch (e) {
-      isError(true);
+      print(e);
+    }
+  }
+
+  Future<void> depositePoints(int id, int amount) async {
+    try {
+      isLoading(true);
+      isUpdateSuccess(false);
+      message.value = '';
+      var url = '$BASE_URL/Auction/deposit?id=$id?amount=$amount';
+      String? token = await storage.read(key: 'jwt');
+      var headers = {
+        'Authorization': 'Bearer $token',
+      };
+
+      var response = await GetConnect().patch(url, {}, headers: headers);
+      if (response.statusCode == 202) {
+        isLoading(false);
+        isUpdateSuccess(true);
+        message.value = '';
+      } else {
+        isLoading(false);
+        print('Request failed with status: ${response.statusCode}');
+        print('Request failed with status: ${response.body['Message']}');
+        message.value = response.body['Message'];
+      }
+    } catch (e) {
       print(e);
     }
   }

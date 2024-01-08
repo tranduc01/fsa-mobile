@@ -11,18 +11,23 @@ class AppScaffold extends StatelessWidget {
   final Color? scaffoldBackgroundColor;
   final Widget? bottomNavigationBar;
 
-  AppScaffold({this.appBarTitle, required this.child, this.actions, this.scaffoldBackgroundColor, this.bottomNavigationBar, this.onBack});
+  AppScaffold(
+      {this.appBarTitle,
+      required this.child,
+      this.actions,
+      this.scaffoldBackgroundColor,
+      this.bottomNavigationBar,
+      this.onBack});
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
+    return PopScope(
+      onPopInvoked: (isPop) {
         if (onBack != null) {
           onBack?.call();
         } else {
           finish(context);
         }
-        return Future.value(true);
       },
       child: Scaffold(
         appBar: AppBar(
@@ -41,7 +46,8 @@ class AppScaffold extends StatelessWidget {
           ),
           actions: actions,
         ),
-        backgroundColor: scaffoldBackgroundColor ?? context.scaffoldBackgroundColor,
+        backgroundColor:
+            scaffoldBackgroundColor ?? context.scaffoldBackgroundColor,
         body: Body(child: child),
         bottomNavigationBar: bottomNavigationBar,
       ),
