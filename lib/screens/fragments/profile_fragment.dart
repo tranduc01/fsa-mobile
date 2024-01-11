@@ -283,7 +283,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                         ],
                       ),
                       4.height,
-                      Text('Total Points', style: secondaryTextStyle(size: 12)),
+                      Text('Tổng điểm', style: secondaryTextStyle(size: 12)),
                     ],
                   ).paddingSymmetric(vertical: 8).onTap(() {
                     WalletScreen().launch(context);

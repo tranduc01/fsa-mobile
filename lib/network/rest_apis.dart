@@ -42,7 +42,6 @@ import 'package:socialv/network/network_utils.dart';
 import 'package:socialv/utils/constants.dart';
 import '../models/gallery/album_media_list_model.dart';
 import '../models/gallery/albums.dart';
-import '../models/gallery/media_active_statuses_model.dart';
 import '../screens/auth/screens/sign_in_screen.dart';
 
 bool get isTokenExpire =>
@@ -1117,13 +1116,6 @@ Future<CommonMessageResponse> deleteMedia(
   return CommonMessageResponse.fromJson(await handleResponse(
       await buildHttpResponse('${APIEndPoint.deleteAlbumMedia}',
           method: HttpMethod.DELETE, request: request)));
-}
-
-Future<List<MediaActiveStatusesModel>> getMediaStatus({String? type}) async {
-  Iterable it = await handleResponse(await buildHttpResponse(
-      '${APIEndPoint.mediaActiveStatus}?component=$type',
-      method: HttpMethod.GET));
-  return it.map((e) => MediaActiveStatusesModel.fromJson(e)).toList();
 }
 
 Future<CommonMessageResponse> createAlbum(

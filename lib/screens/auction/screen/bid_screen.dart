@@ -76,7 +76,7 @@ class _BidScreenState extends State<BidScreen> {
                 child: Column(
                   children: [
                     Text(
-                      'Current Points: ${auctionController.auction.value.currentPoint!.toStringAsFixed(0).formatNumberWithComma()}',
+                      'Điểm hiện tại: ${auctionController.auction.value.currentPoint!.toStringAsFixed(0).formatNumberWithComma()}',
                       style: boldTextStyle(size: 20),
                     ).paddingOnly(top: 16),
                     Divider(
@@ -154,12 +154,16 @@ class _BidScreenState extends State<BidScreen> {
                   boxShadow: defaultBoxShadow(),
                 ),
                 child: appButton(
-                    text: 'Place Bid',
+                    text: 'Đặt giá',
                     onTap: () {
                       if (userController.user.value.isVerified == false) {
-                        toast('Please verify your account to place bid');
+                        toast('Hãy xác thực tài khoản trước khi đấu giá');
                         return;
                       } else {
+                        amountController.text = auctionController
+                            .auction.value.currentBidPrice!
+                            .toStringAsFixed(0)
+                            .formatNumberWithComma();
                         showDialog(
                           context: context,
                           builder: (context) {
@@ -169,7 +173,7 @@ class _BidScreenState extends State<BidScreen> {
                                 return Future.value(true);
                               },
                               child: AlertDialog(
-                                title: Text('Place Bid',
+                                title: Text('Đặt giá',
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontFamily: 'Roboto',
@@ -186,7 +190,10 @@ class _BidScreenState extends State<BidScreen> {
                                         children: [
                                           InputQty(
                                             maxVal: auctionController.auction
-                                                .value.soldDirectlyPrice!,
+                                                    .value.isSoldDirectly!
+                                                ? auctionController.auction
+                                                    .value.soldDirectlyPrice!
+                                                : 1000000000000000,
                                             initVal: 0,
                                             steps: auctionController
                                                 .auction.value.stepPrice!,
@@ -246,12 +253,12 @@ class _BidScreenState extends State<BidScreen> {
                                             ),
                                             validator: (value) {
                                               if (value!.isEmpty) {
-                                                return 'Please enter amount';
+                                                return 'Hãy nhập điểm';
                                               }
                                               if (_currentAmount ==
                                                   auctionController.auction
                                                       .value.currentBidPrice!) {
-                                                return 'Amount must greater than current bid price';
+                                                return 'Số điểm đặt phải cao hơn giá đấu giá hiện tại';
                                               }
                                               return null;
                                             },
@@ -266,7 +273,7 @@ class _BidScreenState extends State<BidScreen> {
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                     },
-                                    child: Text('Cancel',
+                                    child: Text('Hủy bỏ',
                                         style: TextStyle(
                                             color: Colors.black,
                                             fontFamily: 'Roboto',
@@ -292,7 +299,7 @@ class _BidScreenState extends State<BidScreen> {
                                                 .text.isEmptyOrNull) {
                                           showConfirmDialogCustom(context,
                                               title:
-                                                  'Place Bid with ${amountController.text} points?',
+                                                  'Đặt ${amountController.text} điểm?',
                                               onAccept: (contex) async {
                                             await auctionController.placeBid(
                                                 auctionController
@@ -317,7 +324,7 @@ class _BidScreenState extends State<BidScreen> {
                                                 context: context,
                                                 builder: (context) {
                                                   return AlertDialog(
-                                                    title: Text('Place Bid',
+                                                    title: Text('Đặt giá',
                                                         style: TextStyle(
                                                             color: Colors.black,
                                                             fontFamily:
@@ -339,7 +346,7 @@ class _BidScreenState extends State<BidScreen> {
                                                         Lottie.asset(
                                                             'assets/lottie/fail.json'),
                                                         Text(
-                                                          'You have already placed a bid for this auction.',
+                                                          'Bạn đã đặt giá rồi.',
                                                           style: TextStyle(
                                                               fontFamily:
                                                                   'Roboto',
@@ -411,7 +418,7 @@ class _BidScreenState extends State<BidScreen> {
                                                         Lottie.asset(
                                                             'assets/lottie/fail.json'),
                                                         Text(
-                                                          'You have to wait for 60s to place a new bid',
+                                                          'Bạn phải chờ 60s để đặt giá mới',
                                                           style: TextStyle(
                                                               fontFamily:
                                                                   'Roboto',
@@ -459,7 +466,7 @@ class _BidScreenState extends State<BidScreen> {
                                       }
                                     },
                                     child: Text(
-                                      'Place Bid',
+                                      'Đặt giá',
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontFamily: 'Roboto',

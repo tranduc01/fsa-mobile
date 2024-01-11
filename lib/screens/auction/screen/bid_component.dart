@@ -92,8 +92,9 @@ class _BidComponentState extends State<BidComponent> {
                   borderRadius: BorderRadius.all(Radius.circular(8))),
               child: Text(
                   parseHtmlString(widget.bid.bidAmount
-                      ?.toStringAsFixed(0)
-                      .formatNumberWithComma()),
+                          ?.toStringAsFixed(0)
+                          .formatNumberWithComma()) +
+                      ' điểm',
                   style: TextStyle(
                       fontSize: 14,
                       fontFamily: 'Roboto',

@@ -95,13 +95,15 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                     .isBefore(DateTime.now()) &&
                 auctionController.auction.value.endDate!
                     .add(Duration(hours: 7))
-                    .isAfter(DateTime.now()))
+                    .isAfter(DateTime.now()) &&
+                auctionController.auction.value.isRegistered == true)
             ? Wrap(
                 direction: Axis.horizontal,
                 children: [
-                  if (auctionController.auction.value.winner == null)
+                  if (auctionController.auction.value.winner == null &&
+                      (auctionController.auction.value.isSoldDirectly == true))
                     FloatingActionButton.extended(
-                      label: Text('Buy Now',
+                      label: Text('Mua ngay',
                           style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold)),
@@ -122,7 +124,7 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                 children: [
                                   Lottie.asset('assets/lottie/buy_now.json'),
                                   Text(
-                                    'Are you sure you want to buy this orchid with ${auctionController.auction.value.soldDirectlyPrice!.toStringAsFixed(0).formatNumberWithComma()}?',
+                                    'Bạn có chắc chắn muốn mua với ${auctionController.auction.value.soldDirectlyPrice!.toStringAsFixed(0).formatNumberWithComma()}?',
                                     style: TextStyle(
                                         fontFamily: 'Roboto',
                                         fontSize: 16,
@@ -135,7 +137,7 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
-                                  child: Text('Cancel',
+                                  child: Text('Hủy bỏ',
                                       style: TextStyle(
                                           color: Colors.black,
                                           fontFamily: 'Roboto',
@@ -172,7 +174,7 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                       await auctionController
                                           .fetchAuction(widget.id);
                                       await userController.getCurrentUser();
-                                      toast('Buy orchid successfully');
+                                      toast('Mua thành công');
                                     } else {
                                       Navigator.pop(context);
                                       Navigator.pop(context);
@@ -180,13 +182,14 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                         context: context,
                                         barrierDismissible: false,
                                         builder: (context) {
-                                          return FailDialog(text: 'Buy Failed');
+                                          return FailDialog(
+                                              text: 'Mua thất bại!');
                                         },
                                       );
                                     }
                                   },
                                   child: Text(
-                                    'Buy',
+                                    'Mua',
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontFamily: 'Roboto',
@@ -257,7 +260,7 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                   10.width,
                   if (auctionController.auction.value.winner == null)
                     FloatingActionButton.extended(
-                      label: Text('Points',
+                      label: Text('Điểm',
                           style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold)),
@@ -274,7 +277,7 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16)),
                               title: Text(
-                                'Add points',
+                                'Thêm điểm',
                                 style: TextStyle(
                                     fontFamily: 'Roboto',
                                     fontSize: 18,
@@ -286,7 +289,7 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                   Row(
                                     children: [
                                       Text(
-                                        'Your wallet: ',
+                                        'Ví của bạn: ',
                                         style: TextStyle(
                                           fontFamily: 'Roboto',
                                           fontSize: 18,
@@ -300,7 +303,7 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                             fontWeight: FontWeight.bold),
                                       ),
                                       Text(
-                                        ' points',
+                                        ' điểm',
                                         style: TextStyle(
                                           fontFamily: 'Roboto',
                                           fontSize: 18,
@@ -341,7 +344,7 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                           ),
                                           validator: (value) {
                                             if (value!.isEmpty) {
-                                              return 'Please enter amount';
+                                              return 'Hãy nhập số điểm';
                                             }
                                             return null;
                                           },
@@ -356,7 +359,7 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
-                                  child: Text('Cancel',
+                                  child: Text('Hủy bỏ',
                                       style: TextStyle(
                                           color: Colors.black,
                                           fontFamily: 'Roboto',
@@ -390,7 +393,7 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                       await auctionController
                                           .fetchAuction(widget.id);
                                       await userController.getCurrentUser();
-                                      toast('Added points successfully');
+                                      toast('Điểm đã được thêm thành công');
                                     } else {
                                       Navigator.pop(context);
                                       Navigator.pop(context);
@@ -398,13 +401,14 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                         context: context,
                                         barrierDismissible: false,
                                         builder: (context) {
-                                          return FailDialog(text: 'Add Failed');
+                                          return FailDialog(
+                                              text: 'Thêm thất bại!');
                                         },
                                       );
                                     }
                                   },
                                   child: Text(
-                                    'Add',
+                                    'Thêm',
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontFamily: 'Roboto',
@@ -428,7 +432,7 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                         .isAfter(DateTime.now()) &&
                     auctionController.auction.value.isRegistered == false
                 ? FloatingActionButton.extended(
-                    label: Text('Join this auction',
+                    label: Text('Tham gia buổi đấu giá',
                         style: TextStyle(
                             color: Colors.black, fontWeight: FontWeight.bold)),
                     icon: Image.asset(
@@ -439,232 +443,319 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                     ),
                     backgroundColor: Colors.white,
                     onPressed: () {
-                      showModalBottomSheet(
-                        elevation: 0,
-                        context: context,
-                        isScrollControlled: true,
-                        backgroundColor: Colors.transparent,
-                        transitionAnimationController: _animationController,
-                        builder: (context) {
-                          return FractionallySizedBox(
-                            heightFactor: 0.7,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Container(
-                                  width: 45,
-                                  height: 5,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(16),
-                                      color: Colors.white),
-                                ),
-                                8.height,
-                                Container(
-                                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                                  decoration: BoxDecoration(
-                                    color: context.cardColor,
-                                    borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(16),
-                                        topRight: Radius.circular(16)),
+                      if (userController.user.value.isVerified == false) {
+                        toast(
+                            'Bạn cần xác thực tài khoản để tham gia buổi đấu giá');
+                      } else {
+                        showModalBottomSheet(
+                          elevation: 0,
+                          context: context,
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          transitionAnimationController: _animationController,
+                          builder: (context) {
+                            return FractionallySizedBox(
+                              heightFactor: 0.7,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(
+                                    width: 45,
+                                    height: 5,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(16),
+                                        color: Colors.white),
                                   ),
-                                  child: WillPopScope(
-                                    onWillPop: () {
-                                      feeAmountCont.clear();
-                                      return Future.value(true);
-                                    },
-                                    child: SingleChildScrollView(
-                                      child: Container(
-                                        padding: EdgeInsets.all(20),
-                                        child: Column(
-                                          children: [
-                                            Text(
-                                              'Registration',
-                                              style: TextStyle(
-                                                  fontSize: 22,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontFamily: 'Roboto'),
-                                            ),
-                                            20.height,
-                                            Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text(
-                                                    'Fee',
-                                                    style: TextStyle(
-                                                        fontSize: 18,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        fontFamily: 'Roboto'),
-                                                  ),
-                                                  Text(
-                                                    auctionController
-                                                            .auction
-                                                            .value
-                                                            .registrationFee!
-                                                            .toStringAsFixed(0)
-                                                            .formatNumberWithComma() +
-                                                        ' Points',
-                                                    style: TextStyle(
-                                                        fontSize: 16,
-                                                        color: Colors.black
-                                                            .withOpacity(0.5),
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        fontFamily: 'Roboto'),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                            20.height,
-                                            Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: Text(
-                                                'Advance Points',
+                                  8.height,
+                                  Container(
+                                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                                    decoration: BoxDecoration(
+                                      color: context.cardColor,
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(16),
+                                          topRight: Radius.circular(16)),
+                                    ),
+                                    child: WillPopScope(
+                                      onWillPop: () {
+                                        feeAmountCont.clear();
+                                        return Future.value(true);
+                                      },
+                                      child: SingleChildScrollView(
+                                        child: Container(
+                                          padding: EdgeInsets.all(20),
+                                          child: Column(
+                                            children: [
+                                              Text(
+                                                'Đăng ký',
                                                 style: TextStyle(
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 22,
+                                                    fontWeight: FontWeight.bold,
                                                     fontFamily: 'Roboto'),
                                               ),
-                                            ),
-                                            10.height,
-                                            Form(
-                                              key: registerationFormKey,
-                                              child: Column(
-                                                children: [
-                                                  TextFormField(
-                                                    controller: feeAmountCont,
-                                                    keyboardType:
-                                                        TextInputType.number,
-                                                    decoration: InputDecoration(
-                                                      enabledBorder:
-                                                          OutlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                          width: 3,
-                                                          color:
-                                                              Color(0xFFB4D4FF),
-                                                        ),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(50.0),
-                                                      ),
-                                                      focusedBorder:
-                                                          OutlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                          width: 3,
-                                                          color:
-                                                              Color(0xFFB4D4FF),
-                                                        ),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(50.0),
-                                                      ),
-                                                      suffixIcon: Icon(
-                                                        Icons.token_outlined,
-                                                        color: Colors.black,
-                                                        size: 30,
-                                                      ),
+                                              20.height,
+                                              Align(
+                                                alignment: Alignment.centerLeft,
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Text(
+                                                      'Phí',
+                                                      style: TextStyle(
+                                                          fontSize: 18,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontFamily: 'Roboto'),
                                                     ),
-                                                    validator: (value) {
-                                                      if (value!.isEmpty) {
-                                                        return 'Please enter amount';
-                                                      }
-                                                      return null;
-                                                    },
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            30.height,
-                                            appButton(
-                                                text: 'Register',
-                                                context: context,
-                                                onTap: () async {
-                                                  if (registerationFormKey
-                                                      .currentState!
-                                                      .validate()) {
-                                                    registerationFormKey
-                                                        .currentState!
-                                                        .save();
-                                                    hideKeyboard(context);
-                                                    showConfirmDialogCustom(
-                                                      context,
-                                                      title: 'Are you sure you want to pay ' +
-                                                          auctionController
+                                                    Text(
+                                                      auctionController
                                                               .auction
                                                               .value
                                                               .registrationFee!
                                                               .toStringAsFixed(
                                                                   0)
                                                               .formatNumberWithComma() +
-                                                          ' fee to join this auction?',
-                                                      onAccept: (p0) async {
-                                                        showDialog(
-                                                            context: context,
-                                                            barrierDismissible:
-                                                                false,
-                                                            builder: (context) {
-                                                              return LoadingDialog();
-                                                            });
-                                                        await auctionController
-                                                            .joinAuction(
-                                                                widget.id,
-                                                                int.parse(
-                                                                    feeAmountCont
-                                                                        .text));
-                                                        if (auctionController
-                                                            .isUpdateSuccess
-                                                            .value) {
-                                                          Navigator.of(context)
-                                                              .pop();
-                                                          Navigator.of(context)
-                                                              .pop();
-                                                          await auctionController
-                                                              .fetchAuction(
-                                                                  widget.id);
-                                                          await userController
-                                                              .getCurrentUser();
-                                                          toast(
-                                                              'Join auction successfully');
-                                                        } else {
-                                                          Navigator.pop(
-                                                              context);
-                                                          showDialog(
-                                                            context: context,
-                                                            barrierDismissible:
-                                                                false,
-                                                            builder: (context) {
-                                                              return FailDialog(
-                                                                  text: auctionController
-                                                                              .message
-                                                                              .value ==
-                                                                          'USER_POINT_NOT_ENOUGH'
-                                                                      ? 'Your points are not enough to join this auction'
-                                                                      : 'Failed to join auction');
-                                                            },
-                                                          );
+                                                          ' Điểm',
+                                                      style: TextStyle(
+                                                          fontSize: 16,
+                                                          color: Colors.black
+                                                              .withOpacity(0.5),
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontFamily: 'Roboto'),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              20.height,
+                                              Align(
+                                                alignment: Alignment.centerLeft,
+                                                child: Text(
+                                                  'Điểm tạm ứng',
+                                                  style: TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontFamily: 'Roboto'),
+                                                ),
+                                              ),
+                                              10.height,
+                                              Form(
+                                                key: registerationFormKey,
+                                                child: Column(
+                                                  children: [
+                                                    TextFormField(
+                                                      controller: feeAmountCont,
+                                                      keyboardType:
+                                                          TextInputType.number,
+                                                      decoration:
+                                                          InputDecoration(
+                                                        enabledBorder:
+                                                            OutlineInputBorder(
+                                                          borderSide:
+                                                              BorderSide(
+                                                            width: 3,
+                                                            color: Color(
+                                                                0xFFB4D4FF),
+                                                          ),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      50.0),
+                                                        ),
+                                                        focusedBorder:
+                                                            OutlineInputBorder(
+                                                          borderSide:
+                                                              BorderSide(
+                                                            width: 3,
+                                                            color: Color(
+                                                                0xFFB4D4FF),
+                                                          ),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      50.0),
+                                                        ),
+                                                        suffixIcon: Icon(
+                                                          Icons.token_outlined,
+                                                          color: Colors.black,
+                                                          size: 30,
+                                                        ),
+                                                      ),
+                                                      validator: (value) {
+                                                        if (value!.isEmpty) {
+                                                          return 'Hãy nhập số điểm';
                                                         }
+                                                        return null;
                                                       },
-                                                    );
-                                                  }
-                                                })
-                                          ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              30.height,
+                                              appButton(
+                                                  text: 'Đăng ký',
+                                                  context: context,
+                                                  onTap: () async {
+                                                    if (registerationFormKey
+                                                        .currentState!
+                                                        .validate()) {
+                                                      registerationFormKey
+                                                          .currentState!
+                                                          .save();
+                                                      hideKeyboard(context);
+                                                      showConfirmDialogCustom(
+                                                        context,
+                                                        title: 'Bạn sẽ bị trừ  ' +
+                                                            auctionController
+                                                                .auction
+                                                                .value
+                                                                .registrationFee!
+                                                                .toStringAsFixed(
+                                                                    0)
+                                                                .formatNumberWithComma() +
+                                                            ' điểm lệ phí để tham gia buổi đấu giá này?',
+                                                        onAccept: (p0) async {
+                                                          showDialog(
+                                                              context: context,
+                                                              barrierDismissible:
+                                                                  false,
+                                                              builder:
+                                                                  (context) {
+                                                                return LoadingDialog();
+                                                              });
+                                                          await auctionController
+                                                              .joinAuction(
+                                                                  widget.id,
+                                                                  int.parse(
+                                                                      feeAmountCont
+                                                                          .text));
+                                                          if (auctionController
+                                                              .isUpdateSuccess
+                                                              .value) {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                            await auctionController
+                                                                .fetchAuction(
+                                                                    widget.id);
+                                                            await userController
+                                                                .getCurrentUser();
+                                                            toast(
+                                                                'Join auction successfully');
+                                                          } else {
+                                                            Navigator.pop(
+                                                                context);
+                                                            showDialog(
+                                                              context: context,
+                                                              barrierDismissible:
+                                                                  false,
+                                                              builder:
+                                                                  (context) {
+                                                                return FailDialog(
+                                                                    text: auctionController.message.value ==
+                                                                            'USER_POINT_NOT_ENOUGH'
+                                                                        ? 'Your points are not enough to join this auction'
+                                                                        : 'Failed to join auction');
+                                                              },
+                                                            );
+                                                          }
+                                                        },
+                                                      );
+                                                    }
+                                                  })
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ).expand(),
-                              ],
-                            ),
-                          );
-                        },
-                      );
+                                  ).expand(),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      }
                     },
                   )
-                : Offstage(),
+                : ((auctionController.auction.value.startDate!
+                            .add(Duration(hours: 7))
+                            .isAfter(DateTime.now())) &&
+                        auctionController.auction.value.isRegistered == true)
+                    ? FloatingActionButton.extended(
+                        label: Text('Đã đăng ký',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold)),
+                        icon: Icon(Icons.check, color: Colors.green),
+                        backgroundColor: Colors.white,
+                        onPressed: () {})
+                    : auctionController.auction.value.endDate!
+                            .add(Duration(hours: 7))
+                            .isBefore(DateTime.now())
+                        ? FloatingActionButton.extended(
+                            label: Text(
+                                auctionController.auction.value.currentBidPrice!
+                                    .toStringAsFixed(0)
+                                    .formatNumberWithComma(),
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold)),
+                            icon: Image.asset(
+                              ic_auction,
+                              height: 30,
+                              width: 30,
+                              color: Colors.black,
+                            ),
+                            backgroundColor: Colors.white,
+                            onPressed: () {
+                              showModalBottomSheet(
+                                elevation: 0,
+                                context: context,
+                                isScrollControlled: true,
+                                backgroundColor: Colors.transparent,
+                                transitionAnimationController:
+                                    _animationController,
+                                builder: (context) {
+                                  return FractionallySizedBox(
+                                    heightFactor: 0.7,
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Container(
+                                          width: 45,
+                                          height: 5,
+                                          //clipBehavior: Clip.hardEdge,
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(16),
+                                              color: Colors.white),
+                                        ),
+                                        8.height,
+                                        Container(
+                                          clipBehavior:
+                                              Clip.antiAliasWithSaveLayer,
+                                          decoration: BoxDecoration(
+                                            color: context.cardColor,
+                                            borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(16),
+                                                topRight: Radius.circular(16)),
+                                          ),
+                                          child:
+                                              BidScreen(auctionId: widget.id),
+                                        ).expand(),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          )
+                        : Offstage(),
         body: Stack(
           children: [
             SingleChildScrollView(
@@ -767,7 +858,7 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                       child: DefaultTextStyle(
                                         child: Text(
                                           language.auctionImage +
-                                              '(${auctionController.auction.value.orchid!.medias!.length})',
+                                              '(${auctionController.auction.value.medias!.length})',
                                           style: TextStyle(
                                               fontFamily: 'Roboto',
                                               fontWeight: FontWeight.bold),
@@ -812,8 +903,8 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                       Container(
                                         height: 330,
                                         child: MasonryGridView.builder(
-                                          itemCount: auctionController.auction
-                                              .value.orchid!.medias!.length,
+                                          itemCount: auctionController
+                                              .auction.value.medias!.length,
                                           gridDelegate:
                                               const SliverSimpleGridDelegateWithFixedCrossAxisCount(
                                             crossAxisCount: 2,
@@ -823,12 +914,8 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                             padding: const EdgeInsets.all(2.0),
                                             child: GestureDetector(
                                               child: Image.network(
-                                                auctionController
-                                                    .auction
-                                                    .value
-                                                    .orchid!
-                                                    .medias![index]
-                                                    .url!,
+                                                auctionController.auction.value
+                                                    .medias![index].url!,
                                                 fit: BoxFit.fill,
                                               ).cornerRadiusWithClipRRect(20),
                                               onTap: () => ImageScreen(
@@ -836,7 +923,6 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                                           auctionController
                                                               .auction
                                                               .value
-                                                              .orchid!
                                                               .medias![index]
                                                               .url!)
                                                   .launch(context),
@@ -1698,43 +1784,47 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                             ],
                           ),
                         ),
-                        Expanded(
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    auctionController
-                                        .auction.value.soldDirectlyPrice!
-                                        .toStringAsFixed(0)
-                                        .formatNumberWithComma(),
-                                    style: TextStyle(
-                                      color: const Color.fromARGB(194, 0, 0, 0),
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15.0,
-                                      fontFamily: 'Roboto',
+                        if (auctionController.auction.value.isSoldDirectly ==
+                            true)
+                          Expanded(
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      auctionController
+                                          .auction.value.soldDirectlyPrice!
+                                          .toStringAsFixed(0)
+                                          .formatNumberWithComma(),
+                                      style: TextStyle(
+                                        color:
+                                            const Color.fromARGB(194, 0, 0, 0),
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15.0,
+                                        fontFamily: 'Roboto',
+                                      ),
+                                      textAlign: TextAlign.center,
                                     ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    language.auctionSoldDirectlyPrices,
-                                    style: secondaryTextStyle(
-                                      color: const Color.fromARGB(194, 0, 0, 0),
-                                      fontFamily: 'Roboto',
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      language.auctionSoldDirectlyPrices,
+                                      style: secondaryTextStyle(
+                                        color:
+                                            const Color.fromARGB(194, 0, 0, 0),
+                                        fontFamily: 'Roboto',
+                                      ),
+                                      textAlign: TextAlign.center,
                                     ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ],
-                              ),
-                            ],
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
                         SizedBox(width: 10.0),
                         Expanded(
                           child: Column(

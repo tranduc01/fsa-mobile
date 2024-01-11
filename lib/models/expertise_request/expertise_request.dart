@@ -12,7 +12,7 @@ class ExpertiseRequest {
   DateTime? createdAt;
   int? status;
   User? expert;
-  int? expertApprovalStatus;
+  int? expertAssignStatus;
   DateTime? assignAt;
   DateTime? canceledAt;
   String? cancelMessage;
@@ -28,7 +28,7 @@ class ExpertiseRequest {
     this.createdAt,
     this.status,
     this.expert,
-    this.expertApprovalStatus,
+    this.expertAssignStatus,
     this.assignAt,
     this.canceledAt,
     this.cancelMessage,
@@ -52,7 +52,7 @@ class ExpertiseRequest {
         expert: json['expert'] != null
             ? User.fromJson(json['expert'] as Map<String, dynamic>)
             : null,
-        expertApprovalStatus: json['expertApprovalStatus'],
+        expertAssignStatus: json['expertAssignStatus'],
         assignAt: json['assignAt'] != null
             ? DateTime.parse(json['assignAt'] as String)
             : null,

@@ -56,6 +56,13 @@ class _ExpertiseRequestDetailScreenState
     Colors.grey.withOpacity(0.5), // Canceled
   ];
 
+  final List<Color> expertAsignColorList = [
+    Colors.blue.withOpacity(0.5), // Doing
+    Colors.red.withOpacity(0.5), // Rejected
+    Colors.grey.withOpacity(0.5), // Expired
+    Colors.green.withOpacity(0.5), // Completed
+  ];
+
   @override
   void initState() {
     Future.delayed(Duration.zero, () async {
@@ -387,6 +394,56 @@ class _ExpertiseRequestDetailScreenState
                                         fontWeight: FontWeight.bold,
                                         fontFamily: 'Roboto'),
                                   ),
+                                  10.width,
+                                  if (expertiseRequestController
+                                          .expertiseRequest.value.expert !=
+                                      null)
+                                    Container(
+                                      decoration: BoxDecoration(
+                                          color: expertAsignColorList[
+                                              expertiseRequestController
+                                                  .expertiseRequest
+                                                  .value
+                                                  .expertAssignStatus!],
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          border: Border.all(
+                                              color:
+                                                  Color.fromARGB(24, 0, 0, 0))),
+                                      padding: EdgeInsets.all(6),
+                                      child: Text(
+                                        () {
+                                          switch (ExpertAssginStatus
+                                              .values[expertiseRequestController
+                                                  .expertiseRequest
+                                                  .value
+                                                  .expertAssignStatus!]
+                                              .name) {
+                                            case 'Doing':
+                                              return 'Đang thực hiện';
+                                            case 'Cancel':
+                                              return 'Đã hủy';
+                                            case 'Expired':
+                                              return 'Đã hết hạn';
+                                            case 'Completed':
+                                              return 'Đã hoàn thành';
+                                            default:
+                                              return ExpertAssginStatus
+                                                  .values[
+                                                      expertiseRequestController
+                                                          .expertiseRequest
+                                                          .value
+                                                          .status!]
+                                                  .name;
+                                          }
+                                        }(),
+                                        style: boldTextStyle(
+                                            size: 15,
+                                            fontFamily: 'Roboto',
+                                            color:
+                                                Color.fromARGB(255, 0, 0, 0)),
+                                      ),
+                                    )
                                 ],
                               )
                             ],
