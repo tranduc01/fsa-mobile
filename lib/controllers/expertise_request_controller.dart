@@ -99,6 +99,43 @@ class ExpertiseRequestController extends GetxController {
     }
   }
 
+  Future<List<ExpertiseRequest>> fetchExpetiseRequestsReceived(
+      int status) async {
+    isLoading(true);
+    var url =
+        '$BASE_URL/expertise-request/expert/received?Filters=status==$status';
+
+    String? token = await storage.read(key: 'jwt');
+    var headers = {
+      'Authorization': 'Bearer $token',
+    };
+    var response = await GetConnect().get(url, headers: headers);
+
+    if (response.bodyString != null) {
+      ResponseModel responseModel =
+          ResponseModel.fromJson(jsonDecode(response.bodyString!));
+
+      if (response.statusCode == 200) {
+        isLoading(false);
+        isError(false);
+        return expertiseRequests.value = (responseModel.data['items'] as List)
+            .map((e) => ExpertiseRequest.fromJson(e))
+            .toList();
+      } else {
+        isLoading(false);
+        isError(true);
+        print('Request failed with status: ${response.statusCode}');
+        print('Request failed with status: ${responseModel.message}');
+        throw Exception('Failed to load requests');
+      }
+    } else {
+      isLoading(false);
+      isError(true);
+      print('Request failed with status: ${response.statusCode}');
+      throw Exception('Failed to load requests');
+    }
+  }
+
   Future<ExpertiseRequest> fetchExpetiseRequest(int id) async {
     isLoading(true);
     var url = '$BASE_URL/expertise-request/$id';

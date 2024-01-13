@@ -308,8 +308,7 @@ class _ExpertiseRequestDetailScreenState
                                             .expertiseRequest.value.status!]
                                         .name) {
                                       case 'WaitingForApproval':
-                                        return language
-                                            .waitingForApprovalExpertiseRequest;
+                                        return 'Chờ duyệt';
                                       case 'WaitingForExpert':
                                         return language
                                             .waitingForExpertExpertiseRequest;
@@ -321,6 +320,8 @@ class _ExpertiseRequestDetailScreenState
                                       case 'Rejected':
                                         return language
                                             .rejectedExpertiseRequest;
+                                      case 'Canceled':
+                                        return 'Đã hủy';
                                       default:
                                         return ExpertiseRequestStatus
                                             .values[expertiseRequestController
@@ -997,7 +998,7 @@ class _ExpertiseRequestDetailScreenState
               : expertiseRequestController.expertiseRequest.value.status ==
                       ExpertiseRequestStatus.WaitingForApproval.index
                   ? FloatingActionButton.extended(
-                      label: Text('Cancel This Request',
+                      label: Text('Hủy yêu cầu này',
                           style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold)),
@@ -1011,7 +1012,7 @@ class _ExpertiseRequestDetailScreenState
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text('Cancel Expertise Request'),
+                              title: Text('Hủy yêu cầu đánh giá'),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20),
                               ),
@@ -1027,7 +1028,7 @@ class _ExpertiseRequestDetailScreenState
                                       context,
                                       fillColor:
                                           context.scaffoldBackgroundColor,
-                                      label: 'Cancel Message',
+                                      label: 'Lời nhắn',
                                     ),
                                   ),
                                 ],
@@ -1109,7 +1110,7 @@ class _ExpertiseRequestDetailScreenState
                                   .expertiseRequest.value.status ==
                               ExpertiseRequestStatus.Doing.index
                       ? FloatingActionButton.extended(
-                          label: Text('Cancel This Request',
+                          label: Text('Không thực hiện đánh giá này',
                               style: TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold)),
@@ -1123,7 +1124,8 @@ class _ExpertiseRequestDetailScreenState
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: Text('Cancel Expertise Request'),
+                                  title:
+                                      Text('Ngừng thực hiện yêu cầu đánh giá'),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20),
                                   ),
@@ -1139,7 +1141,7 @@ class _ExpertiseRequestDetailScreenState
                                           context,
                                           fillColor:
                                               context.scaffoldBackgroundColor,
-                                          label: 'Cancel Message',
+                                          label: 'Lời nhắn',
                                         ),
                                       ),
                                     ],
@@ -1187,7 +1189,7 @@ class _ExpertiseRequestDetailScreenState
                                           await userController.getCurrentUser();
                                           Navigator.pop(context);
                                           Navigator.pop(context);
-                                          toast('Cancel Success');
+                                          toast('Hủy thành công');
                                         } else {
                                           Navigator.pop(context);
                                           showDialog(

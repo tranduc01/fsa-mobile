@@ -118,7 +118,7 @@ class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
                       tabs: [
                         Tab(
                             child: Text(
-                          language.waitingForApprovalExpertiseRequest,
+                          'Chờ duyệt',
                         )),
                         Tab(
                           child: Text(
@@ -141,7 +141,7 @@ class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
                         ),
                         Tab(
                           child: Text(
-                            'Canceled',
+                            'Đã hủy',
                           ),
                         ),
                       ],
@@ -177,8 +177,14 @@ class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
                                 index == 1
                             ? expertiseRequestController
                                 .fetchExpetiseRequestsReceive(status)
-                            : expertiseRequestController
-                                .fetchExpetiseRequests(status);
+                            : userController.user.value.role.any((element) =>
+                                        element.name.toLowerCase() ==
+                                        Role.Expert.name.toLowerCase()) &&
+                                    index == 2
+                                ? expertiseRequestController
+                                    .fetchExpetiseRequestsReceived(status)
+                                : expertiseRequestController
+                                    .fetchExpetiseRequests(status);
                         selectIndex = status;
                         setState(() {});
                       },
@@ -366,8 +372,7 @@ class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
                                                           .status!]
                                                       .name) {
                                                     case 'WaitingForApproval':
-                                                      return language
-                                                          .waitingForApprovalExpertiseRequest;
+                                                      return 'Chờ duyệt';
                                                     case 'WaitingForExpert':
                                                       return language
                                                           .waitingForExpertExpertiseRequest;
@@ -380,6 +385,8 @@ class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
                                                     case 'Rejected':
                                                       return language
                                                           .rejectedExpertiseRequest;
+                                                    case 'Canceled':
+                                                      return 'Đã hủy';
                                                     default:
                                                       return ExpertiseRequestStatus
                                                           .values[
