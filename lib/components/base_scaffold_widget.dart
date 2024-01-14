@@ -11,7 +11,13 @@ class AppScaffold extends StatelessWidget {
   final Color? scaffoldBackgroundColor;
   final Widget? bottomNavigationBar;
 
-  AppScaffold({this.appBarTitle, required this.child, this.actions, this.scaffoldBackgroundColor, this.bottomNavigationBar, this.onBack});
+  AppScaffold(
+      {this.appBarTitle,
+      required this.child,
+      this.actions,
+      this.scaffoldBackgroundColor,
+      this.bottomNavigationBar,
+      this.onBack});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +28,7 @@ class AppScaffold extends StatelessWidget {
         } else {
           finish(context);
         }
-        return Future.value(true);
+        return Future.value(false);
       },
       child: Scaffold(
         appBar: AppBar(
@@ -41,7 +47,8 @@ class AppScaffold extends StatelessWidget {
           ),
           actions: actions,
         ),
-        backgroundColor: scaffoldBackgroundColor ?? context.scaffoldBackgroundColor,
+        backgroundColor:
+            scaffoldBackgroundColor ?? context.scaffoldBackgroundColor,
         body: Body(child: child),
         bottomNavigationBar: bottomNavigationBar,
       ),

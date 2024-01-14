@@ -25,14 +25,12 @@ class _SignUpComponentState extends State<SignUpComponent> {
   final signupFormKey = GlobalKey<FormState>();
   final UserController userController = Get.put(UserController());
 
-  TextEditingController userNameCont = TextEditingController();
   TextEditingController fullNameCont = TextEditingController();
   TextEditingController passwordCont = TextEditingController();
   TextEditingController confirmPasswordCont = TextEditingController();
   TextEditingController emailCont = TextEditingController();
   TextEditingController contactCont = TextEditingController();
 
-  FocusNode userName = FocusNode();
   FocusNode fullName = FocusNode();
   FocusNode password = FocusNode();
   FocusNode confirmPassword = FocusNode();
@@ -73,20 +71,6 @@ class _SignUpComponentState extends State<SignUpComponent> {
                 child: Column(
                   children: [
                     15.height,
-                    AppTextField(
-                      enabled: !appStore.isLoading,
-                      controller: userNameCont,
-                      nextFocus: fullName,
-                      focus: userName,
-                      textFieldType: TextFieldType.USERNAME,
-                      textStyle: boldTextStyle(),
-                      decoration: inputDecoration(
-                        context,
-                        label: language.username,
-                        labelStyle: secondaryTextStyle(weight: FontWeight.w600),
-                      ),
-                    ).paddingSymmetric(horizontal: 16),
-                    8.height,
                     AppTextField(
                       enabled: !appStore.isLoading,
                       controller: fullNameCont,

@@ -7,7 +7,6 @@ import 'package:socialv/components/vimeo_embed_widget.dart';
 import 'package:socialv/components/youtube_embed_widget.dart';
 import 'package:socialv/screens/post/screens/image_screen.dart';
 import 'package:socialv/screens/post/screens/pdf_screen.dart';
-import 'package:socialv/screens/profile/screens/member_profile_screen.dart';
 import 'package:socialv/utils/app_constants.dart';
 
 class HtmlWidget extends StatelessWidget {
@@ -27,8 +26,6 @@ class HtmlWidget extends StatelessWidget {
         } else {
           log(s);
           if (s.contains('?user_id=')) {
-            MemberProfileScreen(memberId: s.splitAfter('?user_id=').toInt())
-                .launch(context);
           } else {
             openWebPage(context, url: s);
           }

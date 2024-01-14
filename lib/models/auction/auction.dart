@@ -1,3 +1,4 @@
+import 'package:socialv/models/common_models/user.dart';
 import 'package:socialv/models/orchid/orchid.dart';
 
 import '../gallery/albums.dart';
@@ -13,8 +14,11 @@ class Auction {
   double? stepPrice;
   double? soldDirectlyPrice;
   double? currentBidPrice;
+  double? registrationFee;
   DateTime? startDate;
   DateTime? endDate;
+  DateTime? startRegisterAt;
+  DateTime? endRegisterAt;
   int? numberParticipated;
   bool? isPreview;
   bool? isStopHalfway;
@@ -22,6 +26,9 @@ class Auction {
   Orchid? orchid;
   List<Media>? medias;
   List<Bid>? auctionBids;
+  User? winner;
+  double? currentPoint;
+  bool? isRegistered;
 
   Auction({
     this.id,
@@ -33,8 +40,11 @@ class Auction {
     this.stepPrice,
     this.soldDirectlyPrice,
     this.currentBidPrice,
+    this.registrationFee,
     this.startDate,
     this.endDate,
+    this.startRegisterAt,
+    this.endRegisterAt,
     this.numberParticipated,
     this.isPreview,
     this.isStopHalfway,
@@ -42,6 +52,9 @@ class Auction {
     this.orchid,
     this.medias,
     this.auctionBids,
+    this.winner,
+    this.currentPoint,
+    this.isRegistered,
   });
 
   factory Auction.fromJson(Map<String, dynamic> json) => Auction(
@@ -59,8 +72,13 @@ class Auction {
         currentBidPrice: json["currentBidPrice"] != null
             ? json["currentBidPrice"].toDouble()
             : 0,
+        registrationFee: json["registrationFee"] != null
+            ? json["registrationFee"].toDouble()
+            : 0,
         startDate: DateTime.parse(json["startDate"]),
         endDate: DateTime.parse(json["endDate"]),
+        startRegisterAt: DateTime.parse(json["startRegisterAt"]),
+        endRegisterAt: DateTime.parse(json["endRegisterAt"]),
         numberParticipated: json["numberParticipated"] as int? ?? 0,
         isPreview: json["isPreview"] as bool? ?? false,
         isStopHalfway: json["isStopHalfway"] as bool? ?? false,
@@ -72,5 +90,9 @@ class Auction {
         auctionBids: json["auctionBids"] != null
             ? (json["auctionBids"] as List).map((e) => Bid.fromJson(e)).toList()
             : [],
+        winner: json["winner"] != null ? User.fromJson(json["winner"]) : null,
+        currentPoint:
+            json["currentPoint"] != null ? json["currentPoint"].toDouble() : 0,
+        isRegistered: json["isRegistered"] as bool? ?? false,
       );
 }

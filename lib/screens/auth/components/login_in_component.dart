@@ -203,31 +203,6 @@ class _LoginInComponentState extends State<LoginInComponent> {
                             splashColor: Colors.transparent)
                       ],
                     ),
-                    16.height,
-                    Row(
-                      children: [
-                        AppButton(
-                          shapeBorder: RoundedRectangleBorder(
-                              borderRadius: radius(defaultAppButtonRadius)),
-                          onTap: () {},
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              GoogleLogoWidget(size: 14),
-                              6.width,
-                              Text(language.signInWithGoogle,
-                                      style: primaryTextStyle(),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis)
-                                  .flexible(),
-                            ],
-                          ).center(),
-                          elevation: 1,
-                          color: context.cardColor,
-                        ).expand(),
-                      ],
-                    ).paddingSymmetric(horizontal: 16),
                     50.height,
                   ],
                 ),

@@ -4,7 +4,6 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/language/app_localizations.dart';
 import 'package:socialv/main.dart';
 import 'package:socialv/models/dashboard_api_response.dart';
-import 'package:socialv/models/groups/group_response.dart';
 import 'package:socialv/models/members/friend_request_model.dart';
 import 'package:socialv/models/members/member_response.dart';
 import 'package:socialv/utils/colors.dart';
@@ -104,9 +103,6 @@ abstract class AppStoreBase with Store {
 
   @observable
   List<MemberResponse> recentMemberSearchList = [];
-
-  @observable
-  List<GroupResponse> recentGroupsSearchList = [];
 
   @observable
   List<FriendRequestModel> suggestedUserList = [];

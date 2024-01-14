@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/main.dart';
-import 'package:socialv/screens/settings/screens/settings_screen.dart';
 import 'package:socialv/screens/stats/screens/stats_screen.dart';
 import 'package:socialv/screens/wallet/wallet_screen.dart';
 
+import '../screens/settings/screens/settings_screen.dart';
 import '../utils/app_constants.dart';
 
 class DrawerModel {

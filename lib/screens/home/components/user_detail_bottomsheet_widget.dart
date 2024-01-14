@@ -187,8 +187,8 @@ class _UserDetailBottomSheetWidgetState
               ).expand(),
               Column(
                 children: [
-                  VersionInfoWidget(prefixText: 'v'),
-                  16.height,
+                  // VersionInfoWidget(prefixText: 'v'),
+                  // 16.height,
                   userController.user.value.id != null
                       ? TextButton(
                           onPressed: () {

@@ -35,7 +35,7 @@ class GalleryController extends GetxController {
       'Authorization': 'Bearer $token',
     };
     var response = await GetConnect().get(url, headers: headers);
-
+    print(response.bodyString!);
     ResponseModel responseModel =
         ResponseModel.fromJson(jsonDecode(response.bodyString!));
 
