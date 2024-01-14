@@ -3,7 +3,6 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/components/loading_widget.dart';
 import 'package:socialv/main.dart';
-import 'package:socialv/network/rest_apis.dart';
 import 'package:socialv/utils/app_constants.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
@@ -33,18 +32,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
         if (confirmPassCont.text == newPassCont.text) {
           appStore.setLoading(true);
-
-          Map request = {"old_password": oldPassCont.text, "new_password": newPassCont.text};
-
-          await changePassword(request: request).then((value) {
-            appStore.setLoading(false);
-            toast(value.message);
-
-            finish(context);
-          }).catchError((e) {
-            appStore.setLoading(false);
-            toast(e.toString());
-          });
         } else {
           toast(language.confirmPasswordError);
         }
@@ -83,7 +70,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       textInputAction: TextInputAction.next,
                       textFieldType: TextFieldType.PASSWORD,
                       textStyle: boldTextStyle(),
-                      suffixIconColor: appStore.isDarkMode ? bodyDark : bodyWhite,
+                      suffixIconColor:
+                          appStore.isDarkMode ? bodyDark : bodyWhite,
                       decoration: inputDecoration(
                         context,
                         label: language.oldPassword,
@@ -100,7 +88,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       textInputAction: TextInputAction.next,
                       textFieldType: TextFieldType.PASSWORD,
                       textStyle: boldTextStyle(),
-                      suffixIconColor: appStore.isDarkMode ? bodyDark : bodyWhite,
+                      suffixIconColor:
+                          appStore.isDarkMode ? bodyDark : bodyWhite,
                       decoration: inputDecoration(
                         context,
                         label: language.newPassword,
@@ -116,7 +105,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       textInputAction: TextInputAction.done,
                       textFieldType: TextFieldType.PASSWORD,
                       textStyle: boldTextStyle(),
-                      suffixIconColor: appStore.isDarkMode ? bodyDark : bodyWhite,
+                      suffixIconColor:
+                          appStore.isDarkMode ? bodyDark : bodyWhite,
                       decoration: inputDecoration(
                         context,
                         label: language.confirmPassword,

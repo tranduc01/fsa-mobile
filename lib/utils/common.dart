@@ -11,10 +11,8 @@ import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:socialv/main.dart';
-import 'package:socialv/models/groups/group_response.dart';
 import 'package:socialv/models/members/member_response.dart';
 import 'package:socialv/models/posts/media_model.dart';
-import 'package:socialv/network/rest_apis.dart';
 
 import 'app_constants.dart';
 
@@ -179,15 +177,6 @@ List<MemberResponse> getMemberListPref() {
     return (json.decode(
             getStringAsync(SharePreferencesKey.RECENT_SEARCH_MEMBERS)) as List)
         .map((i) => MemberResponse.fromJson(i))
-        .toList();
-  return [];
-}
-
-List<GroupResponse> getGroupListPref() {
-  if (getStringAsync(SharePreferencesKey.RECENT_SEARCH_GROUPS).isNotEmpty)
-    return (json.decode(
-            getStringAsync(SharePreferencesKey.RECENT_SEARCH_GROUPS)) as List)
-        .map((i) => GroupResponse.fromJson(i))
         .toList();
   return [];
 }
@@ -454,17 +443,4 @@ String getPostContent(String? postContent) {
       .replaceAll('\n', '');
 
   return content;
-}
-
-Future<void> activeUser() async {
-  await updateActiveStatus().then((value) {
-    Future.delayed(Duration(minutes: updateActiveStatusDuration), () {
-      activeUser();
-    });
-  }).catchError((e) {
-    log('Error: ${e.toString()}');
-    Future.delayed(Duration(minutes: updateActiveStatusDuration), () {
-      activeUser();
-    });
-  });
 }

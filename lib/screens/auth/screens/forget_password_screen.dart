@@ -3,7 +3,6 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/components/loading_widget.dart';
 import 'package:socialv/main.dart';
-import 'package:socialv/network/rest_apis.dart';
 import 'package:socialv/screens/auth/screens/sign_in_screen.dart';
 import 'package:socialv/utils/common.dart';
 
@@ -51,7 +50,9 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                       child: Column(
                         children: [
                           20.height,
-                          Text(language.enterTheEmailAssociated, style: secondaryTextStyle(), textAlign: TextAlign.center),
+                          Text(language.enterTheEmailAssociated,
+                              style: secondaryTextStyle(),
+                              textAlign: TextAlign.center),
                           50.height,
                           AppTextField(
                             enabled: !appStore.isLoading,
@@ -63,7 +64,8 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                             decoration: inputDecoration(
                               context,
                               label: language.enterYourEmail,
-                              labelStyle: secondaryTextStyle(weight: FontWeight.w600),
+                              labelStyle:
+                                  secondaryTextStyle(weight: FontWeight.w600),
                             ),
                           ).paddingSymmetric(horizontal: 16),
                           100.height,
@@ -74,18 +76,10 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                                 hideKeyboard(context);
 
                                 if (!appStore.isLoading) {
-                                  if (forgetPassFormKey.currentState!.validate()) {
+                                  if (forgetPassFormKey.currentState!
+                                      .validate()) {
                                     forgetPassFormKey.currentState!.save();
                                     appStore.setLoading(true);
-                                    await forgetPassword(email: emailController.text.trim()).then((value) {
-                                      appStore.setLoading(false);
-                                      toast(value.message);
-
-                                      finish(context);
-                                    }).catchError((e) {
-                                      appStore.setLoading(false);
-                                      toast(e.toString());
-                                    });
                                   }
                                 }
                               }),

@@ -4,14 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/components/loading_widget.dart';
-import 'package:socialv/components/request_verification_dialog.dart';
 import 'package:socialv/main.dart';
-import 'package:socialv/network/rest_apis.dart';
-import 'package:socialv/screens/blockReport/blocked_accounts.dart';
 import 'package:socialv/screens/profile/screens/edit_profile_screen.dart';
 import 'package:socialv/screens/settings/screens/change_password_screen.dart';
 import 'package:socialv/screens/settings/screens/language_screen.dart';
-import 'package:socialv/screens/settings/screens/profile_visibility_screen.dart';
 import 'package:socialv/utils/app_constants.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -306,10 +302,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           trailing: Icon(Icons.arrow_forward_ios,
                               color: appStore.isDarkMode ? bodyDark : bodyWhite,
                               size: 16),
-                          onTap: () {
-                            if (!appStore.isLoading)
-                              ProfileVisibilityScreen().launch(context);
-                          },
+                          onTap: () {},
                         ),
                       ],
                     ),
@@ -457,9 +450,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           trailing: Icon(Icons.arrow_forward_ios,
                               color: appStore.isDarkMode ? bodyDark : bodyWhite,
                               size: 16),
-                          onTap: () {
-                            BlockedAccounts().launch(context);
-                          },
+                          onTap: () {},
                         ),
                         Observer(
                           builder: (_) => SettingItemWidget(
@@ -492,17 +483,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                             color: Colors.white)),
                                   )
                                 : Offstage(),
-                            onTap: () {
-                              if (appStore.verificationStatus ==
-                                      VerificationStatus.rejected ||
-                                  appStore.verificationStatus.isEmpty)
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return RequestVerificationDialog();
-                                  },
-                                );
-                            },
+                            onTap: () {},
                           ),
                         ),
                         SettingItemWidget(
@@ -514,41 +495,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               width: 18,
                               color: Colors.redAccent,
                               fit: BoxFit.cover),
-                          onTap: () {
-                            showConfirmDialogCustom(
-                              context,
-                              onAccept: (c) {
-                                ifNotTester(() async {
-                                  appStore.setLoading(true);
-                                  await deleteAccount().then((value) {
-                                    toast(value.message);
-                                    appStore.setVerificationStatus(
-                                        VerificationStatus.pending);
-                                    logout(context);
-                                  }).catchError((e) {
-                                    appStore.setLoading(false);
-                                    toast(e.toString());
-                                  });
-                                });
-                              },
-                              dialogType: DialogType.DELETE,
-                              title: language.deleteAccountConfirmation,
-                            );
-                          },
+                          onTap: () {},
                         ),
                       ],
                     ),
                     TextButton(
-                      onPressed: () {
-                        showConfirmDialogCustom(
-                          context,
-                          primaryColor: appColorPrimary,
-                          title: language.logoutConfirmation,
-                          onAccept: (s) {
-                            logout(context);
-                          },
-                        );
-                      },
+                      onPressed: () {},
                       child: Text(language.logout,
                           style: boldTextStyle(color: context.primaryColor)),
                     ).paddingAll(16),

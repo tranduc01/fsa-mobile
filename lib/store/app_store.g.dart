@@ -491,23 +491,6 @@ mixin _$AppStore on AppStoreBase, Store {
     });
   }
 
-  late final _$recentGroupsSearchListAtom =
-      Atom(name: 'AppStoreBase.recentGroupsSearchList', context: context);
-
-  @override
-  List<GroupResponse> get recentGroupsSearchList {
-    _$recentGroupsSearchListAtom.reportRead();
-    return super.recentGroupsSearchList;
-  }
-
-  @override
-  set recentGroupsSearchList(List<GroupResponse> value) {
-    _$recentGroupsSearchListAtom
-        .reportWrite(value, super.recentGroupsSearchList, () {
-      super.recentGroupsSearchList = value;
-    });
-  }
-
   late final _$suggestedUserListAtom =
       Atom(name: 'AppStoreBase.suggestedUserList', context: context);
 
@@ -920,7 +903,6 @@ displayPostCommentsCount: ${displayPostCommentsCount},
 displayFriendRequestBtn: ${displayFriendRequestBtn},
 isShopEnable: ${isShopEnable},
 recentMemberSearchList: ${recentMemberSearchList},
-recentGroupsSearchList: ${recentGroupsSearchList},
 suggestedUserList: ${suggestedUserList},
 suggestedGroupsList: ${suggestedGroupsList},
 notificationCount: ${notificationCount},
