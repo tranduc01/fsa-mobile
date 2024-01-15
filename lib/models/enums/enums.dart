@@ -25,3 +25,12 @@ enum ExpertAssginStatus {
 enum AuctionStatus { Upcoming, Ongoing, StopHalfway, Ended }
 
 enum WithdrawStatus { Sent, Processing, Done, Rejected, Canceled }
+
+enum TransactionType {
+  Withdraw,
+  Deposit,
+  PointEarned,
+  PointSpent,
+  PointRefund,
+  PointFine
+}

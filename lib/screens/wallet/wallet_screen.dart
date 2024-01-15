@@ -7,11 +7,13 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/controllers/user_controller.dart';
+import 'package:socialv/models/transaction/transaction_log.dart';
 import 'package:socialv/models/withdraw/withdraw.dart';
 import 'package:socialv/utils/app_constants.dart';
 
 import '../../components/loading_widget.dart';
 import '../../components/no_data_lottie_widget.dart';
+import '../../controllers/transaction_log_controller.dart';
 import '../../controllers/withdraw_controller.dart';
 import '../../main.dart';
 import '../../models/enums/enums.dart';
@@ -44,6 +46,8 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
 
   late UserController userController = Get.find();
   late WithdrawController withdrawController = Get.put(WithdrawController());
+  late TransactionLogController transactionController =
+      Get.put(TransactionLogController());
 
   final List<Color> colorList = [
     Colors.blue.withOpacity(0.5),
@@ -55,6 +59,9 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
 
   @override
   void initState() {
+    Future.delayed(Duration.zero, () async {
+      await transactionController.fetchTransactions(null);
+    });
     _animationController = BottomSheet.createAnimationController(this);
     _animationController.duration = const Duration(milliseconds: 500);
     _animationController.drive(CurveTween(curve: Curves.easeOutQuad));
@@ -800,7 +807,7 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
                   ]),
                 ),
                 DefaultTabController(
-                  length: 5,
+                  length: 6,
                   child: Column(
                     children: [
                       Container(
@@ -838,19 +845,35 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
                                 child: Text(
                               'Used',
                             )),
+                            Tab(
+                                child: Text(
+                              'Refund',
+                            )),
                           ],
                           onTap: (index) async {
                             switch (index) {
                               case 0:
+                                await transactionController
+                                    .fetchTransactions(null);
                                 break;
                               case 1:
+                                await transactionController
+                                    .fetchTransactions(1);
                                 break;
                               case 2:
                                 await withdrawController.fetchWithdraws();
                                 break;
                               case 3:
+                                await transactionController
+                                    .fetchTransactions(2);
                                 break;
                               case 4:
+                                await transactionController
+                                    .fetchTransactions(3);
+                                break;
+                              case 5:
+                                await transactionController
+                                    .fetchTransactions(4);
                                 break;
                             }
                           },
@@ -862,6 +885,7 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
                           historyWidget(),
                           historyWidget(),
                           withdrawWidget(),
+                          historyWidget(),
                           historyWidget(),
                           historyWidget(),
                         ]),
@@ -878,127 +902,163 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
   }
 
   Widget historyWidget() {
-    return AnimatedListView(
-      padding: EdgeInsets.only(bottom: 400),
-      itemCount: 10,
-      physics: BouncingScrollPhysics(),
-      slideConfiguration: SlideConfiguration(
-          delay: Duration(milliseconds: 80), verticalOffset: 300),
-      itemBuilder: (context, index) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.all(10),
-              child: Row(
-                children: [
-                  (index % 2 == 0)
-                      ? Image.asset(
-                          ic_receive_money,
-                          width: 80,
-                          height: 80,
-                        )
-                      : Image.asset(
-                          ic_send_money,
-                          width: 80,
-                          height: 80,
-                        ),
-                  12.width,
-                  Expanded(
-                    child: Container(
-                      height: 100,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                'title',
+    if (transactionController.isLoading.value)
+      return LoadingWidget().center();
+    else if (transactionController.isError.value ||
+        transactionController.transactionLogs.isEmpty)
+      return SizedBox(
+        height: MediaQuery.of(context).size.height * 0.8,
+        child: NoDataWidget(
+          imageWidget: NoDataLottieWidget(),
+          title: transactionController.isError.value
+              ? language.somethingWentWrong
+              : language.noDataFound,
+          onRetry: () {
+            transactionController.fetchTransactions(null);
+          },
+          retryText: '   ' + language.clickToRefresh + '   ',
+        ).center(),
+      );
+    else
+      return AnimatedListView(
+        padding: EdgeInsets.only(bottom: 400),
+        itemCount: transactionController.transactionLogs.length,
+        physics: BouncingScrollPhysics(),
+        slideConfiguration: SlideConfiguration(
+            delay: Duration(milliseconds: 80), verticalOffset: 300),
+        itemBuilder: (context, index) {
+          TransactionLog transaction =
+              transactionController.transactionLogs[index];
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: Row(
+                  children: [
+                    if (transaction.transactionType ==
+                            TransactionType.Deposit ||
+                        transaction.transactionType ==
+                            TransactionType.PointEarned ||
+                        transaction.transactionType ==
+                            TransactionType.PointRefund)
+                      Image.asset(
+                        ic_receive_money,
+                        width: 80,
+                        height: 80,
+                      )
+                    else
+                      Image.asset(
+                        ic_send_money,
+                        width: 80,
+                        height: 80,
+                      ),
+                    12.width,
+                    Expanded(
+                      child: Container(
+                        height: 100,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Row(
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    transaction.note!,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 3,
+                                    textAlign: TextAlign.start,
+                                    style: boldTextStyle(
+                                        fontFamily: 'Roboto', size: 18),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            10.height,
+                            Flexible(
+                              child: Text(
+                                DateFormat('dd/MM/yyyy hh:mm:ss a').format(
+                                    transaction.createdDate!
+                                        .add(Duration(hours: 7))),
                                 overflow: TextOverflow.ellipsis,
-                                maxLines: 3,
+                                maxLines: 1,
                                 textAlign: TextAlign.start,
                                 style: boldTextStyle(
-                                    fontFamily: 'Roboto', size: 18),
-                              ),
-                              10.width,
-                              Container(
-                                decoration: BoxDecoration(
-                                    color:
-                                        const Color.fromARGB(118, 76, 175, 79),
-                                    borderRadius: BorderRadius.circular(20),
-                                    border: Border.all(
-                                        color: Color.fromARGB(24, 0, 0, 0))),
-                                padding: EdgeInsets.all(3),
-                                child: Text(
-                                  'Status',
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      fontFamily: 'Roboto',
-                                      color: Color.fromARGB(255, 0, 0, 0)),
+                                  size: 15,
+                                  fontFamily: 'Roboto',
+                                  color: Color.fromARGB(118, 0, 0, 0),
                                 ),
-                              )
-                            ],
-                          ),
-                          10.height,
-                          Flexible(
-                            child: Text(
-                              DateFormat('dd/MM/yyyy hh:mm:ss a')
-                                  .format(DateTime.now()),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                              textAlign: TextAlign.start,
-                              style: boldTextStyle(
-                                size: 15,
-                                fontFamily: 'Roboto',
-                                color: Color.fromARGB(118, 0, 0, 0),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  (index % 2 == 0)
-                      ? Column(
-                          children: [
-                            Text('+ 120.000',
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.green,
-                                    fontFamily: 'Roboto')),
-                            Text('50.000 VNĐ',
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    color: const Color.fromARGB(120, 0, 0, 0),
-                                    fontFamily: 'Roboto')),
-                          ],
-                        )
-                      : Column(
-                          children: [
-                            Text('- 120.000',
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.red,
-                                    fontFamily: 'Roboto')),
-                            Text('50.000 VNĐ',
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    color: const Color.fromARGB(120, 0, 0, 0),
-                                    fontFamily: 'Roboto')),
                           ],
                         ),
-                ],
-              ),
-            )
-          ],
-        );
-      },
-    );
+                      ),
+                    ),
+                    if (transaction.transactionType ==
+                            TransactionType.Deposit ||
+                        transaction.transactionType ==
+                            TransactionType.PointEarned ||
+                        transaction.transactionType ==
+                            TransactionType.PointRefund)
+                      Column(
+                        children: [
+                          Text(
+                              '+ ' +
+                                  transaction.amount!
+                                      .toStringAsFixed(0)
+                                      .formatNumberWithComma() +
+                                  ' điểm',
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.green,
+                                  fontFamily: 'Roboto')),
+                          Text(
+                              (transaction.amount! * 1000)
+                                      .toStringAsFixed(0)
+                                      .formatNumberWithComma() +
+                                  ' VNĐ',
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: const Color.fromARGB(120, 0, 0, 0),
+                                  fontFamily: 'Roboto')),
+                        ],
+                      )
+                    else
+                      Column(
+                        children: [
+                          Text(
+                              '- ' +
+                                  transaction.amount!
+                                      .toStringAsFixed(0)
+                                      .formatNumberWithComma() +
+                                  ' điểm',
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.red,
+                                  fontFamily: 'Roboto')),
+                          Text(
+                              (transaction.amount! * 1000)
+                                      .toStringAsFixed(0)
+                                      .formatNumberWithComma() +
+                                  ' VNĐ',
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: const Color.fromARGB(120, 0, 0, 0),
+                                  fontFamily: 'Roboto')),
+                        ],
+                      ),
+                  ],
+                ),
+              )
+            ],
+          );
+        },
+      );
   }
 
   Widget withdrawWidget() {
