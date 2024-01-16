@@ -133,15 +133,16 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
                           Icons.token_outlined,
                           size: 30,
                         ),
-                        Text(
-                          userController.user.value.totalPoint!
-                              .toStringAsFixed(0)
-                              .formatNumberWithComma(),
-                          style: TextStyle(
-                              fontFamily: 'Roboto',
-                              fontSize: 27,
-                              fontWeight: FontWeight.bold),
-                        ),
+                        if (userController.user.value.totalPoint != null)
+                          Text(
+                            userController.user.value.totalPoint!
+                                .toStringAsFixed(0)
+                                .formatNumberWithComma(),
+                            style: TextStyle(
+                                fontFamily: 'Roboto',
+                                fontSize: 27,
+                                fontWeight: FontWeight.bold),
+                          ),
                       ],
                     ),
                     5.height,
@@ -907,7 +908,7 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
     else if (transactionController.isError.value ||
         transactionController.transactionLogs.isEmpty)
       return SizedBox(
-        height: MediaQuery.of(context).size.height * 0.8,
+        height: MediaQuery.of(context).size.height * 0.5,
         child: NoDataWidget(
           imageWidget: NoDataLottieWidget(),
           title: transactionController.isError.value
@@ -1067,7 +1068,7 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
     else if (withdrawController.isError.value ||
         withdrawController.withdraws.isEmpty)
       return SizedBox(
-        height: MediaQuery.of(context).size.height * 0.8,
+        height: MediaQuery.of(context).size.height * 0.5,
         child: NoDataWidget(
           imageWidget: NoDataLottieWidget(),
           title: withdrawController.isError.value

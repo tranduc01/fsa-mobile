@@ -44,8 +44,10 @@ class _ForumsFragment extends State<ForumsFragment> {
 
   @override
   void initState() {
-    topicController.fetchTopics();
-    galleryController.fetchAlbumsDiscovery();
+    Future.delayed(Duration.zero, () async {
+      await topicController.fetchTopics();
+      await galleryController.fetchAlbumsDiscovery();
+    });
     super.initState();
   }
 

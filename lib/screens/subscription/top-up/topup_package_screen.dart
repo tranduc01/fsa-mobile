@@ -1,4 +1,3 @@
-import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
@@ -185,32 +184,17 @@ class _TopupPackageScreen extends State<TopupPackageScreen> {
                                       ),
                                     ),
                                     Text(
-                                      !topupPackageController.topupPackages
+                                      topupPackageController.topupPackages
                                               .where((element) =>
                                                   element.isApplySale == true &&
                                                   element.saleEndAt!
                                                       .add(Duration(hours: 7))
                                                       .isAfter(DateTime.now()))
                                               .toList()[index]
-                                              .salePercent!
-                                              .isZero
-                                          ? ((topupPackageController.topupPackages.where((element) => element.isApplySale == true && element.saleEndAt!.add(Duration(hours: 7)).isAfter(DateTime.now())).toList()[index].price! - ((topupPackageController.topupPackages.where((element) => element.isApplySale == true && element.saleEndAt!.add(Duration(hours: 7)).isAfter(DateTime.now())).toList()[index].price! * topupPackageController.topupPackages.where((element) => element.isApplySale == true && element.saleEndAt!.add(Duration(hours: 7)).isAfter(DateTime.now())).toList()[index].salePercent! / 100))))
-                                                  .toStringAsFixed(0)
-                                                  .formatNumberWithComma() +
-                                              " VNĐ"
-                                          : topupPackageController.topupPackages
-                                                  .where((element) =>
-                                                      element.isApplySale ==
-                                                          true &&
-                                                      element.saleEndAt!
-                                                          .add(Duration(
-                                                              hours: 7))
-                                                          .isAfter(DateTime.now()))
-                                                  .toList()[index]
-                                                  .salePrice!
-                                                  .toStringAsFixed(0)
-                                                  .formatNumberWithComma() +
-                                              " VNĐ",
+                                              .salePrice!
+                                              .toStringAsFixed(0)
+                                              .formatNumberWithComma() +
+                                          " VNĐ",
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 16,
@@ -389,32 +373,24 @@ class _TopupPackageScreen extends State<TopupPackageScreen> {
                                                   Icon(Icons
                                                       .arrow_right_alt_outlined),
                                                   Text(
-                                                    !topupPackageController
+                                                    topupPackageController
                                                             .topupPackages
                                                             .where((element) =>
-                                                                element.isApplySale == true &&
-                                                                element.saleEndAt!.add(Duration(hours: 7)).isAfter(DateTime
-                                                                    .now()))
+                                                                element.isApplySale ==
+                                                                    true &&
+                                                                element
+                                                                    .saleEndAt!
+                                                                    .add(Duration(
+                                                                        hours:
+                                                                            7))
+                                                                    .isAfter(
+                                                                        DateTime
+                                                                            .now()))
                                                             .toList()[index]
-                                                            .salePercent!
-                                                            .isZero
-                                                        ? ((topupPackageController.topupPackages.where((element) => element.isApplySale == true && element.saleEndAt!.add(Duration(hours: 7)).isAfter(DateTime.now())).toList()[index].price! - ((topupPackageController.topupPackages.where((element) => element.isApplySale == true && element.saleEndAt!.add(Duration(hours: 7)).isAfter(DateTime.now())).toList()[index].price! * topupPackageController.topupPackages.where((element) => element.isApplySale == true && element.saleEndAt!.add(Duration(hours: 7)).isAfter(DateTime.now())).toList()[index].salePercent! / 100))))
-                                                                .toStringAsFixed(
-                                                                    0)
-                                                                .formatNumberWithComma() +
-                                                            " VNĐ"
-                                                        : topupPackageController
-                                                                .topupPackages
-                                                                .where((element) =>
-                                                                    element.isApplySale == true &&
-                                                                    element.saleEndAt!
-                                                                        .add(Duration(hours: 7))
-                                                                        .isAfter(DateTime.now()))
-                                                                .toList()[index]
-                                                                .salePrice!
-                                                                .toStringAsFixed(0)
-                                                                .formatNumberWithComma() +
-                                                            " VNĐ",
+                                                            .salePrice!
+                                                            .toStringAsFixed(0)
+                                                            .formatNumberWithComma() +
+                                                        " VNĐ",
                                                     overflow:
                                                         TextOverflow.ellipsis,
                                                     maxLines: 3,
@@ -517,7 +493,7 @@ class _TopupPackageScreen extends State<TopupPackageScreen> {
                                                     "Sale will end in: ",
                                                     style: TextStyle(
                                                         fontFamily: 'Roboto',
-                                                        fontSize: 20),
+                                                        fontSize: 16),
                                                   ),
                                                   SizedBox(
                                                     width: 30,
@@ -858,24 +834,11 @@ class _TopupPackageScreen extends State<TopupPackageScreen> {
                                                       Icon(Icons
                                                           .arrow_right_alt_outlined),
                                                       Text(
-                                                        !topupPackage
-                                                                .salePercent!
-                                                                .isZero
-                                                            ? (topupPackage.price! -
-                                                                        (topupPackage.price! *
-                                                                            topupPackage
-                                                                                .salePercent! /
-                                                                            100))
-                                                                    .toStringAsFixed(
-                                                                        0)
-                                                                    .formatNumberWithComma() +
-                                                                " VNĐ"
-                                                            : topupPackage
-                                                                    .salePrice!
-                                                                    .toStringAsFixed(
-                                                                        0)
-                                                                    .formatNumberWithComma() +
-                                                                " VNĐ",
+                                                        topupPackage.salePrice!
+                                                                .toStringAsFixed(
+                                                                    0)
+                                                                .formatNumberWithComma() +
+                                                            " VNĐ",
                                                         overflow: TextOverflow
                                                             .ellipsis,
                                                         maxLines: 3,
@@ -943,7 +906,7 @@ class _TopupPackageScreen extends State<TopupPackageScreen> {
                                                         style: TextStyle(
                                                             fontFamily:
                                                                 'Roboto',
-                                                            fontSize: 20),
+                                                            fontSize: 16),
                                                       ),
                                                       SizedBox(
                                                         width: 30,
