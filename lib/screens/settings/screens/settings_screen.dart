@@ -355,9 +355,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           trailing: Icon(Icons.arrow_forward_ios,
                               color: appStore.isDarkMode ? bodyDark : bodyWhite,
                               size: 16),
-                          onTap: () {
-                            if (!appStore.isLoading) onShareTap(context);
-                          },
+                          onTap: () {},
                         ),
                         SettingItemWidget(
                           title: language.privacyPolicy,

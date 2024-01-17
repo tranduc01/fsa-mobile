@@ -12,7 +12,6 @@ import 'package:socialv/models/common_models.dart';
 import 'package:socialv/screens/splash_screen.dart';
 import 'package:socialv/store/app_store.dart';
 import 'package:socialv/utils/app_constants.dart';
-import 'package:flutter_portal/flutter_portal.dart';
 
 AppStore appStore = AppStore();
 
@@ -59,44 +58,42 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return Portal(
-      child: Observer(
-        builder: (_) => MaterialApp(
-          navigatorKey: navigatorKey,
-          title: APP_NAME,
-          debugShowCheckedModeBanner: false,
-          theme: AppTheme.lightTheme,
-          darkTheme: AppTheme.darkTheme,
-          themeMode: ThemeMode.light,
-          home: SplashScreen(),
-          builder: (context, child) {
-            return ScrollConfiguration(
-                behavior: MyBehavior(), child: child.validate());
-          },
-          supportedLocales: LanguageDataModel.languageLocales(),
-          localizationsDelegates: [
-            AppLocalizations(),
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          localeResolutionCallback: (locale, supportedLocales) => locale,
-          locale: Locale(appStore.selectedLanguage
-              .validate(value: Constants.defaultLanguage)),
-          onGenerateRoute: (settings) {
-            String pathComponents = settings.name!.split('/').last;
+    return Observer(
+      builder: (_) => MaterialApp(
+        navigatorKey: navigatorKey,
+        title: APP_NAME,
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        themeMode: ThemeMode.light,
+        home: SplashScreen(),
+        builder: (context, child) {
+          return ScrollConfiguration(
+              behavior: MyBehavior(), child: child.validate());
+        },
+        supportedLocales: LanguageDataModel.languageLocales(),
+        localizationsDelegates: [
+          AppLocalizations(),
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        localeResolutionCallback: (locale, supportedLocales) => locale,
+        locale: Locale(appStore.selectedLanguage
+            .validate(value: Constants.defaultLanguage)),
+        onGenerateRoute: (settings) {
+          String pathComponents = settings.name!.split('/').last;
 
-            if (pathComponents.isInt) {
-              return MaterialPageRoute(
-                builder: (context) {
-                  return SplashScreen(activityId: pathComponents.toInt());
-                },
-              );
-            } else {
-              return MaterialPageRoute(builder: (_) => SplashScreen());
-            }
-          },
-        ),
+          if (pathComponents.isInt) {
+            return MaterialPageRoute(
+              builder: (context) {
+                return SplashScreen(activityId: pathComponents.toInt());
+              },
+            );
+          } else {
+            return MaterialPageRoute(builder: (_) => SplashScreen());
+          }
+        },
       ),
     );
   }

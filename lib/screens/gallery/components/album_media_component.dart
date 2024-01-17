@@ -1,7 +1,6 @@
 import 'package:appinio_video_player/appinio_video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:socialv/screens/post/screens/audio_post_screen.dart';
 import 'package:socialv/screens/post/screens/image_screen.dart';
 import 'package:socialv/screens/post/screens/video_post_screen.dart';
 
@@ -55,8 +54,6 @@ class _AlbumMediaComponentState extends State<AlbumMediaComponent> {
       onTap: () {
         if (widget.mediaType == MediaTypes.image) {
           ImageScreen(imageURl: widget.mediaUrl.validate()).launch(context);
-        } else if (widget.mediaType == MediaTypes.audio) {
-          AudioPostScreen(widget.mediaUrl.validate()).launch(context);
         } else if (widget.mediaType == MediaTypes.video) {
           VideoPostScreen(widget.mediaUrl.validate()).launch(context);
         } else {

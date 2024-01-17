@@ -9,7 +9,6 @@ import 'package:html/parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:socialv/main.dart';
 import 'package:socialv/models/members/member_response.dart';
 import 'package:socialv/models/posts/media_model.dart';
@@ -158,15 +157,6 @@ Future<List<File>> getMediasSource(
 
 String parseHtmlString(String? htmlString) {
   return parse(parse(htmlString).body!.text).documentElement!.text;
-}
-
-void onShareTap(BuildContext context) async {
-  if (isAndroid) {
-    Share.share(
-        'Share $APP_NAME app $playStoreBaseURL${await getPackageName()}');
-  } else {
-    Share.share('Share $APP_NAME app $IOS_APP_LINK');
-  }
 }
 
 String getFormattedDate(String date) =>

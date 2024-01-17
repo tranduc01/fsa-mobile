@@ -16,8 +16,6 @@ dependencies:
   google_fonts: ^6.1.0
   cached_network_image: ^3.2.3
   flutter_spinkit: ^5.2.0
-  flutter_mentions: ^2.0.1
-  flutter_portal: ^0.4.0
   tap_to_expand:
   flutter_rating_bar:
   ionicons:
@@ -26,7 +24,6 @@ dependencies:
   # Media
   image_picker: ^1.0.4
   file_picker: ^6.0.0
-  just_audio: ^0.9.33
   photo_view: ^0.14.0
   appinio_video_player: ^1.2.1
   giphy_get: ^3.4.0
@@ -36,6 +33,7 @@ dependencies:
   extended_image: ^8.1.1
   animated_bottom_navigation_bar:
   fl_chart: 0.60.0
+  
   #Date CountDown
   date_count_down:
   flutter_timer_countdown:
@@ -56,7 +54,6 @@ dependencies:
   get:
 
   # Share
-  share_plus: ^7.0.1
   flutter_custom_tabs: ^1.0.4
   flutter_secure_storage:
 
@@ -77,7 +74,6 @@ dependencies:
 
   #SlideShow
   flutter_image_slideshow: any
-
   carousel_slider: ^4.2.1
   # Story
   numberpicker: 
@@ -89,7 +85,6 @@ dependencies:
 
   flutter_localizations:
     sdk: flutter
-  in_app_purchases_paywall_ui: ^1.0.1
 
 dependency_overrides:
   intl: ^0.18.0

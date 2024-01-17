@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:socialv/main.dart';
 import 'package:socialv/models/common_models/post_mdeia_model.dart';
-import 'package:socialv/screens/post/components/audio_component.dart';
 import 'package:socialv/screens/post/components/video_post_component.dart';
-import 'package:socialv/screens/post/screens/audio_post_screen.dart';
 import 'package:socialv/screens/post/screens/image_screen.dart';
 import 'package:socialv/screens/post/screens/video_post_screen.dart';
 import 'package:socialv/utils/app_constants.dart';
@@ -88,28 +85,6 @@ class _PostMediaComponentState extends State<PostMediaComponent> {
                                 .validate())
                         .launch(context);
                   },
-                          splashColor: Colors.transparent,
-                          highlightColor: Colors.transparent);
-                } else if (widget.mediaType == MediaTypes.audio) {
-                  return widget.isFromPostDetail
-                      ? AudioPostComponent(
-                          audioURl:
-                              widget.mediaList.validate()[index].url.validate())
-                      : Container(
-                          margin: EdgeInsets.symmetric(horizontal: 8),
-                          padding: EdgeInsets.symmetric(vertical: 40),
-                          decoration: BoxDecoration(
-                              borderRadius: radius(defaultAppButtonRadius)),
-                          child: cachedImage(ic_voice,
-                              color:
-                                  appStore.isDarkMode ? bodyDark : bodyWhite),
-                        ).onTap(() {
-                          AudioPostScreen(widget.mediaList
-                                  .validate()[index]
-                                  .url
-                                  .validate())
-                              .launch(context);
-                        },
                           splashColor: Colors.transparent,
                           highlightColor: Colors.transparent);
                 } else if (widget.mediaType == MediaTypes.video) {
