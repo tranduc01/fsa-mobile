@@ -146,27 +146,30 @@ class _ForumsFragment extends State<ForumsFragment> {
                     children: [
                       Row(
                         children: [
-                          data.user!.avatarUrl != null
-                              ? Image.network(
-                                  data.user!.avatarUrl.validate(),
-                                  height: 36,
-                                  width: 36,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Image.asset(
+                          data.user != null
+                              ? data.user!.avatarUrl != null
+                                  ? Image.network(
+                                      data.user!.avatarUrl.validate(),
+                                      height: 36,
+                                      width: 36,
+                                      fit: BoxFit.cover,
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        return Image.asset(
+                                          'assets/images/profile.png',
+                                          height: 36,
+                                          width: 36,
+                                          fit: BoxFit.cover,
+                                        ).cornerRadiusWithClipRRect(100);
+                                      },
+                                    ).cornerRadiusWithClipRRect(100)
+                                  : Image.asset(
                                       'assets/images/profile.png',
                                       height: 36,
                                       width: 36,
                                       fit: BoxFit.cover,
-                                    ).cornerRadiusWithClipRRect(100);
-                                  },
-                                ).cornerRadiusWithClipRRect(100)
-                              : Image.asset(
-                                  'assets/images/profile.png',
-                                  height: 36,
-                                  width: 36,
-                                  fit: BoxFit.cover,
-                                ).cornerRadiusWithClipRRect(100),
+                                    ).cornerRadiusWithClipRRect(100)
+                              : Container(),
                           10.width,
                           Column(
                             children: [
