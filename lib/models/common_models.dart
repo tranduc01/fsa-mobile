@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/main.dart';
-import 'package:socialv/screens/stats/screens/stats_screen.dart';
 import 'package:socialv/screens/wallet/wallet_screen.dart';
 
 import '../screens/settings/screens/settings_screen.dart';
@@ -24,8 +23,6 @@ List<DrawerModel> getDrawerOptions() {
 
   list.add(DrawerModel(
       image: ic_wallet, title: 'Wallet', attachedScreen: WalletScreen()));
-  list.add(DrawerModel(
-      image: stats, title: 'Thống kê', attachedScreen: StatsScreen()));
   list.add(DrawerModel(
       image: ic_setting,
       title: language.settings,

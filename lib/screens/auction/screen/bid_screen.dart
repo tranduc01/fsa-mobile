@@ -1,3 +1,4 @@
+import 'package:date_count_down/date_count_down.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:input_quantity/input_quantity.dart';
@@ -76,9 +77,41 @@ class _BidScreenState extends State<BidScreen> {
                 child: Column(
                   children: [
                     Text(
-                      'Điểm hiện tại: ${auctionController.auction.value.currentPoint!.toStringAsFixed(0).formatNumberWithComma()}',
+                      'Ví đấu giá: ${auctionController.auction.value.currentPoint!.toStringAsFixed(0).formatNumberWithComma()} điểm',
                       style: boldTextStyle(size: 20),
-                    ).paddingOnly(top: 16),
+                    ).paddingOnly(top: 16, left: 10),
+                    10.height,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.timer_outlined,
+                          color: Colors.black,
+                          size: 30,
+                        ),
+                        6.width,
+                        CountDownText(
+                          due: auctionController.auction.value.startDate!
+                                  .add(Duration(hours: 7))
+                                  .isBefore(DateTime.now())
+                              ? auctionController.auction.value.actualEndDate!
+                                  .add(Duration(hours: 7))
+                              : auctionController.auction.value.startDate!
+                                  .add(Duration(hours: 7)),
+                          finishedText: language.auctionEnded,
+                          showLabel: true,
+                          daysTextShort: "d ",
+                          hoursTextShort: "h ",
+                          minutesTextShort: "m ",
+                          secondsTextShort: "s ",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontFamily: 'Roboto',
+                            fontSize: 22,
+                          ),
+                        ),
+                      ],
+                    ),
                     Divider(
                       thickness: 1,
                     ),
@@ -307,9 +340,34 @@ class _BidScreenState extends State<BidScreen> {
                                                 _currentAmount.toInt());
                                             Navigator.of(context).pop();
 
-                                            if (auctionController
-                                                    .message.value ==
-                                                'AUCTION_BIDDER_ALREADY_BID') {
+                                            if (!auctionController
+                                                .isUpdateSuccess.value) {
+                                              String message = auctionController
+                                                  .message.value;
+                                              switch (auctionController
+                                                  .message.value) {
+                                                case 'AUCTION_BIDDER_ALREADY_BID':
+                                                  message =
+                                                      'Bạn đã đặt giá rồi.';
+                                                  break;
+                                                case 'AUCTION_BID_WAIT':
+                                                  message =
+                                                      'Bạn phải chờ 60s để đặt giá mới';
+                                                  break;
+                                                case 'AUCTION_BID_NOT_MET_MINIMUM':
+                                                  message =
+                                                      'Số điểm đặt phải cao hơn giá đấu giá hiện tại';
+                                                  break;
+                                                case 'NOT_ENOUGH_POINT':
+                                                  message =
+                                                      'Bạn không đủ điểm để đấu giá';
+                                                  break;
+                                                case 'AUCTION_ALREADY_STOPPED':
+                                                  message =
+                                                      'Đấu giá đã kết thúc';
+                                                  break;
+                                              }
+
                                               showDialog(
                                                 context: context,
                                                 builder: (context) {
@@ -336,79 +394,7 @@ class _BidScreenState extends State<BidScreen> {
                                                         Lottie.asset(
                                                             'assets/lottie/fail.json'),
                                                         Text(
-                                                          'Bạn đã đặt giá rồi.',
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  'Roboto',
-                                                              fontSize: 16,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        )
-                                                      ],
-                                                    ),
-                                                    actions: [
-                                                      TextButton(
-                                                        style: ButtonStyle(
-                                                            backgroundColor:
-                                                                MaterialStateProperty
-                                                                    .all(context
-                                                                        .primaryColor),
-                                                            shape: MaterialStateProperty.all(
-                                                                RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            20)))),
-                                                        onPressed: () {
-                                                          Navigator.of(context)
-                                                              .pop();
-                                                        },
-                                                        child: Text('OK',
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .white,
-                                                                fontFamily:
-                                                                    'Roboto',
-                                                                fontSize: 16,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold)),
-                                                      ),
-                                                    ],
-                                                  );
-                                                },
-                                              );
-                                            }
-                                            if (auctionController
-                                                    .message.value ==
-                                                'AUCTION_BID_WAIT') {
-                                              showDialog(
-                                                context: context,
-                                                builder: (context) {
-                                                  return AlertDialog(
-                                                    title: Text('Place Bid',
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontFamily:
-                                                                'Roboto',
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold)),
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        16)),
-                                                    content: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      children: [
-                                                        Lottie.asset(
-                                                            'assets/lottie/fail.json'),
-                                                        Text(
-                                                          'Bạn phải chờ 60s để đặt giá mới',
+                                                          message,
                                                           style: TextStyle(
                                                               fontFamily:
                                                                   'Roboto',

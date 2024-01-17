@@ -70,8 +70,14 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
         auctionController.auction.value.currentBidPrice =
             element['bidAmount'] != null ? element['bidAmount'].toDouble() : 0;
         auctionController.auction.value.auctionBids!.add(Bid.fromJson(element));
-        auctionController.auction.value.actualEndDate =
-            DateTime.parse(element['actualEndDate']);
+        if (element['actualEndDate'] != null) {
+          auctionController.auction.value.actualEndDate =
+              element['actualEndDate'] != null
+                  ? (DateTime.parse(element['actualEndDate'])
+                      .subtract(Duration(hours: 7)))
+                  : null;
+        }
+
         if (userController.user.value.id == Bid.fromJson(element).bidder!.id) {
           auctionController.auction.value.currentPoint =
               element['currentPoint'] != null
@@ -111,6 +117,7 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                   if (auctionController.auction.value.winner == null &&
                       (auctionController.auction.value.isSoldDirectly == true))
                     FloatingActionButton.extended(
+                      heroTag: 'buy_now',
                       label: Text('Mua ngay',
                           style: TextStyle(
                               color: Colors.black,
@@ -213,6 +220,7 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                     ),
                   10.width,
                   FloatingActionButton.extended(
+                    heroTag: 'bid',
                     label: Text(
                         auctionController.auction.value.currentBidPrice!
                             .toStringAsFixed(0)
@@ -268,6 +276,7 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                   10.width,
                   if (auctionController.auction.value.winner == null)
                     FloatingActionButton.extended(
+                      heroTag: 'add_point',
                       label: Text('Điểm',
                           style: TextStyle(
                               color: Colors.black,
@@ -285,7 +294,7 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16)),
                               title: Text(
-                                'Thêm điểm',
+                                'Thêm điểm vào ví đấu giá',
                                 style: TextStyle(
                                     fontFamily: 'Roboto',
                                     fontSize: 18,
@@ -319,6 +328,32 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                       )
                                     ],
                                   ),
+                                  10.height,
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'Ví đấu giá: ',
+                                        style: TextStyle(
+                                          fontFamily: 'Roboto',
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                      Text(
+                                        '${auctionController.auction.value.currentPoint!.toStringAsFixed(0).formatNumberWithComma()}',
+                                        style: TextStyle(
+                                            fontFamily: 'Roboto',
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        ' điểm',
+                                        style: TextStyle(
+                                          fontFamily: 'Roboto',
+                                          fontSize: 18,
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                   20.height,
                                   Form(
                                     key: addPointFormKey,
@@ -328,6 +363,7 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                           controller: addPointCont,
                                           keyboardType: TextInputType.number,
                                           decoration: InputDecoration(
+                                            hintText: 'Nhập số điểm',
                                             enabledBorder: OutlineInputBorder(
                                               borderSide: BorderSide(
                                                 width: 3,
@@ -665,8 +701,8 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                                                 return FailDialog(
                                                                     text: auctionController.message.value ==
                                                                             'USER_POINT_NOT_ENOUGH'
-                                                                        ? 'Your points are not enough to join this auction'
-                                                                        : 'Failed to join auction');
+                                                                        ? 'Bạn không có đủ điểm để tham gia buổi đấu giá này'
+                                                                        : 'Tham gia thất bại!');
                                                               },
                                                             );
                                                           }
@@ -693,7 +729,7 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                             .isAfter(DateTime.now())) &&
                         auctionController.auction.value.isRegistered == true)
                     ? FloatingActionButton.extended(
-                        label: Text('Hủy đăng ký',
+                        label: Text('Hủy đăng ký tham gia',
                             style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold)),
@@ -702,7 +738,7 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                         onPressed: () {
                           showConfirmDialogCustom(context,
                               title:
-                                  'Nếu hủy đăng ký tham gia buổi đấu giá này bạn sẽ không được hoàn lại phí đăng ký? Bạn có muốn hủy?',
+                                  'Bạn có chắc chắn muốn hủy đăng ký tham gia buổi đấu giá này?',
                               onAccept: (p0) async {
                             showDialog(
                                 context: context,
@@ -714,7 +750,7 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                 .cancelRegistrationAuction(widget.id);
                             if (auctionController.isUpdateSuccess.value) {
                               Navigator.of(context).pop();
-                              Navigator.of(context).pop();
+
                               await auctionController.fetchAuction(widget.id);
                               await userController.getCurrentUser();
                               toast('Cancel registration successfully');
@@ -850,8 +886,11 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                 children: [
                                   IconButton(
                                     icon: Icon(Icons.arrow_back),
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(),
+                                    onPressed: () async {
+                                      Navigator.pop(context);
+                                      await auctionController
+                                          .fetchAuctions(null);
+                                    },
                                   ),
                                   Text(
                                     language.auctionDetail,
@@ -1767,8 +1806,8 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                           minutesDescription: language.auctionMinutes,
                           secondsDescription: language.auctionSeconds,
                           spacerWidth: 5,
-                          onEnd: () {
-                            print("Timer finished");
+                          onEnd: () async {
+                            await auctionController.fetchAuction(widget.id);
                           },
                         ),
                       ],
