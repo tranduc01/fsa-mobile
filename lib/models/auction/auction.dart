@@ -16,7 +16,8 @@ class Auction {
   double? currentBidPrice;
   double? registrationFee;
   DateTime? startDate;
-  DateTime? endDate;
+  DateTime? actualEndDate;
+  DateTime? estimateEndDate;
   DateTime? startRegisterAt;
   DateTime? endRegisterAt;
   int? numberParticipated;
@@ -42,7 +43,8 @@ class Auction {
     this.currentBidPrice,
     this.registrationFee,
     this.startDate,
-    this.endDate,
+    this.actualEndDate,
+    this.estimateEndDate,
     this.startRegisterAt,
     this.endRegisterAt,
     this.numberParticipated,
@@ -76,7 +78,8 @@ class Auction {
             ? json["registrationFee"].toDouble()
             : 0,
         startDate: DateTime.parse(json["startDate"]),
-        endDate: DateTime.parse(json["endDate"]),
+        actualEndDate: DateTime.parse(json["actualEndDate"]),
+        estimateEndDate: DateTime.parse(json["estimateEndDate"]),
         startRegisterAt: DateTime.parse(json["startRegisterAt"]),
         endRegisterAt: DateTime.parse(json["endRegisterAt"]),
         numberParticipated: json["numberParticipated"] as int? ?? 0,

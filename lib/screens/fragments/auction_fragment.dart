@@ -189,7 +189,7 @@ class _AutionFragmentState extends State<AuctionFragment> {
                               if (auction.startDate!
                                       .add(Duration(hours: 7))
                                       .isAfter(DateTime.now()) &&
-                                  auction.endDate!
+                                  auction.actualEndDate!
                                       .add(Duration(hours: 7))
                                       .isAfter(DateTime.now()))
                                 Column(
@@ -251,7 +251,7 @@ class _AutionFragmentState extends State<AuctionFragment> {
                   if (auction.startDate!
                           .add(Duration(hours: 7))
                           .isBefore(DateTime.now()) &&
-                      auction.endDate!
+                      auction.actualEndDate!
                           .add(Duration(hours: 7))
                           .isAfter(DateTime.now()))
                     Positioned(
@@ -291,7 +291,8 @@ class _AutionFragmentState extends State<AuctionFragment> {
                                   due: auction.startDate!
                                           .add(Duration(hours: 7))
                                           .isBefore(DateTime.now())
-                                      ? auction.endDate!.add(Duration(hours: 7))
+                                      ? auction.actualEndDate!
+                                          .add(Duration(hours: 7))
                                       : auction.startDate!
                                           .add(Duration(hours: 7)),
                                   finishedText: language.auctionEnded,

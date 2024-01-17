@@ -70,6 +70,8 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
         auctionController.auction.value.currentBidPrice =
             element['bidAmount'] != null ? element['bidAmount'].toDouble() : 0;
         auctionController.auction.value.auctionBids!.add(Bid.fromJson(element));
+        auctionController.auction.value.actualEndDate =
+            DateTime.parse(element['actualEndDate']);
         if (userController.user.value.id == Bid.fromJson(element).bidder!.id) {
           auctionController.auction.value.currentPoint =
               element['currentPoint'] != null
@@ -99,7 +101,7 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
         floatingActionButton: (auctionController.auction.value.startDate!
                     .add(Duration(hours: 7))
                     .isBefore(DateTime.now()) &&
-                auctionController.auction.value.endDate!
+                auctionController.auction.value.actualEndDate!
                     .add(Duration(hours: 7))
                     .isAfter(DateTime.now()) &&
                 auctionController.auction.value.isRegistered == true)
@@ -730,7 +732,9 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                             }
                           });
                         })
-                    : auctionController.auction.value.startDate!.add(Duration(hours: 7)).isAfter(DateTime.now()) &&
+                    : auctionController.auction.value.startDate!
+                                .add(Duration(hours: 7))
+                                .isAfter(DateTime.now()) &&
                             auctionController.auction.value.endRegisterAt!
                                 .add(Duration(hours: 7))
                                 .isBefore(DateTime.now())
@@ -1735,7 +1739,7 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                   .auction.value.startDate!
                                   .add(Duration(hours: 7))
                                   .isBefore(DateTime.now())
-                              ? auctionController.auction.value.endDate!
+                              ? auctionController.auction.value.actualEndDate!
                                   .add(Duration(hours: 7))
                                   .toString()
                               : auctionController.auction.value.startDate!
