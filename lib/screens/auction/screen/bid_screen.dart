@@ -308,16 +308,6 @@ class _BidScreenState extends State<BidScreen> {
                                             Navigator.of(context).pop();
 
                                             if (auctionController
-                                                .isUpdateSuccess.value) {
-                                              auctionController.auction.value
-                                                      .currentPoint =
-                                                  auctionController.auction
-                                                          .value.currentPoint! -
-                                                      _currentAmount;
-                                              auctionController.auction
-                                                  .refresh();
-                                            }
-                                            if (auctionController
                                                     .message.value ==
                                                 'AUCTION_BIDDER_ALREADY_BID') {
                                               showDialog(

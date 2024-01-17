@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:socialv/components/youtube_player_component.dart';
 import 'package:socialv/main.dart';
 import 'package:socialv/models/common_models/post_mdeia_model.dart';
 import 'package:socialv/screens/post/components/audio_component.dart';
 import 'package:socialv/screens/post/components/video_post_component.dart';
 import 'package:socialv/screens/post/screens/audio_post_screen.dart';
 import 'package:socialv/screens/post/screens/image_screen.dart';
-import 'package:socialv/screens/post/screens/pdf_screen.dart';
 import 'package:socialv/screens/post/screens/video_post_screen.dart';
 import 'package:socialv/utils/app_constants.dart';
 import 'package:socialv/utils/cached_network_image.dart';
@@ -114,64 +112,31 @@ class _PostMediaComponentState extends State<PostMediaComponent> {
                         },
                           splashColor: Colors.transparent,
                           highlightColor: Colors.transparent);
-                } else if (widget.mediaType == MediaTypes.doc) {
-                  return Container(
-                    margin: EdgeInsets.symmetric(horizontal: 8),
-                    padding: EdgeInsets.symmetric(vertical: 40),
-                    decoration: BoxDecoration(
-                        borderRadius: radius(defaultAppButtonRadius)),
-                    child: cachedImage(
-                      ic_document,
-                      color: appStore.isDarkMode ? bodyDark : bodyWhite,
-                    ),
-                  ).onTap(() {
-                    PDFScreen(
-                            docURl: widget.mediaList
-                                .validate()[index]
-                                .url
-                                .validate())
-                        .launch(context);
-                  },
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.transparent);
                 } else if (widget.mediaType == MediaTypes.video) {
-                  if (widget.mediaList.validate()[index].source.validate() ==
-                      'youtube') {
-                    return YoutubePlayerComponent(
-                            id: widget.mediaList
-                                .validate()[index]
-                                .url
-                                .validate()
-                                .toYouTubeId())
-                        .paddingSymmetric(horizontal: 8);
-                  } else {
-                    return widget.isFromPostDetail
-                        ? VideoPostComponent(
-                            videoURl: widget.mediaList
-                                .validate()[index]
-                                .url
-                                .validate(),
-                            isShowControllers: widget.isFromQuickViewDetail,
-                          )
-                            .cornerRadiusWithClipRRect(10)
-                            .paddingSymmetric(horizontal: 8)
-                        : VideoPostComponent(
-                                videoURl: widget.mediaList
+                  return widget.isFromPostDetail
+                      ? VideoPostComponent(
+                          videoURl:
+                              widget.mediaList.validate()[index].url.validate(),
+                          isShowControllers: widget.isFromQuickViewDetail,
+                        )
+                          .cornerRadiusWithClipRRect(10)
+                          .paddingSymmetric(horizontal: 8)
+                      : VideoPostComponent(
+                              videoURl: widget.mediaList
+                                  .validate()[index]
+                                  .url
+                                  .validate())
+                          .onTap(() {
+                            VideoPostScreen(widget.mediaList
                                     .validate()[index]
                                     .url
                                     .validate())
-                            .onTap(() {
-                              VideoPostScreen(widget.mediaList
-                                      .validate()[index]
-                                      .url
-                                      .validate())
-                                  .launch(context);
-                            },
-                                splashColor: Colors.transparent,
-                                highlightColor: Colors.transparent)
-                            .cornerRadiusWithClipRRect(10)
-                            .paddingSymmetric(horizontal: 8);
-                  }
+                                .launch(context);
+                          },
+                              splashColor: Colors.transparent,
+                              highlightColor: Colors.transparent)
+                          .cornerRadiusWithClipRRect(10)
+                          .paddingSymmetric(horizontal: 8);
                 } else if (widget.mediaType == MediaTypes.gif) {
                   return cachedImage(
                     widget.mediaList.validate()[index].url,

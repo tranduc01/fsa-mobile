@@ -103,13 +103,13 @@ class AuctionController extends GetxController {
         isUpdateSuccess(true);
       } else {
         isLoading(false);
-        isError(true);
+        //isError(true);
         print('Request failed with status: ${response.statusCode}');
         print('Request failed with status: ${response.body['Message']}');
         message.value = response.body['Message'];
       }
     } catch (e) {
-      isError(true);
+      //isError(true);
       print(e);
     }
   }
@@ -146,14 +146,14 @@ class AuctionController extends GetxController {
       isLoading(true);
       isUpdateSuccess(false);
       message.value = '';
-      var url = '$BASE_URL/Auction/deposit?id=$id?amount=$amount';
+      var url = '$BASE_URL/Auction/deposit?id=$id&amount=$amount';
       String? token = await storage.read(key: 'jwt');
       var headers = {
         'Authorization': 'Bearer $token',
       };
 
       var response = await GetConnect().patch(url, {}, headers: headers);
-      if (response.statusCode == 202) {
+      if (response.statusCode == 200 || response.statusCode == 202) {
         isLoading(false);
         isUpdateSuccess(true);
         message.value = '';
@@ -164,6 +164,33 @@ class AuctionController extends GetxController {
         message.value = response.body['Message'];
       }
     } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> cancelRegistrationAuction(int id) async {
+    try {
+      isLoading(true);
+      isUpdateSuccess(false);
+      var url = '$BASE_URL/Auction/cancel-registration?id=$id';
+      String? token = await storage.read(key: 'jwt');
+      var headers = {
+        'Authorization': 'Bearer $token',
+      };
+
+      var response = await GetConnect().patch(url, {}, headers: headers);
+      if (response.statusCode == 200) {
+        isLoading(false);
+        isUpdateSuccess(true);
+      } else {
+        isLoading(false);
+        //isError(true);
+        print('Request failed with status: ${response.statusCode}');
+        print('Request failed with status: ${response.body['Message']}');
+        message.value = response.body['Message'];
+      }
+    } catch (e) {
+      //isError(true);
       print(e);
     }
   }

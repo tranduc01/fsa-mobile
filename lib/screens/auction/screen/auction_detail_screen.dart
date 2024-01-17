@@ -70,6 +70,12 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
         auctionController.auction.value.currentBidPrice =
             element['bidAmount'] != null ? element['bidAmount'].toDouble() : 0;
         auctionController.auction.value.auctionBids!.add(Bid.fromJson(element));
+        if (userController.user.value.id == Bid.fromJson(element).bidder!.id) {
+          auctionController.auction.value.currentPoint =
+              element['currentPoint'] != null
+                  ? element['currentPoint'].toDouble()
+                  : 0;
+        }
         auctionController.auction.refresh();
       });
     });
@@ -424,9 +430,7 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                     ),
                 ],
               )
-            : auctionController.auction.value.startRegisterAt!
-                        .add(Duration(hours: 7))
-                        .isBefore(DateTime.now()) &&
+            : auctionController.auction.value.startRegisterAt!.add(Duration(hours: 7)).isBefore(DateTime.now()) &&
                     auctionController.auction.value.endRegisterAt!
                         .add(Duration(hours: 7))
                         .isAfter(DateTime.now()) &&
@@ -682,80 +686,122 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                       }
                     },
                   )
-                : ((auctionController.auction.value.startDate!
+                : ((auctionController.auction.value.endRegisterAt!
                             .add(Duration(hours: 7))
                             .isAfter(DateTime.now())) &&
                         auctionController.auction.value.isRegistered == true)
                     ? FloatingActionButton.extended(
-                        label: Text('Đã đăng ký',
+                        label: Text('Hủy đăng ký',
                             style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold)),
-                        icon: Icon(Icons.check, color: Colors.green),
+                        icon: Icon(Icons.close_rounded, color: Colors.red),
                         backgroundColor: Colors.white,
-                        onPressed: () {})
-                    : auctionController.auction.value.endDate!
-                            .add(Duration(hours: 7))
-                            .isBefore(DateTime.now())
-                        ? FloatingActionButton.extended(
-                            label: Text(
-                                auctionController.auction.value.currentBidPrice!
-                                    .toStringAsFixed(0)
-                                    .formatNumberWithComma(),
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold)),
-                            icon: Image.asset(
-                              ic_auction,
-                              height: 30,
-                              width: 30,
-                              color: Colors.black,
-                            ),
-                            backgroundColor: Colors.white,
-                            onPressed: () {
-                              showModalBottomSheet(
-                                elevation: 0,
+                        onPressed: () {
+                          showConfirmDialogCustom(context,
+                              title:
+                                  'Nếu hủy đăng ký tham gia buổi đấu giá này bạn sẽ không được hoàn lại phí đăng ký? Bạn có muốn hủy?',
+                              onAccept: (p0) async {
+                            showDialog(
                                 context: context,
-                                isScrollControlled: true,
-                                backgroundColor: Colors.transparent,
-                                transitionAnimationController:
-                                    _animationController,
+                                barrierDismissible: false,
                                 builder: (context) {
-                                  return FractionallySizedBox(
-                                    heightFactor: 0.7,
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Container(
-                                          width: 45,
-                                          height: 5,
-                                          //clipBehavior: Clip.hardEdge,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(16),
-                                              color: Colors.white),
-                                        ),
-                                        8.height,
-                                        Container(
-                                          clipBehavior:
-                                              Clip.antiAliasWithSaveLayer,
-                                          decoration: BoxDecoration(
-                                            color: context.cardColor,
-                                            borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(16),
-                                                topRight: Radius.circular(16)),
-                                          ),
-                                          child:
-                                              BidScreen(auctionId: widget.id),
-                                        ).expand(),
-                                      ],
-                                    ),
-                                  );
+                                  return LoadingDialog();
+                                });
+                            await auctionController
+                                .cancelRegistrationAuction(widget.id);
+                            if (auctionController.isUpdateSuccess.value) {
+                              Navigator.of(context).pop();
+                              Navigator.of(context).pop();
+                              await auctionController.fetchAuction(widget.id);
+                              await userController.getCurrentUser();
+                              toast('Cancel registration successfully');
+                            } else {
+                              Navigator.pop(context);
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (context) {
+                                  return FailDialog(
+                                      text:
+                                          'Failed to cancel registration this auction');
                                 },
                               );
-                            },
-                          )
-                        : Offstage(),
+                            }
+                          });
+                        })
+                    : auctionController.auction.value.startDate!.add(Duration(hours: 7)).isAfter(DateTime.now()) &&
+                            auctionController.auction.value.endRegisterAt!
+                                .add(Duration(hours: 7))
+                                .isBefore(DateTime.now())
+                        ? FloatingActionButton.extended(
+                            label: Text('Đã đăng ký', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+                            icon: Icon(Icons.check, color: Colors.green),
+                            backgroundColor: Colors.white,
+                            onPressed: () {})
+                        : auctionController.auction.value.startDate!.add(Duration(hours: 7)).isBefore(DateTime.now())
+                            ? FloatingActionButton.extended(
+                                label: Text(
+                                    auctionController
+                                        .auction.value.currentBidPrice!
+                                        .toStringAsFixed(0)
+                                        .formatNumberWithComma(),
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold)),
+                                icon: Image.asset(
+                                  ic_auction,
+                                  height: 30,
+                                  width: 30,
+                                  color: Colors.black,
+                                ),
+                                backgroundColor: Colors.white,
+                                onPressed: () {
+                                  showModalBottomSheet(
+                                    elevation: 0,
+                                    context: context,
+                                    isScrollControlled: true,
+                                    backgroundColor: Colors.transparent,
+                                    transitionAnimationController:
+                                        _animationController,
+                                    builder: (context) {
+                                      return FractionallySizedBox(
+                                        heightFactor: 0.7,
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Container(
+                                              width: 45,
+                                              height: 5,
+                                              //clipBehavior: Clip.hardEdge,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(16),
+                                                  color: Colors.white),
+                                            ),
+                                            8.height,
+                                            Container(
+                                              clipBehavior:
+                                                  Clip.antiAliasWithSaveLayer,
+                                              decoration: BoxDecoration(
+                                                color: context.cardColor,
+                                                borderRadius: BorderRadius.only(
+                                                    topLeft:
+                                                        Radius.circular(16),
+                                                    topRight:
+                                                        Radius.circular(16)),
+                                              ),
+                                              child: BidScreen(
+                                                  auctionId: widget.id),
+                                            ).expand(),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  );
+                                },
+                              )
+                            : Offstage(),
         body: Stack(
           children: [
             SingleChildScrollView(

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/screens/post/screens/audio_post_screen.dart';
 import 'package:socialv/screens/post/screens/image_screen.dart';
-import 'package:socialv/screens/post/screens/pdf_screen.dart';
 import 'package:socialv/screens/post/screens/video_post_screen.dart';
 
 import '../../../utils/cached_network_image.dart';
@@ -60,8 +59,6 @@ class _AlbumMediaComponentState extends State<AlbumMediaComponent> {
           AudioPostScreen(widget.mediaUrl.validate()).launch(context);
         } else if (widget.mediaType == MediaTypes.video) {
           VideoPostScreen(widget.mediaUrl.validate()).launch(context);
-        } else if (widget.mediaType == MediaTypes.doc) {
-          PDFScreen(docURl: widget.mediaUrl.validate()).launch(context);
         } else {
           //
         }

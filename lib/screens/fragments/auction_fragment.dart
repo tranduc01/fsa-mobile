@@ -115,7 +115,7 @@ class _AutionFragmentState extends State<AuctionFragment> {
                 ? language.somethingWentWrong
                 : language.noDataFound,
             onRetry: () {
-              auctionController.fetchAuctions(0);
+              auctionController.fetchAuctions(null);
             },
             retryText: '   ' + language.clickToRefresh + '   ',
           ).center(),
