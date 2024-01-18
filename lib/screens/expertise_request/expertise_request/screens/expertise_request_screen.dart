@@ -16,8 +16,12 @@ import 'create_expertise_request_screen.dart';
 class ExpertiseRequestScreen extends StatefulWidget {
   final ScrollController controller;
   final int? selectedIndex;
+  final int selectedTab;
 
-  const ExpertiseRequestScreen({required this.controller, this.selectedIndex});
+  const ExpertiseRequestScreen(
+      {required this.controller,
+      this.selectedIndex,
+      required this.selectedTab});
 
   @override
   State<ExpertiseRequestScreen> createState() => _ExpertiseRequestScreenState();
@@ -100,6 +104,7 @@ class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
         children: [
           DefaultTabController(
             length: 6,
+            initialIndex: widget.selectedTab,
             child: SingleChildScrollView(
               child: Column(
                 children: [

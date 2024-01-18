@@ -507,22 +507,6 @@ mixin _$AppStore on AppStoreBase, Store {
     });
   }
 
-  late final _$suggestedGroupsListAtom =
-      Atom(name: 'AppStoreBase.suggestedGroupsList', context: context);
-
-  @override
-  List<SuggestedGroup> get suggestedGroupsList {
-    _$suggestedGroupsListAtom.reportRead();
-    return super.suggestedGroupsList;
-  }
-
-  @override
-  set suggestedGroupsList(List<SuggestedGroup> value) {
-    _$suggestedGroupsListAtom.reportWrite(value, super.suggestedGroupsList, () {
-      super.suggestedGroupsList = value;
-    });
-  }
-
   late final _$notificationCountAtom =
       Atom(name: 'AppStoreBase.notificationCount', context: context);
 
@@ -904,7 +888,6 @@ displayFriendRequestBtn: ${displayFriendRequestBtn},
 isShopEnable: ${isShopEnable},
 recentMemberSearchList: ${recentMemberSearchList},
 suggestedUserList: ${suggestedUserList},
-suggestedGroupsList: ${suggestedGroupsList},
 notificationCount: ${notificationCount},
 isMultiSelect: ${isMultiSelect}
     ''';

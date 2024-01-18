@@ -245,11 +245,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                          userController.user.value.totalExpertiseRequestSent
-                              .validate()
-                              .toString(),
-                          style: boldTextStyle(size: 18)),
+                      Text('10', style: boldTextStyle(size: 18)),
                       4.height,
                       Text(language.expertiseRequestSent,
                           style: secondaryTextStyle(size: 12)),
@@ -328,6 +324,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                             onTap: () => ExpertiseRequestScreen(
                               controller: _controller,
                               selectedIndex: 2,
+                              selectedTab: 0,
                             ).launch(context),
                             child: Stack(
                               clipBehavior: Clip.none,
@@ -348,7 +345,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                         color: appColorPrimary,
                                         shape: BoxShape.circle),
                                     child: Text(
-                                      '10',
+                                      '3',
                                       style: boldTextStyle(
                                           color: Colors.white,
                                           size: 10,
@@ -359,12 +356,11 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                   ),
                                 ),
                                 Positioned(
-                                  bottom: -17, // Adjust the position as needed
+                                  bottom: -10, // Adjust the position as needed
                                   child: Container(
                                     width: 60,
                                     child: Text(
-                                      language
-                                          .waitingForApprovalExpertiseRequest,
+                                      'Chờ duyệt',
                                       style: boldTextStyle(
                                         color: Colors.black,
                                         size: 10,
@@ -380,6 +376,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                             onTap: () => ExpertiseRequestScreen(
                               controller: _controller,
                               selectedIndex: 3,
+                              selectedTab: 1,
                             ).launch(context),
                             child: Stack(
                               clipBehavior: Clip.none,
@@ -400,7 +397,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                         color: appColorPrimary,
                                         shape: BoxShape.circle),
                                     child: Text(
-                                      '10',
+                                      '2',
                                       style: boldTextStyle(
                                           color: Colors.white,
                                           size: 10,
@@ -431,6 +428,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                             onTap: () => ExpertiseRequestScreen(
                               controller: _controller,
                               selectedIndex: 0,
+                              selectedTab: 2,
                             ).launch(context),
                             child: Stack(
                               clipBehavior: Clip.none,
@@ -451,7 +449,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                         color: appColorPrimary,
                                         shape: BoxShape.circle),
                                     child: Text(
-                                      '10',
+                                      '2',
                                       style: boldTextStyle(
                                           color: Colors.white,
                                           size: 10,
@@ -478,6 +476,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                             onTap: () => ExpertiseRequestScreen(
                               controller: _controller,
                               selectedIndex: 1,
+                              selectedTab: 3,
                             ).launch(context),
                             child: Stack(
                               clipBehavior: Clip.none,
@@ -498,7 +497,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                         color: appColorPrimary,
                                         shape: BoxShape.circle),
                                     child: Text(
-                                      '10',
+                                      '2',
                                       style: boldTextStyle(
                                           color: Colors.white,
                                           size: 10,
@@ -525,6 +524,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                             onTap: () => ExpertiseRequestScreen(
                               controller: _controller,
                               selectedIndex: 4,
+                              selectedTab: 4,
                             ).launch(context),
                             child: Stack(
                               clipBehavior: Clip.none,
@@ -545,7 +545,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                         color: appColorPrimary,
                                         shape: BoxShape.circle),
                                     child: Text(
-                                      '10',
+                                      '0',
                                       style: boldTextStyle(
                                           color: Colors.white,
                                           size: 10,
@@ -572,6 +572,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                             onTap: () => ExpertiseRequestScreen(
                               controller: _controller,
                               selectedIndex: 5,
+                              selectedTab: 5,
                             ).launch(context),
                             child: Stack(
                               clipBehavior: Clip.none,
@@ -592,7 +593,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                         color: appColorPrimary,
                                         shape: BoxShape.circle),
                                     child: Text(
-                                      '10',
+                                      '2',
                                       style: boldTextStyle(
                                           color: Colors.white,
                                           size: 10,
@@ -605,7 +606,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                 Positioned(
                                   bottom: -10, // Adjust the position as needed
                                   child: Text(
-                                    'Canceled',
+                                    'Đã hủy',
                                     style: boldTextStyle(
                                       color: Colors.black,
                                       size: 10,

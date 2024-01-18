@@ -109,7 +109,7 @@ class _CreateExpertiseRequestComponentState
                           ),
                           validator: (value) {
                             if (value!.isEmpty) {
-                              return 'Please enter message';
+                              return 'Hãy nhập lời nhắn';
                             } else {
                               return null;
                             }
@@ -183,12 +183,12 @@ class _CreateExpertiseRequestComponentState
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                title: Text('Create Expertise Request'),
+                                title: Text('Tạo phiếu đánh giá'),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 content: Text(
-                                  'Would you like to redeem 100 points for submitting this request?',
+                                  'Bạn sẽ phải trả 100 điểm khi gửi yêu cầu này? Bạn có chắc chắn muốn tạo phiếu đánh giá?',
                                   style: TextStyle(fontFamily: 'Roboto'),
                                 ),
                                 actions: [
@@ -242,7 +242,7 @@ class _CreateExpertiseRequestComponentState
                                         Navigator.pop(context);
                                         Navigator.pop(context);
                                         Navigator.pop(context);
-                                        toast('Request Created Successfully');
+                                        toast('Tạo phiếu đánh giá thành công');
                                       } else {
                                         Navigator.pop(context);
                                         showDialog(
@@ -258,8 +258,8 @@ class _CreateExpertiseRequestComponentState
                                                                 .errorMessage
                                                                 .value ==
                                                             'NOT_ENOUGH_POINT'
-                                                    ? 'Create Request Failed'
-                                                    : 'Not Enough Point! Please Top Up Your Point');
+                                                    ? 'Tạo phiếu đánh giá thất bại'
+                                                    : 'Số điểm trong ví không đủ để tạo phiếu đánh giá');
                                           },
                                         );
                                       }
@@ -446,7 +446,7 @@ class _CreateExpertiseRequestComponentState
                                 ? Colors.white30
                                 : Colors.white,
                           ),
-                          child: Text('IMAGE'),
+                          child: Text('Chụp ảnh'),
                         ),
                       ),
                     ),
@@ -469,7 +469,7 @@ class _CreateExpertiseRequestComponentState
                                 ? Colors.white
                                 : Colors.white30,
                           ),
-                          child: Text('VIDEO'),
+                          child: Text('Quay video'),
                         ),
                       ),
                     ),

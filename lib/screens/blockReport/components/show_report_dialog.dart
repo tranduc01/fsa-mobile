@@ -3,7 +3,6 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/components/loading_widget.dart';
 import 'package:socialv/main.dart';
-import 'package:socialv/models/dashboard_api_response.dart';
 import 'package:socialv/utils/app_constants.dart';
 
 class ShowReportDialog extends StatefulWidget {
@@ -64,33 +63,6 @@ class _ShowReportDialogState extends State<ShowReportDialog> {
                   ).paddingSymmetric(horizontal: 16),
                 ),
                 16.height,
-                ListView.builder(
-                  shrinkWrap: true,
-                  primary: false,
-                  physics: NeverScrollableScrollPhysics(),
-                  //itemCount: reportTypes.validate().length,
-                  itemBuilder: (context, index) {
-                    ReportType data = ReportType();
-
-                    return GestureDetector(
-                      onTap: () {
-                        if (!appStore.isLoading) {
-                          selectedIndex = index;
-                          setState(() {});
-                        }
-                      },
-                      child: Container(
-                        color: selectedIndex == index
-                            ? context.primaryColor.withAlpha(40)
-                            : context.cardColor,
-                        padding:
-                            EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                        child: Text(data.label.validate(),
-                            style: boldTextStyle(size: 14)),
-                      ),
-                    );
-                  },
-                ),
                 Row(
                   children: [
                     AppButton(
