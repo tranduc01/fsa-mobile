@@ -82,7 +82,7 @@ class _CreateExpertiseRequestResultComponentState
                 children: [
                   24.height,
                   Text(
-                    'Create Expertise Request Result',
+                    'Tạo phiếu kết quả',
                     style: primaryTextStyle(
                         color: appStore.isDarkMode ? bodyDark : bodyWhite,
                         size: 18),
@@ -155,6 +155,12 @@ class _CreateExpertiseRequestResultComponentState
                                           context.scaffoldBackgroundColor,
                                       label: evaluationCriteria.name,
                                     ),
+                                    // validator: (value) {
+                                    //   if (value!.isEmpty) {
+                                    //     return 'Please enter ${evaluationCriteria.name}';
+                                    //   }
+                                    //   return null;
+                                    // },
                                     onChanged: (value) {
                                       texts.update(
                                           evaluationCriteria.id!, (v) => value);
@@ -227,14 +233,13 @@ class _CreateExpertiseRequestResultComponentState
                       expertiseRequestController
                               .expertiseRequest.value.status ==
                           ExpertiseRequestStatus.Doing.index)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    Column(
                       children: [
                         Visibility(
                           visible: isTextModified,
                           child: appButton(
-                            width: MediaQuery.of(context).size.width * 0.4,
-                            text: 'Save',
+                            width: MediaQuery.of(context).size.width,
+                            text: 'Lưu',
                             color: Colors.white,
                             shapeBorder: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
@@ -290,8 +295,8 @@ class _CreateExpertiseRequestResultComponentState
                         Visibility(
                           visible: !isTextModified,
                           child: appButton(
-                            width: MediaQuery.of(context).size.width * 0.4,
-                            text: 'Publish',
+                            width: MediaQuery.of(context).size.width,
+                            text: 'Gửi kết quả',
                             onTap: () async {
                               hideKeyboard(context);
                               if (albumKey.currentState!.validate()) {

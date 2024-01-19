@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
-import 'package:giphy_get/giphy_get.dart';
 import 'package:html/parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -321,25 +320,6 @@ void setStatusBarColorBasedOnTheme() {
 
 Future<bool> get isIqonicProduct async =>
     await getPackageName() == APP_PACKAGE_NAME;
-
-Future<GiphyGif?> selectGif({required BuildContext context}) async {
-  GiphyGif? gif;
-
-  await GiphyGet.getGif(
-    context: context,
-    apiKey: getStringAsync(SharePreferencesKey.GIPHY_API_KEY),
-    tabColor: context.primaryColor,
-    debounceTimeInMilliseconds: 350,
-    showEmojis: false,
-    showStickers: false,
-  ).then((value) {
-    if (value != null) {
-      gif = value;
-    }
-  });
-
-  return gif;
-}
 
 String socialvFormatTime(int timestamp) {
   int difference = DateTime.now().millisecondsSinceEpoch - timestamp;

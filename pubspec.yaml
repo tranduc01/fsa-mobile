@@ -26,12 +26,10 @@ dependencies:
   file_picker: ^6.0.0
   photo_view: ^0.14.0
   appinio_video_player: ^1.2.1
-  giphy_get: ^3.4.0
   video_player: ^2.6.1
   visibility_detector: ^0.4.0+2
   camera:
   extended_image: ^8.1.1
-  animated_bottom_navigation_bar:
   
   #Date CountDown
   date_count_down:
@@ -44,7 +42,6 @@ dependencies:
   html: ^0.15.3
 
   flutter_html:
-  flutter_html_table: ^3.0.0-beta.2
   # google_mobile_ads: ^3.0.0
 
   # State Management Technique
@@ -74,6 +71,7 @@ dependencies:
   #SlideShow
   flutter_image_slideshow: any
   carousel_slider: ^4.2.1
+  
   # Story
   numberpicker: 
   input_quantity:

@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:socialv/controllers/system_config_controller.dart';
 import 'package:socialv/controllers/user_controller.dart';
 import 'package:socialv/models/transaction/transaction_log.dart';
 import 'package:socialv/models/withdraw/withdraw.dart';
@@ -48,6 +49,7 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
   late WithdrawController withdrawController = Get.put(WithdrawController());
   late TransactionLogController transactionController =
       Get.put(TransactionLogController());
+  late SystemConfigController systemConfigController = Get.find();
 
   final List<Color> colorList = [
     Colors.blue.withOpacity(0.5),
@@ -353,15 +355,52 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
                                                           validator: (value) {
                                                             if (value!
                                                                 .isEmpty) {
-                                                              return 'Please enter amount';
+                                                              return 'Hãy nhập số điểm';
                                                             }
+
+                                                            var minAmount = systemConfigController
+                                                                .systemConfigs
+                                                                .firstWhere(
+                                                                    (element) =>
+                                                                        element
+                                                                            .key ==
+                                                                        'WithdrawRequest.MinPoint')
+                                                                .value;
+                                                            if (int.parse(
+                                                                    value) <
+                                                                int.parse(
+                                                                    minAmount!)) {
+                                                              return 'Số điểm rút tối thiểu là ' +
+                                                                  minAmount
+                                                                      .formatNumberWithComma() +
+                                                                  ' điểm';
+                                                            }
+
+                                                            var maxAmount = systemConfigController
+                                                                .systemConfigs
+                                                                .firstWhere(
+                                                                    (element) =>
+                                                                        element
+                                                                            .key ==
+                                                                        'WithdrawRequest.MaxPoint')
+                                                                .value;
+                                                            if (int.parse(
+                                                                    value) >
+                                                                int.parse(
+                                                                    maxAmount!)) {
+                                                              return 'Số điểm rút tối thiểu là ' +
+                                                                  maxAmount
+                                                                      .formatNumberWithComma() +
+                                                                  ' điểm';
+                                                            }
+
                                                             if (int.parse(
                                                                     value) >
                                                                 userController
                                                                     .user
                                                                     .value
                                                                     .totalPoint!) {
-                                                              return 'Not enough points';
+                                                              return 'Số dư không khả dụng';
                                                             }
                                                             return null;
                                                           },

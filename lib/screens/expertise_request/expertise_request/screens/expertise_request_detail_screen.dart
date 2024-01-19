@@ -1110,7 +1110,7 @@ class _ExpertiseRequestDetailScreenState
                                   .expertiseRequest.value.status ==
                               ExpertiseRequestStatus.Doing.index
                       ? FloatingActionButton.extended(
-                          label: Text('Không thực hiện đánh giá này',
+                          label: Text('Ngưng thực hiện',
                               style: TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold)),

@@ -5,6 +5,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/app_theme.dart';
+import 'package:socialv/controllers/system_config_controller.dart';
 import 'package:socialv/controllers/user_controller.dart';
 import 'package:socialv/language/app_localizations.dart';
 import 'package:socialv/language/languages.dart';
@@ -33,6 +34,7 @@ void main() async {
 
   exitFullScreen();
   Get.put(UserController());
+  Get.put(SystemConfigController());
   runApp(const MyApp());
 }
 

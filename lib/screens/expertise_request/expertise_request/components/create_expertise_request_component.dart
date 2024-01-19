@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:socialv/controllers/system_config_controller.dart';
 import 'package:socialv/screens/common/fail_dialog.dart';
 import 'package:socialv/screens/common/loading_dialog.dart';
 import 'package:video_player/video_player.dart';
@@ -47,6 +48,7 @@ class _CreateExpertiseRequestComponentState
   late ExpertiseRequestController expertiseRequestController =
       Get.put(ExpertiseRequestController());
   late UserController userController = Get.find();
+  late SystemConfigController systemConfigController = Get.find();
 
   @override
   void initState() {
@@ -179,102 +181,114 @@ class _CreateExpertiseRequestComponentState
                       onTap: () async {
                         hideKeyboard(context);
                         if (albumKey.currentState!.validate()) {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text('Tạo phiếu đánh giá'),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                content: Text(
-                                  'Bạn sẽ phải trả 100 điểm khi gửi yêu cầu này? Bạn có chắc chắn muốn tạo phiếu đánh giá?',
-                                  style: TextStyle(fontFamily: 'Roboto'),
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text(language.cancel,
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontFamily: 'Roboto',
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold)),
+                          var pointCostPerRequest = systemConfigController
+                              .systemConfigs
+                              .firstWhere((element) =>
+                                  element.key ==
+                                  'ExpertiseRequest.PointCostPerRequest')
+                              .value;
+                          if (mediaImageList.isEmpty &&
+                              mediaVideoList.isEmpty) {
+                            toast('Hãy chọn ít nhất 1 ảnh hoặc video');
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('Tạo phiếu đánh giá'),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
                                   ),
-                                  TextButton(
-                                    style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.all(
-                                                context.primaryColor),
-                                        shape: MaterialStateProperty.all(
-                                            RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        20)))),
-                                    onPressed: () async {
-                                      showDialog(
-                                        context: context,
-                                        barrierDismissible: false,
-                                        builder: (context) {
-                                          return LoadingDialog();
-                                        },
-                                      );
-
-                                      var mediaList = [
-                                        ...mediaImageList,
-                                        ...mediaVideoList
-                                      ];
-
-                                      await expertiseRequestController
-                                          .createExpertiseRequest(
-                                        discCont.text,
-                                        mediaList,
-                                      );
-
-                                      if (expertiseRequestController
-                                          .isCreateSuccess.value) {
-                                        await expertiseRequestController
-                                            .fetchExpetiseRequests(2);
-                                        await userController.getCurrentUser();
-
-                                        Navigator.pop(context);
-                                        Navigator.pop(context);
-                                        Navigator.pop(context);
-                                        toast('Tạo phiếu đánh giá thành công');
-                                      } else {
-                                        Navigator.pop(context);
+                                  content: Text(
+                                    'Bạn sẽ phải trả $pointCostPerRequest điểm khi gửi yêu cầu này? Bạn có chắc chắn muốn tạo phiếu đánh giá?',
+                                    style: TextStyle(fontFamily: 'Roboto'),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text(language.cancel,
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontFamily: 'Roboto',
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold)),
+                                    ),
+                                    TextButton(
+                                      style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                                  context.primaryColor),
+                                          shape: MaterialStateProperty.all(
+                                              RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          20)))),
+                                      onPressed: () async {
                                         showDialog(
                                           context: context,
                                           barrierDismissible: false,
                                           builder: (context) {
-                                            return FailDialog(
-                                                text: expertiseRequestController
-                                                            .errorMessage
-                                                            .value
-                                                            .isEmptyOrNull &&
-                                                        expertiseRequestController
-                                                                .errorMessage
-                                                                .value ==
-                                                            'NOT_ENOUGH_POINT'
-                                                    ? 'Tạo phiếu đánh giá thất bại'
-                                                    : 'Số điểm trong ví không đủ để tạo phiếu đánh giá');
+                                            return LoadingDialog();
                                           },
                                         );
-                                      }
-                                    },
-                                    child: Text(language.send,
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontFamily: 'Roboto',
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold)),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
+
+                                        var mediaList = [
+                                          ...mediaImageList,
+                                          ...mediaVideoList
+                                        ];
+
+                                        await expertiseRequestController
+                                            .createExpertiseRequest(
+                                          discCont.text,
+                                          mediaList,
+                                        );
+
+                                        if (expertiseRequestController
+                                            .isCreateSuccess.value) {
+                                          await expertiseRequestController
+                                              .fetchExpetiseRequests(2);
+                                          await userController.getCurrentUser();
+
+                                          Navigator.pop(context);
+                                          Navigator.pop(context);
+                                          Navigator.pop(context);
+                                          toast(
+                                              'Tạo phiếu đánh giá thành công');
+                                        } else {
+                                          Navigator.pop(context);
+                                          showDialog(
+                                            context: context,
+                                            barrierDismissible: false,
+                                            builder: (context) {
+                                              return FailDialog(
+                                                  text: expertiseRequestController
+                                                              .errorMessage
+                                                              .value
+                                                              .isEmptyOrNull &&
+                                                          expertiseRequestController
+                                                                  .errorMessage
+                                                                  .value ==
+                                                              'NOT_ENOUGH_POINT'
+                                                      ? 'Tạo phiếu đánh giá thất bại'
+                                                      : 'Số điểm trong ví không đủ để tạo phiếu đánh giá');
+                                            },
+                                          );
+                                        }
+                                      },
+                                      child: Text(language.send,
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontFamily: 'Roboto',
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold)),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
                         }
                       },
                       context: context,

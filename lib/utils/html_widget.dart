@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/components/table_view_widget.dart';
-import 'package:socialv/components/vimeo_embed_widget.dart';
 import 'package:socialv/screens/post/screens/image_screen.dart';
 import 'package:socialv/utils/app_constants.dart';
 
@@ -197,29 +196,11 @@ class HtmlWidget extends StatelessWidget {
       },
       extensions: [
         //ImageExtension(),
-        TagExtension(
-          tagsToExtend: {'embed'},
-          builder: (extensionContext) {
-            var videoLink = extensionContext.parser.htmlData.text
-                .splitBetween('<embed>', '</embed');
 
-            if (videoLink.contains('vimeo')) {
-              return VimeoEmbedWidget(videoLink.replaceAll('<br>', ''));
-            } else {
-              return Offstage();
-            }
-          },
-        ),
         TagExtension(
           tagsToExtend: {'figure'},
           builder: (extensionContext) {
-            if (extensionContext.innerHtml.contains('vimeo')) {
-              return VimeoEmbedWidget(extensionContext.innerHtml
-                  .splitBetween(
-                      '<div class="wp-block-embed__wrapper">', "</div>")
-                  .replaceAll('<br>', '')
-                  .splitAfter('com/'));
-            } else if (extensionContext.innerHtml.contains('audio')) {
+            if (extensionContext.innerHtml.contains('audio')) {
               //return AudioPostWidget(postString: extensionContext.innerHtml);
             } else if (extensionContext.innerHtml.contains('twitter')) {
               //String t = extensionContext.innerHtml.splitAfter('<div class="wp-block-embed__wrapper">').splitBefore('</div>');
