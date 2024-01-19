@@ -4,19 +4,13 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
-import 'package:giphy_get/giphy_get.dart';
 import 'package:html/parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:socialv/main.dart';
-import 'package:socialv/models/groups/group_response.dart';
-import 'package:socialv/models/lms/quiz_answers.dart';
 import 'package:socialv/models/members/member_response.dart';
 import 'package:socialv/models/posts/media_model.dart';
-import 'package:socialv/models/story/common_story_model.dart';
-import 'package:socialv/network/rest_apis.dart';
 
 import 'app_constants.dart';
 
@@ -134,38 +128,34 @@ Widget appButton({
   );
 }
 
-Future<File?> getImageSource(
+Future<List<File>> getMediasSource(
     {bool isCamera = true, bool isVideo = false}) async {
   final picker = ImagePicker();
 
-  XFile? pickedImage;
-  if (isVideo) {
-    await picker
-        .pickVideo(source: isCamera ? ImageSource.camera : ImageSource.gallery)
-        .then((value) {
-      pickedImage = value;
-    }).catchError((e) {
-      log('Error: ${e.toString()}');
-    });
-  } else {
-    pickedImage = await picker.pickImage(
-        source: isCamera ? ImageSource.camera : ImageSource.gallery);
-  }
+  List<File> files = [];
 
-  return File(pickedImage!.path);
+  // if (isVideo) {
+  //   await picker
+  //       .pickVideo(source: isCamera ? ImageSource.camera : ImageSource.gallery)
+  //       .then((value) {
+  //     pickedImage = value;
+  //   }).catchError((e) {
+  //     log('Error: ${e.toString()}');
+  //   });
+  // } else {
+  //   pickedImage = await picker.pickImage(
+  //       source: isCamera ? ImageSource.camera : ImageSource.gallery);
+  // }
+
+  await picker.pickMultipleMedia().then((value) => value.forEach((element) {
+        files.add(File(element.path));
+      }));
+
+  return files;
 }
 
 String parseHtmlString(String? htmlString) {
   return parse(parse(htmlString).body!.text).documentElement!.text;
-}
-
-void onShareTap(BuildContext context) async {
-  if (isAndroid) {
-    Share.share(
-        'Share $APP_NAME app $playStoreBaseURL${await getPackageName()}');
-  } else {
-    Share.share('Share $APP_NAME app $IOS_APP_LINK');
-  }
 }
 
 String getFormattedDate(String date) =>
@@ -178,26 +168,6 @@ List<MemberResponse> getMemberListPref() {
         .map((i) => MemberResponse.fromJson(i))
         .toList();
   return [];
-}
-
-List<GroupResponse> getGroupListPref() {
-  if (getStringAsync(SharePreferencesKey.RECENT_SEARCH_GROUPS).isNotEmpty)
-    return (json.decode(
-            getStringAsync(SharePreferencesKey.RECENT_SEARCH_GROUPS)) as List)
-        .map((i) => GroupResponse.fromJson(i))
-        .toList();
-  return [];
-}
-
-List<QuizAnswers> getLmsQuizListPref() {
-  if (getStringAsync(SharePreferencesKey.LMS_QUIZ_LIST).isNotEmpty) {
-    return (json.decode(getStringAsync(SharePreferencesKey.LMS_QUIZ_LIST))
-            as List)
-        .map((i) => QuizAnswers.fromJson(i))
-        .toList();
-  } else {
-    return [];
-  }
 }
 
 class TabIndicator extends Decoration {
@@ -329,36 +299,6 @@ void ifNotTester(VoidCallback callback) {
   }
 }
 
-Future<List<MediaSourceModel>> getMultipleImages() async {
-  FilePickerResult? filePickerResult;
-  List<MediaSourceModel> imgList = [];
-  filePickerResult = await FilePicker.platform
-      .pickFiles(allowMultiple: true, type: FileType.media);
-  String mediaType = MediaTypes.photo;
-
-  if (filePickerResult != null) {
-    filePickerResult.files.forEach((element) {
-      log('element: ${element.path.validate().split("/").last.split(".").last}');
-
-      if (allowedVideoExtensions.any((e) =>
-          e == element.path.validate().split("/").last.split(".").last)) {
-        mediaType = MediaTypes.video;
-      }
-
-      if (element.path.validate().split("/").last.split(".").last.isNotEmpty) {
-        imgList.add(MediaSourceModel(
-          mediaFile: File(element.path!),
-          mediaType: mediaType,
-          extension: element.path.validate().split("/").last.split(".").last,
-        ));
-      } else {
-        toast('Cannot add this file');
-      }
-    });
-  }
-  return imgList;
-}
-
 String timeStampToDate(int time) {
   final DateTime input = DateTime.fromMillisecondsSinceEpoch(time * 1000);
 
@@ -380,25 +320,6 @@ void setStatusBarColorBasedOnTheme() {
 
 Future<bool> get isIqonicProduct async =>
     await getPackageName() == APP_PACKAGE_NAME;
-
-Future<GiphyGif?> selectGif({required BuildContext context}) async {
-  GiphyGif? gif;
-
-  await GiphyGet.getGif(
-    context: context,
-    apiKey: getStringAsync(SharePreferencesKey.GIPHY_API_KEY),
-    tabColor: context.primaryColor,
-    debounceTimeInMilliseconds: 350,
-    showEmojis: false,
-    showStickers: false,
-  ).then((value) {
-    if (value != null) {
-      gif = value;
-    }
-  });
-
-  return gif;
-}
 
 String socialvFormatTime(int timestamp) {
   int difference = DateTime.now().millisecondsSinceEpoch - timestamp;
@@ -474,33 +395,6 @@ String countYears(int difference) {
       (count > 1 ? ' ${language.years}' : ' ${language.year}');
 }
 
-// void initializeOneSignal() async {
-//   OneSignal.shared
-//       .setAppId(
-//           getStringAsync(ONESIGNAL_APP_ID, defaultValue: ONESIGNAL_APP_ID))
-//       .then((value) async {
-//     OneSignal.shared.setNotificationOpenedHandler((openedResult) {
-//       //
-//     });
-
-//     OneSignal.shared.setNotificationWillShowInForegroundHandler(
-//         (OSNotificationReceivedEvent event) {
-//       event.complete(event.notification);
-//     });
-
-//     OneSignal.shared.consentGranted(true);
-//     OneSignal.shared.promptUserForPushNotificationPermission();
-
-//     final status = await OneSignal.shared.getDeviceState();
-
-//     log('--------------------------------');
-//     log(status?.userId.validate());
-//     if (status!.userId.validate().isNotEmpty)
-//       setValue(
-//           SharePreferencesKey.ONE_SIGNAL_PLAYER_ID, status.userId.validate());
-//   });
-// }
-
 String getPostContent(String? postContent) {
   String content = '';
 
@@ -519,31 +413,4 @@ String getPostContent(String? postContent) {
       .replaceAll('\n', '');
 
   return content;
-}
-
-Future<void> activeUser() async {
-  await updateActiveStatus().then((value) {
-    Future.delayed(Duration(minutes: updateActiveStatusDuration), () {
-      activeUser();
-    });
-  }).catchError((e) {
-    log('Error: ${e.toString()}');
-    Future.delayed(Duration(minutes: updateActiveStatusDuration), () {
-      activeUser();
-    });
-  });
-}
-
-Future<void> getNotificationCount() async {
-  await notificationCount().then((value) {
-    appStore.setNotificationCount(value.notificationCount.validate());
-    Future.delayed(Duration(minutes: updateActiveStatusDuration), () {
-      getNotificationCount();
-    });
-  }).catchError((e) {
-    log('Error: ${e.toString()}');
-    Future.delayed(Duration(minutes: updateActiveStatusDuration), () {
-      getNotificationCount();
-    });
-  });
 }

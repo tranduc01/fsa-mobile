@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:camera/camera.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 import 'package:flutter/material.dart';
@@ -18,6 +21,8 @@ import '../../../models/gallery/albums.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/common.dart';
 import '../../../utils/constants.dart';
+import 'package:path/path.dart' as path;
+import '../../../utils/images.dart';
 import '../../post/components/show_selected_media_component.dart';
 
 // ignore: must_be_immutable
@@ -32,12 +37,18 @@ class AlbumUploadScreen extends StatefulWidget {
 }
 
 class _AlbumUploadScreenState extends State<AlbumUploadScreen> {
-  List<PostMedia> mediaList = [];
+  List<PostMedia> mediaImageList = [];
+  List<PostMedia> mediaVideoList = [];
   late GalleryController galleryController = Get.put(GalleryController());
+  late CameraController _cameraController;
+  bool _isVideoCameraSelected = false;
+  bool _isRecordingInProgress = false;
+
   @override
   void initState() {
     super.initState();
-    mediaList.clear();
+    mediaImageList.clear();
+    mediaVideoList.clear();
   }
 
   Future<void> onSelectMedia() async {
@@ -52,26 +63,215 @@ class _AlbumUploadScreenState extends State<AlbumUploadScreen> {
 
     if (file != null) {
       if (file == FileTypes.CAMERA) {
-        appStore.setLoading(true);
-        await getImageSource(isCamera: true, isVideo: false).then((value) {
-          appStore.setLoading(false);
-          mediaList.add(PostMedia(file: value));
-          setState(() {});
-        }).catchError((e) {
-          log('Error: ${e.toString()}');
-          appStore.setLoading(false);
-        });
+        await onCaptureImage();
+        _cameraController.dispose();
       } else {
         appStore.setLoading(true);
-        await getImageSource(isCamera: false, isVideo: false).then((value) {
+        await getMediasSource(isCamera: false, isVideo: false).then((value) {
           appStore.setLoading(false);
-          mediaList.add(PostMedia(file: value));
+
+          value.forEach(
+            (element) {
+              path.extension(element.path) == '.mp4'
+                  ? mediaVideoList.add(PostMedia(
+                      file: element, link: path.extension(element.path)))
+                  : mediaImageList.add(PostMedia(
+                      file: element, link: path.extension(element.path)));
+            },
+          );
           setState(() {});
         }).catchError((e) {
           log('Error: ${e.toString()}');
           appStore.setLoading(false);
         });
       }
+    }
+  }
+
+  Future<void> onCaptureImage() async {
+    //appStore.setLoading(true);
+
+    final cameras = await availableCameras();
+    final camera = cameras[0];
+    _cameraController = CameraController(
+      camera,
+      ResolutionPreset.high,
+      enableAudio: false,
+    );
+
+    await _cameraController.initialize();
+
+    await showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => WillPopScope(
+          onWillPop: () {
+            _cameraController.dispose();
+            return Future.value(true);
+          },
+          child: Stack(
+            children: [
+              Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                child: CameraPreview(_cameraController),
+              ),
+              Positioned(
+                top: 30,
+                left: 10,
+                child: Material(
+                  type: MaterialType.transparency,
+                  child: IconButton(
+                    icon: Icon(Icons.arrow_back, color: Colors.white),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+              ),
+              Positioned(
+                bottom: 100,
+                left: 0,
+                right: 0,
+                child: _isVideoCameraSelected
+                    ? GestureDetector(
+                        child: Icon(
+                          _isRecordingInProgress
+                              ? Icons.stop_circle_outlined
+                              : Icons.fiber_manual_record_outlined,
+                          color: Colors.red,
+                          size: 50,
+                        ),
+                        onTap: () async {
+                          if (_isRecordingInProgress) {
+                            var value = await stopVideoRecording();
+                            mediaVideoList
+                                .add(PostMedia(file: File(value!.path)));
+                            setState(() {
+                              _isRecordingInProgress = false;
+                            });
+                            Navigator.pop(context);
+                          } else {
+                            startVideoRecording();
+                            setState(() {
+                              _isRecordingInProgress = true;
+                            });
+                          }
+                        },
+                      )
+                    : GestureDetector(
+                        child: Image.asset(
+                          ic_camera_post,
+                          height: 50,
+                          width: 50,
+                        ),
+                        onTap: () async {
+                          var value = await _cameraController.takePicture();
+                          mediaImageList.add(PostMedia(file: File(value.path)));
+                          setState(() {});
+                          Navigator.pop(context);
+                        },
+                      ),
+              ),
+              Positioned(
+                bottom: 30,
+                left: 0,
+                right: 0,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          left: 8.0,
+                          right: 4.0,
+                        ),
+                        child: TextButton(
+                          onPressed: _isRecordingInProgress
+                              ? null
+                              : () {
+                                  if (_isVideoCameraSelected) {
+                                    setState(() {
+                                      _isVideoCameraSelected = false;
+                                    });
+                                  }
+                                },
+                          style: TextButton.styleFrom(
+                            foregroundColor: _isVideoCameraSelected
+                                ? Colors.black54
+                                : Colors.black,
+                            backgroundColor: _isVideoCameraSelected
+                                ? Colors.white30
+                                : Colors.white,
+                          ),
+                          child: Text('IMAGE'),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 4.0, right: 8.0),
+                        child: TextButton(
+                          onPressed: () {
+                            if (!_isVideoCameraSelected) {
+                              setState(() {
+                                _isVideoCameraSelected = true;
+                              });
+                            }
+                          },
+                          style: TextButton.styleFrom(
+                            foregroundColor: _isVideoCameraSelected
+                                ? Colors.black
+                                : Colors.black54,
+                            backgroundColor: _isVideoCameraSelected
+                                ? Colors.white
+                                : Colors.white30,
+                          ),
+                          child: Text('VIDEO'),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> startVideoRecording() async {
+    final CameraController? cameraController = _cameraController;
+    if (_cameraController.value.isRecordingVideo) {
+      // A recording has already started, do nothing.
+      return;
+    }
+    try {
+      await cameraController!.startVideoRecording();
+      setState(() {
+        _isRecordingInProgress = true;
+        print(_isRecordingInProgress);
+      });
+    } on CameraException catch (e) {
+      print('Error starting to record video: $e');
+    }
+  }
+
+  Future<XFile?> stopVideoRecording() async {
+    if (!_cameraController.value.isRecordingVideo) {
+      // Recording is already is stopped state
+      return null;
+    }
+    try {
+      XFile file = await _cameraController.stopVideoRecording();
+      setState(() {
+        _isRecordingInProgress = false;
+        print(_isRecordingInProgress);
+      });
+      return file;
+    } on CameraException catch (e) {
+      print('Error stopping video recording: $e');
+      return null;
     }
   }
 
@@ -82,6 +282,7 @@ class _AlbumUploadScreenState extends State<AlbumUploadScreen> {
 
   @override
   void dispose() {
+    _cameraController.dispose();
     super.dispose();
   }
 
@@ -140,28 +341,28 @@ class _AlbumUploadScreenState extends State<AlbumUploadScreen> {
                         ],
                       ),
                     ),
-                    // Positioned(
-                    //   child: Icon(Icons.cancel_outlined,
-                    //           color: appColorPrimary, size: 18)
-                    //       .onTap(() {
-                    //     finish(context);
-                    //     finish(context);
-                    //   },
-                    //           splashColor: Colors.transparent,
-                    //           highlightColor: Colors.transparent),
-                    //   right: 6,
-                    //   top: 6,
-                    // ),
                   ],
                 ).paddingAll(16),
-                if (mediaList.isNotEmpty)
+                if (mediaImageList.isNotEmpty)
                   ShowSelectedMediaComponent(
-                    mediaList: mediaList,
+                    mediaList: mediaImageList,
                     mediaType: MediaModel(
                         type: 'photo', title: 'Photo', isActive: true),
-                    videoController: List.generate(mediaList.length, (index) {
-                      return VideoPlayerController.networkUrl(
-                          Uri.parse(mediaList[index].file!.path.validate()));
+                    videoController:
+                        List.generate(mediaImageList.length, (index) {
+                      return VideoPlayerController.networkUrl(Uri.parse(
+                          mediaImageList[index].file!.path.validate()));
+                    }),
+                  ),
+                if (mediaVideoList.isNotEmpty)
+                  ShowSelectedMediaComponent(
+                    mediaList: mediaVideoList,
+                    mediaType: MediaModel(
+                        type: 'video', title: 'Photo', isActive: true),
+                    videoController:
+                        List.generate(mediaVideoList.length, (index) {
+                      return VideoPlayerController.networkUrl(Uri.parse(
+                          mediaVideoList[index].file!.path.validate()));
                     }),
                   ),
                 8.height,
@@ -176,8 +377,10 @@ class _AlbumUploadScreenState extends State<AlbumUploadScreen> {
                           builder: (context) {
                             return LoadingDialog();
                           });
+
+                      var mediaList = [...mediaImageList, ...mediaVideoList];
                       await galleryController.updateAlbum(
-                          widget.album!, mediaList, null);
+                          widget.album!, mediaList, null, null);
 
                       if (galleryController.isUpdateSuccess.value) {
                         galleryController.fetchAlbum(widget.album!.id!);

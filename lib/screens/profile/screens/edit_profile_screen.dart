@@ -9,9 +9,7 @@ import 'package:socialv/components/loading_widget.dart';
 import 'package:socialv/controllers/user_controller.dart';
 import 'package:socialv/main.dart';
 import 'package:socialv/models/members/profile_field_model.dart';
-import 'package:socialv/network/rest_apis.dart';
 import 'package:socialv/screens/common/loading_dialog.dart';
-import 'package:socialv/screens/profile/components/expansion_body.dart';
 import 'package:socialv/utils/app_constants.dart';
 import 'package:socialv/utils/cached_network_image.dart';
 
@@ -62,7 +60,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Future<void> getFiledList() async {
     //appStore.setLoading(true);
-    isDetailChange = false;
+    //isDetailChange = false;
 
     fieldList = fieldList;
     setState(() {});
@@ -72,32 +70,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     ifNotTester(() async {
       if (nameCont.text.isNotEmpty && nameCont.text != appStore.loginFullName) {
         appStore.setLoading(true);
-
-        Map request = {"name": nameCont.text};
-
-        await updateLoginUser(request: request).then((value) {
-          appStore.setLoginFullName(value.name.validate());
-          toast(language.profileUpdatedSuccessfully, print: true);
-
-          if (avatarImage == null) {
-            appStore.setLoading(false);
-            finish(context, true);
-          }
-        }).catchError((e) {
-          appStore.setLoading(false);
-          toast(e.toString(), print: true);
-        });
       }
 
       if (avatarImage != null) {
         appStore.setLoading(true);
-        await attachMemberImage(id: appStore.loginUserId, image: avatarImage)
-            .then((value) {
-          init();
-        }).catchError((e) {
-          appStore.setLoading(false);
-          toast(language.somethingWentWrong);
-        });
       }
     });
   }
@@ -211,10 +187,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                         );
 
                                         if (file != null) {
-                                          avatarImage = await getImageSource(
-                                              isCamera: file == FileTypes.CAMERA
-                                                  ? true
-                                                  : false);
+                                          // avatarImage = await getImageSource(
+                                          //     isCamera: file == FileTypes.CAMERA
+                                          //         ? true
+                                          //         : false);
                                           setState(() {});
                                           appStore.setLoading(false);
                                         }
@@ -258,44 +234,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         '${language.profile} ${language.settings}',
                         style: boldTextStyle(color: context.primaryColor),
                       ).paddingAll(16),
-                    if (fieldList.isNotEmpty)
-                      Theme(
-                        data: Theme.of(context).copyWith(useMaterial3: false),
-                        child: ExpansionPanelList.radio(
-                          elevation: 0,
-                          children: fieldList.map<ExpansionPanelRadio>(
-                            (e) {
-                              return ExpansionPanelRadio(
-                                value: e.groupId.validate(),
-                                canTapOnHeader: true,
-                                backgroundColor: context.cardColor,
-                                headerBuilder:
-                                    (BuildContext context, bool isExpanded) {
-                                  if (isExpanded) {
-                                    group = e;
-                                  }
-                                  return ListTile(
-                                    title: Text(
-                                      e.groupName.validate(),
-                                      style: primaryTextStyle(
-                                          color: isExpanded
-                                              ? context.primaryColor
-                                              : Colors.black),
-                                    ),
-                                  );
-                                },
-                                body: ExpansionBody(
-                                  group: e,
-                                  callback: () {
-                                    appStore.setLoading(true);
-                                    getFiledList();
-                                  },
-                                ),
-                              );
-                            },
-                          ).toList(),
-                        ),
-                      ),
                     60.height,
                   ],
                 ),

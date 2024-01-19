@@ -20,6 +20,7 @@ class _AutionFragmentState extends State<AuctionFragment> {
   late AuctionController auctionController = Get.put(AuctionController());
   int mPage = 1;
   bool mIsLastPage = false;
+
   @override
   void initState() {
     auctionController.fetchAuctions(null);
@@ -29,7 +30,7 @@ class _AutionFragmentState extends State<AuctionFragment> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 4,
+      length: 5,
       child: Column(
         children: [
           Container(
@@ -60,7 +61,12 @@ class _AutionFragmentState extends State<AuctionFragment> {
                 )),
                 Tab(
                   child: Text(
-                    'Ended',
+                    language.auctionEnded,
+                  ),
+                ),
+                Tab(
+                  child: Text(
+                    'Đã tham gia',
                   ),
                 ),
               ],
@@ -79,16 +85,24 @@ class _AutionFragmentState extends State<AuctionFragment> {
                   case 3:
                     status = 3;
                     break;
+                  case 4:
+                    status = 4;
+                    break;
                   default:
                     status = 0;
                 }
-                auctionController.fetchAuctions(status);
+                if (status == 4) {
+                  auctionController.fetchMyAuctions(status);
+                } else {
+                  auctionController.fetchAuctions(status);
+                }
               },
             ),
           ),
           Container(
             height: MediaQuery.of(context).size.height,
             child: TabBarView(children: [
+              auctionWidget(),
               auctionWidget(),
               auctionWidget(),
               auctionWidget(),
@@ -114,7 +128,7 @@ class _AutionFragmentState extends State<AuctionFragment> {
                 ? language.somethingWentWrong
                 : language.noDataFound,
             onRetry: () {
-              auctionController.fetchAuctions(0);
+              auctionController.fetchAuctions(null);
             },
             retryText: '   ' + language.clickToRefresh + '   ',
           ).center(),
@@ -171,39 +185,76 @@ class _AutionFragmentState extends State<AuctionFragment> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              10.height,
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Flexible(
-                                    child: Text(
-                                      auction.title!,
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20.0,
-                                        fontFamily: 'Roboto',
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 2,
-                                      textAlign: TextAlign.start,
-                                    ),
+                              Flexible(
+                                child: Text(
+                                  auction.title!,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20.0,
+                                    fontFamily: 'Roboto',
                                   ),
-                                ],
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                  textAlign: TextAlign.start,
+                                ),
                               ),
-                              // Flexible(
-                              //   child: Text(
-                              //     auction.description!,
-                              //     style: TextStyle(
-                              //       color: const Color.fromARGB(160, 0, 0, 0),
-                              //       fontSize: 14.0,
-                              //       fontFamily: 'Roboto',
-                              //     ),
-                              //     overflow: TextOverflow.ellipsis,
-                              //     maxLines: 2,
-                              //     textAlign: TextAlign.start,
-                              //   ),
-                              // ),
+                              if (auction.startDate!
+                                      .add(Duration(hours: 7))
+                                      .isAfter(DateTime.now()) &&
+                                  auction.actualEndDate!
+                                      .add(Duration(hours: 7))
+                                      .isAfter(DateTime.now()))
+                                Column(
+                                  children: [
+                                    if (auction.startRegisterAt!
+                                        .isAfter(DateTime.now()))
+                                      Text('Start register in: ' +
+                                          auction.startRegisterAt!
+                                              .difference(DateTime.now())
+                                              .inDays
+                                              .toString() +
+                                          ' days' +
+                                          ' ' +
+                                          auction.startRegisterAt!
+                                              .difference(DateTime.now())
+                                              .inHours
+                                              .remainder(24)
+                                              .toString() +
+                                          ' hours' +
+                                          ' ' +
+                                          auction.startRegisterAt!
+                                              .difference(DateTime.now())
+                                              .inMinutes
+                                              .remainder(60)
+                                              .toString() +
+                                          ' minutes'),
+                                    if (auction.endRegisterAt!
+                                            .isAfter(DateTime.now()) &&
+                                        auction.startRegisterAt!
+                                            .isBefore(DateTime.now()))
+                                      Text('End register in: ' +
+                                          auction.endRegisterAt!
+                                              .difference(DateTime.now())
+                                              .inDays
+                                              .toString() +
+                                          ' days' +
+                                          ' ' +
+                                          auction.endRegisterAt!
+                                              .difference(DateTime.now())
+                                              .inHours
+                                              .remainder(24)
+                                              .toString() +
+                                          ' hours' +
+                                          ' ' +
+                                          auction.endRegisterAt!
+                                              .difference(DateTime.now())
+                                              .inMinutes
+                                              .remainder(60)
+                                              .toString() +
+                                          ' minutes'),
+                                  ],
+                                )
                             ],
                           ),
                         ),
@@ -213,7 +264,7 @@ class _AutionFragmentState extends State<AuctionFragment> {
                   if (auction.startDate!
                           .add(Duration(hours: 7))
                           .isBefore(DateTime.now()) &&
-                      auction.endDate!
+                      auction.actualEndDate!
                           .add(Duration(hours: 7))
                           .isAfter(DateTime.now()))
                     Positioned(
@@ -250,15 +301,13 @@ class _AutionFragmentState extends State<AuctionFragment> {
                             Container(
                                 padding: EdgeInsets.all(5.0),
                                 child: CountDownText(
-                                  due: DateTime.parse(auction.startDate!
+                                  due: auction.startDate!
                                           .add(Duration(hours: 7))
                                           .isBefore(DateTime.now())
-                                      ? auction.endDate!
+                                      ? auction.actualEndDate!
                                           .add(Duration(hours: 7))
-                                          .toString()
                                       : auction.startDate!
-                                          .add(Duration(hours: 7))
-                                          .toString()),
+                                          .add(Duration(hours: 7)),
                                   finishedText: language.auctionEnded,
                                   showLabel: true,
                                   daysTextShort: "d ",

@@ -9,7 +9,6 @@ import 'package:socialv/screens/fragments/forums_fragment.dart';
 import 'package:socialv/screens/fragments/home_fragment.dart';
 import 'package:socialv/screens/fragments/orchid_fragment.dart';
 import 'package:socialv/screens/fragments/profile_fragment.dart';
-import 'package:socialv/screens/home/components/ranking_bottomsheet_widget.dart';
 import 'package:socialv/screens/home/components/user_detail_bottomsheet_widget.dart';
 import 'package:socialv/utils/app_constants.dart';
 
@@ -135,53 +134,6 @@ class _DashboardScreenState extends State<DashboardScreen>
                     ],
                   ),
                   actions: [
-                    IconButton(
-                      onPressed: () {
-                        showModalBottomSheet(
-                          elevation: 0,
-                          context: context,
-                          isScrollControlled: true,
-                          backgroundColor: Colors.transparent,
-                          transitionAnimationController: _animationController,
-                          builder: (context) {
-                            return FractionallySizedBox(
-                              heightFactor: 0.93,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Container(
-                                    width: 45,
-                                    height: 5,
-                                    //clipBehavior: Clip.hardEdge,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(16),
-                                        color: Colors.white),
-                                  ),
-                                  8.height,
-                                  Container(
-                                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                                    decoration: BoxDecoration(
-                                      color: context.cardColor,
-                                      borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(16),
-                                          topRight: Radius.circular(16)),
-                                    ),
-                                    child: RankingBottomSheetWidget(),
-                                  ).expand(),
-                                ],
-                              ),
-                            );
-                          },
-                        );
-                      },
-                      highlightColor: Colors.transparent,
-                      splashColor: Colors.transparent,
-                      icon: Image.asset(ic_ranking,
-                          height: 30,
-                          width: 30,
-                          fit: BoxFit.fitWidth,
-                          color: Colors.black),
-                    ),
                     Obx(
                       () => IconButton(
                           highlightColor: Colors.transparent,
@@ -236,19 +188,19 @@ class _DashboardScreenState extends State<DashboardScreen>
                               ? userController
                                       .user.value.avatarUrl.isEmptyOrNull
                                   ? Image.asset("assets/images/profile.png",
-                                          height: 60,
-                                          width: 60,
+                                          height: 80,
+                                          width: 80,
                                           fit: BoxFit.cover)
-                                      .cornerRadiusWithClipRRect(15)
+                                      .cornerRadiusWithClipRRect(10)
                                   : Image.network(
                                           userController.user.value.avatarUrl!,
-                                          height: 60,
-                                          width: 60,
+                                          height: 80,
+                                          width: 80,
                                           fit: BoxFit.cover)
-                                      .cornerRadiusWithClipRRect(15)
+                                      .cornerRadiusWithClipRRect(10)
                               : Image.asset("assets/images/profile.png",
-                                      height: 60, width: 60, fit: BoxFit.cover)
-                                  .cornerRadiusWithClipRRect(15)),
+                                      height: 80, width: 80, fit: BoxFit.cover)
+                                  .cornerRadiusWithClipRRect(10)),
                     )
                   ],
                 ),

@@ -19,4 +19,9 @@ class Bid {
         bidAmount: json["bidAmount"] != null ? json["bidAmount"].toDouble() : 0,
         bidAt: DateTime.parse(json["biddedAt"]),
       );
+
+  @override
+  String toString() {
+    return 'Bid{id: $id, bidder: $bidder, bidAmount: $bidAmount, bidAt: $bidAt}';
+  }
 }

@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/components/loading_widget.dart';
 import 'package:socialv/controllers/expertise_request_controller.dart';
+import 'package:socialv/main.dart';
 import 'package:socialv/models/enums/enums.dart';
 import 'package:socialv/models/expertise_request/expertise_result.dart';
 
@@ -57,8 +58,8 @@ class _ExpertiseRequestResultScreenState
     return Scaffold(
         appBar: AppBar(
           backgroundColor: context.scaffoldBackgroundColor,
-          title:
-              Text('Expertise Request Result', style: boldTextStyle(size: 20)),
+          title: Text(language.expertiseRequestResult,
+              style: boldTextStyle(size: 20)),
           elevation: 0,
           centerTitle: true,
           leading: IconButton(
@@ -138,18 +139,19 @@ class _ExpertiseRequestResultScreenState
             ],
           ),
         ),
-        floatingActionButton:
-            expertiseRequestController.expertiseRequest.value.status ==
-                    ExpertiseRequestStatus.Doing.index
-                ? FloatingActionButton(
-                    child: Icon(Icons.add),
-                    onPressed: () {
-                      CreateExpertiseRequestResultScreen(
-                        isNew: true,
-                        requestId: widget.requestId!,
-                      ).launch(context);
-                    },
-                  )
-                : Offstage());
+        floatingActionButton: Obx(() {
+          return expertiseRequestController.expertiseRequest.value.status ==
+                  ExpertiseRequestStatus.Doing.index
+              ? FloatingActionButton(
+                  child: Icon(Icons.add),
+                  onPressed: () {
+                    CreateExpertiseRequestResultScreen(
+                      isNew: true,
+                      requestId: widget.requestId!,
+                    ).launch(context);
+                  },
+                )
+              : Offstage();
+        }));
   }
 }

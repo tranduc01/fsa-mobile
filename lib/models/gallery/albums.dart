@@ -1,3 +1,5 @@
+import 'package:socialv/models/common_models/user.dart';
+
 class Album {
   int? id;
   String? title;
@@ -5,7 +7,9 @@ class Album {
   String? description;
   DateTime? createdAt;
   bool? canDelete;
+  bool? isPublic;
   List<Media> media = [];
+  User? user;
 
   Album(
       {this.id,
@@ -14,16 +18,20 @@ class Album {
       this.coverImageUrl,
       this.createdAt,
       required this.media,
-      this.canDelete});
+      this.isPublic,
+      this.canDelete,
+      this.user});
 
-  Album.fromJson(dynamic json) {
+  Album.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];
     coverImageUrl = json['coverImageUrl'];
     description = json['description'];
     canDelete = json['can_delete'] ?? true;
     createdAt = DateTime.parse(json['createdAt']);
+    isPublic = json['isPublic'];
     media = (json['medias'] as List).map((e) => Media.fromJson(e)).toList();
+    user = json['user'] != null ? User.fromJson(json['user']) : null;
   }
 }
 
@@ -42,7 +50,7 @@ class Media {
     this.canDelete,
   });
 
-  Media.fromJson(dynamic json) {
+  Media.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     url = json['url'];
     name = json['name'];

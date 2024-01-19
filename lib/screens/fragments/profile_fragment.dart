@@ -7,11 +7,11 @@ import 'package:socialv/components/no_data_lottie_widget.dart';
 import 'package:socialv/controllers/user_controller.dart';
 import 'package:socialv/main.dart';
 import 'package:socialv/models/members/member_detail_model.dart';
-import 'package:socialv/network/rest_apis.dart';
 import 'package:socialv/screens/dashboard_screen.dart';
 import 'package:socialv/screens/expertise_request/expertise_request/screens/expertise_request_screen.dart';
 import 'package:socialv/screens/post/components/post_component.dart';
 import 'package:socialv/screens/profile/components/profile_header_component.dart';
+import 'package:socialv/screens/wallet/wallet_screen.dart';
 
 import '../../models/enums/enums.dart';
 import '../../models/posts/post.dart';
@@ -59,7 +59,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
         ])
       ]);
   List<Post> _userPostList = [];
-
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   late Future<List<Post>> future;
 
   late UserController userController = Get.put(UserController());
@@ -73,7 +73,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
   @override
   void initState() {
     future = getUserPostList();
-    userController.getUserById(userController.user.value.id ?? '');
+    userController.getCurrentUser();
     setStatusBarColor(Colors.transparent);
     super.initState();
     widget.controller?.addListener(() {
@@ -90,7 +90,6 @@ class _ProfileFragmentState extends State<ProfileFragment> {
     getMemberDetails();
     LiveStream().on(OnAddPostProfile, (p0) {
       getMemberDetails();
-      getCategoryList();
 
       _userPostList.clear();
       mPage = 1;
@@ -157,7 +156,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
             Obx(() => ProfileHeaderComponent(
                   avatarUrl: userController.user.value.avatarUrl,
                 )),
-            userController.isLoggedIn.value
+            userController.user.value.id != null
                 ? Column(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -246,13 +245,9 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                          userController.user.value.expertiseLeft
-                              .validate()
-                              .toString(),
-                          style: boldTextStyle(size: 18)),
+                      Text('10', style: boldTextStyle(size: 18)),
                       4.height,
-                      Text(language.expertiseLeft,
+                      Text(language.expertiseRequestSent,
                           style: secondaryTextStyle(size: 12)),
                     ],
                   ).paddingSymmetric(vertical: 8).onTap(() {
@@ -266,20 +261,28 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                          userController.user.value.totalExpertiseRequestSent
-                              .validate()
-                              .toString(),
-                          style: boldTextStyle(size: 18)),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            userController.user.value.totalPoint
+                                .validate()
+                                .toStringAsFixed(0)
+                                .formatNumberWithComma(),
+                            style: boldTextStyle(size: 18),
+                          ),
+                          10.width,
+                          Icon(
+                            Icons.info_outline_rounded,
+                            size: 20,
+                          ), // Add your icon here
+                        ],
+                      ),
                       4.height,
-                      Text(language.expertiseRequestSent,
-                          style: secondaryTextStyle(size: 12)),
+                      Text('Tổng điểm', style: secondaryTextStyle(size: 12)),
                     ],
                   ).paddingSymmetric(vertical: 8).onTap(() {
-                    widget.controller?.animateTo(
-                        MediaQuery.of(context).size.height * 0.35,
-                        duration: const Duration(milliseconds: 500),
-                        curve: Curves.linear);
+                    WalletScreen().launch(context);
                   },
                       splashColor: Colors.transparent,
                       highlightColor: Colors.transparent).expand(),
@@ -317,66 +320,63 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          if (!userController.user.value.role.any((element) =>
-                              element.name.toLowerCase() ==
-                              Role.Expert.name.toLowerCase()))
-                            InkWell(
-                              onTap: () => ExpertiseRequestScreen(
-                                controller: _controller,
-                                selectedIndex: 2,
-                              ).launch(context),
-                              child: Stack(
-                                clipBehavior: Clip.none,
-                                alignment: Alignment.center,
-                                children: [
-                                  Image.asset(
-                                    ic_pending,
-                                    height: 40,
-                                    width: 40,
-                                    fit: BoxFit.cover,
-                                  ).paddingSymmetric(vertical: 11),
-                                  Positioned(
-                                    right: -8,
-                                    top: -4,
-                                    child: Container(
-                                      padding: EdgeInsets.all(6),
-                                      decoration: BoxDecoration(
-                                          color: appColorPrimary,
-                                          shape: BoxShape.circle),
-                                      child: Text(
-                                        '10',
-                                        style: boldTextStyle(
-                                            color: Colors.white,
-                                            size: 10,
-                                            weight: FontWeight.w700,
-                                            letterSpacing: 0.7),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    bottom:
-                                        -17, // Adjust the position as needed
-                                    child: Container(
-                                      width: 60,
-                                      child: Text(
-                                        language
-                                            .waitingForApprovalExpertiseRequest,
-                                        style: boldTextStyle(
-                                          color: Colors.black,
+                          InkWell(
+                            onTap: () => ExpertiseRequestScreen(
+                              controller: _controller,
+                              selectedIndex: 2,
+                              selectedTab: 0,
+                            ).launch(context),
+                            child: Stack(
+                              clipBehavior: Clip.none,
+                              alignment: Alignment.center,
+                              children: [
+                                Image.asset(
+                                  ic_pending,
+                                  height: 40,
+                                  width: 40,
+                                  fit: BoxFit.cover,
+                                ).paddingSymmetric(vertical: 11),
+                                Positioned(
+                                  right: -8,
+                                  top: -4,
+                                  child: Container(
+                                    padding: EdgeInsets.all(6),
+                                    decoration: BoxDecoration(
+                                        color: appColorPrimary,
+                                        shape: BoxShape.circle),
+                                    child: Text(
+                                      '3',
+                                      style: boldTextStyle(
+                                          color: Colors.white,
                                           size: 10,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
+                                          weight: FontWeight.w700,
+                                          letterSpacing: 0.7),
+                                      textAlign: TextAlign.center,
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
+                                Positioned(
+                                  bottom: -10, // Adjust the position as needed
+                                  child: Container(
+                                    width: 60,
+                                    child: Text(
+                                      'Chờ duyệt',
+                                      style: boldTextStyle(
+                                        color: Colors.black,
+                                        size: 10,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
+                          ),
                           InkWell(
                             onTap: () => ExpertiseRequestScreen(
                               controller: _controller,
                               selectedIndex: 3,
+                              selectedTab: 1,
                             ).launch(context),
                             child: Stack(
                               clipBehavior: Clip.none,
@@ -397,7 +397,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                         color: appColorPrimary,
                                         shape: BoxShape.circle),
                                     child: Text(
-                                      '10',
+                                      '2',
                                       style: boldTextStyle(
                                           color: Colors.white,
                                           size: 10,
@@ -428,6 +428,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                             onTap: () => ExpertiseRequestScreen(
                               controller: _controller,
                               selectedIndex: 0,
+                              selectedTab: 2,
                             ).launch(context),
                             child: Stack(
                               clipBehavior: Clip.none,
@@ -448,7 +449,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                         color: appColorPrimary,
                                         shape: BoxShape.circle),
                                     child: Text(
-                                      '10',
+                                      '2',
                                       style: boldTextStyle(
                                           color: Colors.white,
                                           size: 10,
@@ -475,6 +476,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                             onTap: () => ExpertiseRequestScreen(
                               controller: _controller,
                               selectedIndex: 1,
+                              selectedTab: 3,
                             ).launch(context),
                             child: Stack(
                               clipBehavior: Clip.none,
@@ -495,7 +497,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                         color: appColorPrimary,
                                         shape: BoxShape.circle),
                                     child: Text(
-                                      '10',
+                                      '2',
                                       style: boldTextStyle(
                                           color: Colors.white,
                                           size: 10,
@@ -522,6 +524,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                             onTap: () => ExpertiseRequestScreen(
                               controller: _controller,
                               selectedIndex: 4,
+                              selectedTab: 4,
                             ).launch(context),
                             child: Stack(
                               clipBehavior: Clip.none,
@@ -542,7 +545,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                         color: appColorPrimary,
                                         shape: BoxShape.circle),
                                     child: Text(
-                                      '10',
+                                      '0',
                                       style: boldTextStyle(
                                           color: Colors.white,
                                           size: 10,
@@ -556,6 +559,54 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                   bottom: -10, // Adjust the position as needed
                                   child: Text(
                                     language.rejectedExpertiseRequest,
+                                    style: boldTextStyle(
+                                      color: Colors.black,
+                                      size: 10,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () => ExpertiseRequestScreen(
+                              controller: _controller,
+                              selectedIndex: 5,
+                              selectedTab: 5,
+                            ).launch(context),
+                            child: Stack(
+                              clipBehavior: Clip.none,
+                              alignment: Alignment.center,
+                              children: [
+                                Image.asset(
+                                  ic_canceled,
+                                  height: 40,
+                                  width: 40,
+                                  fit: BoxFit.cover,
+                                ).paddingSymmetric(vertical: 11),
+                                Positioned(
+                                  right: -8,
+                                  top: -4,
+                                  child: Container(
+                                    padding: EdgeInsets.all(6),
+                                    decoration: BoxDecoration(
+                                        color: appColorPrimary,
+                                        shape: BoxShape.circle),
+                                    child: Text(
+                                      '2',
+                                      style: boldTextStyle(
+                                          color: Colors.white,
+                                          size: 10,
+                                          weight: FontWeight.w700,
+                                          letterSpacing: 0.7),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  bottom: -10, // Adjust the position as needed
+                                  child: Text(
+                                    'Đã hủy',
                                     style: boldTextStyle(
                                       color: Colors.black,
                                       size: 10,
@@ -586,21 +637,6 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                       Text(language.posts,
                           style: boldTextStyle(
                               color: context.primaryColor, size: 20)),
-                      // TextIcon(
-                      //   onTap: () {
-                      //     isFavorites = !isFavorites;
-                      //     mPage = 1;
-                      //     setState(() {});
-                      //     getUserPostList();
-                      //   },
-                      //   prefix: Icon(
-                      //       isFavorites ? Icons.check_circle : Icons.circle_outlined,
-                      //       color: appColorPrimary,
-                      //       size: 18),
-                      //   text: language.favorites,
-                      //   textStyle: secondaryTextStyle(
-                      //       color: isFavorites ? context.primaryColor : null),
-                      // ),
                     ],
                   ).paddingSymmetric(horizontal: 8),
                   FutureBuilder<List<Post>>(

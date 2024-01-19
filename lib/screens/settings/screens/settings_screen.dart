@@ -4,21 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/components/loading_widget.dart';
-import 'package:socialv/components/request_verification_dialog.dart';
 import 'package:socialv/main.dart';
-import 'package:socialv/network/rest_apis.dart';
-import 'package:socialv/screens/blockReport/blocked_accounts.dart';
 import 'package:socialv/screens/profile/screens/edit_profile_screen.dart';
 import 'package:socialv/screens/settings/screens/change_password_screen.dart';
-import 'package:socialv/screens/settings/screens/coupon_list_screen.dart';
-import 'package:socialv/screens/settings/screens/edit_shop_details_screen.dart';
 import 'package:socialv/screens/settings/screens/language_screen.dart';
-import 'package:socialv/screens/settings/screens/notification_settings.dart';
-import 'package:socialv/screens/settings/screens/profile_visibility_screen.dart';
 import 'package:socialv/utils/app_constants.dart';
-import 'package:url_launcher/url_launcher.dart';
-
-import 'send_invitations_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   @override
@@ -35,11 +25,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   init() async {
-    int themeModeIndex = getIntAsync(SharePreferencesKey.APP_THEME, defaultValue: AppThemeMode.ThemeModeSystem);
+    int themeModeIndex = getIntAsync(SharePreferencesKey.APP_THEME,
+        defaultValue: AppThemeMode.ThemeModeSystem);
 
     window.onPlatformBrightnessChanged = () {
       if (themeModeIndex == AppThemeMode.ThemeModeSystem) {
-        appStore.toggleDarkMode(value: MediaQuery.of(context).platformBrightness == Brightness.light);
+        appStore.toggleDarkMode(
+            value:
+                MediaQuery.of(context).platformBrightness == Brightness.light);
       }
     };
   }
@@ -70,14 +63,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 child: Column(
                   children: [
                     SettingSection(
-                      title: Text(language.appSetting.toUpperCase(), style: boldTextStyle(color: context.primaryColor)),
-                      headingDecoration: BoxDecoration(color: context.cardColor),
+                      title: Text(language.appSetting.toUpperCase(),
+                          style: boldTextStyle(color: context.primaryColor)),
+                      headingDecoration:
+                          BoxDecoration(color: context.cardColor),
                       items: [
                         SettingItemWidget(
                           title: language.appTheme,
-                          titleTextStyle: primaryTextStyle(color: appStore.isDarkMode ? bodyDark : bodyWhite),
-                          leading: Image.asset(ic_dark_mode, height: 18, width: 18, color: context.primaryColor, fit: BoxFit.cover),
-                          trailing: Icon(Icons.arrow_forward_ios, color: appStore.isDarkMode ? bodyDark : bodyWhite, size: 16),
+                          titleTextStyle: primaryTextStyle(
+                              color:
+                                  appStore.isDarkMode ? bodyDark : bodyWhite),
+                          leading: Image.asset(ic_dark_mode,
+                              height: 18,
+                              width: 18,
+                              color: context.primaryColor,
+                              fit: BoxFit.cover),
+                          trailing: Icon(Icons.arrow_forward_ios,
+                              color: appStore.isDarkMode ? bodyDark : bodyWhite,
+                              size: 16),
                           onTap: () async {
                             await showGeneralDialog(
                               context: context,
@@ -89,10 +92,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   child: Opacity(
                                     opacity: a1.value,
                                     child: BackdropFilter(
-                                      filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3, tileMode: TileMode.repeated),
+                                      filter: ImageFilter.blur(
+                                          sigmaX: 3,
+                                          sigmaY: 3,
+                                          tileMode: TileMode.repeated),
                                       child: Dialog(
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(defaultRadius)),
-                                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                                defaultRadius)),
+                                        clipBehavior:
+                                            Clip.antiAliasWithSaveLayer,
                                         elevation: 0,
                                         insetAnimationCurve: Curves.linear,
                                         insetAnimationDuration: 0.seconds,
@@ -102,50 +111,106 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                             Container(
                                               padding: EdgeInsets.all(16),
                                               width: ctx.width(),
-                                              decoration: BoxDecoration(color: context.primaryColor),
+                                              decoration: BoxDecoration(
+                                                  color: context.primaryColor),
                                               child: Row(
                                                 mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
                                                 children: [
-                                                  Text(language.appTheme, style: boldTextStyle(color: Colors.white, size: 20)),
-                                                  Image.asset(ic_close_square, height: 24, width: 24, fit: BoxFit.cover, color: Colors.white).onTap(() {
+                                                  Text(language.appTheme,
+                                                      style: boldTextStyle(
+                                                          color: Colors.white,
+                                                          size: 20)),
+                                                  Image.asset(ic_close_square,
+                                                          height: 24,
+                                                          width: 24,
+                                                          fit: BoxFit.cover,
+                                                          color: Colors.white)
+                                                      .onTap(() {
                                                     finish(ctx);
-                                                  }, splashColor: Colors.transparent, highlightColor: Colors.transparent)
+                                                  },
+                                                          splashColor: Colors
+                                                              .transparent,
+                                                          highlightColor: Colors
+                                                              .transparent)
                                                 ],
                                               ),
                                             ),
                                             RadioListTile(
-                                              value: getIntAsync(SharePreferencesKey.APP_THEME),
-                                              groupValue: AppThemeMode.ThemeModeSystem,
+                                              value: getIntAsync(
+                                                  SharePreferencesKey
+                                                      .APP_THEME),
+                                              groupValue:
+                                                  AppThemeMode.ThemeModeSystem,
                                               onChanged: (val) async {
-                                                appStore.toggleDarkMode(value: MediaQuery.of(context).platformBrightness == Brightness.dark);
-                                                await setValue(SharePreferencesKey.APP_THEME, AppThemeMode.ThemeModeSystem);
-                                                await setValue(SharePreferencesKey.IS_DARK_MODE, MediaQuery.of(context).platformBrightness == Brightness.dark);
+                                                appStore.toggleDarkMode(
+                                                    value: MediaQuery.of(
+                                                                context)
+                                                            .platformBrightness ==
+                                                        Brightness.dark);
+                                                await setValue(
+                                                    SharePreferencesKey
+                                                        .APP_THEME,
+                                                    AppThemeMode
+                                                        .ThemeModeSystem);
+                                                await setValue(
+                                                    SharePreferencesKey
+                                                        .IS_DARK_MODE,
+                                                    MediaQuery.of(context)
+                                                            .platformBrightness ==
+                                                        Brightness.dark);
                                                 finish(ctx);
                                               },
-                                              title: Text(language.systemDefault, style: primaryTextStyle()),
+                                              title: Text(
+                                                  language.systemDefault,
+                                                  style: primaryTextStyle()),
                                             ),
                                             RadioListTile(
-                                              value: getIntAsync(SharePreferencesKey.APP_THEME),
-                                              groupValue: AppThemeMode.ThemeModeDark,
+                                              value: getIntAsync(
+                                                  SharePreferencesKey
+                                                      .APP_THEME),
+                                              groupValue:
+                                                  AppThemeMode.ThemeModeDark,
                                               onChanged: (val) async {
-                                                appStore.toggleDarkMode(value: true);
-                                                await setValue(SharePreferencesKey.APP_THEME, AppThemeMode.ThemeModeDark);
-                                                await setValue(SharePreferencesKey.IS_DARK_MODE, true);
+                                                appStore.toggleDarkMode(
+                                                    value: true);
+                                                await setValue(
+                                                    SharePreferencesKey
+                                                        .APP_THEME,
+                                                    AppThemeMode.ThemeModeDark);
+                                                await setValue(
+                                                    SharePreferencesKey
+                                                        .IS_DARK_MODE,
+                                                    true);
                                                 finish(ctx);
                                               },
-                                              title: Text(language.darkMode, style: primaryTextStyle()),
+                                              title: Text(language.darkMode,
+                                                  style: primaryTextStyle()),
                                             ),
                                             RadioListTile(
-                                              value: getIntAsync(SharePreferencesKey.APP_THEME),
-                                              groupValue: AppThemeMode.ThemeModeLight,
+                                              value: getIntAsync(
+                                                  SharePreferencesKey
+                                                      .APP_THEME),
+                                              groupValue:
+                                                  AppThemeMode.ThemeModeLight,
                                               onChanged: (val) async {
-                                                appStore.toggleDarkMode(value: false);
-                                                await setValue(SharePreferencesKey.APP_THEME, AppThemeMode.ThemeModeLight);
-                                                await setValue(SharePreferencesKey.IS_DARK_MODE, false);
+                                                appStore.toggleDarkMode(
+                                                    value: false);
+                                                await setValue(
+                                                    SharePreferencesKey
+                                                        .APP_THEME,
+                                                    AppThemeMode
+                                                        .ThemeModeLight);
+                                                await setValue(
+                                                    SharePreferencesKey
+                                                        .IS_DARK_MODE,
+                                                    false);
                                                 finish(ctx);
                                               },
-                                              title: Text(language.lightMode, style: primaryTextStyle()),
+                                              title: Text(language.lightMode,
+                                                  style: primaryTextStyle()),
                                             ),
                                           ],
                                         ),
@@ -154,15 +219,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   ),
                                 );
                               },
-                              pageBuilder: (context, animation1, animation2) => Offstage(),
+                              pageBuilder: (context, animation1, animation2) =>
+                                  Offstage(),
                             );
                           },
                         ),
                         SettingItemWidget(
                           title: language.appLanguage,
-                          titleTextStyle: primaryTextStyle(color: appStore.isDarkMode ? bodyDark : bodyWhite),
-                          leading: Image.asset(ic_network, height: 18, width: 18, color: context.primaryColor, fit: BoxFit.cover),
-                          trailing: Icon(Icons.arrow_forward_ios, color: appStore.isDarkMode ? bodyDark : bodyWhite, size: 16),
+                          titleTextStyle: primaryTextStyle(
+                              color:
+                                  appStore.isDarkMode ? bodyDark : bodyWhite),
+                          leading: Image.asset(ic_network,
+                              height: 18,
+                              width: 18,
+                              color: context.primaryColor,
+                              fit: BoxFit.cover),
+                          trailing: Icon(Icons.arrow_forward_ios,
+                              color: appStore.isDarkMode ? bodyDark : bodyWhite,
+                              size: 16),
                           onTap: () {
                             LanguageScreen().launch(context);
                           },
@@ -170,14 +244,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ],
                     ),
                     SettingSection(
-                      title: Text('${language.account.toUpperCase()} ${language.settings.toUpperCase()}', style: boldTextStyle(color: context.primaryColor)),
-                      headingDecoration: BoxDecoration(color: context.cardColor),
+                      title: Text(
+                          '${language.account.toUpperCase()} ${language.settings.toUpperCase()}',
+                          style: boldTextStyle(color: context.primaryColor)),
+                      headingDecoration:
+                          BoxDecoration(color: context.cardColor),
                       items: [
                         SettingItemWidget(
                           title: language.editProfile,
-                          titleTextStyle: primaryTextStyle(color: appStore.isDarkMode ? bodyDark : bodyWhite),
-                          leading: Image.asset(ic_edit, height: 18, width: 18, color: context.primaryColor, fit: BoxFit.cover),
-                          trailing: Icon(Icons.arrow_forward_ios, color: appStore.isDarkMode ? bodyDark : bodyWhite, size: 16),
+                          titleTextStyle: primaryTextStyle(
+                              color:
+                                  appStore.isDarkMode ? bodyDark : bodyWhite),
+                          leading: Image.asset(ic_edit,
+                              height: 18,
+                              width: 18,
+                              color: context.primaryColor,
+                              fit: BoxFit.cover),
+                          trailing: Icon(Icons.arrow_forward_ios,
+                              color: appStore.isDarkMode ? bodyDark : bodyWhite,
+                              size: 16),
                           onTap: () {
                             if (!appStore.isLoading)
                               EditProfileScreen().launch(context).then((value) {
@@ -185,201 +270,225 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               });
                           },
                         ),
-                        if (appStore.showWoocommerce == 1 && appStore.isShopEnable == 1)
-                          SettingItemWidget(
-                            title: language.editShopDetails,
-                            titleTextStyle: primaryTextStyle(color: appStore.isDarkMode ? bodyDark : bodyWhite),
-                            leading: Image.asset(ic_bag, height: 18, width: 18, color: context.primaryColor, fit: BoxFit.cover),
-                            trailing: Icon(Icons.arrow_forward_ios, color: appStore.isDarkMode ? bodyDark : bodyWhite, size: 16),
-                            onTap: () {
-                              if (!appStore.isLoading)
-                                EditShopDetailsScreen().launch(context).then((value) {
-                                  isUpdate = value;
-                                });
-                            },
-                          ),
-                        if (appStore.showWoocommerce == 1)
-                          SettingItemWidget(
-                            title: language.coupons,
-                            titleTextStyle: primaryTextStyle(color: appStore.isDarkMode ? bodyDark : bodyWhite),
-                            leading: Image.asset(ic_coupon, height: 18, width: 18, color: context.primaryColor, fit: BoxFit.cover),
-                            trailing: Icon(Icons.arrow_forward_ios, color: appStore.isDarkMode ? bodyDark : bodyWhite, size: 16),
-                            onTap: () {
-                              CouponListScreen().launch(context);
-                            },
-                          ),
                         SettingItemWidget(
                           title: language.changePassword,
-                          titleTextStyle: primaryTextStyle(color: appStore.isDarkMode ? bodyDark : bodyWhite),
-                          leading: Image.asset(ic_lock, height: 18, width: 18, color: context.primaryColor, fit: BoxFit.cover),
-                          trailing: Icon(Icons.arrow_forward_ios, color: appStore.isDarkMode ? bodyDark : bodyWhite, size: 16),
+                          titleTextStyle: primaryTextStyle(
+                              color:
+                                  appStore.isDarkMode ? bodyDark : bodyWhite),
+                          leading: Image.asset(ic_lock,
+                              height: 18,
+                              width: 18,
+                              color: context.primaryColor,
+                              fit: BoxFit.cover),
+                          trailing: Icon(Icons.arrow_forward_ios,
+                              color: appStore.isDarkMode ? bodyDark : bodyWhite,
+                              size: 16),
                           onTap: () {
-                            if (!appStore.isLoading) ChangePasswordScreen().launch(context);
-                          },
-                        ),
-                        SettingItemWidget(
-                          title: language.notificationSettings,
-                          titleTextStyle: primaryTextStyle(color: appStore.isDarkMode ? bodyDark : bodyWhite),
-                          leading: Image.asset(ic_notification, height: 18, width: 18, color: context.primaryColor, fit: BoxFit.cover),
-                          trailing: Icon(Icons.arrow_forward_ios, color: appStore.isDarkMode ? bodyDark : bodyWhite, size: 16),
-                          onTap: () {
-                            if (!appStore.isLoading) NotificationSettings().launch(context);
+                            if (!appStore.isLoading)
+                              ChangePasswordScreen().launch(context);
                           },
                         ),
                         SettingItemWidget(
                           title: language.profileVisibility,
-                          titleTextStyle: primaryTextStyle(color: appStore.isDarkMode ? bodyDark : bodyWhite),
-                          leading: Image.asset(ic_profile, height: 18, width: 18, color: context.primaryColor, fit: BoxFit.cover),
-                          trailing: Icon(Icons.arrow_forward_ios, color: appStore.isDarkMode ? bodyDark : bodyWhite, size: 16),
-                          onTap: () {
-                            if (!appStore.isLoading) ProfileVisibilityScreen().launch(context);
-                          },
+                          titleTextStyle: primaryTextStyle(
+                              color:
+                                  appStore.isDarkMode ? bodyDark : bodyWhite),
+                          leading: Image.asset(ic_profile,
+                              height: 18,
+                              width: 18,
+                              color: context.primaryColor,
+                              fit: BoxFit.cover),
+                          trailing: Icon(Icons.arrow_forward_ios,
+                              color: appStore.isDarkMode ? bodyDark : bodyWhite,
+                              size: 16),
+                          onTap: () {},
                         ),
                       ],
                     ),
                     SettingSection(
-                      title: Text(language.about.toUpperCase(), style: boldTextStyle(color: context.primaryColor)),
-                      headingDecoration: BoxDecoration(color: context.cardColor),
+                      title: Text(language.about.toUpperCase(),
+                          style: boldTextStyle(color: context.primaryColor)),
+                      headingDecoration:
+                          BoxDecoration(color: context.cardColor),
                       items: [
                         SnapHelperWidget<PackageInfoData>(
                           future: getPackageInfo(),
                           onSuccess: (d) => SettingItemWidget(
                             title: language.rateUs,
-                            titleTextStyle: primaryTextStyle(color: appStore.isDarkMode ? bodyDark : bodyWhite),
-                            leading: Image.asset(ic_star, height: 18, width: 18, color: context.primaryColor, fit: BoxFit.cover),
-                            trailing: Icon(Icons.arrow_forward_ios, color: appStore.isDarkMode ? bodyDark : bodyWhite, size: 16),
-                            onTap: () {
-                              if (isAndroid) {
-                                log('$playStoreBaseURL${d.packageName}');
-                                launchUrl(Uri.parse('$playStoreBaseURL${d.packageName}'), mode: LaunchMode.externalApplication);
-                              } else if (isIOS) {
-                                launchUrl(Uri.parse(IOS_APP_LINK), mode: LaunchMode.externalApplication);
-                              }
-                            },
+                            titleTextStyle: primaryTextStyle(
+                                color:
+                                    appStore.isDarkMode ? bodyDark : bodyWhite),
+                            leading: Image.asset(ic_star,
+                                height: 18,
+                                width: 18,
+                                color: context.primaryColor,
+                                fit: BoxFit.cover),
+                            trailing: Icon(Icons.arrow_forward_ios,
+                                color:
+                                    appStore.isDarkMode ? bodyDark : bodyWhite,
+                                size: 16),
+                            onTap: () {},
                           ),
                         ),
                         SettingItemWidget(
                           title: language.shareApp,
-                          titleTextStyle: primaryTextStyle(color: appStore.isDarkMode ? bodyDark : bodyWhite),
-                          leading: Image.asset(ic_send, height: 18, width: 18, color: context.primaryColor, fit: BoxFit.cover),
-                          trailing: Icon(Icons.arrow_forward_ios, color: appStore.isDarkMode ? bodyDark : bodyWhite, size: 16),
-                          onTap: () {
-                            if (!appStore.isLoading) onShareTap(context);
-                          },
+                          titleTextStyle: primaryTextStyle(
+                              color:
+                                  appStore.isDarkMode ? bodyDark : bodyWhite),
+                          leading: Image.asset(ic_send,
+                              height: 18,
+                              width: 18,
+                              color: context.primaryColor,
+                              fit: BoxFit.cover),
+                          trailing: Icon(Icons.arrow_forward_ios,
+                              color: appStore.isDarkMode ? bodyDark : bodyWhite,
+                              size: 16),
+                          onTap: () {},
                         ),
                         SettingItemWidget(
                           title: language.privacyPolicy,
-                          titleTextStyle: primaryTextStyle(color: appStore.isDarkMode ? bodyDark : bodyWhite),
-                          leading: Image.asset(ic_shield_done, height: 16, width: 18, color: context.primaryColor, fit: BoxFit.cover),
-                          trailing: Icon(Icons.arrow_forward_ios, color: appStore.isDarkMode ? bodyDark : bodyWhite, size: 16),
+                          titleTextStyle: primaryTextStyle(
+                              color:
+                                  appStore.isDarkMode ? bodyDark : bodyWhite),
+                          leading: Image.asset(ic_shield_done,
+                              height: 16,
+                              width: 18,
+                              color: context.primaryColor,
+                              fit: BoxFit.cover),
+                          trailing: Icon(Icons.arrow_forward_ios,
+                              color: appStore.isDarkMode ? bodyDark : bodyWhite,
+                              size: 16),
                           onTap: () {
-                            if (!appStore.isLoading) openWebPage(context, url: PRIVACY_POLICY_URL);
+                            if (!appStore.isLoading)
+                              openWebPage(context, url: PRIVACY_POLICY_URL);
                           },
                         ),
                         SettingItemWidget(
                           title: language.termsCondition,
-                          titleTextStyle: primaryTextStyle(color: appStore.isDarkMode ? bodyDark : bodyWhite),
-                          leading: Image.asset(ic_document, height: 18, width: 18, color: context.primaryColor, fit: BoxFit.cover),
-                          trailing: Icon(Icons.arrow_forward_ios, color: appStore.isDarkMode ? bodyDark : bodyWhite, size: 16),
+                          titleTextStyle: primaryTextStyle(
+                              color:
+                                  appStore.isDarkMode ? bodyDark : bodyWhite),
+                          leading: Image.asset(ic_document,
+                              height: 18,
+                              width: 18,
+                              color: context.primaryColor,
+                              fit: BoxFit.cover),
+                          trailing: Icon(Icons.arrow_forward_ios,
+                              color: appStore.isDarkMode ? bodyDark : bodyWhite,
+                              size: 16),
                           onTap: () {
-                            if (!appStore.isLoading) openWebPage(context, url: TERMS_AND_CONDITIONS_URL);
+                            if (!appStore.isLoading)
+                              openWebPage(context,
+                                  url: TERMS_AND_CONDITIONS_URL);
                           },
                         ),
                         SettingItemWidget(
                           title: language.helpSupport,
-                          titleTextStyle: primaryTextStyle(color: appStore.isDarkMode ? bodyDark : bodyWhite),
-                          leading: Image.asset(ic_question_circle, height: 18, width: 18, color: appColorPrimary, fit: BoxFit.cover),
-                          trailing: Icon(Icons.arrow_forward_ios, color: appStore.isDarkMode ? bodyDark : bodyWhite, size: 16),
+                          titleTextStyle: primaryTextStyle(
+                              color:
+                                  appStore.isDarkMode ? bodyDark : bodyWhite),
+                          leading: Image.asset(ic_question_circle,
+                              height: 18,
+                              width: 18,
+                              color: appColorPrimary,
+                              fit: BoxFit.cover),
+                          trailing: Icon(Icons.arrow_forward_ios,
+                              color: appStore.isDarkMode ? bodyDark : bodyWhite,
+                              size: 16),
                           onTap: () {
-                            if (!appStore.isLoading) openWebPage(context, url: SUPPORT_URL);
+                            if (!appStore.isLoading)
+                              openWebPage(context, url: SUPPORT_URL);
                           },
                         ),
                       ],
                     ),
                     SettingSection(
-                      title: Text(language.manageAccount.toUpperCase(), style: boldTextStyle(color: context.primaryColor)),
-                      headingDecoration: BoxDecoration(color: context.cardColor),
+                      title: Text(language.manageAccount.toUpperCase(),
+                          style: boldTextStyle(color: context.primaryColor)),
+                      headingDecoration:
+                          BoxDecoration(color: context.cardColor),
                       items: [
                         SettingItemWidget(
                           title: language.invitations,
-                          titleTextStyle: primaryTextStyle(color: appStore.isDarkMode ? bodyDark : bodyWhite),
-                          leading: Image.asset(ic_message, height: 18, width: 18, color: appColorPrimary, fit: BoxFit.cover),
-                          trailing: Icon(Icons.arrow_forward_ios, color: appStore.isDarkMode ? bodyDark : bodyWhite, size: 16),
-                          onTap: () {
-                            SendInvitationsScreen().launch(context);
-                          },
+                          titleTextStyle: primaryTextStyle(
+                              color:
+                                  appStore.isDarkMode ? bodyDark : bodyWhite),
+                          leading: Image.asset(ic_message,
+                              height: 18,
+                              width: 18,
+                              color: appColorPrimary,
+                              fit: BoxFit.cover),
+                          trailing: Icon(Icons.arrow_forward_ios,
+                              color: appStore.isDarkMode ? bodyDark : bodyWhite,
+                              size: 16),
+                          onTap: () {},
                         ),
                         SettingItemWidget(
                           title: language.blockedAccounts,
-                          titleTextStyle: primaryTextStyle(color: appStore.isDarkMode ? bodyDark : bodyWhite),
-                          leading: Image.asset(ic_close_square, height: 18, width: 18, color: appColorPrimary, fit: BoxFit.cover),
-                          trailing: Icon(Icons.arrow_forward_ios, color: appStore.isDarkMode ? bodyDark : bodyWhite, size: 16),
-                          onTap: () {
-                            BlockedAccounts().launch(context);
-                          },
+                          titleTextStyle: primaryTextStyle(
+                              color:
+                                  appStore.isDarkMode ? bodyDark : bodyWhite),
+                          leading: Image.asset(ic_close_square,
+                              height: 18,
+                              width: 18,
+                              color: appColorPrimary,
+                              fit: BoxFit.cover),
+                          trailing: Icon(Icons.arrow_forward_ios,
+                              color: appStore.isDarkMode ? bodyDark : bodyWhite,
+                              size: 16),
+                          onTap: () {},
                         ),
                         Observer(
                           builder: (_) => SettingItemWidget(
                             title: language.requestVerification,
-                            titleTextStyle: primaryTextStyle(color: appStore.isDarkMode ? bodyDark : bodyWhite),
-                            leading: Image.asset(ic_tick_square, height: 18, width: 18, color: appColorPrimary, fit: BoxFit.cover),
-                            trailing: appStore.verificationStatus == VerificationStatus.accepted || appStore.verificationStatus == VerificationStatus.pending
+                            titleTextStyle: primaryTextStyle(
+                                color:
+                                    appStore.isDarkMode ? bodyDark : bodyWhite),
+                            leading: Image.asset(ic_tick_square,
+                                height: 18,
+                                width: 18,
+                                color: appColorPrimary,
+                                fit: BoxFit.cover),
+                            trailing: appStore.verificationStatus ==
+                                        VerificationStatus.accepted ||
+                                    appStore.verificationStatus ==
+                                        VerificationStatus.pending
                                 ? Container(
-                                    padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                    decoration: BoxDecoration(color: appStore.verificationStatus == VerificationStatus.accepted ? appGreenColor : context.primaryColor, borderRadius: radius(4)),
-                                    child: Text(appStore.verificationStatus.capitalizeFirstLetter(), style: secondaryTextStyle(color: Colors.white)),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 6, vertical: 2),
+                                    decoration: BoxDecoration(
+                                        color: appStore.verificationStatus ==
+                                                VerificationStatus.accepted
+                                            ? appGreenColor
+                                            : context.primaryColor,
+                                        borderRadius: radius(4)),
+                                    child: Text(
+                                        appStore.verificationStatus
+                                            .capitalizeFirstLetter(),
+                                        style: secondaryTextStyle(
+                                            color: Colors.white)),
                                   )
                                 : Offstage(),
-                            onTap: () {
-                              if (appStore.verificationStatus == VerificationStatus.rejected || appStore.verificationStatus.isEmpty)
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return RequestVerificationDialog();
-                                  },
-                                );
-                            },
+                            onTap: () {},
                           ),
                         ),
                         SettingItemWidget(
                           title: language.deleteAccount,
-                          titleTextStyle: primaryTextStyle(color: Colors.redAccent),
-                          leading: Image.asset(ic_delete, height: 18, width: 18, color: Colors.redAccent, fit: BoxFit.cover),
-                          onTap: () {
-                            showConfirmDialogCustom(
-                              context,
-                              onAccept: (c) {
-                                ifNotTester(() async {
-                                  appStore.setLoading(true);
-                                  await deleteAccount().then((value) {
-                                    toast(value.message);
-                                    appStore.setVerificationStatus(VerificationStatus.pending);
-                                    logout(context);
-                                  }).catchError((e) {
-                                    appStore.setLoading(false);
-                                    toast(e.toString());
-                                  });
-                                });
-                              },
-                              dialogType: DialogType.DELETE,
-                              title: language.deleteAccountConfirmation,
-                            );
-                          },
+                          titleTextStyle:
+                              primaryTextStyle(color: Colors.redAccent),
+                          leading: Image.asset(ic_delete,
+                              height: 18,
+                              width: 18,
+                              color: Colors.redAccent,
+                              fit: BoxFit.cover),
+                          onTap: () {},
                         ),
                       ],
                     ),
                     TextButton(
-                      onPressed: () {
-                        showConfirmDialogCustom(
-                          context,
-                          primaryColor: appColorPrimary,
-                          title: language.logoutConfirmation,
-                          onAccept: (s) {
-                            logout(context);
-                          },
-                        );
-                      },
-                      child: Text(language.logout, style: boldTextStyle(color: context.primaryColor)),
+                      onPressed: () {},
+                      child: Text(language.logout,
+                          style: boldTextStyle(color: context.primaryColor)),
                     ).paddingAll(16),
                     30.height,
                   ],

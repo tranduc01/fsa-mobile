@@ -44,6 +44,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
   void initState() {
     super.initState();
     setStatusBarColorBasedOnTheme();
+    galleryController.fetchAlbums();
     afterBuildCreated(
       () {
         scrollCont.addListener(

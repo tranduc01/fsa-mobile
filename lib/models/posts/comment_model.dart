@@ -1,8 +1,5 @@
 import 'package:socialv/models/common_models/post_mdeia_model.dart';
 
-import '../reactions/reactions_count_model.dart';
-
-
 class CommentModel {
   List<CommentModel>? children;
   String? content;
@@ -18,8 +15,6 @@ class CommentModel {
   bool? isUserVerified;
   int? reactionCount;
   List<PostMediaModel>? medias;
-  List<Reactions>? reactions;
-  Reactions? curUserReaction;
 
   CommentModel({
     this.hasMentions,
@@ -35,15 +30,16 @@ class CommentModel {
     this.userName,
     this.isUserVerified,
     this.medias,
-    this.reactions,
-    this.curUserReaction,
     this.reactionCount,
-
   });
 
   factory CommentModel.fromJson(Map<String, dynamic> json) {
     return CommentModel(
-      children: json['children'] != null ? (json['children'] as List).map((i) => CommentModel.fromJson(i)).toList() : null,
+      children: json['children'] != null
+          ? (json['children'] as List)
+              .map((i) => CommentModel.fromJson(i))
+              .toList()
+          : null,
       content: json['content'],
       dateRecorded: json['date_recorded'],
       id: json['id'],
@@ -56,9 +52,11 @@ class CommentModel {
       userName: json['user_name'],
       reactionCount: json["reaction_count"],
       isUserVerified: json['is_user_verified'],
-      medias: json['medias'] != null ? (json['medias'] as List).map((i) => PostMediaModel.fromJson(i)).toList() : null,
-      reactions: json['reactions'] != null ? (json['reactions'] as List).map((i) => Reactions.fromJson(i)).toList() : null,
-      curUserReaction: json['cur_user_reaction'] != null ? Reactions.fromJson(json['cur_user_reaction']) : null,
+      medias: json['medias'] != null
+          ? (json['medias'] as List)
+              .map((i) => PostMediaModel.fromJson(i))
+              .toList()
+          : null,
     );
   }
 
@@ -81,12 +79,6 @@ class CommentModel {
     }
     if (this.medias != null) {
       data['medias'] = this.medias!.map((v) => v.toJson()).toList();
-    }
-    if (this.reactions != null) {
-      data['reactions'] = this.reactions!.map((v) => v.toJson()).toList();
-    }
-    if (this.curUserReaction != null) {
-      data['cur_user_reaction'] = this.curUserReaction!.toJson();
     }
     return data;
   }

@@ -1,31 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/components/loading_widget.dart';
-import 'package:socialv/components/no_data_lottie_widget.dart';
+import 'package:socialv/controllers/post_controller.dart';
 import 'package:socialv/main.dart';
-import 'package:socialv/models/forums/common_models.dart';
-import 'package:socialv/models/forums/forum_detail_model.dart';
-import 'package:socialv/models/forums/forum_model.dart';
-import 'package:socialv/models/forums/topic_model.dart';
-import 'package:socialv/models/posts/post_model.dart';
-import 'package:socialv/network/rest_apis.dart';
-import 'package:socialv/screens/forums/components/forum_detail_component.dart';
-import 'package:socialv/screens/forums/screens/create_topic_screen.dart';
-import 'package:socialv/screens/groups/screens/group_detail_screen.dart';
-import 'package:socialv/utils/app_constants.dart';
 
-import '../../profile/components/profile_header_component.dart';
+import '../../../components/no_data_lottie_widget.dart';
+import '../../../models/posts/topic.dart';
+import '../../post/components/post_component.dart';
 
 class ForumDetailScreen extends StatefulWidget {
-  final int forumId;
-  final String type;
-  final bool isFromSubscription;
+  final Topic topic;
 
-  const ForumDetailScreen(
-      {required this.forumId,
-      required this.type,
-      this.isFromSubscription = false});
+  const ForumDetailScreen({Key? key, required this.topic}) : super(key: key);
 
   @override
   State<ForumDetailScreen> createState() => _ForumDetailScreenState();
@@ -33,123 +20,26 @@ class ForumDetailScreen extends StatefulWidget {
 
 class _ForumDetailScreenState extends State<ForumDetailScreen>
     with SingleTickerProviderStateMixin {
-  ForumDetailModel forum = ForumDetailModel(
-    id: 1,
-    description: '123',
-    title: '123',
-    lastUpdate: '2023-10-10',
-    image:
-        'https://scontent.fsgn16-1.fna.fbcdn.net/v/t39.30808-6/353017930_6153557468098795_166607921767111563_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=5f2048&_nc_ohc=W6LrcRHkvIUAX_iHmEz&_nc_ht=scontent.fsgn16-1.fna&oh=00_AfBhfixdYyCvfg2hmq1m2iA2Jfv_Zeso_Jd2WFyEUKq7ig&oe=6568B66C',
-  );
   ScrollController _scrollController = ScrollController();
-
-  List<TopicModel> topicList = [
-    TopicModel(
-        id: 1,
-        title: 'Hội những người mê hoa lan vãi cả lồn',
-        description: 'Ai có đam mê thì vào đây mình thẩm du',
-        postCount: '10',
-        freshness: [],
-        postList: [TopicReplyModel()]),
-    TopicModel(
-      id: 3,
-      title: 'Hoa lan là nhất',
-      description: 'Ai có đam mê thì vào đây mình thẩm du',
-      postCount: '10',
-      freshness: [],
-    ),
-    TopicModel(
-      id: 2,
-      title: 'Bán hoa dâm bụt',
-      description: 'Ai có đam mê thì vào đây mình thẩm du',
-      postCount: '10',
-      freshness: [],
-    )
-  ];
-  List<ForumModel> forumList = [
-    ForumModel(
-        id: 1,
-        title: 'Hội những người mê hoa lan vãi cả lồn',
-        description: '123',
-        postCount: '10',
-        topicCount: '10',
-        isPrivate: 0),
-  ];
-
-  int selectedIndex = 0;
-
-  late TabController tabController;
-
+  late PostController postController = Get.put(PostController());
   int mPage = 1;
   bool mIsLastPage = false;
-
-  bool isSubscribed = false;
-  bool showOptions = false;
-  bool isError = false;
-  bool isUpdate = false;
-  bool isFetched = false;
 
   @override
   void initState() {
     super.initState();
-    getDetails();
-
-    tabController = TabController(length: 2, vsync: this);
-
+    Future.delayed(Duration.zero, () async {
+      await postController.fetchPostsByTopic(widget.topic.id!);
+    });
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
         if (!mIsLastPage) {
           mPage++;
           appStore.setLoading(true);
-          getDetails();
         }
       }
     });
-  }
-
-  Future<ForumDetailModel> getDetails() async {
-    // isError = false;
-    // appStore.setLoading(true);
-
-    // await getForumDetail(forumId: widget.forumId, page: mPage)
-    //     .then((value) async {
-    //   forum = value;
-
-    //   if (value.forumList.validate().isNotEmpty) {
-    //     selectedIndex = 1;
-    //   } else {
-    //     selectedIndex = 0;
-    //   }
-
-    //   isFetched = true;
-    //   isSubscribed = value.isSubscribed.validate();
-    //   if (mPage == 1) {
-    //     forumList.clear();
-    //     topicList.clear();
-    //   }
-
-    //   mIsLastPage = value.topicList.validate().length != PER_PAGE &&
-    //       value.forumList.validate().length != PER_PAGE;
-    //   topicList.addAll(value.topicList.validate());
-    //   forumList.addAll(value.forumList.validate());
-
-    //   showOptions =
-    //       forumList.validate().isNotEmpty && topicList.validate().isNotEmpty;
-
-    //   setState(() {});
-
-    //   appStore.setLoading(false);
-    // }).catchError((e) {
-    //   isError = true;
-    //   appStore.setLoading(false);
-    //   setState(() {});
-
-    //   toast(e.toString(), print: true);
-    // });
-    isFetched = true;
-    appStore.setLoading(false);
-    return forum;
   }
 
   @override
@@ -159,279 +49,107 @@ class _ForumDetailScreenState extends State<ForumDetailScreen>
 
   @override
   void dispose() {
-    tabController.dispose();
     _scrollController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
-        appStore.setLoading(false);
-        finish(context, isUpdate);
-        return Future.value(true);
+    return RefreshIndicator(
+      onRefresh: () async {
+        mPage = 1;
+        //getDetails();
       },
-      child: RefreshIndicator(
-        onRefresh: () async {
-          mPage = 1;
-          getDetails();
-        },
-        color: context.primaryColor,
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text('Topic', style: boldTextStyle(size: 20)),
-            elevation: 0,
-            centerTitle: true,
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back, color: context.iconColor),
-              onPressed: () {
-                finish(context, isUpdate);
-              },
-            ),
-            // actions: [
-            //   Theme(
-            //     data: Theme.of(context).copyWith(useMaterial3: false),
-            //     child: PopupMenuButton(
-            //       position: PopupMenuPosition.under,
-            //       padding: EdgeInsets.zero,
-            //       shape: RoundedRectangleBorder(
-            //           borderRadius: BorderRadius.circular(commonRadius)),
-            //       onSelected: (val) async {
-            //         if (val == 1) {
-            //           ifNotTester(() {
-            //             isSubscribed = !isSubscribed;
-            //             setState(() {});
-
-            //             if (isSubscribed) {
-            //               toast(language.subscribedSuccessfully);
-            //             } else {
-            //               toast(language.unsubscribedSuccessfully);
-            //             }
-
-            //             subscribeForum(forumId: widget.forumId).then((value) {
-            //               if (widget.isFromSubscription) isUpdate = true;
-            //             }).catchError((e) {
-            //               log(e.toString());
-            //             });
-            //           });
-            //         } else {
-            //           CreateTopicScreen(
-            //                   forumName: forum.title.validate(),
-            //                   forumId: widget.forumId)
-            //               .launch(context)
-            //               .then((value) {
-            //             if (value ?? false) {
-            //               isUpdate = true;
-            //               appStore.setLoading(true);
-            //               mPage = 1;
-            //               setState(() {});
-            //               getDetails();
-            //             }
-            //           });
-            //         }
-            //       },
-            //       icon: Icon(Icons.more_horiz),
-            //       itemBuilder: (context) => <PopupMenuEntry>[
-            //         PopupMenuItem(
-            //           value: 1,
-            //           child: Text(isSubscribed
-            //               ? language.unsubscribe
-            //               : language.subscribe),
-            //           textStyle: primaryTextStyle(),
-            //         ),
-            //         if (forum.groupDetails == null ||
-            //             forum.groupDetails!.isGroupMember.validate())
-            //           PopupMenuItem(
-            //             value: 2,
-            //             child: Text(language.createTopic),
-            //             textStyle: primaryTextStyle(),
-            //           ),
-            //       ],
-            //     ),
-            //   ),
-            // ],
-          ),
-          body: Observer(
-            builder: (_) {
-              return Stack(
-                alignment: isFetched ? Alignment.topCenter : Alignment.center,
-                children: [
-                  isFetched
-                      ? SingleChildScrollView(
-                          controller: _scrollController,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // ProfileHeaderComponent(
-                              //   avatarUrl: forum.image.validate(),
-                              //   //cover: forum.groupDetails != null && forum.groupDetails!.coverImage.validate().isNotEmpty ? forum.groupDetails!.coverImage.validate() : null,
-                              // ),
-                              // 16.height,
-                              Text(forum.title.validate(),
-                                      style: boldTextStyle(size: 20))
-                                  .paddingSymmetric(horizontal: 16)
-                                  .onTap(() {
-                                // if (forum.groupDetails != null &&
-                                //     forum.groupDetails!.groupId != 0) {
-                                //   // GroupDetailScreen(
-                                //   //         groupId: forum.groupDetails!.groupId
-                                //   //             .validate())
-                                //   //     .launch(context)
-                                //   //     .then((value) {
-                                //   //   if (value ?? false) {
-                                //   //     mPage = 1;
-                                //   //     setState(() {});
-                                //   //     getDetails();
-                                //   //   }
-                                //   // });
-                                // }
-                              },
-                                      splashColor: Colors.transparent,
-                                      highlightColor:
-                                          Colors.transparent).center(),
-                              8.height,
-                              ReadMoreText(
-                                forum.description.validate(),
-                                trimLength: 100,
-                                style: secondaryTextStyle(),
-                                textAlign: TextAlign.center,
-                              ).paddingSymmetric(horizontal: 16).center(),
-                              16.height,
-                              // AppButton(
-                              //   padding: EdgeInsets.symmetric(
-                              //       horizontal: 10, vertical: 4),
-                              //   elevation: 0,
-                              //   color: isSubscribed
-                              //       ? appOrangeColor
-                              //       : appGreenColor,
-                              //   child: Text(
-                              //       isSubscribed
-                              //           ? language.unsubscribe
-                              //           : language.subscribe,
-                              //       style: boldTextStyle(color: Colors.white)),
-                              //   onTap: () {
-                              //     ifNotTester(() {
-                              //       isSubscribed = !isSubscribed;
-                              //       setState(() {});
-
-                              //       if (isSubscribed) {
-                              //         toast(language.subscribedSuccessfully);
-                              //       } else {
-                              //         toast(language.unsubscribedSuccessfully);
-                              //       }
-
-                              //       subscribeForum(forumId: widget.forumId)
-                              //           .then((value) {
-                              //         if (widget.isFromSubscription)
-                              //           isUpdate = true;
-                              //       }).catchError((e) {
-                              //         log(e.toString());
-                              //       });
-                              //     });
-                              //   },
-                              // ).paddingSymmetric(horizontal: 16),
-                              Container(
-                                margin: EdgeInsets.all(16),
-                                padding: EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color: context.primaryColor.withAlpha(30),
-                                  border: Border(
-                                      left: BorderSide(
-                                          color: context.primaryColor,
-                                          width: 2)),
-                                ),
-                                child: Text(forum.lastUpdate.validate(),
-                                    style: secondaryTextStyle()),
-                              ),
-                              // if ((forum.groupDetails != null &&
-                              //         forum.groupDetails!.isGroupMember
-                              //             .validate()) ||
-                              //     forum.isPrivate == 0)
-                              ForumDetailComponent(
-                                  type: widget.type,
-                                  forumList: forumList,
-                                  topicList: topicList,
-                                  selectedIndex: selectedIndex,
-                                  showOptions: showOptions,
-                                  callback: () {
-                                    isUpdate = true;
-                                    mPage = 1;
-                                    setState(() {});
-                                    getDetails();
-                                  }),
-                              // else if (forum.groupDetails != null &&
-                              //     !forum.groupDetails!.isGroupMember.validate())
-                              //   appButton(
-                              //     context: context,
-                              //     shapeBorder: RoundedRectangleBorder(
-                              //         borderRadius: radius(4)),
-                              //     text: language.viewGroup,
-                              //     textStyle: boldTextStyle(color: Colors.white),
-                              //     onTap: () {
-                              //       // if (forum.groupDetails != null &&
-                              //       //     forum.groupDetails!.groupId != 0)
-                              //       //   GroupDetailScreen(
-                              //       //           groupId: forum
-                              //       //               .groupDetails!.groupId
-                              //       //               .validate())
-                              //       //       .launch(context)
-                              //       //       .then((value) {
-                              //       //     if (value ?? false) {
-                              //       //       mPage = 1;
-                              //       //       setState(() {});
-                              //       //       getDetails();
-                              //       //     }
-                              //       //   });
-                              //       // else
-                              //       toast(language.canNotViewThisGroup);
-                              //     },
-                              //     width: context.width() - 64,
-                              //   ).paddingSymmetric(vertical: 20).center()
-                              // else
-                              //   ForumDetailComponent(
-                              //       type: widget.type,
-                              //       forumList: forumList,
-                              //       topicList: topicList,
-                              //       selectedIndex: selectedIndex,
-                              //       showOptions: showOptions,
-                              //       callback: () {
-                              //         isUpdate = true;
-                              //         mPage = 1;
-                              //         setState(() {});
-                              //         getDetails();
-                              //       }),
-                              70.height,
-                            ],
-                          ),
-                        ).visible(!isError)
-                      : LoadingWidget()
-                          .center()
-                          .visible(!appStore.isLoading & !isError),
-                  if (isError)
-                    NoDataWidget(
-                      imageWidget: NoDataLottieWidget(),
-                      title: isError
-                          ? language.somethingWentWrong
-                          : language.noDataFound,
-                      retryText: '   ${language.clickToRefresh}   ',
-                      onRetry: () {
-                        mPage = 1;
-                        getDetails();
-                      },
-                    ).center(),
-                  Positioned(
-                    bottom: mPage != 1 ? 10 : null,
-                    child: LoadingWidget(
-                            isBlurBackground: mPage == 1 ? true : false)
-                        .center()
-                        .visible(appStore.isLoading),
-                  ),
-                ],
-              );
+      color: context.primaryColor,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Topic', style: boldTextStyle(size: 20)),
+          elevation: 0,
+          centerTitle: true,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () {
+              finish(context);
             },
           ),
+        ),
+        body: Stack(
+          alignment: Alignment.topCenter,
+          children: [
+            SingleChildScrollView(
+              controller: _scrollController,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(widget.topic.name.validate(),
+                          style: boldTextStyle(size: 20))
+                      .paddingSymmetric(horizontal: 16)
+                      .onTap(() {},
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent)
+                      .center(),
+                  8.height,
+                  ReadMoreText(
+                    widget.topic.description.validate(),
+                    trimLength: 100,
+                    style: secondaryTextStyle(),
+                    textAlign: TextAlign.center,
+                  ).paddingSymmetric(horizontal: 16).center(),
+                  16.height,
+                  Obx(() {
+                    if (postController.isLoading.value)
+                      return LoadingWidget().center();
+                    else if (postController.isError.value ||
+                        postController.posts.isEmpty)
+                      return SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.8,
+                        child: NoDataWidget(
+                          imageWidget: NoDataLottieWidget(),
+                          title: postController.isError.value
+                              ? language.somethingWentWrong
+                              : language.noDataFound,
+                          onRetry: () {
+                            postController.fetchPostsByTopic(widget.topic.id!);
+                          },
+                          retryText: '   ' + language.clickToRefresh + '   ',
+                        ).center(),
+                      );
+                    else
+                      return AnimatedListView(
+                        padding: EdgeInsets.only(bottom: mIsLastPage ? 16 : 60),
+                        itemCount: postController.posts.length,
+                        slideConfiguration: SlideConfiguration(
+                            delay: Duration(milliseconds: 80),
+                            verticalOffset: 300),
+                        itemBuilder: (context, index) {
+                          return Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              PostComponent(
+                                post: postController.posts[index],
+                                callback: () {
+                                  mPage = 1;
+                                  postController.fetchPosts();
+                                },
+                              ).paddingSymmetric(horizontal: 8),
+                            ],
+                          );
+                        },
+                        shrinkWrap: true,
+                      );
+                  }),
+                  70.height,
+                ],
+              ),
+            ),
+            Positioned(
+              bottom: mPage != 1 ? 10 : null,
+              child: LoadingWidget(isBlurBackground: mPage == 1 ? true : false)
+                  .center()
+                  .visible(appStore.isLoading),
+            ),
+          ],
         ),
       ),
     );

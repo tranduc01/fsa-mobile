@@ -1,12 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:socialv/main.dart';
 import 'package:socialv/utils/cached_network_image.dart';
 
 import '../../../../utils/app_constants.dart';
-import '../../../../utils/constants.dart';
 
 class SearchCardComponent extends StatefulWidget {
   final int id;
@@ -73,20 +69,7 @@ class _SearchCardComponentState extends State<SearchCardComponent> {
           ],
         ).expand(),
         IconButton(
-          onPressed: () async {
-            if (widget.isMember.validate()) {
-              appStore.recentMemberSearchList
-                  .removeWhere((element) => element.id == widget.id);
-              await setValue(SharePreferencesKey.RECENT_SEARCH_MEMBERS,
-                  jsonEncode(appStore.recentMemberSearchList));
-            } else {
-              appStore.recentGroupsSearchList
-                  .removeWhere((element) => element.id == widget.id);
-              await setValue(SharePreferencesKey.RECENT_SEARCH_GROUPS,
-                  jsonEncode(appStore.recentGroupsSearchList));
-            }
-            widget.callback!.call();
-          },
+          onPressed: () async {},
           icon: Image.asset(
             ic_close_square,
             height: 20,

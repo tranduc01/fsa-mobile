@@ -3,6 +3,43 @@ import 'package:flutter/material.dart';
 abstract class BaseLanguage {
   static BaseLanguage? of(BuildContext context) =>
       Localizations.of<BaseLanguage>(context, BaseLanguage);
+
+  String get requestPackageCount;
+
+  String get purchase;
+
+  String get receivedSuccessfully;
+
+  String get expertiseThisRequestConfirmMsg;
+
+  String get expertiseThisRequest;
+
+  String get rejectMessage;
+
+  String get feedbackRating;
+
+  String get feedbackSentFailed;
+
+  String get feedbackSentSuccessfully;
+
+  String get noOne;
+
+  String get sendFeedbackExpertiseRequest;
+
+  String get feedbackMessageExpertiseRequest;
+
+  String get ratingExpertiseRequest;
+
+  String get feedback;
+
+  String get messageExpertiseRequest;
+
+  String get commonName;
+
+  String get expertiseRequestResult;
+
+  String get expert;
+
   String get packages;
 
   String get collections;

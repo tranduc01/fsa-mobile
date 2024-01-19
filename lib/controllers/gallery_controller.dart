@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as path;
 import 'package:http_parser/http_parser.dart';
 import 'package:get/get.dart';
 import 'package:socialv/models/common_models.dart';
@@ -34,7 +35,7 @@ class GalleryController extends GetxController {
       'Authorization': 'Bearer $token',
     };
     var response = await GetConnect().get(url, headers: headers);
-
+    print(response.bodyString!);
     ResponseModel responseModel =
         ResponseModel.fromJson(jsonDecode(response.bodyString!));
 
@@ -44,6 +45,33 @@ class GalleryController extends GetxController {
       return albums.value = (responseModel.data['items'] as List)
           .map((e) => Album.fromJson(e))
           .toList();
+    } else {
+      isLoading(false);
+      isError(true);
+      print('Request failed with status: ${response.statusCode}');
+      print('Request failed with status: ${responseModel.message}');
+      throw Exception('Failed to load album');
+    }
+  }
+
+  Future<List<Album>> fetchAlbumsDiscovery() async {
+    isLoading(true);
+    var url = '$BASE_URL/Collection/discovery';
+
+    String? token = await storage.read(key: 'jwt');
+    var headers = {
+      'Authorization': 'Bearer $token',
+    };
+    var response = await GetConnect().get(url, headers: headers);
+
+    ResponseModel responseModel =
+        ResponseModel.fromJson(jsonDecode(response.bodyString!));
+
+    if (response.statusCode == 200) {
+      isLoading(false);
+      isError(false);
+      return albums.value =
+          (responseModel.data as List).map((e) => Album.fromJson(e)).toList();
     } else {
       isLoading(false);
       isError(true);
@@ -83,11 +111,13 @@ class GalleryController extends GetxController {
       request.headers['Authorization'] =
           'Bearer ${await storage.read(key: 'jwt')}';
       for (var media in medias) {
+        String type =
+            path.extension(media.file!.path) == '.mp4' ? 'video' : 'image';
         var multipartFile = await http.MultipartFile.fromPath(
           'medias',
           media.file!.path,
           filename: media.file!.path.split('/').last,
-          contentType: MediaType('image', 'jpeg'),
+          contentType: MediaType(type, 'mp4'),
         );
         request.files.add(multipartFile);
       }
@@ -106,8 +136,8 @@ class GalleryController extends GetxController {
     }
   }
 
-  Future<void> updateAlbum(
-      Album album, List<PostMedia>? medias, List<int>? deleteId) async {
+  Future<void> updateAlbum(Album album, List<PostMedia>? medias,
+      List<int>? deleteId, bool? isPublic) async {
     try {
       var url = Uri.parse('$BASE_URL/Collection/${album.id}');
       var request = http.MultipartRequest('PATCH', url);
@@ -115,11 +145,13 @@ class GalleryController extends GetxController {
           'Bearer ${await storage.read(key: 'jwt')}';
       if (medias != null) {
         for (var media in medias) {
+          String type =
+              path.extension(media.file!.path) == '.mp4' ? 'video' : 'image';
           var multipartFile = await http.MultipartFile.fromPath(
             'mediasAdd',
             media.file!.path,
             filename: media.file!.path.split('/').last,
-            contentType: MediaType('image', 'jpeg'),
+            contentType: MediaType(type, 'jpeg'),
           );
           request.files.add(multipartFile);
         }
@@ -127,6 +159,10 @@ class GalleryController extends GetxController {
 
       if (deleteId != null) {
         request.fields['mediaDeleteIds'] = deleteId.join(",");
+      }
+
+      if (isPublic != null) {
+        request.fields['isPublic'] = isPublic.toString();
       }
 
       request.fields['title'] = album.title!;

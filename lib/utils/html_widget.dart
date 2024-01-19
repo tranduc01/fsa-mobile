@@ -3,11 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/components/table_view_widget.dart';
-import 'package:socialv/components/vimeo_embed_widget.dart';
-import 'package:socialv/components/youtube_embed_widget.dart';
 import 'package:socialv/screens/post/screens/image_screen.dart';
-import 'package:socialv/screens/post/screens/pdf_screen.dart';
-import 'package:socialv/screens/profile/screens/member_profile_screen.dart';
 import 'package:socialv/utils/app_constants.dart';
 
 class HtmlWidget extends StatelessWidget {
@@ -22,16 +18,10 @@ class HtmlWidget extends StatelessWidget {
     return Html(
       data: postContent.validate(),
       onLinkTap: (s, _, __) {
-        if (s!.split('/').last.contains('.pdf')) {
-          PDFScreen(docURl: s).launch(context);
+        log(s);
+        if (s!.contains('?user_id=')) {
         } else {
-          log(s);
-          if (s.contains('?user_id=')) {
-            MemberProfileScreen(memberId: s.splitAfter('?user_id=').toInt())
-                .launch(context);
-          } else {
-            openWebPage(context, url: s);
-          }
+          openWebPage(context, url: s);
         }
       },
       onAnchorTap: (s, _, __) {},
@@ -206,38 +196,11 @@ class HtmlWidget extends StatelessWidget {
       },
       extensions: [
         //ImageExtension(),
-        TagExtension(
-          tagsToExtend: {'embed'},
-          builder: (extensionContext) {
-            var videoLink = extensionContext.parser.htmlData.text
-                .splitBetween('<embed>', '</embed');
 
-            if (videoLink.contains('yout')) {
-              return YouTubeEmbedWidget(
-                  videoLink.replaceAll('<br>', '').toYouTubeId());
-            } else if (videoLink.contains('vimeo')) {
-              return VimeoEmbedWidget(videoLink.replaceAll('<br>', ''));
-            } else {
-              return Offstage();
-            }
-          },
-        ),
         TagExtension(
           tagsToExtend: {'figure'},
           builder: (extensionContext) {
-            if (extensionContext.innerHtml.contains('yout')) {
-              return YouTubeEmbedWidget(extensionContext.innerHtml
-                  .splitBetween(
-                      '<div class="wp-block-embed__wrapper">', "</div>")
-                  .replaceAll('<br>', '')
-                  .toYouTubeId());
-            } else if (extensionContext.innerHtml.contains('vimeo')) {
-              return VimeoEmbedWidget(extensionContext.innerHtml
-                  .splitBetween(
-                      '<div class="wp-block-embed__wrapper">', "</div>")
-                  .replaceAll('<br>', '')
-                  .splitAfter('com/'));
-            } else if (extensionContext.innerHtml.contains('audio')) {
+            if (extensionContext.innerHtml.contains('audio')) {
               //return AudioPostWidget(postString: extensionContext.innerHtml);
             } else if (extensionContext.innerHtml.contains('twitter')) {
               //String t = extensionContext.innerHtml.splitAfter('<div class="wp-block-embed__wrapper">').splitBefore('</div>');
@@ -248,13 +211,7 @@ class HtmlWidget extends StatelessWidget {
             return Offstage();
           },
         ),
-        TagExtension(
-          tagsToExtend: {'iframe'},
-          builder: (extensionContext) {
-            return YouTubeEmbedWidget(
-                extensionContext.attributes['src'].validate().toYouTubeId());
-          },
-        ),
+
         TagExtension(
           tagsToExtend: {'img'},
           builder: (extensionContext) {

@@ -12,8 +12,10 @@ class ExpertiseRequest {
   DateTime? createdAt;
   int? status;
   User? expert;
-  int? expertApprovalStatus;
+  int? expertAssignStatus;
   DateTime? assignAt;
+  DateTime? canceledAt;
+  String? cancelMessage;
   List<Media>? medias;
   List<ExpertiseResult>? expertiseResults;
   ExpertiseFeedback? feedback;
@@ -26,8 +28,10 @@ class ExpertiseRequest {
     this.createdAt,
     this.status,
     this.expert,
-    this.expertApprovalStatus,
+    this.expertAssignStatus,
     this.assignAt,
+    this.canceledAt,
+    this.cancelMessage,
     this.medias,
     this.expertiseResults,
     this.feedback,
@@ -48,10 +52,14 @@ class ExpertiseRequest {
         expert: json['expert'] != null
             ? User.fromJson(json['expert'] as Map<String, dynamic>)
             : null,
-        expertApprovalStatus: json['expertApprovalStatus'],
+        expertAssignStatus: json['expertAssignStatus'],
         assignAt: json['assignAt'] != null
             ? DateTime.parse(json['assignAt'] as String)
             : null,
+        canceledAt: json['canceledAt'] != null
+            ? DateTime.parse(json['canceledAt'] as String)
+            : null,
+        cancelMessage: json['cancelMessage'] as String?,
         medias: json['medias'] != null
             ? (json['medias'] as List<dynamic>?)
                 ?.map((e) => Media.fromJson(e as Map<String, dynamic>))

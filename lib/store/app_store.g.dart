@@ -25,22 +25,6 @@ mixin _$AppStore on AppStoreBase, Store {
     });
   }
 
-  late final _$defaultReactionAtom =
-      Atom(name: 'AppStoreBase.defaultReaction', context: context);
-
-  @override
-  ReactionsModel get defaultReaction {
-    _$defaultReactionAtom.reportRead();
-    return super.defaultReaction;
-  }
-
-  @override
-  set defaultReaction(ReactionsModel value) {
-    _$defaultReactionAtom.reportWrite(value, super.defaultReaction, () {
-      super.defaultReaction = value;
-    });
-  }
-
   late final _$giphyKeyAtom =
       Atom(name: 'AppStoreBase.giphyKey', context: context);
 
@@ -507,23 +491,6 @@ mixin _$AppStore on AppStoreBase, Store {
     });
   }
 
-  late final _$recentGroupsSearchListAtom =
-      Atom(name: 'AppStoreBase.recentGroupsSearchList', context: context);
-
-  @override
-  List<GroupResponse> get recentGroupsSearchList {
-    _$recentGroupsSearchListAtom.reportRead();
-    return super.recentGroupsSearchList;
-  }
-
-  @override
-  set recentGroupsSearchList(List<GroupResponse> value) {
-    _$recentGroupsSearchListAtom
-        .reportWrite(value, super.recentGroupsSearchList, () {
-      super.recentGroupsSearchList = value;
-    });
-  }
-
   late final _$suggestedUserListAtom =
       Atom(name: 'AppStoreBase.suggestedUserList', context: context);
 
@@ -537,22 +504,6 @@ mixin _$AppStore on AppStoreBase, Store {
   set suggestedUserList(List<FriendRequestModel> value) {
     _$suggestedUserListAtom.reportWrite(value, super.suggestedUserList, () {
       super.suggestedUserList = value;
-    });
-  }
-
-  late final _$suggestedGroupsListAtom =
-      Atom(name: 'AppStoreBase.suggestedGroupsList', context: context);
-
-  @override
-  List<SuggestedGroup> get suggestedGroupsList {
-    _$suggestedGroupsListAtom.reportRead();
-    return super.suggestedGroupsList;
-  }
-
-  @override
-  set suggestedGroupsList(List<SuggestedGroup> value) {
-    _$suggestedGroupsListAtom.reportWrite(value, super.suggestedGroupsList, () {
-      super.suggestedGroupsList = value;
     });
   }
 
@@ -586,16 +537,6 @@ mixin _$AppStore on AppStoreBase, Store {
     _$isMultiSelectAtom.reportWrite(value, super.isMultiSelect, () {
       super.isMultiSelect = value;
     });
-  }
-
-  late final _$setDefaultReactionAsyncAction =
-      AsyncAction('AppStoreBase.setDefaultReaction', context: context);
-
-  @override
-  Future<void> setDefaultReaction(ReactionsModel val,
-      {bool isInitializing = false}) {
-    return _$setDefaultReactionAsyncAction.run(
-        () => super.setDefaultReaction(val, isInitializing: isInitializing));
   }
 
   late final _$setGiphyKeyAsyncAction =
@@ -917,7 +858,6 @@ mixin _$AppStore on AppStoreBase, Store {
   String toString() {
     return '''
 isReactionEnable: ${isReactionEnable},
-defaultReaction: ${defaultReaction},
 giphyKey: ${giphyKey},
 wooCurrency: ${wooCurrency},
 nonce: ${nonce},
@@ -947,9 +887,7 @@ displayPostCommentsCount: ${displayPostCommentsCount},
 displayFriendRequestBtn: ${displayFriendRequestBtn},
 isShopEnable: ${isShopEnable},
 recentMemberSearchList: ${recentMemberSearchList},
-recentGroupsSearchList: ${recentGroupsSearchList},
 suggestedUserList: ${suggestedUserList},
-suggestedGroupsList: ${suggestedGroupsList},
 notificationCount: ${notificationCount},
 isMultiSelect: ${isMultiSelect}
     ''';

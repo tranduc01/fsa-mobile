@@ -2,14 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/components/loading_widget.dart';
+import 'package:socialv/controllers/gallery_controller.dart';
 import 'package:socialv/controllers/topic_controller.dart';
 import 'package:socialv/main.dart';
+import 'package:socialv/models/gallery/albums.dart';
 import 'package:socialv/screens/forums/components/forums_card_component.dart';
 import 'package:socialv/screens/forums/screens/forum_detail_screen.dart';
+import 'package:socialv/screens/forums/screens/single_discovery_album_detail_screen.dart';
 
 import '../../../utils/app_constants.dart';
 import '../../models/posts/topic.dart';
+import '../expertise_request/expertise_request/components/video_media_component.dart';
 import '../post/screens/image_screen.dart';
+import '../post/screens/video_post_screen.dart';
 
 class ForumsFragment extends StatefulWidget {
   final ScrollController controller;
@@ -30,6 +35,7 @@ var listImage = [
 class _ForumsFragment extends State<ForumsFragment> {
   TextEditingController searchController = TextEditingController();
   late TopicController topicController = Get.put(TopicController());
+  late GalleryController galleryController = Get.put(GalleryController());
   int mPage = 1;
   bool mIsLastPage = false;
 
@@ -38,7 +44,10 @@ class _ForumsFragment extends State<ForumsFragment> {
 
   @override
   void initState() {
-    topicController.fetchTopics();
+    Future.delayed(Duration.zero, () async {
+      await topicController.fetchTopics();
+      await galleryController.fetchAlbumsDiscovery();
+    });
     super.initState();
   }
 
@@ -56,142 +65,27 @@ class _ForumsFragment extends State<ForumsFragment> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        16.height,
-        Container(
-          padding: EdgeInsets.only(left: 16),
-          child: Text(
-            language.topics,
-            style: TextStyle(
-                fontFamily: 'Roboto',
-                fontWeight: FontWeight.bold,
-                fontSize: 22),
+    return Obx(
+      () => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          16.height,
+          Container(
+            padding: EdgeInsets.only(left: 16),
+            child: Text(
+              language.topics,
+              style: TextStyle(
+                  fontFamily: 'Roboto',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 22),
+            ),
           ),
-        ),
-        // Container(
-        //   width: context.width() - 32,
-        //   margin: EdgeInsets.only(left: 16, right: 8),
-        //   decoration: BoxDecoration(
-        //       color: context.cardColor, borderRadius: radius(commonRadius)),
-        //   child: AppTextField(
-        //     controller: searchController,
-        //     textFieldType: TextFieldType.USERNAME,
-        //     onFieldSubmitted: (text) {
-        //       mPage = 1;
-        //       future = getForums();
-        //     },
-        //     decoration: InputDecoration(
-        //       border: InputBorder.none,
-        //       hintText: language.searchHere,
-        //       hintStyle: secondaryTextStyle(),
-        //       prefixIcon: Image.asset(
-        //         ic_search,
-        //         height: 16,
-        //         width: 16,
-        //         fit: BoxFit.cover,
-        //         color: appStore.isDarkMode ? bodyDark : bodyWhite,
-        //       ).paddingAll(16),
-        //       suffixIcon: hasShowClearTextIcon
-        //           ? IconButton(
-        //               icon: Icon(Icons.cancel,
-        //                   color: appStore.isDarkMode ? bodyDark : bodyWhite,
-        //                   size: 18),
-        //               onPressed: () {
-        //                 hideKeyboard(context);
-        //                 hasShowClearTextIcon = false;
-        //                 searchController.clear();
-
-        //                 mPage = 1;
-        //                 getForums();
-        //                 setState(() {});
-        //               },
-        //             )
-        //           : null,
-        //     ),
-        //   ),
-        // ),
-        Container(
-          height: MediaQuery.of(context).size.height * 0.27,
-          child: Stack(
-            alignment: Alignment.topCenter,
-            children: [
-              AnimatedListView(
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                physics: BouncingScrollPhysics(),
-                slideConfiguration: SlideConfiguration(
-                    delay: Duration(milliseconds: 80), verticalOffset: 300),
-                padding:
-                    EdgeInsets.only(left: 16, right: 16, bottom: 10, top: 16),
-                itemCount: topicController.topics.length,
-                itemBuilder: (context, index) {
-                  Topic data = topicController.topics[index];
-                  return InkWell(
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    onTap: () {
-                      ForumDetailScreen(
-                        forumId: data.id.validate(),
-                        type: 'data.type.validate()',
-                      );
-                    },
-                    child: ForumsCardComponent(topic: data),
-                  );
-                },
-              ),
-              Obx(
-                () {
-                  if (topicController.isLoading.value) {
-                    return Positioned(
-                      bottom: mPage != 1 ? 10 : null,
-                      child: LoadingWidget(
-                          isBlurBackground: mPage == 1 ? true : false),
-                    );
-                  } else {
-                    return Offstage();
-                  }
-                },
-              ),
-            ],
-          ),
-        ),
-        Container(
-          padding: EdgeInsets.only(left: 16),
-          child: Text(
-            language.collections,
-            style: TextStyle(
-                fontFamily: 'Roboto',
-                fontWeight: FontWeight.bold,
-                fontSize: 22),
-          ),
-        ),
-
-        Container(
-          padding: EdgeInsets.all(15),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Image.network(
-                    'https://upload.wikimedia.org/wikipedia/commons/4/48/RedCat_8727.jpg',
-                    width: 50,
-                    height: 50,
-                  ).cornerRadiusWithClipRRect(30),
-                  10.width,
-                  Text(
-                    'Tên ở đây nè',
-                    style: TextStyle(
-                        fontFamily: 'Roboto',
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18),
-                  )
-                ],
-              ),
-              Container(
-                height: MediaQuery.of(context).size.height * 0.3,
-                child: AnimatedListView(
+          Container(
+            height: MediaQuery.of(context).size.height * 0.27,
+            child: Stack(
+              alignment: Alignment.topCenter,
+              children: [
+                AnimatedListView(
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
                   physics: BouncingScrollPhysics(),
@@ -199,45 +93,178 @@ class _ForumsFragment extends State<ForumsFragment> {
                       delay: Duration(milliseconds: 80), verticalOffset: 300),
                   padding:
                       EdgeInsets.only(left: 16, right: 16, bottom: 10, top: 16),
-                  itemCount: listImage.length,
+                  itemCount: topicController.topics.length,
                   itemBuilder: (context, index) {
-                    if (index == listImage.length - 1) {
-                      // Last item, display the "see more" button
-                      return InkWell(
-                        onTap: () {},
-                        child: Container(
-                          width: 150,
-                          decoration: BoxDecoration(
-                              color: Color.fromARGB(34, 0, 0, 0),
-                              borderRadius: BorderRadius.circular(20)),
-                          padding: EdgeInsets.only(right: 10),
-                          child: Icon(Icons.more_horiz_rounded,
-                              size: 30), // Replace with your desired icon
-                        ),
-                      );
-                    } else {
-                      return InkWell(
-                        splashColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        onTap: () {
-                          ImageScreen(imageURl: listImage[index])
-                              .launch(context);
-                        },
-                        child: Container(
-                          padding: EdgeInsets.only(right: 10),
-                          child: Image.network(
-                            listImage[index],
-                          ).cornerRadiusWithClipRRect(20),
-                        ),
-                      );
-                    }
+                    Topic data = topicController.topics[index];
+                    return InkWell(
+                      splashColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      onTap: () {
+                        ForumDetailScreen(
+                          topic: data,
+                        ).launch(context);
+                      },
+                      child: ForumsCardComponent(topic: data),
+                    );
                   },
                 ),
-              ),
-            ],
+                if (topicController.isLoading.value)
+                  Positioned(
+                    bottom: mPage != 1 ? 10 : null,
+                    child: LoadingWidget(
+                        isBlurBackground: mPage == 1 ? true : false),
+                  )
+              ],
+            ),
           ),
-        )
-      ],
+          Container(
+            padding: EdgeInsets.only(left: 16),
+            child: Text(
+              language.collections,
+              style: TextStyle(
+                  fontFamily: 'Roboto',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 22),
+            ),
+          ),
+          Container(
+            height: MediaQuery.of(context).size.height * 0.5,
+            child: AnimatedListView(
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              physics: BouncingScrollPhysics(),
+              slideConfiguration: SlideConfiguration(
+                  delay: Duration(milliseconds: 80), verticalOffset: 300),
+              padding:
+                  EdgeInsets.only(left: 16, right: 16, bottom: 10, top: 16),
+              itemCount: galleryController.albums.length,
+              itemBuilder: (context, index) {
+                Album data = galleryController.albums[index];
+                return Container(
+                  padding: EdgeInsets.all(15),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          data.user != null
+                              ? data.user!.avatarUrl != null
+                                  ? Image.network(
+                                      data.user!.avatarUrl.validate(),
+                                      height: 36,
+                                      width: 36,
+                                      fit: BoxFit.cover,
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        return Image.asset(
+                                          'assets/images/profile.png',
+                                          height: 36,
+                                          width: 36,
+                                          fit: BoxFit.cover,
+                                        ).cornerRadiusWithClipRRect(100);
+                                      },
+                                    ).cornerRadiusWithClipRRect(100)
+                                  : Image.asset(
+                                      'assets/images/profile.png',
+                                      height: 36,
+                                      width: 36,
+                                      fit: BoxFit.cover,
+                                    ).cornerRadiusWithClipRRect(100)
+                              : Container(),
+                          10.width,
+                          Column(
+                            children: [
+                              TextIcon(
+                                text: data.user!.name!,
+                                textStyle: TextStyle(
+                                    fontFamily: 'Roboto',
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18),
+                                suffix: data.user!.isVerified!
+                                    ? Image.asset(ic_tick_filled,
+                                        width: 20,
+                                        height: 20,
+                                        color: blueTickColor)
+                                    : null,
+                              ),
+                              5.height,
+                              Text(
+                                convertToAgo(data.createdAt!.toString()),
+                                style: TextStyle(
+                                    fontFamily: 'Roboto',
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 14),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                      Container(
+                        height: MediaQuery.of(context).size.height * 0.3,
+                        child: AnimatedListView(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          physics: BouncingScrollPhysics(),
+                          slideConfiguration: SlideConfiguration(
+                              delay: Duration(milliseconds: 80),
+                              verticalOffset: 300),
+                          padding: EdgeInsets.only(
+                              left: 16, right: 16, bottom: 10, top: 16),
+                          itemCount:
+                              data.media.length > 3 ? 4 : data.media.length,
+                          itemBuilder: (context, index) {
+                            Media media = data.media[index];
+                            if (index == listImage.length - 1) {
+                              return InkWell(
+                                onTap: () {
+                                  SingleAlbumDiscoveryDetailScreen(
+                                    album: data,
+                                  ).launch(context);
+                                },
+                                child: Container(
+                                  width: 150,
+                                  decoration: BoxDecoration(
+                                      color: Color.fromARGB(34, 0, 0, 0),
+                                      borderRadius: BorderRadius.circular(20)),
+                                  padding: EdgeInsets.only(right: 10),
+                                  child: Icon(Icons.more_horiz_rounded,
+                                      size:
+                                          30), // Replace with your desired icon
+                                ),
+                              );
+                            } else {
+                              return InkWell(
+                                splashColor: Colors.transparent,
+                                highlightColor: Colors.transparent,
+                                onTap: () {
+                                  media.type == 'image'
+                                      ? ImageScreen(imageURl: media.url!)
+                                          .launch(context)
+                                      : VideoPostScreen(media.url!.validate())
+                                          .launch(context);
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.only(right: 10),
+                                  child: media.type == 'image'
+                                      ? Image.network(
+                                          media.url!,
+                                        ).cornerRadiusWithClipRRect(20)
+                                      : VideoMediaComponent(
+                                          mediaUrl: media.url!,
+                                        ).cornerRadiusWithClipRRect(20),
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          )
+        ],
+      ),
     );
   }
 }

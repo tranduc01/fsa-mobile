@@ -150,7 +150,7 @@ class _VerifyFaceComponentState extends State<VerifyFaceComponent> {
                               widget.frontIdMedia, portraitMedia!);
                           if (userController.isVerifySuccess.value) {
                             Navigator.pop(context);
-                            userController.user.value.isVerified = true;
+                            await userController.getCurrentUser();
                             toast(language.verifySuccess);
 
                             Navigator.pop(context);
@@ -235,15 +235,6 @@ class _VerifyFaceComponentState extends State<VerifyFaceComponent> {
               ),
             ),
           ),
-          // for (final face in faces)
-          //   Positioned(
-          //       left: face.boundingBox.left,
-          //       top: face.boundingBox.top,
-          //       width: face.boundingBox.width,
-          //       height: face.boundingBox.height,
-          //       child: CustomPaint(
-          //         painter: FaceRectanglePainter(face.boundingBox),
-          //       )),
           Positioned(
             bottom: 30,
             left: 0,
@@ -309,7 +300,7 @@ class _VerifyFaceComponentState extends State<VerifyFaceComponent> {
     );
 
     // Create an instance of FaceDetector
-    print('detectFace');
+
     // Process the image and get the detected face
     final List<Face> faces = await faceDetector.processImage(inputImage);
     faces.forEach((element) {
@@ -321,32 +312,4 @@ class _VerifyFaceComponentState extends State<VerifyFaceComponent> {
 
     return faces;
   }
-}
-
-class FaceRectanglePainter extends CustomPainter {
-  final Rect boundingBox;
-
-  FaceRectanglePainter(this.boundingBox);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Colors.red
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.0;
-
-    // Calculate the adjusted bounding box coordinates based on the canvas size
-    final adjustedBoundingBox = Rect.fromLTRB(
-      boundingBox.left * size.width,
-      boundingBox.top * size.height,
-      boundingBox.right * size.width,
-      boundingBox.bottom * size.height,
-    );
-
-    // Draw the rectangle on the canvas
-    canvas.drawRect(adjustedBoundingBox, paint);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => true;
 }

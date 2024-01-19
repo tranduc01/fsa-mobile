@@ -1,10 +1,7 @@
 import 'package:appinio_video_player/appinio_video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:socialv/main.dart';
-import 'package:socialv/screens/post/screens/audio_post_screen.dart';
 import 'package:socialv/screens/post/screens/image_screen.dart';
-import 'package:socialv/screens/post/screens/pdf_screen.dart';
 import 'package:socialv/screens/post/screens/video_post_screen.dart';
 
 import '../../../utils/cached_network_image.dart';
@@ -53,17 +50,12 @@ class _AlbumMediaComponentState extends State<AlbumMediaComponent> {
 
   @override
   Widget build(BuildContext context) {
-    log(widget.thumbnail);
     return GestureDetector(
       onTap: () {
         if (widget.mediaType == MediaTypes.image) {
           ImageScreen(imageURl: widget.mediaUrl.validate()).launch(context);
-        } else if (widget.mediaType == MediaTypes.audio) {
-          AudioPostScreen(widget.mediaUrl.validate()).launch(context);
         } else if (widget.mediaType == MediaTypes.video) {
           VideoPostScreen(widget.mediaUrl.validate()).launch(context);
-        } else if (widget.mediaType == MediaTypes.doc) {
-          PDFScreen(docURl: widget.mediaUrl.validate()).launch(context);
         } else {
           //
         }
@@ -110,7 +102,7 @@ class _AlbumMediaComponentState extends State<AlbumMediaComponent> {
                 onPressed: () {
                   showConfirmDialogCustom(
                     context,
-                    title: language.albumDeleteConfirmation,
+                    title: 'Bạn có chắc chắn muốn xóa hình ảnh này không?',
                     onAccept: (s) {
                       widget.onDelete!.call(widget.mediaId!);
                     },

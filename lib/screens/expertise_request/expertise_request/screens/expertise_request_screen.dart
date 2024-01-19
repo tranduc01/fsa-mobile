@@ -16,8 +16,12 @@ import 'create_expertise_request_screen.dart';
 class ExpertiseRequestScreen extends StatefulWidget {
   final ScrollController controller;
   final int? selectedIndex;
+  final int selectedTab;
 
-  const ExpertiseRequestScreen({required this.controller, this.selectedIndex});
+  const ExpertiseRequestScreen(
+      {required this.controller,
+      this.selectedIndex,
+      required this.selectedTab});
 
   @override
   State<ExpertiseRequestScreen> createState() => _ExpertiseRequestScreenState();
@@ -35,11 +39,12 @@ class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
   int selectIndex = 0;
 
   final List<Color> colorList = [
-    const Color.fromARGB(127, 33, 149, 243),
-    const Color.fromARGB(127, 255, 235, 59),
-    Color.fromARGB(127, 76, 175, 79),
-    Color.fromARGB(127, 244, 67, 54),
-    Color.fromARGB(100, 0, 0, 0)
+    Colors.blue.withOpacity(0.5), // Doing
+    Colors.green.withOpacity(0.5), // Completed
+    Colors.orange.withOpacity(0.5), // WaitingForApproval
+    Colors.yellow.withOpacity(0.5), // WaitingForExpert
+    Colors.red.withOpacity(0.5), // Rejected
+    Colors.grey.withOpacity(0.5), // Canceled
   ];
 
   @override
@@ -98,11 +103,8 @@ class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
         alignment: Alignment.topCenter,
         children: [
           DefaultTabController(
-            length: (!userController.user.value.role.any((element) =>
-                    element.name.toLowerCase() ==
-                    Role.Expert.name.toLowerCase()))
-                ? 5
-                : 4,
+            length: 6,
+            initialIndex: widget.selectedTab,
             child: SingleChildScrollView(
               child: Column(
                 children: [
@@ -119,84 +121,75 @@ class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
                       physics: BouncingScrollPhysics(),
                       indicator: BoxDecoration(),
                       tabs: [
-                        if (!userController.user.value.role.any((element) =>
-                            element.name.toLowerCase() ==
-                            Role.Expert.name.toLowerCase()))
-                          Tab(
-                              child: Text(
-                            'Pending',
-                          )),
+                        Tab(
+                            child: Text(
+                          'Chờ duyệt',
+                        )),
                         Tab(
                           child: Text(
-                            'Waiting For Expert ',
+                            language.waitingForExpertExpertiseRequest,
                           ),
                         ),
                         Tab(
                             child: Text(
-                          'Doing',
+                          language.doingExpertiseRequest,
                         )),
                         Tab(
                           child: Text(
-                            'Completed',
+                            language.completedExpertiseRequest,
                           ),
                         ),
                         Tab(
                           child: Text(
-                            'Rejected',
+                            language.rejectedExpertiseRequest,
+                          ),
+                        ),
+                        Tab(
+                          child: Text(
+                            'Đã hủy',
                           ),
                         ),
                       ],
                       onTap: (index) {
                         int status;
-                        if (!userController.user.value.role.any((element) =>
-                            element.name.toLowerCase() ==
-                            Role.Expert.name.toLowerCase())) {
-                          switch (index) {
-                            case 0:
-                              status = 2;
-                              break;
-                            case 1:
-                              status = 3;
-                              break;
-                            case 2:
-                              status = 0;
-                              break;
-                            case 3:
-                              status = 1;
-                              break;
-                            case 4:
-                              status = 4;
-                              break;
-                            default:
-                              status = 0;
-                          }
-                        } else {
-                          switch (index) {
-                            case 0:
-                              status = 3;
-                              break;
-                            case 1:
-                              status = 0;
-                              break;
-                            case 2:
-                              status = 1;
-                              break;
-                            case 3:
-                              status = 4;
-                              break;
-                            default:
-                              status = 0;
-                          }
+
+                        switch (index) {
+                          case 0:
+                            status = 2;
+                            break;
+                          case 1:
+                            status = 3;
+                            break;
+                          case 2:
+                            status = 0;
+                            break;
+                          case 3:
+                            status = 1;
+                            break;
+                          case 4:
+                            status = 4;
+                            break;
+                          case 5:
+                            status = 5;
+                            break;
+                          default:
+                            status = 0;
                         }
 
                         userController.user.value.role.any((element) =>
                                     element.name.toLowerCase() ==
                                     Role.Expert.name.toLowerCase()) &&
-                                index == 0
+                                index == 1
                             ? expertiseRequestController
                                 .fetchExpetiseRequestsReceive(status)
-                            : expertiseRequestController
-                                .fetchExpetiseRequests(status);
+                            : userController.user.value.role.any((element) =>
+                                        element.name.toLowerCase() ==
+                                        Role.Expert.name.toLowerCase()) &&
+                                    index == 2
+                                ? expertiseRequestController
+                                    .fetchExpetiseRequestsReceived(status)
+                                : expertiseRequestController
+                                    .fetchExpetiseRequests(status);
                         selectIndex = status;
                         setState(() {});
                       },
@@ -205,10 +198,8 @@ class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
                   Container(
                     height: MediaQuery.of(context).size.height,
                     child: TabBarView(children: [
-                      if (!userController.user.value.role.any((element) =>
-                          element.name.toLowerCase() ==
-                          Role.Expert.name.toLowerCase()))
-                        expertiseRequestsComponent(),
+                      expertiseRequestsComponent(),
+                      expertiseRequestsComponent(),
                       expertiseRequestsComponent(),
                       expertiseRequestsComponent(),
                       expertiseRequestsComponent(),
@@ -233,15 +224,12 @@ class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
           ),
         ],
       ),
-      floatingActionButton: userController.user.value.role.any((element) =>
-              element.name.toLowerCase() == Role.Expert.name.toLowerCase())
-          ? Offstage()
-          : FloatingActionButton(
-              child: Icon(Icons.add),
-              onPressed: () {
-                CreateExpertiseRequestScreen().launch(context);
-              },
-            ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          CreateExpertiseRequestScreen().launch(context);
+        },
+      ),
     );
   }
 
@@ -255,8 +243,8 @@ class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
             child: NoDataWidget(
               imageWidget: NoDataLottieWidget(),
               title: expertiseRequestController.isError.value
-                  ? 'Something Went Wrong'
-                  : 'No data found',
+                  ? language.somethingWentWrong
+                  : language.noDataFound,
               onRetry: () {
                 userController.user.value.role.any((element) =>
                         element.name.toLowerCase() ==
@@ -266,7 +254,7 @@ class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
                     : expertiseRequestController
                         .fetchExpetiseRequests(selectIndex);
               },
-              retryText: '   Click to Refresh   ',
+              retryText: '   ' + language.clickToRefresh + '   ',
             ).center(),
           );
         } else {
@@ -379,10 +367,39 @@ class _ExpertiseRequestScreenState extends State<ExpertiseRequestScreen>
                                                           24, 0, 0, 0))),
                                               padding: EdgeInsets.all(6),
                                               child: Text(
-                                                ExpertiseRequestStatus
-                                                    .values[expertiseRequest
-                                                        .status!]
-                                                    .name,
+                                                // ExpertiseRequestStatus
+                                                //     .values[expertiseRequest
+                                                //         .status!]
+                                                //     .name,
+                                                () {
+                                                  switch (ExpertiseRequestStatus
+                                                      .values[expertiseRequest
+                                                          .status!]
+                                                      .name) {
+                                                    case 'WaitingForApproval':
+                                                      return 'Chờ duyệt';
+                                                    case 'WaitingForExpert':
+                                                      return language
+                                                          .waitingForExpertExpertiseRequest;
+                                                    case 'Doing':
+                                                      return language
+                                                          .doingExpertiseRequest;
+                                                    case 'Completed':
+                                                      return language
+                                                          .completedExpertiseRequest;
+                                                    case 'Rejected':
+                                                      return language
+                                                          .rejectedExpertiseRequest;
+                                                    case 'Canceled':
+                                                      return 'Đã hủy';
+                                                    default:
+                                                      return ExpertiseRequestStatus
+                                                          .values[
+                                                              expertiseRequest
+                                                                  .status!]
+                                                          .name;
+                                                  }
+                                                }(),
                                                 style: boldTextStyle(
                                                     size: 15,
                                                     fontFamily: 'Roboto',
