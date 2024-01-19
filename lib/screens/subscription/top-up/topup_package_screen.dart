@@ -591,16 +591,11 @@ class _TopupPackageScreen extends State<TopupPackageScreen> {
                                             webViewController
                                                 .setNavigationDelegate(
                                                     NavigationDelegate(
-                                              onPageStarted: (String url) {
+                                              onPageStarted:
+                                                  (String url) async {
                                                 // This callback will be called when a new page starts loading
                                                 print(
                                                     'Page started loading: $url');
-                                              },
-                                              onPageFinished:
-                                                  (String url) async {
-                                                // This callback will be called when a page finishes loading
-                                                print(
-                                                    'Page finished loading: $url');
                                                 final uri = Uri.parse(url);
                                                 final transactionStatus = uri
                                                         .queryParameters[
@@ -657,6 +652,11 @@ class _TopupPackageScreen extends State<TopupPackageScreen> {
                                                     },
                                                   );
                                                 }
+                                              },
+                                              onPageFinished: (String url) {
+                                                // This callback will be called when a page finishes loading
+                                                print(
+                                                    'Page finished loading: $url');
                                               },
                                               onWebResourceError:
                                                   (WebResourceError error) {
