@@ -67,23 +67,33 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
     hubConnection.on('BidAuction', (arguments) {
       arguments!.forEach((element) {
         print(element);
-        auctionController.auction.value.currentBidPrice =
-            element['bidAmount'] != null ? element['bidAmount'].toDouble() : 0;
-        auctionController.auction.value.auctionBids!.add(Bid.fromJson(element));
-        if (element['actualEndDate'] != null) {
-          auctionController.auction.value.actualEndDate =
-              element['actualEndDate'] != null
-                  ? (DateTime.parse(element['actualEndDate'])
-                      .subtract(Duration(hours: 7)))
-                  : null;
+
+        if (element['IsUpdatedWinner'] == null) {
+          auctionController.auction.value.currentBidPrice =
+              element['bidAmount'] != null
+                  ? element['bidAmount'].toDouble()
+                  : 0;
+          auctionController.auction.value.auctionBids!
+              .add(Bid.fromJson(element));
+          if (element['actualEndDate'] != null) {
+            auctionController.auction.value.actualEndDate =
+                element['actualEndDate'] != null
+                    ? (DateTime.parse(element['actualEndDate'])
+                        .subtract(Duration(hours: 7)))
+                    : null;
+          }
+
+          if (userController.user.value.id ==
+              Bid.fromJson(element).bidder!.id) {
+            auctionController.auction.value.currentPoint =
+                element['currentPoint'] != null
+                    ? element['currentPoint'].toDouble()
+                    : 0;
+          }
+        } else {
+          auctionController.fetchAuction(widget.id);
         }
 
-        if (userController.user.value.id == Bid.fromJson(element).bidder!.id) {
-          auctionController.auction.value.currentPoint =
-              element['currentPoint'] != null
-                  ? element['currentPoint'].toDouble()
-                  : 0;
-        }
         auctionController.auction.refresh();
       });
     });
