@@ -282,7 +282,10 @@ class _VerifyFaceComponentState extends State<VerifyFaceComponent> {
     final Size imageSize =
         Size(image.width.toDouble(), image.height.toDouble());
 
-    final InputImageRotation rotation = InputImageRotation.rotation0deg;
+    InputImageRotation rotation = InputImageRotation.rotation0deg;
+    if (GetPlatform.isAndroid) {
+      rotation = InputImageRotation.rotation270deg;
+    }
 
     final InputImageFormat format =
         image.format.group == ImageFormatGroup.yuv420

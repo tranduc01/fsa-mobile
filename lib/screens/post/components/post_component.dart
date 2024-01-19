@@ -116,8 +116,10 @@ class _PostComponentState extends State<PostComponent> {
                             overflow: TextOverflow.ellipsis,
                             maxLines: 3,
                             textAlign: TextAlign.start,
-                            style:
-                                boldTextStyle(fontFamily: 'Roboto', size: 18),
+                            style: boldTextStyle(
+                                fontFamily: 'Roboto',
+                                size: 18,
+                                color: Colors.black),
                           ),
                           Spacer(),
                           Row(

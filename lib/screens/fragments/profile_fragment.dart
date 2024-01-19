@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socialv/components/loading_widget.dart';
@@ -150,20 +149,20 @@ class _ProfileFragmentState extends State<ProfileFragment> {
     return Stack(
       alignment: Alignment.topCenter,
       children: [
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Obx(() => ProfileHeaderComponent(
-                  avatarUrl: userController.user.value.avatarUrl,
-                )),
-            userController.user.value.id != null
-                ? Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Obx(() {
-                        return RichText(
+        Obx(
+          () => Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ProfileHeaderComponent(
+                avatarUrl: userController.user.value.avatarUrl,
+              ),
+              userController.user.value.id != null
+                  ? Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        RichText(
                           textAlign: TextAlign.center,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -195,52 +194,93 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                               ),
                             ],
                           ),
-                        );
-                      }),
-                      4.height,
-                      Text(
-                          userController.user.value.role
-                              .map((e) => e.name)
-                              .join(', '),
-                          style: secondaryTextStyle(size: 12)),
-                      TextIcon(
-                        edgeInsets: EdgeInsets.zero,
-                        spacing: 0,
-                        onTap: () {
-                          PersonalInfoScreen(
-                                  profileInfo:
-                                      _memberDetails.profileInfo.validate(),
-                                  hasUserInfo: true)
-                              .launch(context);
-                        },
-                        text: userController.user.value.userName,
-                        textStyle: secondaryTextStyle(),
-                        suffix: SizedBox(
-                          height: 26,
-                          width: 26,
-                          child: IconButton(
-                            padding: EdgeInsets.zero,
-                            onPressed: () {
-                              PersonalInfoScreen(
-                                      profileInfo:
-                                          _memberDetails.profileInfo.validate(),
-                                      hasUserInfo: true)
-                                  .launch(context);
-                            },
-                            icon: Icon(Icons.info_outline_rounded),
-                            iconSize: 18,
-                            splashRadius: 1,
+                        ),
+                        4.height,
+                        Text(
+                            userController.user.value.role
+                                .map((e) => e.name)
+                                .join(', '),
+                            style: secondaryTextStyle(size: 12)),
+                        TextIcon(
+                          edgeInsets: EdgeInsets.zero,
+                          spacing: 0,
+                          onTap: () {
+                            PersonalInfoScreen(
+                                    profileInfo:
+                                        _memberDetails.profileInfo.validate(),
+                                    hasUserInfo: true)
+                                .launch(context);
+                          },
+                          text: userController.user.value.userName,
+                          textStyle: secondaryTextStyle(),
+                          suffix: SizedBox(
+                            height: 26,
+                            width: 26,
+                            child: IconButton(
+                              padding: EdgeInsets.zero,
+                              onPressed: () {
+                                PersonalInfoScreen(
+                                        profileInfo: _memberDetails.profileInfo
+                                            .validate(),
+                                        hasUserInfo: true)
+                                    .launch(context);
+                              },
+                              icon: Icon(Icons.info_outline_rounded),
+                              iconSize: 18,
+                              splashRadius: 1,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ).paddingAll(16)
-                : Text(
-                    'Please login to view your profile!',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                  ).withHeight(30),
-            Obx(() {
-              return Row(
+                        4.height,
+                        if (userController.user.value.isVerified == false)
+                          Container(
+                            padding: EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: Color.fromARGB(94, 244, 67, 54)),
+                                color: Color.fromARGB(24, 244, 67, 54),
+                                borderRadius: BorderRadius.circular(8)),
+                            child: Column(
+                              children: [
+                                TextIcon(
+                                  text: 'Tài khoản của bạn chưa được xác thực',
+                                  textStyle: TextStyle(
+                                      fontFamily: 'Roboto',
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15),
+                                  prefix: Icon(
+                                    Icons.warning_amber_rounded,
+                                    color: Colors.redAccent,
+                                    size: 20,
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    VerifyIdCardScreen().launch(context);
+                                    toast('Please verify your account');
+                                    // VerifyFaceScreen(
+                                    //   frontIdMedia: PostMedia(),
+                                    // ).launch(context);
+                                  },
+                                  child: Text(
+                                    'Xác thực ngay',
+                                    style: TextStyle(
+                                        fontFamily: 'Roboto',
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15),
+                                  ),
+                                )
+                              ],
+                            ),
+                          )
+                      ],
+                    ).paddingAll(16)
+                  : Text(
+                      'Please login to view your profile!',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    ).withHeight(30),
+              Row(
                 children: [
                   Column(
                     mainAxisSize: MainAxisSize.min,
@@ -287,429 +327,434 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                       splashColor: Colors.transparent,
                       highlightColor: Colors.transparent).expand(),
                 ],
-              );
-            }),
-            TextIcon(
-              onTap: () {
-                GalleryScreen(canEdit: true).launch(context);
-              },
-              text: language.viewGallery,
-              textStyle: primaryTextStyle(color: appColorPrimary),
-              prefix: Image.asset(ic_image,
-                  width: 25, height: 25, color: appColorPrimary),
-            ),
-            if (userController.user.value.role.any((element) =>
-                element.name.toLowerCase() == Role.Member.name.toLowerCase()))
-              Column(
-                children: [
-                  10.height,
-                  Container(
-                    padding: EdgeInsets.only(left: 8, right: 8, top: 8),
-                    child: Row(
+              ),
+              TextIcon(
+                onTap: () {
+                  GalleryScreen(canEdit: true).launch(context);
+                },
+                text: language.viewGallery,
+                textStyle: primaryTextStyle(color: appColorPrimary),
+                prefix: Image.asset(ic_image,
+                    width: 25, height: 25, color: appColorPrimary),
+              ),
+              if (userController.user.value.role.any((element) =>
+                  element.name.toLowerCase() == Role.Member.name.toLowerCase()))
+                Column(
+                  children: [
+                    10.height,
+                    Container(
+                      padding: EdgeInsets.only(left: 8, right: 8, top: 8),
+                      child: Row(
+                        children: [
+                          Text(language.yourRequest,
+                              style: boldTextStyle(
+                                  color: context.primaryColor, size: 20)),
+                        ],
+                      ),
+                    ),
+                    10.height,
+                    Column(
                       children: [
-                        Text(language.yourRequest,
+                        Divider(thickness: 1),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            InkWell(
+                              onTap: () => ExpertiseRequestScreen(
+                                controller: _controller,
+                                selectedIndex: 2,
+                                selectedTab: 0,
+                              ).launch(context),
+                              child: Stack(
+                                clipBehavior: Clip.none,
+                                alignment: Alignment.center,
+                                children: [
+                                  Image.asset(
+                                    ic_pending,
+                                    height: 40,
+                                    width: 40,
+                                    fit: BoxFit.cover,
+                                  ).paddingSymmetric(vertical: 11),
+                                  Positioned(
+                                    right: -8,
+                                    top: -4,
+                                    child: Container(
+                                      padding: EdgeInsets.all(6),
+                                      decoration: BoxDecoration(
+                                          color: appColorPrimary,
+                                          shape: BoxShape.circle),
+                                      child: Text(
+                                        '3',
+                                        style: boldTextStyle(
+                                            color: Colors.white,
+                                            size: 10,
+                                            weight: FontWeight.w700,
+                                            letterSpacing: 0.7),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom:
+                                        -10, // Adjust the position as needed
+                                    child: Container(
+                                      width: 60,
+                                      child: Text(
+                                        'Chờ duyệt',
+                                        style: boldTextStyle(
+                                          color: Colors.black,
+                                          size: 10,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () => ExpertiseRequestScreen(
+                                controller: _controller,
+                                selectedIndex: 3,
+                                selectedTab: 1,
+                              ).launch(context),
+                              child: Stack(
+                                clipBehavior: Clip.none,
+                                alignment: Alignment.center,
+                                children: [
+                                  Image.asset(
+                                    ic_user_pending,
+                                    height: 40,
+                                    width: 40,
+                                    fit: BoxFit.cover,
+                                  ).paddingSymmetric(vertical: 11),
+                                  Positioned(
+                                    right: -8,
+                                    top: -4,
+                                    child: Container(
+                                      padding: EdgeInsets.all(6),
+                                      decoration: BoxDecoration(
+                                          color: appColorPrimary,
+                                          shape: BoxShape.circle),
+                                      child: Text(
+                                        '2',
+                                        style: boldTextStyle(
+                                            color: Colors.white,
+                                            size: 10,
+                                            weight: FontWeight.w700,
+                                            letterSpacing: 0.7),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom:
+                                        -17, // Adjust the position as needed
+                                    child: Container(
+                                      width: 60,
+                                      child: Text(
+                                        language
+                                            .waitingForExpertExpertiseRequest,
+                                        style: boldTextStyle(
+                                          color: Colors.black,
+                                          size: 10,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () => ExpertiseRequestScreen(
+                                controller: _controller,
+                                selectedIndex: 0,
+                                selectedTab: 2,
+                              ).launch(context),
+                              child: Stack(
+                                clipBehavior: Clip.none,
+                                alignment: Alignment.center,
+                                children: [
+                                  Image.asset(
+                                    ic_doing,
+                                    height: 40,
+                                    width: 40,
+                                    fit: BoxFit.cover,
+                                  ).paddingSymmetric(vertical: 11),
+                                  Positioned(
+                                    right: -8,
+                                    top: -4,
+                                    child: Container(
+                                      padding: EdgeInsets.all(6),
+                                      decoration: BoxDecoration(
+                                          color: appColorPrimary,
+                                          shape: BoxShape.circle),
+                                      child: Text(
+                                        '2',
+                                        style: boldTextStyle(
+                                            color: Colors.white,
+                                            size: 10,
+                                            weight: FontWeight.w700,
+                                            letterSpacing: 0.7),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom:
+                                        -10, // Adjust the position as needed
+                                    child: Text(
+                                      language.doingExpertiseRequest,
+                                      style: boldTextStyle(
+                                        color: Colors.black,
+                                        size: 10,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () => ExpertiseRequestScreen(
+                                controller: _controller,
+                                selectedIndex: 1,
+                                selectedTab: 3,
+                              ).launch(context),
+                              child: Stack(
+                                clipBehavior: Clip.none,
+                                alignment: Alignment.center,
+                                children: [
+                                  Image.asset(
+                                    ic_approved,
+                                    height: 40,
+                                    width: 40,
+                                    fit: BoxFit.cover,
+                                  ).paddingSymmetric(vertical: 11),
+                                  Positioned(
+                                    right: -8,
+                                    top: -4,
+                                    child: Container(
+                                      padding: EdgeInsets.all(6),
+                                      decoration: BoxDecoration(
+                                          color: appColorPrimary,
+                                          shape: BoxShape.circle),
+                                      child: Text(
+                                        '2',
+                                        style: boldTextStyle(
+                                            color: Colors.white,
+                                            size: 10,
+                                            weight: FontWeight.w700,
+                                            letterSpacing: 0.7),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom:
+                                        -10, // Adjust the position as needed
+                                    child: Text(
+                                      language.completedExpertiseRequest,
+                                      style: boldTextStyle(
+                                        color: Colors.black,
+                                        size: 10,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () => ExpertiseRequestScreen(
+                                controller: _controller,
+                                selectedIndex: 4,
+                                selectedTab: 4,
+                              ).launch(context),
+                              child: Stack(
+                                clipBehavior: Clip.none,
+                                alignment: Alignment.center,
+                                children: [
+                                  Image.asset(
+                                    ic_rejected,
+                                    height: 40,
+                                    width: 40,
+                                    fit: BoxFit.cover,
+                                  ).paddingSymmetric(vertical: 11),
+                                  Positioned(
+                                    right: -8,
+                                    top: -4,
+                                    child: Container(
+                                      padding: EdgeInsets.all(6),
+                                      decoration: BoxDecoration(
+                                          color: appColorPrimary,
+                                          shape: BoxShape.circle),
+                                      child: Text(
+                                        '0',
+                                        style: boldTextStyle(
+                                            color: Colors.white,
+                                            size: 10,
+                                            weight: FontWeight.w700,
+                                            letterSpacing: 0.7),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom:
+                                        -10, // Adjust the position as needed
+                                    child: Text(
+                                      language.rejectedExpertiseRequest,
+                                      style: boldTextStyle(
+                                        color: Colors.black,
+                                        size: 10,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () => ExpertiseRequestScreen(
+                                controller: _controller,
+                                selectedIndex: 5,
+                                selectedTab: 5,
+                              ).launch(context),
+                              child: Stack(
+                                clipBehavior: Clip.none,
+                                alignment: Alignment.center,
+                                children: [
+                                  Image.asset(
+                                    ic_canceled,
+                                    height: 40,
+                                    width: 40,
+                                    fit: BoxFit.cover,
+                                  ).paddingSymmetric(vertical: 11),
+                                  Positioned(
+                                    right: -8,
+                                    top: -4,
+                                    child: Container(
+                                      padding: EdgeInsets.all(6),
+                                      decoration: BoxDecoration(
+                                          color: appColorPrimary,
+                                          shape: BoxShape.circle),
+                                      child: Text(
+                                        '2',
+                                        style: boldTextStyle(
+                                            color: Colors.white,
+                                            size: 10,
+                                            weight: FontWeight.w700,
+                                            letterSpacing: 0.7),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom:
+                                        -10, // Adjust the position as needed
+                                    child: Text(
+                                      'Đã hủy',
+                                      style: boldTextStyle(
+                                        color: Colors.black,
+                                        size: 10,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                        10.height,
+                        Divider(
+                          thickness: 1,
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              if (userController.user.value.role.any((element) =>
+                  element.name.toLowerCase() ==
+                  Role.Contributor.name.toLowerCase()))
+                Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(language.posts,
                             style: boldTextStyle(
                                 color: context.primaryColor, size: 20)),
                       ],
-                    ),
-                  ),
-                  10.height,
-                  Column(
-                    children: [
-                      Divider(thickness: 1),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          InkWell(
-                            onTap: () => ExpertiseRequestScreen(
-                              controller: _controller,
-                              selectedIndex: 2,
-                              selectedTab: 0,
-                            ).launch(context),
-                            child: Stack(
-                              clipBehavior: Clip.none,
-                              alignment: Alignment.center,
-                              children: [
-                                Image.asset(
-                                  ic_pending,
-                                  height: 40,
-                                  width: 40,
-                                  fit: BoxFit.cover,
-                                ).paddingSymmetric(vertical: 11),
-                                Positioned(
-                                  right: -8,
-                                  top: -4,
-                                  child: Container(
-                                    padding: EdgeInsets.all(6),
-                                    decoration: BoxDecoration(
-                                        color: appColorPrimary,
-                                        shape: BoxShape.circle),
-                                    child: Text(
-                                      '3',
-                                      style: boldTextStyle(
-                                          color: Colors.white,
-                                          size: 10,
-                                          weight: FontWeight.w700,
-                                          letterSpacing: 0.7),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  bottom: -10, // Adjust the position as needed
-                                  child: Container(
-                                    width: 60,
-                                    child: Text(
-                                      'Chờ duyệt',
-                                      style: boldTextStyle(
-                                        color: Colors.black,
-                                        size: 10,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () => ExpertiseRequestScreen(
-                              controller: _controller,
-                              selectedIndex: 3,
-                              selectedTab: 1,
-                            ).launch(context),
-                            child: Stack(
-                              clipBehavior: Clip.none,
-                              alignment: Alignment.center,
-                              children: [
-                                Image.asset(
-                                  ic_user_pending,
-                                  height: 40,
-                                  width: 40,
-                                  fit: BoxFit.cover,
-                                ).paddingSymmetric(vertical: 11),
-                                Positioned(
-                                  right: -8,
-                                  top: -4,
-                                  child: Container(
-                                    padding: EdgeInsets.all(6),
-                                    decoration: BoxDecoration(
-                                        color: appColorPrimary,
-                                        shape: BoxShape.circle),
-                                    child: Text(
-                                      '2',
-                                      style: boldTextStyle(
-                                          color: Colors.white,
-                                          size: 10,
-                                          weight: FontWeight.w700,
-                                          letterSpacing: 0.7),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  bottom: -17, // Adjust the position as needed
-                                  child: Container(
-                                    width: 60,
-                                    child: Text(
-                                      language.waitingForExpertExpertiseRequest,
-                                      style: boldTextStyle(
-                                        color: Colors.black,
-                                        size: 10,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () => ExpertiseRequestScreen(
-                              controller: _controller,
-                              selectedIndex: 0,
-                              selectedTab: 2,
-                            ).launch(context),
-                            child: Stack(
-                              clipBehavior: Clip.none,
-                              alignment: Alignment.center,
-                              children: [
-                                Image.asset(
-                                  ic_doing,
-                                  height: 40,
-                                  width: 40,
-                                  fit: BoxFit.cover,
-                                ).paddingSymmetric(vertical: 11),
-                                Positioned(
-                                  right: -8,
-                                  top: -4,
-                                  child: Container(
-                                    padding: EdgeInsets.all(6),
-                                    decoration: BoxDecoration(
-                                        color: appColorPrimary,
-                                        shape: BoxShape.circle),
-                                    child: Text(
-                                      '2',
-                                      style: boldTextStyle(
-                                          color: Colors.white,
-                                          size: 10,
-                                          weight: FontWeight.w700,
-                                          letterSpacing: 0.7),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  bottom: -10, // Adjust the position as needed
-                                  child: Text(
-                                    language.doingExpertiseRequest,
-                                    style: boldTextStyle(
-                                      color: Colors.black,
-                                      size: 10,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () => ExpertiseRequestScreen(
-                              controller: _controller,
-                              selectedIndex: 1,
-                              selectedTab: 3,
-                            ).launch(context),
-                            child: Stack(
-                              clipBehavior: Clip.none,
-                              alignment: Alignment.center,
-                              children: [
-                                Image.asset(
-                                  ic_approved,
-                                  height: 40,
-                                  width: 40,
-                                  fit: BoxFit.cover,
-                                ).paddingSymmetric(vertical: 11),
-                                Positioned(
-                                  right: -8,
-                                  top: -4,
-                                  child: Container(
-                                    padding: EdgeInsets.all(6),
-                                    decoration: BoxDecoration(
-                                        color: appColorPrimary,
-                                        shape: BoxShape.circle),
-                                    child: Text(
-                                      '2',
-                                      style: boldTextStyle(
-                                          color: Colors.white,
-                                          size: 10,
-                                          weight: FontWeight.w700,
-                                          letterSpacing: 0.7),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  bottom: -10, // Adjust the position as needed
-                                  child: Text(
-                                    language.completedExpertiseRequest,
-                                    style: boldTextStyle(
-                                      color: Colors.black,
-                                      size: 10,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () => ExpertiseRequestScreen(
-                              controller: _controller,
-                              selectedIndex: 4,
-                              selectedTab: 4,
-                            ).launch(context),
-                            child: Stack(
-                              clipBehavior: Clip.none,
-                              alignment: Alignment.center,
-                              children: [
-                                Image.asset(
-                                  ic_rejected,
-                                  height: 40,
-                                  width: 40,
-                                  fit: BoxFit.cover,
-                                ).paddingSymmetric(vertical: 11),
-                                Positioned(
-                                  right: -8,
-                                  top: -4,
-                                  child: Container(
-                                    padding: EdgeInsets.all(6),
-                                    decoration: BoxDecoration(
-                                        color: appColorPrimary,
-                                        shape: BoxShape.circle),
-                                    child: Text(
-                                      '0',
-                                      style: boldTextStyle(
-                                          color: Colors.white,
-                                          size: 10,
-                                          weight: FontWeight.w700,
-                                          letterSpacing: 0.7),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  bottom: -10, // Adjust the position as needed
-                                  child: Text(
-                                    language.rejectedExpertiseRequest,
-                                    style: boldTextStyle(
-                                      color: Colors.black,
-                                      size: 10,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () => ExpertiseRequestScreen(
-                              controller: _controller,
-                              selectedIndex: 5,
-                              selectedTab: 5,
-                            ).launch(context),
-                            child: Stack(
-                              clipBehavior: Clip.none,
-                              alignment: Alignment.center,
-                              children: [
-                                Image.asset(
-                                  ic_canceled,
-                                  height: 40,
-                                  width: 40,
-                                  fit: BoxFit.cover,
-                                ).paddingSymmetric(vertical: 11),
-                                Positioned(
-                                  right: -8,
-                                  top: -4,
-                                  child: Container(
-                                    padding: EdgeInsets.all(6),
-                                    decoration: BoxDecoration(
-                                        color: appColorPrimary,
-                                        shape: BoxShape.circle),
-                                    child: Text(
-                                      '2',
-                                      style: boldTextStyle(
-                                          color: Colors.white,
-                                          size: 10,
-                                          weight: FontWeight.w700,
-                                          letterSpacing: 0.7),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  bottom: -10, // Adjust the position as needed
-                                  child: Text(
-                                    'Đã hủy',
-                                    style: boldTextStyle(
-                                      color: Colors.black,
-                                      size: 10,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                      10.height,
-                      Divider(
-                        thickness: 1,
-                      )
-                    ],
-                  )
-                ],
-              ),
-            if (userController.user.value.role.any((element) =>
-                element.name.toLowerCase() ==
-                Role.Contributor.name.toLowerCase()))
-              Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(language.posts,
-                          style: boldTextStyle(
-                              color: context.primaryColor, size: 20)),
-                    ],
-                  ).paddingSymmetric(horizontal: 8),
-                  FutureBuilder<List<Post>>(
-                    future: future,
-                    builder: (ctx, snap) {
-                      if (snap.hasError) {
-                        return NoDataWidget(
-                          imageWidget: NoDataLottieWidget(),
-                          title: isError
-                              ? language.somethingWentWrong
-                              : language.noDataFound,
-                          onRetry: () {
-                            isError = false;
-                            LiveStream().emit(OnAddPostProfile);
-                          },
-                          retryText: '   ${language.clickToRefresh}   ',
-                        ).center().paddingBottom(20);
-                      }
-
-                      if (snap.hasData) {
-                        if (snap.data.validate().isEmpty) {
-                          return appStore.isLoading
-                              ? Offstage()
-                              : NoDataWidget(
-                                  imageWidget: NoDataLottieWidget(),
-                                  title: language.noDataFound,
-                                  retryText: '   ${language.clickToRefresh}   ',
-                                ).center().paddingBottom(20);
-                        } else {
-                          return Stack(
-                            children: [
-                              AnimatedListView(
-                                padding: EdgeInsets.only(
-                                    left: 8, right: 8, bottom: 50, top: 8),
-                                itemCount: _userPostList.length,
-                                slideConfiguration: SlideConfiguration(
-                                    delay: Duration(milliseconds: 80),
-                                    verticalOffset: 300),
-                                shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
-                                itemBuilder: (context, index) {
-                                  return PostComponent(
-                                    post: _userPostList[index],
-                                    callback: () {
-                                      isLoading = true;
-                                      mPage = 1;
-                                      getMemberDetails();
-                                      future = getUserPostList();
-                                    },
-                                  );
-                                },
-                              ),
-                              if (mPage != 1 && isLoading)
-                                Positioned(
-                                  bottom: 0,
-                                  right: 0,
-                                  left: 0,
-                                  child: ThreeBounceLoadingWidget(),
-                                )
-                            ],
-                          );
+                    ).paddingSymmetric(horizontal: 8),
+                    FutureBuilder<List<Post>>(
+                      future: future,
+                      builder: (ctx, snap) {
+                        if (snap.hasError) {
+                          return NoDataWidget(
+                            imageWidget: NoDataLottieWidget(),
+                            title: isError
+                                ? language.somethingWentWrong
+                                : language.noDataFound,
+                            onRetry: () {
+                              isError = false;
+                              LiveStream().emit(OnAddPostProfile);
+                            },
+                            retryText: '   ${language.clickToRefresh}   ',
+                          ).center().paddingBottom(20);
                         }
-                      }
-                      return ThreeBounceLoadingWidget().paddingTop(16);
-                    },
-                  ),
-                ],
-              )
-          ],
-        ),
-        Observer(
-            builder: (_) =>
-                LoadingWidget().center().visible(appStore.isLoading)),
+
+                        if (snap.hasData) {
+                          if (snap.data.validate().isEmpty) {
+                            return appStore.isLoading
+                                ? Offstage()
+                                : NoDataWidget(
+                                    imageWidget: NoDataLottieWidget(),
+                                    title: language.noDataFound,
+                                    retryText:
+                                        '   ${language.clickToRefresh}   ',
+                                  ).center().paddingBottom(20);
+                          } else {
+                            return Stack(
+                              children: [
+                                AnimatedListView(
+                                  padding: EdgeInsets.only(
+                                      left: 8, right: 8, bottom: 50, top: 8),
+                                  itemCount: _userPostList.length,
+                                  slideConfiguration: SlideConfiguration(
+                                      delay: Duration(milliseconds: 80),
+                                      verticalOffset: 300),
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  itemBuilder: (context, index) {
+                                    return PostComponent(
+                                      post: _userPostList[index],
+                                      callback: () {
+                                        isLoading = true;
+                                        mPage = 1;
+                                        getMemberDetails();
+                                        future = getUserPostList();
+                                      },
+                                    );
+                                  },
+                                ),
+                                if (mPage != 1 && isLoading)
+                                  Positioned(
+                                    bottom: 0,
+                                    right: 0,
+                                    left: 0,
+                                    child: ThreeBounceLoadingWidget(),
+                                  )
+                              ],
+                            );
+                          }
+                        }
+                        return ThreeBounceLoadingWidget().paddingTop(16);
+                      },
+                    ),
+                  ],
+                )
+            ],
+          ),
+        )
       ],
     );
   }
