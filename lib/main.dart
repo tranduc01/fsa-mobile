@@ -1,4 +1,3 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -24,10 +23,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await initialize(aLocaleLanguageList: languageList());
-
-  Firebase.initializeApp().then((value) {}).catchError((e) {
-    log('Error: ${e.toString()}');
-  });
 
   defaultRadius = 32.0;
   defaultAppButtonRadius = 12;

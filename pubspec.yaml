@@ -54,9 +54,6 @@ dependencies:
   flutter_secure_storage:
 
   # Firebase
-  firebase_core: 
-  firebase_auth:
-  firebase_messaging: 
   google_mlkit_face_detection:
   google_mlkit_text_recognition:
 
