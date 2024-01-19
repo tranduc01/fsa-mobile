@@ -58,7 +58,6 @@ dependencies:
   google_mlkit_text_recognition:
 
   # AUTHENTICATION
-  google_sign_in:
   the_apple_sign_in: ^1.1.1 
   jwt_decoder:
 
