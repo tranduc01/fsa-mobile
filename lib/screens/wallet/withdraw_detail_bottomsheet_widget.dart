@@ -76,10 +76,9 @@ class _WithdrawRequestDetailBottomSheetWidgetState
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      onPopInvoked: (isPop) async {
         await withdrawController.fetchWithdraws();
-        return Future.value(true);
       },
       child: Obx(() {
         if (withdrawController.isLoading.value)

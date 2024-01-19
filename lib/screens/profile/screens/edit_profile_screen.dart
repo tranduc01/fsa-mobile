@@ -85,10 +85,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
+    return PopScope(
+      onPopInvoked: (isPop) {
         finish(context, true);
-        return Future.value(true);
       },
       child: Observer(
         builder: (_) => Scaffold(

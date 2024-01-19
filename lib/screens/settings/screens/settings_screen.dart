@@ -39,10 +39,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
+    return PopScope(
+      onPopInvoked: (isPop) {
         finish(context, isUpdate);
-        return Future.value(true);
       },
       child: Scaffold(
         appBar: AppBar(

@@ -104,10 +104,9 @@ class _AlbumUploadScreenState extends State<AlbumUploadScreen> {
     await showDialog(
       context: context,
       builder: (context) => StatefulBuilder(
-        builder: (context, setState) => WillPopScope(
-          onWillPop: () {
+        builder: (context, setState) => PopScope(
+          onPopInvoked: (isPop) {
             _cameraController.dispose();
-            return Future.value(true);
           },
           child: Stack(
             children: [

@@ -21,14 +21,13 @@ class AppScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
+    return PopScope(
+      onPopInvoked: (isPop) {
         if (onBack != null) {
           onBack?.call();
         } else {
           finish(context);
         }
-        return Future.value(false);
       },
       child: Scaffold(
         appBar: AppBar(

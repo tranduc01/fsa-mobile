@@ -62,11 +62,10 @@ class _CommentScreenState extends State<CommentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
+    return PopScope(
+      onPopInvoked: (isPop) {
         appStore.setLoading(false);
         finish(context);
-        return Future.value(true);
       },
       child: RefreshIndicator(
         onRefresh: () async {
