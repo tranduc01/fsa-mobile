@@ -30,7 +30,7 @@ class _AutionFragmentState extends State<AuctionFragment> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 4,
+      length: 5,
       child: Column(
         children: [
           Container(
@@ -64,6 +64,11 @@ class _AutionFragmentState extends State<AuctionFragment> {
                     language.auctionEnded,
                   ),
                 ),
+                Tab(
+                  child: Text(
+                    'Đã tham gia',
+                  ),
+                ),
               ],
               onTap: (index) {
                 int? status;
@@ -80,16 +85,24 @@ class _AutionFragmentState extends State<AuctionFragment> {
                   case 3:
                     status = 3;
                     break;
+                  case 4:
+                    status = 4;
+                    break;
                   default:
                     status = 0;
                 }
-                auctionController.fetchAuctions(status);
+                if (status == 4) {
+                  auctionController.fetchMyAuctions(status);
+                } else {
+                  auctionController.fetchAuctions(status);
+                }
               },
             ),
           ),
           Container(
             height: MediaQuery.of(context).size.height,
             child: TabBarView(children: [
+              auctionWidget(),
               auctionWidget(),
               auctionWidget(),
               auctionWidget(),
