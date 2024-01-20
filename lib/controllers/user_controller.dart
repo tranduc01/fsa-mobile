@@ -75,7 +75,7 @@ class UserController extends GetxController {
 
   Future<void> login(String email, String password) async {
     var url = Uri.parse('$BASE_URL/Auth/login');
-
+    isLoggedIn.value = false;
     var response = await http.post(
       url,
       headers: {

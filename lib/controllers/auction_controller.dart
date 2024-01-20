@@ -193,9 +193,9 @@ class AuctionController extends GetxController {
         message.value = '';
       } else {
         isLoading(false);
+        message.value = response.body['Message'];
         print('Request failed with status: ${response.statusCode}');
         print('Request failed with status: ${response.body['Message']}');
-        message.value = response.body['Message'];
       }
     } catch (e) {
       print(e);

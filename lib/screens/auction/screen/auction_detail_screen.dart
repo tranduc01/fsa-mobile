@@ -450,12 +450,27 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                     } else {
                                       Navigator.pop(context);
                                       Navigator.pop(context);
+
+                                      var errorMessage ;
+                                      print(auctionController.message.value);
+                                      switch (auctionController.message.value) {
+                                        case 'USER_POINT_NOT_ENOUGH':
+                                          errorMessage =
+                                              'Bạn không có đủ điểm trong ví để nạp';
+                                          break;
+                                        default:
+                                          errorMessage =
+                                              auctionController.message.value;
+                                      }
+
                                       showDialog(
                                         context: context,
                                         barrierDismissible: false,
                                         builder: (context) {
                                           return FailDialog(
-                                              text: 'Thêm thất bại!');
+                                              text: errorMessage.isEmptyOrNull
+                                                  ? 'Thêm thất bại!'
+                                                  : errorMessage);
                                         },
                                       );
                                     }
@@ -477,7 +492,9 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                     ),
                 ],
               )
-            : auctionController.auction.value.startRegisterAt!.add(Duration(hours: 7)).isBefore(DateTime.now()) &&
+            : auctionController.auction.value.startRegisterAt!
+                        .add(Duration(hours: 7))
+                        .isBefore(DateTime.now()) &&
                     auctionController.auction.value.endRegisterAt!
                         .add(Duration(hours: 7))
                         .isAfter(DateTime.now()) &&
@@ -736,46 +753,275 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                             .add(Duration(hours: 7))
                             .isAfter(DateTime.now())) &&
                         auctionController.auction.value.isRegistered == true)
-                    ? FloatingActionButton.extended(
-                        label: Text('Hủy đăng ký tham gia',
-                            style: TextStyle(
+                    ? Wrap(
+                        direction: Axis.vertical,
+                        crossAxisAlignment: WrapCrossAlignment.end,
+                        children: [
+                          FloatingActionButton.extended(
+                              heroTag: 'add_pointtt',
+                              label: Text(
+                                  auctionController.auction.value.currentPoint!
+                                          .toStringAsFixed(0)
+                                          .formatNumberWithComma() +
+                                      ' điểm',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold)),
+                              icon: Image.asset(
+                                ic_wallet,
+                                height: 30,
+                                width: 30,
                                 color: Colors.black,
-                                fontWeight: FontWeight.bold)),
-                        icon: Icon(Icons.close_rounded, color: Colors.red),
-                        backgroundColor: Colors.white,
-                        onPressed: () {
-                          showConfirmDialogCustom(context,
-                              title:
-                                  'Bạn có chắc chắn muốn hủy đăng ký tham gia buổi đấu giá này?',
-                              onAccept: (p0) async {
-                            showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (context) {
-                                  return LoadingDialog();
-                                });
-                            await auctionController
-                                .cancelRegistrationAuction(widget.id);
-                            if (auctionController.isUpdateSuccess.value) {
-                              Navigator.of(context).pop();
-
-                              await auctionController.fetchAuction(widget.id);
-                              await userController.getCurrentUser();
-                              toast('Cancel registration successfully');
-                            } else {
-                              Navigator.pop(context);
+                              ),
+                              backgroundColor: Colors.white,
+                              onPressed: () {}),
+                          10.height,
+                          FloatingActionButton.extended(
+                            heroTag: 'add_pointt',
+                            label: Text('Điểm',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold)),
+                            icon: Icon(
+                              Icons.add_outlined,
+                              color: Colors.black,
+                            ),
+                            backgroundColor: Colors.white,
+                            onPressed: () {
                               showDialog(
                                 context: context,
-                                barrierDismissible: false,
                                 builder: (context) {
-                                  return FailDialog(
-                                      text:
-                                          'Failed to cancel registration this auction');
+                                  return AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(16)),
+                                    title: Text(
+                                      'Thêm điểm vào ví đấu giá',
+                                      style: TextStyle(
+                                          fontFamily: 'Roboto',
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              'Ví của bạn: ',
+                                              style: TextStyle(
+                                                fontFamily: 'Roboto',
+                                                fontSize: 18,
+                                              ),
+                                            ),
+                                            Text(
+                                              '${userController.user.value.totalPoint!.toStringAsFixed(0).formatNumberWithComma()}',
+                                              style: TextStyle(
+                                                  fontFamily: 'Roboto',
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                              ' điểm',
+                                              style: TextStyle(
+                                                fontFamily: 'Roboto',
+                                                fontSize: 18,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                        10.height,
+                                        Row(
+                                          children: [
+                                            Text(
+                                              'Ví đấu giá: ',
+                                              style: TextStyle(
+                                                fontFamily: 'Roboto',
+                                                fontSize: 18,
+                                              ),
+                                            ),
+                                            Text(
+                                              '${auctionController.auction.value.currentPoint!.toStringAsFixed(0).formatNumberWithComma()}',
+                                              style: TextStyle(
+                                                  fontFamily: 'Roboto',
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                              ' điểm',
+                                              style: TextStyle(
+                                                fontFamily: 'Roboto',
+                                                fontSize: 18,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                        20.height,
+                                        Form(
+                                          key: addPointFormKey,
+                                          child: Column(
+                                            children: [
+                                              TextFormField(
+                                                controller: addPointCont,
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                decoration: InputDecoration(
+                                                  hintText: 'Nhập số điểm',
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                      width: 3,
+                                                      color: Color(0xFFB4D4FF),
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            50.0),
+                                                  ),
+                                                  focusedBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                      width: 3,
+                                                      color: Color(0xFFB4D4FF),
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            50.0),
+                                                  ),
+                                                  suffixIcon: Icon(
+                                                    Icons.token_outlined,
+                                                    color: Colors.black,
+                                                    size: 30,
+                                                  ),
+                                                ),
+                                                validator: (value) {
+                                                  if (value!.isEmpty) {
+                                                    return 'Hãy nhập số điểm';
+                                                  }
+                                                  return null;
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text('Hủy bỏ',
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontFamily: 'Roboto',
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold)),
+                                      ),
+                                      TextButton(
+                                        style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all(
+                                                    context.primaryColor),
+                                            shape: MaterialStateProperty.all(
+                                                RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20)))),
+                                        onPressed: () async {
+                                          showDialog(
+                                              context: context,
+                                              barrierDismissible: false,
+                                              builder: (context) {
+                                                return LoadingDialog();
+                                              });
+
+                                          await auctionController
+                                              .depositePoints(widget.id,
+                                                  addPointCont.text.toInt());
+
+                                          if (auctionController
+                                              .isUpdateSuccess.value) {
+                                            Navigator.of(context).pop();
+                                            Navigator.of(context).pop();
+                                            await auctionController
+                                                .fetchAuction(widget.id);
+                                            await userController
+                                                .getCurrentUser();
+                                            toast(
+                                                'Điểm đã được thêm thành công');
+                                          } else {
+                                            Navigator.pop(context);
+                                            Navigator.pop(context);
+                                            showDialog(
+                                              context: context,
+                                              barrierDismissible: false,
+                                              builder: (context) {
+                                                return FailDialog(
+                                                    text: 'Thêm thất bại!');
+                                              },
+                                            );
+                                          }
+                                        },
+                                        child: Text(
+                                          'Thêm',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontFamily: 'Roboto',
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      )
+                                    ],
+                                  );
                                 },
                               );
-                            }
-                          });
-                        })
+                            },
+                          ),
+                          10.height,
+                          FloatingActionButton.extended(
+                              label: Text('Hủy đăng ký tham gia',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold)),
+                              icon:
+                                  Icon(Icons.close_rounded, color: Colors.red),
+                              backgroundColor: Colors.white,
+                              onPressed: () {
+                                showConfirmDialogCustom(context,
+                                    title:
+                                        'Bạn có chắc chắn muốn hủy đăng ký tham gia buổi đấu giá này?',
+                                    onAccept: (p0) async {
+                                  showDialog(
+                                      context: context,
+                                      barrierDismissible: false,
+                                      builder: (context) {
+                                        return LoadingDialog();
+                                      });
+                                  await auctionController
+                                      .cancelRegistrationAuction(widget.id);
+                                  if (auctionController.isUpdateSuccess.value) {
+                                    Navigator.of(context).pop();
+
+                                    await auctionController
+                                        .fetchAuction(widget.id);
+                                    await userController.getCurrentUser();
+                                    toast('Cancel registration successfully');
+                                  } else {
+                                    Navigator.pop(context);
+                                    showDialog(
+                                      context: context,
+                                      barrierDismissible: false,
+                                      builder: (context) {
+                                        return FailDialog(
+                                            text:
+                                                'Failed to cancel registration this auction');
+                                      },
+                                    );
+                                  }
+                                });
+                              })
+                        ],
+                      )
                     : auctionController.auction.value.startDate!
                                 .add(Duration(hours: 7))
                                 .isAfter(DateTime.now()) &&
@@ -783,7 +1029,8 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                 .add(Duration(hours: 7))
                                 .isBefore(DateTime.now())
                         ? FloatingActionButton.extended(
-                            label: Text('Đã đăng ký', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+                            label:
+                                Text('Đã đăng ký', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
                             icon: Icon(Icons.check, color: Colors.green),
                             backgroundColor: Colors.white,
                             onPressed: () {})
