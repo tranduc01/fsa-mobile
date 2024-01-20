@@ -285,7 +285,12 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text('10', style: boldTextStyle(size: 18)),
+                      Text(
+                          (userController
+                                      .user.value.totalExpertiseRequestSent ??
+                                  0)
+                              .toStringAsFixed(0),
+                          style: boldTextStyle(size: 18)),
                       4.height,
                       Text(language.expertiseRequestSent,
                           style: secondaryTextStyle(size: 12)),
