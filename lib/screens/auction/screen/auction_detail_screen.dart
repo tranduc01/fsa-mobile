@@ -451,7 +451,7 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                       Navigator.pop(context);
                                       Navigator.pop(context);
 
-                                      var errorMessage ;
+                                      var errorMessage;
                                       print(auctionController.message.value);
                                       switch (auctionController.message.value) {
                                         case 'USER_POINT_NOT_ENOUGH':
@@ -692,12 +692,39 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                                                   (context) {
                                                                 return LoadingDialog();
                                                               });
+                                                          if (int.parse(
+                                                                  feeAmountCont
+                                                                      .text) <
+                                                              auctionController
+                                                                  .auction
+                                                                  .value
+                                                                  .registrationFee!) {
+                                                            feeAmountCont.text =
+                                                                (int.parse(feeAmountCont
+                                                                            .text) +
+                                                                        20)
+                                                                    .toString();
+                                                          }
+
+                                                          if (feeAmountCont.text
+                                                                  .isEmptyOrNull ||
+                                                              feeAmountCont
+                                                                      .text ==
+                                                                  '0') {
+                                                            feeAmountCont.text =
+                                                                auctionController
+                                                                    .auction
+                                                                    .value
+                                                                    .registrationFee!
+                                                                    .toString();
+                                                          }
                                                           await auctionController
                                                               .joinAuction(
                                                                   widget.id,
                                                                   int.parse(
                                                                       feeAmountCont
                                                                           .text));
+
                                                           if (auctionController
                                                               .isUpdateSuccess
                                                               .value) {
