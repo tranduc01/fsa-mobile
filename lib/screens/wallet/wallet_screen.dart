@@ -884,7 +884,7 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
                             )),
                             Tab(
                                 child: Text(
-                              'Hoàn tiền',
+                              'Hoàn lại',
                             )),
                           ],
                           onTap: (index) async {
