@@ -17,6 +17,7 @@ class UserController extends GetxController {
   var isRegistered = false.obs;
   var user = User(role: []).obs;
   var isVerifySuccess = false.obs;
+  var isUpdateSuccess = false.obs;
   var message = ''.obs;
 
   @override
@@ -226,6 +227,34 @@ class UserController extends GetxController {
       }
     } else {
       throw Exception('Failed to get User');
+    }
+  }
+
+  Future<void> forgotPassword(String email) async {
+    try {
+      var url = '$BASE_URL/Auth/forgot-password';
+      String? token = await storage.read(key: 'jwt');
+      var headers = {
+        'Authorization': 'Bearer $token',
+      };
+      var body = "\"$email\"";
+      var response = await GetConnect().post(
+        url,
+        body,
+        headers: headers,
+      );
+
+      if (response.statusCode == 200) {
+        isUpdateSuccess(true);
+      } else {
+        isUpdateSuccess(false);
+        message.value = response.body['Message'];
+        print('Request failed with status: ${response.statusCode}');
+        print('Request failed with status: ${response.body['Message']}');
+        print('Request failed with status: ${response.statusCode}');
+      }
+    } catch (e) {
+      print(e);
     }
   }
 }

@@ -68,7 +68,7 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
       arguments!.forEach((element) {
         print(element);
 
-        if (element['IsUpdatedWinner'] == null) {
+        if (element['isUpdatedWinner'] == null) {
           auctionController.auction.value.currentBidPrice =
               element['bidAmount'] != null
                   ? element['bidAmount'].toDouble()
@@ -90,11 +90,10 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                     ? element['currentPoint'].toDouble()
                     : 0;
           }
+          auctionController.auction.refresh();
         } else {
           auctionController.fetchAuction(widget.id);
         }
-
-        auctionController.auction.refresh();
       });
     });
 
