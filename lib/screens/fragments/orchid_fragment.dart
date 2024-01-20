@@ -82,7 +82,7 @@ class _OrchidFragment extends State<OrchidFragment> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    height: MediaQuery.of(context).size.height,
+                    height: MediaQuery.of(context).size.height * 0.7,
                     child: Column(
                       children: [
                         Expanded(

@@ -185,6 +185,7 @@ class _AutionFragmentState extends State<AuctionFragment> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
+                              10.height,
                               Flexible(
                                 child: Text(
                                   auction.title!,
@@ -209,50 +210,50 @@ class _AutionFragmentState extends State<AuctionFragment> {
                                   children: [
                                     if (auction.startRegisterAt!
                                         .isAfter(DateTime.now()))
-                                      Text('Start register in: ' +
+                                      Text('Bắt đầu đăng ký sau: ' +
                                           auction.startRegisterAt!
                                               .difference(DateTime.now())
                                               .inDays
                                               .toString() +
-                                          ' days' +
+                                          ' ngày' +
                                           ' ' +
                                           auction.startRegisterAt!
                                               .difference(DateTime.now())
                                               .inHours
                                               .remainder(24)
                                               .toString() +
-                                          ' hours' +
+                                          ' giờ' +
                                           ' ' +
                                           auction.startRegisterAt!
                                               .difference(DateTime.now())
                                               .inMinutes
                                               .remainder(60)
                                               .toString() +
-                                          ' minutes'),
+                                          ' phút'),
                                     if (auction.endRegisterAt!
                                             .isAfter(DateTime.now()) &&
                                         auction.startRegisterAt!
                                             .isBefore(DateTime.now()))
-                                      Text('End register in: ' +
+                                      Text('Kết thúc đăng ký sau: ' +
                                           auction.endRegisterAt!
                                               .difference(DateTime.now())
                                               .inDays
                                               .toString() +
-                                          ' days' +
+                                          ' ngày' +
                                           ' ' +
                                           auction.endRegisterAt!
                                               .difference(DateTime.now())
                                               .inHours
                                               .remainder(24)
                                               .toString() +
-                                          ' hours' +
+                                          ' giờ' +
                                           ' ' +
                                           auction.endRegisterAt!
                                               .difference(DateTime.now())
                                               .inMinutes
                                               .remainder(60)
                                               .toString() +
-                                          ' minutes'),
+                                          ' phút'),
                                   ],
                                 )
                             ],

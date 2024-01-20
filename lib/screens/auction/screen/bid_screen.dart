@@ -432,7 +432,12 @@ class _BidScreenState extends State<BidScreen> {
                                         }
                                       },
                                       child: Text(
-                                        'Đặt giá',
+                                        'Đặt giá - ' +
+                                            auctionController
+                                                .auction.value.currentPoint!
+                                                .toStringAsFixed(0)
+                                                .formatNumberWithComma() +
+                                            ' điểm',
                                         style: TextStyle(
                                             color: Colors.white,
                                             fontFamily: 'Roboto',

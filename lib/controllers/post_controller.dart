@@ -23,7 +23,7 @@ class PostController extends GetxController {
 
   Future<List<Post>> fetchPosts() async {
     isLoading(true);
-    var url = '$BASE_URL/Post';
+    var url = '$BASE_URL/Post?Sorts=-publishedAt';
 
     var response = await GetConnect().get(url);
 
