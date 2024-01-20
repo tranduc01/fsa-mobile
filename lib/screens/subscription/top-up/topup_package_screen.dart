@@ -430,7 +430,7 @@ class _TopupPackageScreen extends State<TopupPackageScreen> {
                                                     .toList()[index]
                                                     .pointEarned
                                                     .toString() +
-                                                ' Points',
+                                                ' Điểm',
                                             style: TextStyle(
                                                 fontFamily: 'Roboto',
                                                 fontWeight: FontWeight.w600),
@@ -490,7 +490,7 @@ class _TopupPackageScreen extends State<TopupPackageScreen> {
                                                     MainAxisAlignment.center,
                                                 children: [
                                                   Text(
-                                                    "Sale will end in: ",
+                                                    "Giảm giá sẽ kết thúc sau: ",
                                                     style: TextStyle(
                                                         fontFamily: 'Roboto',
                                                         fontSize: 16),
@@ -518,12 +518,12 @@ class _TopupPackageScreen extends State<TopupPackageScreen> {
                                                                 DateTime.now())
                                                             .inDays
                                                             .toString() +
-                                                        ' days',
+                                                        ' ngày',
                                                     style: TextStyle(
                                                         fontFamily: 'Roboto',
                                                         fontWeight:
                                                             FontWeight.bold,
-                                                        fontSize: 20),
+                                                        fontSize: 18),
                                                   ),
                                                 ],
                                               ),
@@ -536,7 +536,7 @@ class _TopupPackageScreen extends State<TopupPackageScreen> {
                                         onPressed: () {
                                           Navigator.of(context).pop();
                                         },
-                                        child: Text('Cancel',
+                                        child: Text('Hủy',
                                             style: TextStyle(
                                                 color: Colors.black,
                                                 fontFamily: 'Roboto',
@@ -625,9 +625,9 @@ class _TopupPackageScreen extends State<TopupPackageScreen> {
                                                                         20)),
                                                         title: result
                                                             ? Text(
-                                                                'Payment Success')
+                                                                'Giao dịch thành công')
                                                             : Text(
-                                                                'Payment Fail'),
+                                                                'Giao dịch thất bại'),
                                                         content: result
                                                             ? Lottie.asset(
                                                                 'assets/lottie/success.json',
@@ -641,7 +641,7 @@ class _TopupPackageScreen extends State<TopupPackageScreen> {
                                                               ),
                                                         actions: [
                                                           appButton(
-                                                              text: 'OK',
+                                                              text: 'Đồng ý',
                                                               onTap: () {
                                                                 Navigator.pop(
                                                                     context);
@@ -684,12 +684,12 @@ class _TopupPackageScreen extends State<TopupPackageScreen> {
                                               barrierDismissible: false,
                                               builder: (context) {
                                                 return FailDialog(
-                                                    text: 'Purchase Failed');
+                                                    text: 'Giao dịch thất bại');
                                               },
                                             );
                                           }
                                         },
-                                        child: Text('Purchase',
+                                        child: Text('Mua',
                                             style: TextStyle(
                                                 color: Colors.white,
                                                 fontFamily: 'Roboto',
@@ -868,7 +868,7 @@ class _TopupPackageScreen extends State<TopupPackageScreen> {
                                                 "+" +
                                                     topupPackage.pointEarned
                                                         .toString() +
-                                                    ' Points',
+                                                    ' Điểm',
                                                 style: TextStyle(
                                                     fontFamily: 'Roboto',
                                                     fontWeight:
@@ -902,7 +902,7 @@ class _TopupPackageScreen extends State<TopupPackageScreen> {
                                                             .center,
                                                     children: [
                                                       Text(
-                                                        "Sale will end in: ",
+                                                        "Giảm giá sẽ kết thúc sau: ",
                                                         style: TextStyle(
                                                             fontFamily:
                                                                 'Roboto',
@@ -918,13 +918,13 @@ class _TopupPackageScreen extends State<TopupPackageScreen> {
                                                                         .now())
                                                                 .inDays
                                                                 .toString() +
-                                                            ' days',
+                                                            ' ngày',
                                                         style: TextStyle(
                                                             fontFamily:
                                                                 'Roboto',
                                                             fontWeight:
                                                                 FontWeight.bold,
-                                                            fontSize: 20),
+                                                            fontSize: 18),
                                                       ),
                                                     ],
                                                   ),
@@ -937,7 +937,7 @@ class _TopupPackageScreen extends State<TopupPackageScreen> {
                                             onPressed: () {
                                               Navigator.of(context).pop();
                                             },
-                                            child: Text('Cancel',
+                                            child: Text('Hủy',
                                                 style: TextStyle(
                                                     color: Colors.black,
                                                     fontFamily: 'Roboto',
@@ -1026,9 +1026,9 @@ class _TopupPackageScreen extends State<TopupPackageScreen> {
                                                                             20)),
                                                             title: result
                                                                 ? Text(
-                                                                    'Payment Success')
+                                                                    'Giao dịch thành công')
                                                                 : Text(
-                                                                    'Payment Fail'),
+                                                                    'Giao dịch thất bại'),
                                                             content: result
                                                                 ? Lottie.asset(
                                                                     'assets/lottie/success.json',
@@ -1042,7 +1042,8 @@ class _TopupPackageScreen extends State<TopupPackageScreen> {
                                                                   ),
                                                             actions: [
                                                               appButton(
-                                                                  text: 'OK',
+                                                                  text:
+                                                                      'Đồng ý',
                                                                   onTap: () {
                                                                     Navigator.pop(
                                                                         context);
@@ -1082,12 +1083,12 @@ class _TopupPackageScreen extends State<TopupPackageScreen> {
                                                   builder: (context) {
                                                     return FailDialog(
                                                         text:
-                                                            'Purchase Failed');
+                                                            'Giao dịch thất bại');
                                                   },
                                                 );
                                               }
                                             },
-                                            child: Text('Purchase',
+                                            child: Text('Mua',
                                                 style: TextStyle(
                                                     color: Colors.white,
                                                     fontFamily: 'Roboto',
@@ -1176,7 +1177,7 @@ class _TopupPackageScreen extends State<TopupPackageScreen> {
                                                 Text(
                                                   topupPackage.pointEarned
                                                           .toString() +
-                                                      " Points",
+                                                      " Điểm",
                                                   style: TextStyle(
                                                     fontSize: 12,
                                                     color: Colors.black

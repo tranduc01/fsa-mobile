@@ -93,7 +93,7 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: context.scaffoldBackgroundColor,
-        title: Text('My Wallet', style: boldTextStyle(size: 20)),
+        title: Text('Ví', style: boldTextStyle(size: 20)),
         elevation: 0,
         centerTitle: true,
       ),
@@ -120,7 +120,7 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
                   child: Column(children: [
                     30.height,
                     Text(
-                      'My Balance',
+                      'Số dư của tôi',
                       style: TextStyle(
                           fontFamily: 'Roboto',
                           fontSize: 20,
@@ -149,7 +149,7 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
                     ),
                     5.height,
                     Text(
-                      'Points',
+                      'Điểm',
                       style: TextStyle(
                           fontFamily: 'Roboto',
                           fontSize: 22,
@@ -187,7 +187,7 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
                               ),
                               10.width,
                               Text(
-                                'Top Up',
+                                'Nạp',
                                 style: TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold,
@@ -261,7 +261,7 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
                                               child: Column(
                                                 children: [
                                                   Text(
-                                                    'Withdraw Request',
+                                                    'Yêu cầu rút tiền',
                                                     style: TextStyle(
                                                         fontSize: 22,
                                                         fontWeight:
@@ -278,7 +278,7 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
                                                               .spaceBetween,
                                                       children: [
                                                         Text(
-                                                          'Enter Points',
+                                                          'Nhập điểm',
                                                           style: TextStyle(
                                                               fontSize: 18,
                                                               fontWeight:
@@ -288,7 +288,7 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
                                                                   'Roboto'),
                                                         ),
                                                         Text(
-                                                          '(1 point = 1,000 VNĐ)',
+                                                          '(1 điểm = 1,000 VNĐ)',
                                                           style: TextStyle(
                                                               fontSize: 16,
                                                               color: Colors
@@ -387,7 +387,7 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
                                                                     value) >
                                                                 int.parse(
                                                                     maxAmount!)) {
-                                                              return 'Số điểm rút tối thiểu là ' +
+                                                              return 'Số điểm rút tối đa là ' +
                                                                   maxAmount
                                                                       .formatNumberWithComma() +
                                                                   ' điểm';
@@ -475,7 +475,7 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
                                                   ),
                                                   30.height,
                                                   appButton(
-                                                      text: 'Next',
+                                                      text: 'Tiếp tục',
                                                       context: context,
                                                       onTap: () async {
                                                         if (withdrawFormKey
@@ -514,7 +514,7 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
                                                                             20),
                                                                   ),
                                                                   title: Text(
-                                                                    'Withdraw Request Information',
+                                                                    'Thông tin tài khoản',
                                                                     style: TextStyle(
                                                                         fontSize:
                                                                             22,
@@ -554,14 +554,14 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
                                                                                     ),
                                                                                     borderRadius: BorderRadius.circular(20.0),
                                                                                   ),
-                                                                                  hintText: 'Bank account number',
+                                                                                  hintText: 'Số tài khoản',
                                                                                   hintStyle: TextStyle(
                                                                                     fontSize: 16,
                                                                                     fontWeight: FontWeight.w500,
                                                                                     fontFamily: 'Roboto',
                                                                                   ),
                                                                                   label: Text(
-                                                                                    'Bank account number',
+                                                                                    'Số tài khoản',
                                                                                     style: TextStyle(
                                                                                       fontSize: 16,
                                                                                       fontWeight: FontWeight.w500,
@@ -571,7 +571,7 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
                                                                                 ),
                                                                                 validator: (value) {
                                                                                   if (value!.isEmpty) {
-                                                                                    return 'Please enter bank account number';
+                                                                                    return 'Hãy nhập số tài khoản';
                                                                                   }
                                                                                   return null;
                                                                                 },
@@ -596,14 +596,14 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
                                                                                     ),
                                                                                     borderRadius: BorderRadius.circular(20.0),
                                                                                   ),
-                                                                                  hintText: 'Bank account name',
+                                                                                  hintText: 'Tên tài khoản',
                                                                                   hintStyle: TextStyle(
                                                                                     fontSize: 16,
                                                                                     fontWeight: FontWeight.w500,
                                                                                     fontFamily: 'Roboto',
                                                                                   ),
                                                                                   label: Text(
-                                                                                    'Bank account name',
+                                                                                    'Tên tài khoản',
                                                                                     style: TextStyle(
                                                                                       fontSize: 16,
                                                                                       fontWeight: FontWeight.w500,
@@ -613,7 +613,7 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
                                                                                 ),
                                                                                 validator: (value) {
                                                                                   if (value!.isEmpty) {
-                                                                                    return 'Please enter bank account name';
+                                                                                    return 'Hãy nhập tên tài khoản';
                                                                                   }
                                                                                   return null;
                                                                                 },
@@ -647,14 +647,14 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
                                                                                       ),
                                                                                       borderRadius: BorderRadius.circular(20.0),
                                                                                     ),
-                                                                                    hintText: 'Select bank',
+                                                                                    hintText: 'Chọn ngân hàng',
                                                                                     hintStyle: TextStyle(
                                                                                       fontSize: 16,
                                                                                       fontWeight: FontWeight.w500,
                                                                                       fontFamily: 'Roboto',
                                                                                     ),
                                                                                     label: Text(
-                                                                                      'Bank',
+                                                                                      'Ngân hàng',
                                                                                       style: TextStyle(
                                                                                         fontSize: 16,
                                                                                         fontWeight: FontWeight.w500,
@@ -665,7 +665,7 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
                                                                                 ),
                                                                                 validator: (value) {
                                                                                   if (value == null) {
-                                                                                    return 'Please select a bank';
+                                                                                    return 'Hãy chọn một ngân hàng';
                                                                                   }
                                                                                   return null;
                                                                                 },
@@ -697,14 +697,14 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
                                                                                     ),
                                                                                     borderRadius: BorderRadius.circular(20.0),
                                                                                   ),
-                                                                                  hintText: 'Bank name',
+                                                                                  hintText: 'Tên ngân hàng',
                                                                                   hintStyle: TextStyle(
                                                                                     fontSize: 16,
                                                                                     fontWeight: FontWeight.w500,
                                                                                     fontFamily: 'Roboto',
                                                                                   ),
                                                                                   label: Text(
-                                                                                    'Bank name',
+                                                                                    'Tên ngân hàng',
                                                                                     style: TextStyle(
                                                                                       fontSize: 16,
                                                                                       fontWeight: FontWeight.w500,
@@ -733,14 +733,14 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
                                                                                     ),
                                                                                     borderRadius: BorderRadius.circular(20.0),
                                                                                   ),
-                                                                                  hintText: 'Note',
+                                                                                  hintText: 'Ghi chú',
                                                                                   hintStyle: TextStyle(
                                                                                     fontSize: 16,
                                                                                     fontWeight: FontWeight.w500,
                                                                                     fontFamily: 'Roboto',
                                                                                   ),
                                                                                   label: Text(
-                                                                                    'Note',
+                                                                                    'Ghi chú',
                                                                                     style: TextStyle(
                                                                                       fontSize: 16,
                                                                                       fontWeight: FontWeight.w500,
@@ -758,7 +758,7 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
                                                                   actions: [
                                                                     appButton(
                                                                         text:
-                                                                            'Create Withdraw Request',
+                                                                            'Tạo yêu cầu rút',
                                                                         onTap:
                                                                             () {
                                                                           if (informationFormKey
@@ -768,7 +768,7 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
                                                                             hideKeyboard(context);
                                                                             showConfirmDialogCustom(
                                                                               context,
-                                                                              title: 'Are you sure you want to withdraw from ' + amountController.text.formatNumberWithComma() + ' points to ' + moneyController.text.formatNumberWithComma() + ' ?',
+                                                                              title: 'Bạn có chắc chắn muốn rút' + amountController.text.formatNumberWithComma() + ' điểm thành ' + moneyController.text.formatNumberWithComma() + ' VNĐ?',
                                                                               onAccept: (p0) async {
                                                                                 showDialog(
                                                                                     context: context,
@@ -785,14 +785,14 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
 
                                                                                   await userController.getCurrentUser();
                                                                                   await withdrawController.fetchWithdraws();
-                                                                                  toast('Withdraw Request Create Successfully');
+                                                                                  toast('Tạo yêu cầu rút thành công');
                                                                                 } else {
                                                                                   Navigator.pop(context);
                                                                                   showDialog(
                                                                                     context: context,
                                                                                     barrierDismissible: false,
                                                                                     builder: (context) {
-                                                                                      return FailDialog(text: 'Create Failed');
+                                                                                      return FailDialog(text: 'Tạo yêu cầu rút thất bại');
                                                                                     },
                                                                                   );
                                                                                 }
@@ -830,7 +830,7 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
                               ),
                               10.width,
                               Text(
-                                'Withdraw',
+                                'Rút',
                                 style: TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold,
@@ -863,28 +863,28 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
                           tabs: [
                             Tab(
                                 child: Text(
-                              'All',
+                              'Tất cả',
                             )),
                             Tab(
                               child: Text(
-                                'Deposit',
+                                'Nạp',
                               ),
                             ),
                             Tab(
                                 child: Text(
-                              'Withdraw',
+                              'Rút',
                             )),
                             Tab(
                                 child: Text(
-                              'Earned',
+                              'Nhận',
                             )),
                             Tab(
                                 child: Text(
-                              'Used',
+                              'Sử dụng',
                             )),
                             Tab(
                                 child: Text(
-                              'Refund',
+                              'Hoàn tiền',
                             )),
                           ],
                           onTap: (index) async {
