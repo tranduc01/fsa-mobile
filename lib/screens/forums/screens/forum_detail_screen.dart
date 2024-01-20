@@ -63,7 +63,7 @@ class _ForumDetailScreenState extends State<ForumDetailScreen>
       color: context.primaryColor,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Topic', style: boldTextStyle(size: 20)),
+          title: Text('Chủ đề', style: boldTextStyle(size: 20)),
           elevation: 0,
           centerTitle: true,
           leading: IconButton(
