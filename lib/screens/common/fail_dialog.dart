@@ -48,13 +48,13 @@ class FailDialog extends StatelessWidget {
                       fontWeight: FontWeight.bold, color: Colors.black),
                 ),
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateColor.resolveWith((states) {
-                    if (states.contains(MaterialState.pressed)) {
+                  backgroundColor: WidgetStateColor.resolveWith((states) {
+                    if (states.contains(WidgetState.pressed)) {
                       return const Color.fromARGB(137, 244, 67, 54);
                     }
                     return Colors.white;
                   }),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                         side: BorderSide(color: Colors.red, width: 2)),

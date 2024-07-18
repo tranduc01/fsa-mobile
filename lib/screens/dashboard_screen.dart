@@ -90,9 +90,9 @@ class _DashboardScreenState extends State<DashboardScreen>
           selectedIndex = 0;
           tabController.index = 0;
           setState(() {});
-          return Future.value(true);
+           Future.value(true);
         }
-        return Future.value(true);
+         Future.value(true);
       },
       child: RefreshIndicator(
         onRefresh: () {

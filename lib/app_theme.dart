@@ -37,7 +37,7 @@ class AppTheme {
     ),
     //visualDensity: VisualDensity.adaptivePlatformDensity,
     radioTheme: RadioThemeData(
-      fillColor: MaterialStateProperty.all(appColorPrimary),
+      fillColor: WidgetStateProperty.all(appColorPrimary),
     ),
     colorScheme:
         ColorScheme.light(primary: appColorPrimary).copyWith(error: Colors.red),
@@ -79,7 +79,7 @@ class AppTheme {
         indicator:
             UnderlineTabIndicator(borderSide: BorderSide(color: Colors.white))),
     radioTheme: RadioThemeData(
-      fillColor: MaterialStateProperty.all(appColorPrimary),
+      fillColor: WidgetStateProperty.all(appColorPrimary),
     ),
     colorScheme: ColorScheme.dark(
             primary: appBackgroundColorDark, onPrimary: cardBackgroundBlackDark)

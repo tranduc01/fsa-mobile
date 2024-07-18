@@ -546,9 +546,9 @@ class _TopupPackageScreen extends State<TopupPackageScreen> {
                                       TextButton(
                                         style: ButtonStyle(
                                             backgroundColor:
-                                                MaterialStateProperty.all(
+                                                WidgetStateProperty.all(
                                                     context.primaryColor),
-                                            shape: MaterialStateProperty.all(
+                                            shape: WidgetStateProperty.all(
                                                 RoundedRectangleBorder(
                                                     borderRadius:
                                                         BorderRadius.circular(
@@ -948,10 +948,10 @@ class _TopupPackageScreen extends State<TopupPackageScreen> {
                                           TextButton(
                                             style: ButtonStyle(
                                                 backgroundColor:
-                                                    MaterialStateProperty.all(
+                                                    WidgetStateProperty.all(
                                                         context.primaryColor),
                                                 shape:
-                                                    MaterialStateProperty.all(
+                                                    WidgetStateProperty.all(
                                                         RoundedRectangleBorder(
                                                             borderRadius:
                                                                 BorderRadius

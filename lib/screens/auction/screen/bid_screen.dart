@@ -301,9 +301,9 @@ class _BidScreenState extends State<BidScreen> {
                                     TextButton(
                                       style: ButtonStyle(
                                           backgroundColor:
-                                              MaterialStateProperty.all(
+                                              WidgetStateProperty.all(
                                                   context.primaryColor),
-                                          shape: MaterialStateProperty.all(
+                                          shape: WidgetStateProperty.all(
                                               RoundedRectangleBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(
@@ -398,10 +398,10 @@ class _BidScreenState extends State<BidScreen> {
                                                         TextButton(
                                                           style: ButtonStyle(
                                                               backgroundColor:
-                                                                  MaterialStateProperty
+                                                                  WidgetStateProperty
                                                                       .all(context
                                                                           .primaryColor),
-                                                              shape: MaterialStateProperty.all(
+                                                              shape: WidgetStateProperty.all(
                                                                   RoundedRectangleBorder(
                                                                       borderRadius:
                                                                           BorderRadius.circular(

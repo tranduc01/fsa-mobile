@@ -218,9 +218,9 @@ class _CreateExpertiseRequestComponentState
                                     TextButton(
                                       style: ButtonStyle(
                                           backgroundColor:
-                                              MaterialStateProperty.all(
+                                              WidgetStateProperty.all(
                                                   context.primaryColor),
-                                          shape: MaterialStateProperty.all(
+                                          shape: WidgetStateProperty.all(
                                               RoundedRectangleBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(

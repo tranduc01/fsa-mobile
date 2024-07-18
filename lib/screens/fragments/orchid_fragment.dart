@@ -70,7 +70,7 @@ class _OrchidFragment extends State<OrchidFragment> {
               padding: const EdgeInsets.all(8.0),
               child: SearchBar(
                 controller: searchController,
-                padding: const MaterialStatePropertyAll<EdgeInsets>(
+                padding: const WidgetStatePropertyAll<EdgeInsets>(
                     EdgeInsets.symmetric(horizontal: 16.0)),
                 leading: const Icon(Icons.search),
                 hintText: language.searchOrchid,

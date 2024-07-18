@@ -163,13 +163,13 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
                         ElevatedButton(
                           style: ButtonStyle(
                             padding:
-                                MaterialStateProperty.all(EdgeInsets.all(8)),
+                                WidgetStateProperty.all(EdgeInsets.all(8)),
                             backgroundColor:
-                                MaterialStateProperty.all(Colors.white),
-                            shape: MaterialStateProperty.all(
+                                WidgetStateProperty.all(Colors.white),
+                            shape: WidgetStateProperty.all(
                                 RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(15))),
-                            side: MaterialStateProperty.all(
+                            side: WidgetStateProperty.all(
                               BorderSide(
                                   color: const Color.fromARGB(129, 0, 0, 0),
                                   width: 2),
@@ -199,13 +199,13 @@ class _WalletState extends State<WalletScreen> with TickerProviderStateMixin {
                         ElevatedButton(
                           style: ButtonStyle(
                             padding:
-                                MaterialStateProperty.all(EdgeInsets.all(8)),
+                                WidgetStateProperty.all(EdgeInsets.all(8)),
                             backgroundColor:
-                                MaterialStateProperty.all(Colors.white),
-                            shape: MaterialStateProperty.all(
+                                WidgetStateProperty.all(Colors.white),
+                            shape: WidgetStateProperty.all(
                                 RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(15))),
-                            side: MaterialStateProperty.all(
+                            side: WidgetStateProperty.all(
                               BorderSide(
                                   color: const Color.fromARGB(129, 0, 0, 0),
                                   width: 2),

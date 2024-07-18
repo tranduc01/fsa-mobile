@@ -171,9 +171,9 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                 TextButton(
                                   style: ButtonStyle(
                                       backgroundColor:
-                                          MaterialStateProperty.all(
+                                          WidgetStateProperty.all(
                                               context.primaryColor),
-                                      shape: MaterialStateProperty.all(
+                                      shape: WidgetStateProperty.all(
                                           RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(20)))),
@@ -422,9 +422,9 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                 TextButton(
                                   style: ButtonStyle(
                                       backgroundColor:
-                                          MaterialStateProperty.all(
+                                          WidgetStateProperty.all(
                                               context.primaryColor),
-                                      shape: MaterialStateProperty.all(
+                                      shape: WidgetStateProperty.all(
                                           RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(20)))),
@@ -947,9 +947,9 @@ class _AuctionDetailSceenState extends State<AuctionDetailSceen>
                                       TextButton(
                                         style: ButtonStyle(
                                             backgroundColor:
-                                                MaterialStateProperty.all(
+                                                WidgetStateProperty.all(
                                                     context.primaryColor),
-                                            shape: MaterialStateProperty.all(
+                                            shape: WidgetStateProperty.all(
                                                 RoundedRectangleBorder(
                                                     borderRadius:
                                                         BorderRadius.circular(

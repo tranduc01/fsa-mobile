@@ -36,8 +36,8 @@ class _GalleryCreateAlbumButtonState extends State<GalleryCreateAlbumButton> {
               16.height,
               TextButton(
                 style: ButtonStyle(
-                  shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))),
-                  side: MaterialStateProperty.all(BorderSide(color: appColorPrimary.withOpacity(0.5))),
+                  shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))),
+                  side: WidgetStateProperty.all(BorderSide(color: appColorPrimary.withOpacity(0.5))),
                 ),
                 onPressed: () {
                   widget.callback!.call();

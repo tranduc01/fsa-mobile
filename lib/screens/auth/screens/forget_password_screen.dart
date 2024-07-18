@@ -116,10 +116,10 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                                               TextButton(
                                                 style: ButtonStyle(
                                                     backgroundColor:
-                                                        MaterialStateProperty
+                                                        WidgetStateProperty
                                                             .all(context
                                                                 .primaryColor),
-                                                    shape: MaterialStateProperty
+                                                    shape: WidgetStateProperty
                                                         .all(RoundedRectangleBorder(
                                                             borderRadius:
                                                                 BorderRadius
@@ -170,10 +170,10 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                                               TextButton(
                                                 style: ButtonStyle(
                                                     backgroundColor:
-                                                        MaterialStateProperty
+                                                        WidgetStateProperty
                                                             .all(context
                                                                 .primaryColor),
-                                                    shape: MaterialStateProperty
+                                                    shape: WidgetStateProperty
                                                         .all(RoundedRectangleBorder(
                                                             borderRadius:
                                                                 BorderRadius
